@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@Facade/*": ["src/LTE/Facades/*"],
+      "@Container/*": ["src/LTE/Containers/*"]
+    }
+  }
+}
