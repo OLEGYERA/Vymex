@@ -1,17 +1,16 @@
-import Preload from './app'
-import Launch from "./app/launch";
+import Vx from './app'
 
 export default [
   {
-    path: '/preload',
-    component: Preload,
-    name: 'preload',
-    children: [
-      {
-        path: 'launch',
-        component: Launch,
-        name: 'preload.launch'
-      },
-    ]
+    path: '/vx',
+    component: Vx,
+    name: 'vx',
+    // children: [
+    //   {
+    //     path: 'me',
+    //     component: Launch,
+    //     name: 'preload.launch'
+    //   },
+    // ]
   }
 ]

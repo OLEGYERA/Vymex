@@ -3,7 +3,10 @@
     "baseUrl": ".",
     "paths": {
       "@Facade/*": ["src/LTE/Facades/*"],
-      "@Container/*": ["src/LTE/Containers/*"]
+      "@Container/*": ["src/LTE/Containers/*"],
+      "@Icon/*": ["src/LTE/Icons/*"],
+      "@Core/*": ["src/LTE/Core/*"],
+      "@Sketch/*": ["src/LTE/Sketches/*"]
     }
   }
 }

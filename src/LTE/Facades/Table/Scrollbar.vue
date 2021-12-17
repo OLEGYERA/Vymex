@@ -1,5 +1,5 @@
 <template>
-  <div class="facade-table-containable" :id="this.ContainableId">
+  <div class="facade-table-containable" :id="`table-containable-${this.id}`">
     <vuescroll :ops="vuescrollOptions"><slot/></vuescroll>
   </div>
 </template>
@@ -8,25 +8,37 @@
   import vuescroll from "vuescroll";
 
   export default {
-    name: 'Facades.Scrollbar.Base',
+    name: 'Facades.Table.Scrollbar',
     props: {
-      ContainableId: String,
-      CellSize: Number
+      id: {
+        type: [Number, String],
+        required: true
+      },
+      status: {
+        type: Boolean,
+        required: true
+      },
+      cellSize: Number,
+      position: Number,
     },
-    components: {
-      vuescroll
-    },
+    components: {vuescroll},
     mounted() {
-      this.containableDom = document.getElementById(this.ContainableId);
-      const containableCellsBox = this.containableDom.getElementsByClassName('__view')[0];
+      this.containableDom = document.getElementById(`table-containable-${this.id}`)
+      this.panelDom = this.containableDom.getElementsByClassName('__panel')[0];
+      this.viewDom = this.panelDom.getElementsByClassName('__view')[0]
+      this.cellsDom = this.viewDom.getElementsByClassName('facade-table-cell');
       this.generateDomData()
 
       this.containableObserver = new MutationObserver(() => this.generateDomData())
-      this.containableObserver.observe(containableCellsBox, {childList: true});
+      this.containableObserver.observe(this.viewDom, {childList: true});
     },
     data(){
       return {
         containableDom: null,
+        panelDom: null,
+        viewDom: null,
+        cellsDom: null,
+
         containableObserver: null,
         vuescrollOptions: {
           bar: {
@@ -46,24 +58,39 @@
     },
     methods: {
       generateDomData() {
-        const containableCells = this.containableDom.getElementsByClassName('facade-table-cell'),
-          containableDomLength = containableCells.length;
-
+        this.panelDom.scrollTop = 0;
+        const containableDomLength = this.cellsDom.length;
         if (containableDomLength) {
-          const containableChildHeight = containableCells[0].offsetHeight,
-            containableHeight = containableChildHeight * (containableDomLength > this.CellSize ? this.CellSize : containableDomLength);
+          const containableChildHeight = this.cellsDom[0].offsetHeight,
+                containableHeight = containableChildHeight * (containableDomLength > this.cellSize ? this.cellSize : containableDomLength);
           this.containableDom.style['height'] = `${containableHeight}px`;
         } else {
           this.containableDom.style['height'] = 0;
         }
+      },
+      scrollbarByKey(dropdownCursor){
+        const panelPosition = this.panelDom.scrollTop,
+          panelHeight = this.panelDom.offsetHeight,
+          cellHeight = this.cellsDom[0].offsetHeight;
+
+        let currentCellPosition = dropdownCursor * cellHeight;
+        if(currentCellPosition >= panelHeight + panelPosition){
+          this.panelDom.scrollTop = currentCellPosition;
+        } else {
+          this.panelDom.scrollTop = currentCellPosition - (dropdownCursor % this.cellSize) * cellHeight;
+        }
       }
+    },
+    watch: {
+      status(){
+        this.generateDomData()
+      },
+      position(cursor){
+        this.scrollbarByKey(cursor)
+      },
     },
     destroyed() {
       this.containableObserver.disconnect();
     }
   }
 </script>
-
-<style lang="scss" scoped>
-  
-</style>

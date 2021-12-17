@@ -1,5 +1,5 @@
 <template>
-  <div class="settings-view">
+  <div class="app-settings">
     <aside class="settings-aside">
       <div class="profile-settings">
         <text-caps-title>Мой профиль</text-caps-title>
@@ -89,7 +89,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.settings-view{
+.app-settings{
   display: flex;
   justify-content: space-between;
   height: calc(100% - 80px);
@@ -117,7 +117,9 @@ export default {
     }
 
   }
-
+  .settings-router-view{
+    width: 65%;
+  }
 
 }
 </style>

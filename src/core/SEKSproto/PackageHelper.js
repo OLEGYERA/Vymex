@@ -2,19 +2,28 @@ import {
   bufferToArray, getPackage, checkHMACVerify, decrypt
 } from '@/core/SEKSproto/utilites'
 
-export default class CryptoHelper{
+export default class PackageHelper{
+
+  constructor(StoragePad, SClient) {
+    this.storage = StoragePad;
+    this.socket = SClient;
+  }
 
   /**
    * Парсим пакет
-   * @param data
+   * @param responsePackage
+   * @param next {function}
    */
-  async ParsingPackage(data){
-    let packageData = getPackage(bufferToArray(data))
+  async parser(responsePackage, next){
+    let packageData = getPackage(bufferToArray(responsePackage))
 
     let decryptedData = packageData.data.length ? await this.Decrypt(...packageData.data) : null;
-    let component = new components[pac.component](this.$socket, this);
 
-    component[pac.method](decryptedData, pac.data)
+    next({
+      component: packageData.component,
+      method: packageData.method,
+      data: decryptedData
+    })
   }
 
   /**
@@ -26,10 +35,10 @@ export default class CryptoHelper{
    * @returns Uint8Array
    */
   async Decrypt(IV128, mac, cipher){
-    this.CheckHMACVerify(IV128, mac, cipher);
+    await this.CheckHMACVerify(IV128, mac, cipher);
 
-    return await decrypt(IV128, this.$store.state.vxData.AES256Key, cipher);
-  },
+    return await decrypt(IV128, this.storage.get('AesKey'), cipher);
+  }
 
   /**
    * Проверяем подпись пакета.
@@ -37,11 +46,11 @@ export default class CryptoHelper{
    * @param data
    */
   async CheckHMACVerify(...data){
-    let HMACVerify = await checkHMACVerify(this.$store.state.vxData.MAC256Key, ...data);
+    let HMACVerify = await checkHMACVerify(this.storage.get('MacKey'), ...data);
 
     // Убиваем соединение.
     if(!HMACVerify){
-      this.$socket.disconnect();
+      this.socket.Disconnect();
       throw new Error('HMAC not Verify\n');
     }
   }

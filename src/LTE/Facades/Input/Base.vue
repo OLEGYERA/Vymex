@@ -1,33 +1,31 @@
 <template>
-  <div class="facade-input-simple"
+  <div class="facade-input-base"
        tabindex="0"
        @click="focusInput"
        :labeled="labeled"
-       :labeled-active="labeled && baseModel && baseModel.length !== 0"
        :position="position"
        :disable="disable"
-       :hide="hide"
-       :class="[{selector: touch}, InputName]">
-    <label class="input-label" v-if="labeled">{{ placeholder }}</label>
+       :hide="hide">
     <transition name="slide-down">
       <img :src="img" v-if="img">
     </transition>
     <input
       v-model="baseModel"
       v-mask="bindInputMask"
-      :placeholder="labeled ? '' : placeholder"
+      :placeholder="placeholder"
       :type="type || 'text'"
-      ref="facade-input-simple-ref"
-      :disabled="touch || disable === true || hide === true"
+      ref="facade-input-base-ref"
+      :disabled="disable === true || hide === true"
       @focus="$emit('onFocus')"
       @blur="handleBlur"
       @keydown.40="$emit('onKeyArrowDown')"
       @keydown.38="$emit('onKeyArrowUp')"
       @keydown.8="$emit('onKeyBackspace')"
       @keydown.enter="$emit('onKeyEnter', $event)"
-      @keydown.tab="$emit('onKeyTab', $event)"
+      @keydown.tab.prevent="$emit('onKeyTab', $event)"
       @keydown.delete="$emit('onKeyDelete', $event)"
     >
+    <label class="input-label" v-if="labeled">{{ placeholder }}</label>
   </div>
 </template>
 
@@ -39,15 +37,15 @@ import debounce from "lodash/debounce";
 export default {
   name: 'Facade.Input.Base',
   props: {
-    model: String,
-    placeholder: {
-      type: String,
+    model: {
+      validator: function (value) {
+        return value === null || typeof value === "string" || typeof value === "number";
+      }
     },
+    placeholder: String,
     mask: [String, Array],
-    InputName: String, //??
     img: String,
     type: String,
-    touch: Boolean, //??
     labeled: Boolean,
     position: String,
     disable: Boolean,
@@ -55,12 +53,11 @@ export default {
     hide: Boolean
   },
   created() {
-    this.baseModel = this.model
-    this.debouncedEmittingOnInput = debounce(this.applicableCopyOfEmit, this.disableDebounce ? 0 : 200)
+    this.modelDebounceFunction = debounce(() => this.applicableCopyOfEmit(), this.disableDebounce ? 0 : 200)
   },
   data(){
     return {
-      baseModel: null
+      baseModel: this.model
     }
   },
   computed: {
@@ -73,130 +70,128 @@ export default {
       if (!(e.relatedTarget && e.relatedTarget.contains(e.target))) this.$emit('onBlur');
     },
     focusInput(){
-      if(this.touch){
-        this.$emit('onTouch')
-      } else {
-        this.$refs['facade-input-simple-ref'].focus()
-      }
+      if(!this.disable) this.$refs['facade-input-base-ref'].focus()
     },
     applicableCopyOfEmit(){
       this.$emit('onInput', this.baseModel)
     }
   },
   watch: {
-    baseModel(){
-      this.debouncedEmittingOnInput()
+    model(_model) {
+      if (_model !== this.baseModel) this.baseModel = _model;
+    },
+    baseModel() {
+      this.modelDebounceFunction()
     }
   }
 }
+
 </script>
 
-
 <style lang="scss" scoped>
-.facade-input-simple{
-  width: 100%;
-  height: 52px;
-  border-bottom: 2px solid $grey-scale-600;
-  box-sizing: border-box;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  overflow: hidden;
-  cursor: pointer;
-  position: relative;
-
-  .input-label{
-    padding: 0 2px;
-    position: absolute;
-    color: $grey-scale-200;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 20px;
-    cursor: text;
-  }
-
-  img{
-    display: flex;
-    justify-content: center;
-    align-content: center;
-    margin: 0 12px 0 6px;
-    width: 28px;
-    height: 28px;
-  }
-  input{
+  .facade-input-base{
     width: 100%;
-    height: 100%;
-    background-color: transparent;
-    border: none;
-    outline: none;
-    color: #fff;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 20px;
-    &::placeholder{
-      color: $grey-scale-200;
-    }
-  }
-
-  &:focus-within{
-    transition: all .2s ease-out;
-    border-color: $blue;
-    .input-label{
-      top: 0;
-    }
-  }
-
-  &.selector{
+    height: 52px;
+    border-bottom: 2px solid $grey-scale-300;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    overflow: hidden;
     cursor: pointer;
-    input{
-      cursor: pointer;
-    }
-  }
+    position: relative;
+    outline: none;
 
-  &[disable]{
-    cursor: not-allowed;
     .input-label{
+      padding: 0 2px;
+      position: absolute;
+      color: $grey-scale-200;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 20px;
+      cursor: text;
+    }
+
+    img{
+      display: flex;
+      justify-content: center;
+      align-content: center;
+      margin: 0 12px 0 6px;
+      width: 28px;
+      height: 28px;
+    }
+    input{
+      width: 100%;
+      height: 100%;
+      background-color: transparent;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 20px;
+      &::placeholder{
+        color: $grey-scale-200;
+      }
+    }
+
+    input:not(:placeholder-shown) + .input-label {
+      top: 0;
+    }
+
+    &:focus-within{
+      transition: all .2s ease-out;
+      border-color: $blue;
+    }
+
+    &[position="center"]{
+      justify-content: center;
+      input {
+        text-align: center;
+      }
+    }
+    &[labeled]{
+      input{
+        padding-top: 20px;
+        &::placeholder{
+          color: transparent;
+        }
+        &:focus + .input-label{
+          top: 0;
+        }
+      }
+    }
+    &[hide]{
+      border: transparent;
+      .input-label {
+        top: 0;
+      }
+    }
+
+    &[disable]{
+      outline: none;
       cursor: not-allowed;
-    }
-    input{
-      cursor: not-allowed;;
+      border-color: $grey-scale-300;
+      .input-label{
+        cursor: not-allowed;
+      }
+      input{
+        color: $grey-scale-200;
+        cursor: not-allowed;;
+      }
     }
   }
 
-  &[position="center"]{
-    justify-content: center;
-    input {
-      text-align: center;
-    }
+  .slide-down-enter-active,
+  .slide-down-leave-active {
+    transition: all .07s ease;
+    max-width: 28px;
+    max-height: 28px;
   }
-  &[labeled]{
-    input{
-      padding-top: 16px;
-    }
-  }
-  &[labeled-active]{
-    .input-label{
-      top: 0;
-    }
-  }
-  &[hide]{
-    border: transparent;
-    .input-label {
-      top: 0;
-    }
-  }
-}
 
-.slide-down-enter-active,
-.slide-down-leave-active {
-  transition: all .07s ease;
-  max-width: 28px;
-  max-height: 28px;
-}
-
-.slide-down-enter, .slide-down-leave-to {
-  opacity: 0;
-  max-width: 0;
-  max-height: 0;
-}
+  .slide-down-enter, .slide-down-leave-to {
+    opacity: 0;
+    max-width: 0;
+    max-height: 0;
+  }
 </style>

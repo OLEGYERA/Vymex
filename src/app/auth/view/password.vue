@@ -1,11 +1,16 @@
 <template>
   <div class="password-view">
-    <text-heading-title>Войти в аккаунт</text-heading-title>
-    <text-heading-description>Для входа в приложение введите ваш пароль</text-heading-description>
-    <input-password placeholder="Пароль" @onPassword="handlePassword" tooltip/>
-    <button-base
-
-    >
+    <title-thin>Войти в Vymex</title-thin>
+    <text-base>Для входа в приложение введите ваш пароль</text-base>
+    <input-password
+      :model="password"
+      placeholder="Пароль"
+      labeled
+      tooltip
+      ref="password"
+      @onPassword="handlePassword"
+    /><button-base
+      :disable="!passwordIsValid" @onClick="login">
       Войти в аккаунт
     </button-base>
   </div>
@@ -13,28 +18,54 @@
 </template>
 
 <script>
-  import InputPassword from '@/components/input/password'
-  import TextHeadingTitle from "@/components/text/heading-title";
-  import TextHeadingDescription from "@/components/text/heading-description";
-  import ButtonBase from "@/components/button/base";
+  import {mapGetters} from 'vuex'
+  import TitleThin from '@Facade/Title/Thin'
+  import TextBase from '@Facade/Text/Base'
+  import InputPassword from '@Facade/Input/Password'
+  import ButtonBase from "@Facade/Button/Base";
 
   export default {
     name: 'auth.password',
     components: {
-      TextHeadingTitle,
-      TextHeadingDescription,
+      TitleThin,
+      TextBase,
       InputPassword,
       ButtonBase
     },
     data(){
-      
+      return  {
+        passwordIsValid: false,
+        password: null
+      }
+    },
+    computed: {
+      ...mapGetters({
+        getPassword: 'getUserPassword'
+      }),
     },
     methods: {
       handlePassword(password){
         if(password !== false){
-          
+          this.passwordIsValid = true
+          this.password = password
+        } else {
+          this.passwordIsValid = false
         }
-        console.log(password)
+      },
+      login(){
+        this.$engine.Predictor
+          .prepareComponentManually('setting', 'cloudPassword', this.password)
+          .runPredictedData();
+      }
+    },
+    watch:{
+      getPassword(_newPassword){
+        if(_newPassword === null){
+          this.password = '';
+          this.$refs['password']
+              .$refs['facade-input-password-ref']
+              .$refs['facade-input-base-ref'].focus();
+        }
       }
     }
   }
@@ -43,10 +74,10 @@
 <style lang="scss" scoped>
   .password-view{
     width: 375px;
-    .input-password{
+    .facade-input-password{
       margin-top: 16px;
     }
-    .button-base{
+    .facade-button-base{
       margin-top: 32px;
     }
   }

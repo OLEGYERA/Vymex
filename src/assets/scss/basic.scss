@@ -1,0 +1,29 @@
+$vx-nav-time: .4s;
+$vx-nav-time-delay: .4s;
+@import './animation';
+
+$grey: #181F26;
+$grey-scale-200: #8296AA;
+$grey-scale-300: #4A5A6A;
+$grey-scale-400: #313D49;
+$grey-scale-500: #212A33;
+$grey-scale-700: #010203;
+
+
+$blue: #1890FF;
+$secondary-yellow: #FACD23;
+$blue-opacity-2: rgba(24, 144, 255, .2);
+$blue-scale-200: #3193f8;
+
+$red: #FF4D4F;
+$red-opacity-2: rgba(255, 77, 79, .2);
+
+$green: #73D13D;
+
+@function rem($value) {
+  @return #{($value / 16)}rem;
+}
+
+
+
+

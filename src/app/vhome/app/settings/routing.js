@@ -1,5 +1,6 @@
 import Settings from "./app";
-import PersonalSetting from "./view/personal";
+// import PersonalSetting from "./view/personal";
+import Personal from "@/app/vhome/app/settings/view/personal";
 
 const RouteName = 'vhome.settings'
 
@@ -11,7 +12,7 @@ export default [
     children: [
       {
         path: 'personal',
-        component: PersonalSetting,
+        component: Personal,
         name: RouteName + '.personal'
       },
     ]

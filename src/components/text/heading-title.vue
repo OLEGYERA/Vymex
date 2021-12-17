@@ -1,5 +1,5 @@
 <template>
-  <h1 class="heading-title-component">
+  <h1 class="text-heading-title-component">
     <slot></slot>
   </h1>
 
@@ -12,7 +12,7 @@
 </script>
 
 <style lang="scss" scoped>
-  .heading-title-component{
+  .text-heading-title-component{
     color: #fff;
     font-size: 28px;
     font-weight: 600;

@@ -1,20 +1,20 @@
 <template>
-  <icon-substrate icon-name="icon-arrow-left">
-    <svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0.291811 7.69241L6.32053 13.7119C6.70547 14.096 7.32635 14.096 7.71129 13.7119C8.09624 13.3277 8.09624 12.7081 7.71129 12.3271L2.37485 7.00155L7.71129 1.67294C8.09624 1.28878 8.09624 0.669175 7.71129 0.288117C7.32635 -0.0960389 6.70547 -0.0960389 6.32053 0.288117L0.288707 6.30759C0.0962353 6.49967 0 6.75061 0 7.00155C0.00310421 7.24939 0.099339 7.50033 0.291811 7.69241Z" fill="currentColor"/>
+  <icon-substrate icon-name="icon-search" :icon-touch="touch">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M1.99119 1.99167C3.26643 0.716427 4.99604 0 6.79951 0C8.60298 0 10.3326 0.716427 11.6078 1.99167C12.8831 3.26692 13.5995 4.99653 13.5995 6.8C13.5995 8.33475 13.0807 9.816 12.1402 11.0093L15.7652 14.6343C16.0776 14.9467 16.0776 15.4533 15.7652 15.7657C15.4528 16.0781 14.9462 16.0781 14.6338 15.7657L11.0088 12.1406C9.81551 13.0812 8.33426 13.6 6.79951 13.6C4.99604 13.6 3.26643 12.8836 1.99119 11.6083C0.715938 10.3331 -0.000488281 8.60347 -0.000488281 6.8C-0.000488281 4.99653 0.715938 3.26692 1.99119 1.99167ZM6.79951 1.6C5.42039 1.6 4.09775 2.14786 3.12256 3.12305C2.14737 4.09823 1.59951 5.42087 1.59951 6.8C1.59951 8.17913 2.14737 9.50177 3.12256 10.477C4.09775 11.4521 5.42039 12 6.79951 12C8.17864 12 9.50128 11.4521 10.4765 10.477C11.4517 9.50177 11.9995 8.17913 11.9995 6.8C11.9995 5.42087 11.4517 4.09823 10.4765 3.12305C9.50128 2.14786 8.17864 1.6 6.79951 1.6Z" fill="currentColor"/>
     </svg>
   </icon-substrate>
-
 </template>
 
-<script>
-  import IconSubstrate from '@/components/icon/substrate'
 
-  export default {
-    name: 'icon.arrow-left',
-    props: {
-      click: Function
-    },
-    components: {IconSubstrate},
-  }
+<script>
+import IconSubstrate from '@/components/icon/substrate'
+
+export default {
+  name: 'icon.search',
+  props: {
+    touch: Boolean
+  },
+  components: {IconSubstrate},
+}
 </script>

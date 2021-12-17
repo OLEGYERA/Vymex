@@ -5,12 +5,18 @@ Vue.use(Vuex);
 
 export default {
   state: {
-    Countries: []
+    Countries: [],
+    ChooseCountry: {}
   },
   getters: {
-    getCountries: (state) => state.countries,
+    getCountries: (state) => state.Countries,
+    getChooseCountry: (state) => state.ChooseCountry,
   },
   mutations: {
-    setCountries: (state, payload) => state.Countries = payload,
+    setCountries: (state, payload) => {
+      state.Countries = payload;
+      state.ChooseCountry = payload[0];
+    },
+    setChooseCountry: (state, payload) => state.ChooseCountry = payload,
   }
 }

@@ -1,0 +1,60 @@
+.vx-center-left{
+  &-leave-to{
+    transition: $vx-nav-time all ease;
+  }
+  &-enter-to{
+    transition: $vx-nav-time all ease $vx-nav-time-delay;
+  }
+
+  &-leave-active{
+    transform: translateX(-100%);
+  }
+  &-leave-to{
+    transform: translateX(0%);
+  }
+  &-enter-active{
+    transform: translateX(0%);
+  }
+  &-enter-to{
+    transform: translateX(-100%);
+  }
+}
+
+.vx-center-right{
+  &-leave-to{
+    transition: $vx-nav-time all ease $vx-nav-time-delay;
+  }
+  &-enter-to{
+    transition: $vx-nav-time all ease;
+  }
+
+  &-enter-active{
+    transform: translateX(-100%);
+  }
+  &-enter-to{
+    transform: translateX(0%);
+  }
+  &-leave-active{
+    transform: translateX(0%);
+  }
+  &-leave-to{
+    transform: translateX(-100%);
+  }
+}
+
+.vx-only-show{
+  &-leave-active{
+    opacity: 1;
+  }
+  &-enter-active{
+    opacity: 0;
+  }
+  &-leave-to{
+    opacity: 0;
+    transition: $vx-nav-time all ease-out;
+  }
+  &-enter-to{
+    opacity: 1;
+    transition: $vx-nav-time all ease-in $vx-nav-time-delay;
+  }
+}

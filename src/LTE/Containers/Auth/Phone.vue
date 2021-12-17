@@ -1,239 +1,240 @@
 <template>
   <div class="container-auth-phone">
-    <input-base
-      placeholder="Страна"
-      :img="chooseCountry ? chooseCountry.img : ''"
-      :input-model="chooseCountry ? chooseCountry.countryName : ''"
-      @onTouch="modalTableStatus=true"
-      touch
+    <dropdown-base
+       placeholder="Страна"
+       :model="chooseCountry"
+       model-observer="countryName"
+       :data="countries"
+       :opts="chooseCountryOpts"
+       error="Страна не обнаружена"
+       img
+       disable-debounce
+       @onSelect="selectCountry"
+       @onBlur="focusOnPhoneLth"
+       :disable="!status"
     />
-    <modal-table search :status="modalTableStatus" @onCLose="modalTableStatus = false"
-                 @onSearchTable="modalTableSearchModel = $event">
-      <template #table-header-title>Выберите страну</template>
-      <template #table-cells>
-        <modal-table-cell
-          :group="[{img: 'country-logo', title: 'country-title'}, {phone: 'phone-title'}]"
-          :position="'between'"
-          @click.native="selectCountry(country)"
-          :class="{active: isSimilarCountry(country)}"
-          v-for="(country, keyCountry) in filterCountries"
-          :key="keyCountry"
-        >
-          <template #img><img :src="country.img" :alt="country.countryName"></template>
-          <template #title>{{ country.countryName }}</template>
-          <template #phone>+{{ country.phoneIdent }}</template>
-        </modal-table-cell>
-      </template>
-    </modal-table>
-
     <div class="phone-number-group">
-      <input-selectable
-        placeholder="+"
-        :selectable-items="filterCountriesPhoneIdent"
-        :selectable-item="chooseCountry ? this.generatePhoneIdent(chooseCountry) : ''"
+      <dropdown-base
+        placeholder="+Код"
+        :model="chooseCountry ? this.generatePhoneIdent(chooseCountry) : ''"
+        model-observer="value"
+        :data="filterCountriesPhoneIdent"
+        :opts="phoneIdentOpts"
+        error="- - -"
+        mask="+####"
+        disable-debounce
         @onSelect="selectPhoneIdent"
         @onBlur="focusOnPhoneLth"
+        :disable="!status"
       />
       <input-base
-        :input-model="phoneLthNumber ? phoneLthNumber.withMask : ''"
-        :input-focus="phoneLengthFocusToggle"
-        :mask-pattern="generateMaskPatternForPhoneLth"
+        :model="phoneNumberModel"
+        :mask="generateMaskPatternForPhoneLth"
+        ref="phoneNumber"
         @onInput="monitorFillingTheMask"
+        :disable="!status"
       />
     </div>
-
-    <div class="phone-number-label">
-      {{label}}
-    </div>
-
-    <button-base
-      :status="phoneNumberCanSubmit"
-      @onClick="$emit('onAction')"
-    >
-      Получить код
-    </button-base>
-
   </div>
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex';
+  import { mapGetters, mapMutations } from 'vuex';
+  import InputBase from "@/LTE/Facades/Input/Base";
+  import DropdownBase from '@Facade/Dropdown/Base'
 
-import InputBase from '@/components/input/base'
-import InputSelectable from '@/components/input/selectable'
-import ModalTable from '@/components/modal/table'
-import ModalTableCell from '@/components/modal/table-cell'
-import ButtonBase from '@/components/button/base'
-
-export default {
-  name: 'Container.Auth.Phone',
-  props: {
-    label: String,
-    status: Boolean,
-  },
-  components: {
-    InputBase,
-    InputSelectable,
-    ModalTable,
-    ModalTableCell,
-    ButtonBase,
-  },
-  created() {
-    if(!this.countries.length)
-      this.$engine.Predictor
-        .prepareComponentManually('auth', 'getCountries')
-        .runPredictedData()
-  },
-  data(){
-    return{
-      modalTableStatus: false,
-      modalTableSearchModel: null,
-      phoneLengthFocusToggle: false,
-    }
-  },
-  computed: {
-    ...mapGetters({
-      countries: 'getCountries',
-      chooseCountry: 'getChooseCountry',
-      phoneLthNumber: 'getPhoneLthNumber'
-    }),
-    filterCountries(){
-      if(this.modalTableSearchModel) {
-        return this.countries.filter((country)=>{
-          return country.countryName.toLowerCase().includes(this.modalTableSearchModel.toLowerCase())
-        })
-      } else{
-        return this.countries;
+  export default {
+    name: 'Container.Auth.Phone',
+    props: {
+      status: {
+        type: Boolean,
+        required: true
       }
     },
-    filterCountriesPhoneIdent(){
-      let phoneIdents = [];
-      this.countries.forEach( country => phoneIdents.push(this.generatePhoneIdent(country)))
-      return phoneIdents
+    components: {
+      InputBase,
+      DropdownBase,
     },
-    generateMaskPatternForPhoneLth(){
-      if(this.chooseCountry && this.chooseCountry.phoneIth){
-        let counter = 1,
-          counterRange = Math.trunc(this.chooseCountry.phoneIth/2),
-          maskPattern = '';
+    created() {
+      if(!this.countries.length)
+        this.$engine.Predictor
+          .prepareComponentManually('auth', 'getCountries')
+          .runPredictedData()
+    },
+    mounted() {
+      this.phoneNumberModel = this.phoneLthNumber ? this.phoneLthNumber.withMask : ''; //relink vuex state on Container model
+    },
+    data(){
+      return{
+        chooseCountryOpts: {
+          cell: {
+            structure: [{img: 'country-logo', title: 'country-title'}, {phone: 'phone-title'}],
+            position: 'between',
+          },
+          template: {
+            img: 'img',
+            title: 'countryName',
+            phone: 'phoneIdent'
+          }
+        },
+        phoneIdentOpts: {
+          cell: {
+            structure: [{code: 'phone-indent'}],
+            height: 35,
+            size: 7,
+          },
+          template: {code: 'value'}
+        },
+        phoneNumberModel: null,
+      }
+    },
+    computed: {
+      ...mapGetters({
+        countries: 'getCountries',
+        chooseCountry: 'getChooseCountry',
+        phoneLthNumber: 'getPhoneLthNumber'
+      }),
+      filterCountriesPhoneIdent(){
+        let phoneIdents = [];
+        this.countries.forEach( country => phoneIdents.push(this.generatePhoneIdent(country)))
+        return phoneIdents;
+      },
+      generateMaskPatternForPhoneLth(){
+        if(this.chooseCountry && this.chooseCountry.phoneIth){
+          let counter = 1,
+            counterRange = Math.trunc(this.chooseCountry.phoneIth/2),
+            maskPattern = '';
 
-        while(counter < counterRange){
-          maskPattern += '##-'
-          counter++
+          while(counter < counterRange){
+            maskPattern += '##-'
+            counter++
+          }
+
+          maskPattern += this.chooseCountry.phoneIth % 2 === 0 ? '##' : '###'
+          return maskPattern;
         }
-
-        maskPattern += this.chooseCountry.phoneIth % 2 === 0 ? '##' : '###'
-        return maskPattern;
+        return null
+      },
+      phoneNumberCanSubmit(){
+        return this.phoneNumberModel &&
+          this.chooseCountry?.phoneIth === this.phoneLthNumber.withoutMask.length && this.status !== false
       }
-      return null
     },
-    phoneNumberCanSubmit(){
-      return this.chooseCountry?.phoneIth === this.phoneLthNumber.withoutMask.length && this.status !== false
-    }
-  },
-  methods: {
-    ...mapMutations(['setChooseCountry', 'setPhoneLthNumber']),
-    selectCountry(selectedCountry){
-      if(!this.isSimilarCountry(selectedCountry)){
-        this.setChooseCountry(selectedCountry)
-        this.clearPhoneLth()
+    methods: {
+      ...mapMutations(['setChooseCountry', 'setPhoneLthNumber']),
+      selectCountry(selectedCountry){
+        if(!this.isSimilarCountry(selectedCountry)){
+          this.setChooseCountry(selectedCountry)
+          this.clearPhoneLth()
+        }
+      },
+      selectPhoneIdent(selectedPhoneIdent){
+        let selectedCountry;
+        this.countries.forEach( country => {
+          if(String(country.countryName) === String(selectedPhoneIdent.key))
+            selectedCountry = country
+        })
+        this.selectCountry(selectedCountry)
+      },
+      clearPhoneLth(){
+        this.setPhoneLthNumber({
+          withMask: '',
+          withoutMask: ''
+        });
+      },
+      focusOnPhoneLth(){
+        setTimeout(() => this.$refs['phoneNumber'].$refs['facade-input-base-ref'].focus(), 100)
+      },
+      isSimilarCountry(country){
+        return String(this.chooseCountry?.countryName) === String(country.countryName)
+      },
+      generatePhoneIdent(country){
+        return {value: `+${country.phoneIdent}`, key: country.countryName}
+      },
+      monitorFillingTheMask(newPhoneLengthNumber){
+        let standardPhone = newPhoneLengthNumber.replace(/-/g, '');
+
+        this.setPhoneLthNumber({
+          withMask: newPhoneLengthNumber,
+          withoutMask: standardPhone
+        });
+      },
+    },
+    watch: {
+      phoneLthNumber(lastPhoneNumber){
+        if(lastPhoneNumber) this.phoneNumberModel = lastPhoneNumber.withMask
+      },
+      phoneNumberCanSubmit(state){
+        this.$emit('onStatus', state);
       }
-
-      this.modalTableStatus = false
-
-      this.focusOnPhoneLth()
-    },
-    selectPhoneIdent(selectedPhoneIdent){
-      let selectedCountry;
-
-      this.countries.forEach( country => {
-        if(String(country.countryName) === String(selectedPhoneIdent.key))
-          selectedCountry = country
-      })
-
-      this.selectCountry(selectedCountry)
-    },
-    clearPhoneLth(){
-      this.setPhoneLthNumber({
-        withMask: '',
-        withoutMask: ''
-      });
-    },
-    focusOnPhoneLth(){
-      this.phoneLengthFocusToggle = !this.phoneLengthFocusToggle;
-    },
-    isSimilarCountry(country){
-      return String(this.chooseCountry?.countryName) === String(country.countryName)
-    },
-    generatePhoneIdent(country){
-      return {value: `+${country.phoneIdent}`, key: country.countryName}
-    },
-    monitorFillingTheMask(newPhoneLengthNumber){
-      let standardPhone = newPhoneLengthNumber.replace(/-/g, '');
-
-      this.setPhoneLthNumber({
-        withMask: newPhoneLengthNumber,
-        withoutMask: standardPhone
-      });
     }
   }
-}
 </script>
 
 <style lang="scss" scoped>
-.container-auth-phone{
-  ::v-deep .input-base{
-    margin-top: 16px;
-    img{
-      width: 28px;
-      height: 28px;
-    }
-  }
+  .container-auth-phone{
+    ::v-deep {
+      .facade-dropdown-base{
+        margin-bottom: 16px;
+        .dropdown-box{
+          .facade-table-cell{
+            .group-num-0{
+              align-items: center;
+            }
+            .country-logo{
+              height: rem(24);
+              img{
+                height: 100%;
+              }
+            }
 
-  ::v-deep .modal-table-cell{
-    .country-logo{
-      width: 36px;
-      height: 36px;
-      margin-right: 22px;
-      img{
-        width: 100%;
+            .country-title, .phone-title{
+              font-weight: 400;
+              font-size: rem(17);
+              line-height: rem(22);
+            }
+            .country-title{
+              margin-left: rem(12);
+            }
+            .phone-title{
+              color: $blue;
+            }
+          }
+        }
+      }
+
+      .phone-number-group{
+        display: flex;
+        justify-content: space-between;
+        align-content: center;
+        margin-bottom: 44px;
+        .facade-dropdown-base{
+          width: 72px;
+          min-width: 72px;
+          margin-right: 12px;
+          .facade-table-cell{
+            padding: 0 rem(8);
+            .phone-indent{
+              font-weight: 400;
+              font-size: rem(15);
+              line-height: rem(18);
+            }
+          }
+        }
       }
     }
 
-    .country-title,
-    .phone-title{
-      color: #fff;
-      font-size: 20px;
-      line-height: 24px;
+    .phone-number-label{
+      margin-top: 32px;
       font-weight: 500;
+      height: 20px;
+      color: #fff;
+      text-align: center;
     }
 
-    .phone-title{
-      color: $blue;
+    .button-base{
+      margin-top: 16px;
     }
-  }
 
-  .phone-number-group{
-    display: flex;
-    justify-content: space-between;
-    align-content: center;
-    .input-selectable{
-      width: 80px;
-      margin-right: 12px;
-    }
   }
-
-  .phone-number-label{
-    margin-top: 32px;
-    font-weight: 500;
-    height: 20px;
-    color: #fff;
-    text-align: center;
-  }
-
-  .button-base{
-    margin-top: 16px;
-  }
-
-}
 </style>
