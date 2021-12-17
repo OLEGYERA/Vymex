@@ -1,8 +1,11 @@
 <template>
   <div class="app-vx">
     <vx-navigation/>
-    <div class="vx-body">
-      <router-view/>
+    <div class="vx-body-space">
+      <vx-header/>
+      <div class="body-space-router-view">
+        <router-view/>
+      </div>
     </div>
   </div>
 </template>
@@ -10,10 +13,28 @@
 
 <script>
   import VxNavigation from '@Container/Vx/Navigation'
+  import VxHeader from '@Container/Vx/Header'
+  import {mapGetters} from 'vuex'
+
   export default {
     name: 'app.vx',
     components: {
-      VxNavigation
+      VxNavigation,
+      VxHeader
+    },
+    created() {
+      console.log('Vx App')
+    },
+    data(){
+      return {
+        lol: 111
+      }
+    },
+    computed: {
+      ...mapGetters(['getPage'])
+    },
+    beforeRouteLeave(to, from, next){
+      console.log(this.getPage, to, from, next)
     }
   }
 </script>
@@ -27,9 +48,13 @@
     justify-content: space-between;
     overflow: hidden;
     background-color: $grey;
-    .vx-body{
+    .vx-body-space{
+      display: flex;
+      flex-direction: column;
       width: 100%;
-      height: 100%;
+      .body-space-router-view{
+        height: 100%;
+      }
     }
   }
 </style>

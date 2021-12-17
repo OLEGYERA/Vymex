@@ -1,40 +1,40 @@
 <template>
-  <div class="container-vx-navigation" :vx-navigation-mini="isTiny">
-    <sketch-header @onToggle="isTiny = !$event" :tiny="isTiny"/>
+  <div class="container-vx-navigation" :vx-navigation-mini="!isFull">
+    <sketch-header @onToggle="setNavigationFull($event)" :tiny="!isFull"/>
     <div class="navigation-main">
       <div class="main-base">
         <div class="navigation-accounts">
           <div class="profile-group">
-            <sketch-title :tiny="isTiny">
+            <sketch-title :tiny="!isFull">
               <template #title>Мой профиль</template>
               <template #icon><icon-profile/></template>
             </sketch-title>
-            <sketch-plate-account :tiny="isTiny" category="profile" :data="{name: 'Oleg', lastname: 'Gerasimenko', id: 1}" />
+            <sketch-plate-account :tiny="!isFull" category="profile" :data="{name: 'Oleg', lastname: 'Gerasimenko', id: 1}" />
           </div>
           <div class="company-group">
-            <sketch-title :tiny="isTiny">
+            <sketch-title :tiny="!isFull">
               <template #title>Мои компании</template>
               <template #icon><icon-company/></template>
             </sketch-title>
             <transition name="vx-only-show">
               <!--Выводить только когда нет компаний!-->
-              <text-base v-if="!isTiny">Вы можете создать новую <br> компанию прямо здесь</text-base>
+              <text-base v-if="isFull">Вы можете создать новую <br> компанию прямо здесь</text-base>
             </transition>
-            <sketch-plate-account :tiny="isTiny" category="company" :data="{name: 'Vintage', id: 2}"/>
-            <sketch-plate-account :tiny="isTiny"/>
+            <sketch-plate-account :tiny="!isFull" category="company" :data="{name: 'Vintage', id: 2}"/>
+            <sketch-plate-account :tiny="!isFull"/>
           </div>
         </div>
         <div class="navigation-settings">
           <div class="setting-list">
-            <sketch-plate-setting :tiny="isTiny">
+            <sketch-plate-setting :tiny="!isFull">
               <template #icon><icon-setting/></template>
               <template #title>Настройки профиля</template>
             </sketch-plate-setting>
-            <sketch-plate-setting :tiny="isTiny">
+            <sketch-plate-setting :tiny="!isFull">
               <template #icon><icon-help/></template>
               <template #title>Техническая поддержка</template>
             </sketch-plate-setting>
-            <sketch-plate-setting :tiny="isTiny">
+            <sketch-plate-setting :tiny="!isFull">
               <template #icon><icon-info/></template>
               <template #title>База знаний</template>
             </sketch-plate-setting>
@@ -57,7 +57,7 @@
   import SketchPlateAccount from '@Sketch/Navigation/PlateAccount'
   import SketchPlateSetting from '@Sketch/Navigation/PlateSetting'
 
-  import {mapGetters} from "vuex";
+  import {mapGetters, mapMutations} from "vuex";
 
   export default {
     name: 'Container.Vx.Navigation',
@@ -73,24 +73,23 @@
       SketchPlateAccount,
       SketchPlateSetting
     },
-    data(){
-      return {
-        isTiny: false,
-      }
-    },
     computed: {
       ...mapGetters({
         userID: 'getUserID',
         userName: 'getUserName',
         userLastname: 'getUserLastname',
+        isFull: 'getNavigationFull'
       }),
+    },
+    methods: {
+      ...mapMutations(['setNavigationFull'])
     }
   }
 </script>
 
 <style lang="scss" scoped>
   .container-vx-navigation{
-    min-width: 280px;
+    flex-shrink: 0;
     width: 280px;
     height: 100%;
     display: flex;
@@ -137,7 +136,6 @@
       }
     }
     &[vx-navigation-mini]{
-      min-width: 72px;
       width: 72px;
       transition: $vx-nav-time all ease $vx-nav-time-delay; // animation
     }

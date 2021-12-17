@@ -30,8 +30,5 @@ new Vue({
   beforeCreate() {
     this.$router.push({name: 'preload.launch'}).catch(() => {})
   },
-  data: {
-    eventBus: new Vue()
-  },
   render: h => h(App),
 }).$mount('#app')

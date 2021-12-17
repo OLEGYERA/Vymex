@@ -1,5 +1,8 @@
 import Router from '@/router'
+
 export default class Third{
+
+  restrictedRoutes = ['preload', 'auth']
 
   constructor(StoragePad) {
     this.storage = StoragePad;
@@ -21,6 +24,34 @@ export default class Third{
   }
 
   async bypass(){
-    await this.router.push({name: 'vx'})
+    const foundRoute = this.router.match(this.router.history._startLocation).name,
+          lastPage = this.storage.get('Page');
+    if(!foundRoute && !lastPage){
+      await this.router.push({name: 'vx'})
+    } else if(foundRoute && !lastPage){
+      console.log(foundRoute, 'found')
+      this.routeMiddleware(foundRoute) ? await this.router.push({name: foundRoute}) : await this.router.push({name: 'vx'})
+    } else if(!foundRoute && lastPage){
+      console.log('go by lastPage')
+    } else {
+      console.log('XZ')
+    }
+
+    // const lastPage = this.storage.get('Page');
+    // if(!lastPage){
+    //   console.log(this.router.match(this.router.history._startLocation).name);
+    //   console.log(this.router.match(this.router.history._startLocation))
+    //   // this.router.(this.router.history._startLocation)
+    //   // this.router.pathMatch
+    //   // console.log(this.router.history._startLocation, this.router)
+    //   // await this.router.push({name: 'vx'})
+    // } else {
+    //   console.log(lastPage, 'HI-Hi')
+    // }
+  }
+
+
+  routeMiddleware(route){
+    return !this.restrictedRoutes.some(restrictedRoute => route.indexOf(restrictedRoute) !== -1)
   }
 }

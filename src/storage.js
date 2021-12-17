@@ -7,7 +7,7 @@ Vue.use(Vuex);
 
 import Countries from '@/app/auth/storage/Countries'
 import UserProfile from '@/app/auth/storage/UserProfile'
-import Settings from '@/app/vhome/storage/Settings'
+import VxInfo from "@/app/vx/storage/VxInfo"
 import Crypto from '@/core/SEKSproto/CryptoStorage'
 
 
@@ -18,8 +18,8 @@ export default new Vuex.Store({
   modules: {
     Countries,
     UserProfile,
-    Settings,
     Crypto,
+    VxInfo
   },
   plugins: [
     createPersistedState({
