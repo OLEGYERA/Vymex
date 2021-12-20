@@ -16,10 +16,6 @@
               <template #title>Мои компании</template>
               <template #icon><icon-company/></template>
             </sketch-title>
-            <transition name="vx-only-show">
-              <!--Выводить только когда нет компаний!-->
-              <text-base v-if="isFull">Вы можете создать новую <br> компанию прямо здесь</text-base>
-            </transition>
             <sketch-plate-account :tiny="!isFull" category="company" :data="{name: 'Vintage', id: 2}"/>
             <sketch-plate-account :tiny="!isFull"/>
           </div>
@@ -46,7 +42,6 @@
 </template>
 
 <script>
-  import TextBase from '@Facade/Text/Base'
   import IconProfile from '@Icon/Profile'
   import IconCompany from '@Icon/Company'
   import IconSetting from '@Icon/Setting'
@@ -62,7 +57,6 @@
   export default {
     name: 'Container.Vx.Navigation',
     components: {
-      TextBase,
       IconProfile,
       IconCompany,
       IconSetting,

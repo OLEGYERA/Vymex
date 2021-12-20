@@ -1,8 +1,26 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import createPersistedState from "vuex-persistedstate";
-import SecureLS from "secure-ls";
-var ls = new SecureLS({encodingType: '', isCompression: false});
+import Secure from './Secure'
+// ᓢ㰴䂼׀ഡ堫恩Ìࣴ䫀笢Ⱑᠧ㎠ௌLƸِӠൡΐΐ澲Ƽ䬰ᙿ\䮠ߟઞᄝ䨓⩐ҀԂ
+// window.localStorage.removeItem('_secure__ls__metadata');
+// console.log(window.localStorage)
+// let password = '12323'
+// console.log(1222)
+// var ls = new SecureLS({encodingType: 'AES', encryptionSecret: password,  isCompression: false});
+// console.log(ls.setDataToLocalStorage('_secure__ls__metadata', '123'))
+// try {
+//   ls.get('vymex_session')
+// } catch (e){
+//   console.log(e)
+//
+//   throw 'Err'
+// }
+
+
+
+
+
 Vue.use(Vuex);
 
 import Countries from '@/app/auth/storage/Countries'
@@ -25,9 +43,11 @@ export default new Vuex.Store({
     createPersistedState({
       key: 'vymex_session',
       storage: {
-        getItem: (key) => ls.get(key),
-        setItem: (key, value) => ls.set(key, value),
-        removeItem: (key) => ls.remove(key),
+        getItem: (key) => {
+          return Secure.get(key)
+        },
+        setItem: (key, value) => Secure.set(key, value),
+        removeItem: (key) => Secure.remove(key),
       },
     }),
   ],
