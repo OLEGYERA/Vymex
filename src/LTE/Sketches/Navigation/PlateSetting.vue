@@ -48,6 +48,7 @@
       align-items: center;
       color: $grey-scale-200;
       margin: 10px 20px;
+      transition: .15s color linear;
       width: calc(100% - 20px * 2);
       .icon-box{
         margin-right: 12px;
@@ -56,6 +57,7 @@
         box-sizing: border-box;
       }
       .facade-text-base{
+        transition: .15s color linear;
         white-space: nowrap;
       }
       &.plate-setting-tiny{
@@ -65,6 +67,12 @@
         width: calc(100% - 4px * 2);
         .icon-box{
           margin-right: 0;
+        }
+      }
+      &:hover, &.active{
+        color: #fff;
+        .facade-text-base{
+          color: #fff;
         }
       }
     }

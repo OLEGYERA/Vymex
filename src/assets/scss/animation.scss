@@ -58,3 +58,44 @@
     transition: $vx-nav-time all ease-in $vx-nav-time-delay;
   }
 }
+
+.vx-zoom{
+  &-leave-to{
+    transition: $vx-tab-time all ease;
+  }
+  &-enter-to{
+    transition: $vx-tab-time all ease $vx-tab-time-delay;
+  }
+
+  &-leave-active{
+    opacity: 1;
+    transform: scale(1);
+    z-index: 1;
+  }
+  &-leave-to{
+    opacity: 0;
+    transform: scale(.7);
+  }
+  &-enter-active{
+    z-index: 2;
+    opacity: .3;
+    transform: scale(.7);
+  }
+  &-enter-to{
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.vx-swap{
+  &-left-enter, &-right-leave-active {
+    opacity: 0;
+    -webkit-transform: translate(30px, 0);
+    transform: translate(30px, 0);
+  }
+  &-left-leave-active, &-right-enter {
+    opacity: 0;
+    -webkit-transform: translate(-30px, 0);
+    transform: translate(-30px, 0);
+  }
+}

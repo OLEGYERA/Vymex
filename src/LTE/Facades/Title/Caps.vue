@@ -1,5 +1,5 @@
 <template>
-  <h2 class="facade-title-caps" :class="{'title-caps-tiny': tiny}"><slot/></h2>
+  <h3 class="facade-title-caps" :class="{'title-caps-tiny': tiny}"><slot/></h3>
 </template>
 
 <script>

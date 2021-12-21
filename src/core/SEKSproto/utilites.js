@@ -1,5 +1,5 @@
 import * as encUtils from 'enc-utils';
-import {bufferToArray, hexToArray, utf8ToArray, concatArrays, arrayToBuffer, arrayToHex} from 'enc-utils';
+import {bufferToArray, hexToArray, utf8ToArray, concatArrays, arrayToBuffer, arrayToHex, numberToArray} from 'enc-utils';
 
 import * as ecies25519 from "ecies-25519";
 import CryptoJS from 'crypto-js';
@@ -252,6 +252,7 @@ export {
   hexToArray,
   utf8ToArray,
   arrayToHex,
+  numberToArray,
   concatArrays,
 
   ecies25519,

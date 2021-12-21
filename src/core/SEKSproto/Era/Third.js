@@ -26,6 +26,7 @@ export default class Third{
   async bypass(){
     const foundRoute = this.router.match(this.router.history._startLocation).name,
           lastPage = this.storage.get('Page');
+    console.log(foundRoute, this.router)
     if(!foundRoute && !lastPage){
       await this.router.push({name: 'vx'})
     } else if(foundRoute && !lastPage){

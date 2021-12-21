@@ -4,7 +4,9 @@
     <div class="vx-body-space">
       <vx-header/>
       <div class="body-space-router-view">
-        <router-view/>
+        <div class="router-view-body">
+          <router-view/>
+        </div>
       </div>
     </div>
   </div>
@@ -24,11 +26,6 @@
     },
     created() {
       console.log('Vx App')
-    },
-    data(){
-      return {
-        lol: 111
-      }
     },
     computed: {
       ...mapGetters(['getPage'])
@@ -54,6 +51,13 @@
       width: 100%;
       .body-space-router-view{
         height: 100%;
+        box-sizing: border-box;
+        padding: 24px 0;
+        overflow-y: scroll;
+        .router-view-body{
+          max-width: 796px;
+          margin: 0 auto;
+        }
       }
     }
   }

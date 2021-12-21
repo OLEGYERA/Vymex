@@ -1,17 +1,20 @@
 import Vx from './app'
-import Profile from './app/profile/routing'
+import Profile from './view/profile'
+import Setting from './app/setting/routing'
+import Api from './app/api/routing'
 
 export default [
   {
     path: '/vx',
     component: Vx,
     children: [
-      ...Profile
-    //   {
-    //     path: 'me',
-    //     component: Launch,
-    //     name: 'preload.launch'
-    //   },
+      {
+        path: '/', //start /vx/
+        name: 'vx',
+        component: Profile,
+      },
+      ...Setting,
+      ...Api
     ]
   }
 ]

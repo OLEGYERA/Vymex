@@ -2,7 +2,7 @@
   <div class="facade-table-cell" :position="position" :no-touch="noTouch" :key-select="selectCursor" :style="{height: `${height}px`}">
     <div v-for="(subgroup, keySubgroup) in structure" class="cell-group" :class="`group-num-${keySubgroup}`" :key="keySubgroup">
       <div v-for="(slot, keySlot) in subgroup" :class="slot" :key="keySlot">
-        <slot :name="keySlot"></slot>
+        <slot :name="keySlot"/>
       </div>
     </div>
   </div>

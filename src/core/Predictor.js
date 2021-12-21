@@ -94,6 +94,9 @@ export default class Predictor{
 
 
   runPredictedData(){
+    if(this.currentActionData.component === undefined){
+      throw 'Система: я к такому дерьму не готова!'
+    }
     const shapedAction = this.currentActionData.component[this.currentActionData.method];
 
     if(shapedAction) shapedAction.apply(this.currentActionData.component, [this.currentActionData.data])

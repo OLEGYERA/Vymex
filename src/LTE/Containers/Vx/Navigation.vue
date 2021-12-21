@@ -9,7 +9,11 @@
               <template #title>Мой профиль</template>
               <template #icon><icon-profile/></template>
             </sketch-title>
-            <sketch-plate-account :tiny="!isFull" category="profile" :data="{name: 'Oleg', lastname: 'Gerasimenko', id: 1}" />
+            <sketch-plate-account :tiny="!isFull"
+                                  category="profile"
+                                  :data="{name: 'Oleg', lastname: 'Gerasimenko', id: 1}"
+                                  active
+            />
           </div>
           <div class="company-group">
             <sketch-title :tiny="!isFull">
@@ -22,7 +26,7 @@
         </div>
         <div class="navigation-settings">
           <div class="setting-list">
-            <sketch-plate-setting :tiny="!isFull">
+            <sketch-plate-setting :tiny="!isFull" @click.native="$router.push({name: 'vx.setting'})">
               <template #icon><icon-setting/></template>
               <template #title>Настройки профиля</template>
             </sketch-plate-setting>

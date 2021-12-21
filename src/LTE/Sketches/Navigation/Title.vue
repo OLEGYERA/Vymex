@@ -22,7 +22,7 @@
       tiny: {
         type: Boolean,
         required: true
-      }
+      },
     },
     components: {
       TitleCaps

@@ -1,5 +1,9 @@
 $vx-nav-time: .4s;
 $vx-nav-time-delay: .35s;
+
+$vx-tab-time: .3s;
+$vx-tab-time-delay: .05s;
+
 @import './animation';
 
 $grey: #181F26;
@@ -11,10 +15,10 @@ $grey-scale-700: #010203;
 
 
 $blue: #1890FF;
+$blue-scale-200: #3193f8;
 $blue-scale-700: #183651;
 $secondary-yellow: #FACD23;
 $blue-opacity-2: rgba(24, 144, 255, .2);
-$blue-scale-200: #3193f8;
 
 $red: #FF4D4F;
 $red-opacity-2: rgba(255, 77, 79, .2);

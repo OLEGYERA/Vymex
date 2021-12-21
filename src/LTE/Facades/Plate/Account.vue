@@ -7,9 +7,9 @@
       <text-base v-if="!tiny">Создать компанию</text-base>
     </div>
   </div>
-  <div class="facade-plate-account" :class="{'plate-account-tiny': tiny}" v-else>
+  <div class="facade-plate-account" :class="{'plate-account-tiny': tiny, 'active': active}" v-else>
     <div class="plate-account-body">
-      <image-avatar :logo="accountInfo.logo" :color-code="accountInfo.id"/>
+      <image-avatar :logo="accountInfo.logo" :color-code="accountInfo.colorId"/>
       <title-sub v-if="!tiny">{{ accountInfo.name }}</title-sub>
       <div class="dropdown-box" v-if="category === 'company' && !tiny"><icon-dropdown-arrow /></div>
     </div>
@@ -35,6 +35,7 @@
         required: true
       },
       data: Object,
+      active: Boolean
     },
     components: {
       IconAdd,
@@ -51,16 +52,16 @@
         switch (this.category){
           case 'company':
             return  {
-              id: String(this.data.id).substr(this.data.id.length - 1, 1),
+              colorId: String(this.data.id).substr(this.data.id.length - 1, 1),
               name: this.data.name,
               logo: this.data?.logo ? this.data.logo : this.data.name.substr(0, 1)
             }
           case 'profile':
             return {
-              id: String(this.data.id).substr(this.data.id.length - 1, 1),
-              name: this.data.lastname + ' ' + this.data.name,
+              colorId: String(this.data.id).substr(this.data.id.length - 1, 1),
+              name: this.data.name + ' ' + this.data.lastname,
               logo: this.data?.logo ?
-                this.data.logo : this.data.lastname.substr(0, 1) + this.data.name.substr(0, 1)
+                this.data.logo : this.data.name.substr(0, 1) + this.data.lastname.substr(0, 1)
             }
         }
         return {}
@@ -131,6 +132,10 @@
           margin-right: 0;
         }
       }
+    }
+
+    &.active{
+      border-color: $blue;
     }
   }
 

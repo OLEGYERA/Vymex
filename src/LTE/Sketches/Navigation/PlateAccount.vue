@@ -2,12 +2,12 @@
   <div class="sketch-navigation-plate-account">
     <transition name="vx-center-right">
       <div class="navigation-plate-body" v-if="tiny">
-        <plate-account tiny :category="category" :data="data"/>
+        <plate-account tiny :category="category" :data="data" :active="active"/>
       </div>
     </transition>
     <transition name="vx-center-left">
       <div class="navigation-plate-body" v-if="!tiny">
-        <plate-account :category="category" :data="data"/>
+        <plate-account :category="category" :data="data" :active="active"/>
       </div>
     </transition>
   </div>
@@ -27,7 +27,8 @@
         type: String,
         default: 'create-company',
       },
-      data: Object
+      data: Object,
+      active: Boolean
     },
     components: {
       PlateAccount

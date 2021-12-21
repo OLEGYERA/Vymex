@@ -46,7 +46,7 @@
   import IconArrowRight from '@Icon/ArrowRight'
 
   export default {
-    name: 'Container.Vx.Profile.Faq',
+    name: 'Container.Vx.Faq',
     components: {
       TitleCaps,
       PlateFaq,
