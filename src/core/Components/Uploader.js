@@ -10,10 +10,13 @@ export default class Uploader{
   }
 
   async init(data){
+    console.time('Init Func')
     const file = data[0], onprogress = data[1] ? data[1] : null, onerror = data[2] ? data[2] : null,
       onload = data[3] ? data[3] : null;
 
     let uploadFile = new UploadFile(this.storage, this.SClient, file, onprogress, onerror, onload);
+    console.timeEnd('Init Func')
+
     this.start(uploadFile);
   }
 

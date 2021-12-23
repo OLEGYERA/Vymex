@@ -1,5 +1,5 @@
 import * as encUtils from 'enc-utils';
-import {bufferToArray, concatUint8Arrays, hexToArray, utf8ToArray, concatArrays, arrayToBuffer, arrayToHex, numberToArray, arrayToUtf8, arrayToNumber} from 'enc-utils';
+import {bufferToArray, hexToArray, utf8ToArray, concatArrays, arrayToBuffer, arrayToHex, numberToArray, arrayToUtf8, arrayToNumber} from 'enc-utils';
 
 import * as ecies25519 from "ecies-25519";
 import CryptoJS from 'crypto-js';
@@ -64,20 +64,38 @@ function prepareData(data){
  * @param data
  * @returns {Uint8Array}
  */
+
+
+/**
+ * Собрать данные в кучу.
+ *
+ * @param data
+ * @returns {Uint8Array}
+ */
 function serialize (...data) {
-  if(data.length > 255){
-    throw new Error('The number of elements is greater than 255 \n');
+  if(data.length > 255) throw new Error('The number of elements is greater than 255 \n');
 
-  }
   data = prepareData(data);
-  let result = [];
+  let lengths = [];
 
-  data.forEach(arg => (result = result.concat(Array.from(arg))));
-  data.forEach(arg => (result = result.concat(padLeft(arg.length))));
-  result.push(data.length);
-
-  return new Uint8Array([...result]);
+  data.forEach(arg => (lengths = lengths.concat(Array.from(padLeft(arg.length)))));
+  return concatUint8Arrays(...data, lengths, [data.length]);
 }
+
+function concatUint8Arrays(...args){
+  let length = 0;
+  args.forEach(arg => (length+=arg.length));
+  let result = new Uint8Array(length);
+
+  let count = 0;
+  args.forEach(arg => {
+    result.set(arg, count);
+    count+=arg.length;
+  });
+
+  return result;
+}
+
 
 /**
  * Распарсить данные.

@@ -11,7 +11,7 @@
             </sketch-title>
             <sketch-plate-account :tiny="!isFull"
                                   category="profile"
-                                  :data="{name: 'Oleg', lastname: 'Gerasimenko', logo: userAvatar, colorCode: userAvatarColor}"
+                                  :data="{name: userName, lastname: userLastname, logo: userAvatar, colorCode: userAvatarColor}"
                                   active
             />
           </div>
