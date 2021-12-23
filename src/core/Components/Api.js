@@ -19,7 +19,12 @@ export default class Api{
     })
     let fullPack;
 
-    if(dataArray.length > 0){
+    if(dataArray.length === 1){
+      fullPack = await encrypt({
+        AES256Key: this.storage.get('AesKey'),
+        MAC256Key: this.storage.get('MacKey')
+      }, emittedData.name, emittedData.method, ...dataArray);
+    } else if(dataArray.length > 1){
       fullPack = await encrypt({
         AES256Key: this.storage.get('AesKey'),
         MAC256Key: this.storage.get('MacKey')

@@ -1,5 +1,5 @@
 <template>
-  <div class="facade-button-secondary">
+  <div class="facade-button-secondary" @click="buttonSecondaryClick">
     <title-sub><slot/></title-sub>
   </div>
 </template>
@@ -15,7 +15,7 @@
       TitleSub
     },
     methods: {
-      buttonBaseClick(){
+      buttonSecondaryClick(){
         if(!this.disable) this.$emit('onClick')
       }
     }

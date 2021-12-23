@@ -15,14 +15,9 @@
 
     },
     computed: {
-      // getInitials(){
-      //   return this.userName.substr(0, 1) + this.userLastname.substr(0, 1)
-      // },
       getColor(){
         return this.colorCode ? `color color-id-${this.colorCode}` : '';
-        // this.userId.substr(this.userId.length - 1, 1)
       }
-  
     }
   }
 </script>
