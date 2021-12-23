@@ -1,7 +1,8 @@
 <template>
   <div class="facade-image-avatar">
     <div class="avatar-body" :class="getColor">
-      {{logo}}
+      <template v-if="logo.length > 2"><img :src="logo"></template>
+      <template v-else>{{logo}}</template>
     </div>
   </div>
 </template>
@@ -38,6 +39,10 @@
       align-items: center;
       overflow: hidden;
       border-radius: 50%;
+      img{
+        width: 100%;
+        height: 100%;
+      }
       &.color{
         text-transform: uppercase;
         font-weight: 600;

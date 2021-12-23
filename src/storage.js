@@ -26,6 +26,7 @@ Vue.use(Vuex);
 import Countries from '@/app/auth/storage/Countries'
 import UserProfile from '@/app/auth/storage/UserProfile'
 import VxInfo from "@/app/vx/storage/VxInfo"
+import File from "@/app/vx/storage/File"
 import Crypto from '@/core/SEKSproto/CryptoStorage'
 
 
@@ -37,11 +38,13 @@ export default new Vuex.Store({
     Countries,
     UserProfile,
     Crypto,
-    VxInfo
+    VxInfo,
+    File
   },
   plugins: [
     createPersistedState({
       key: 'vymex_session',
+      paths: ['Countries', 'Crypto', 'UserProfile', 'VxInfo'],
       storage: {
         getItem: (key) => {
           return Secure.get(key)

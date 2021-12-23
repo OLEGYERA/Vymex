@@ -33,8 +33,11 @@
         const uploadedFile = this.$refs.uploadedFile.files[0],
               uploadReader = new FileReader();
 
+        this.$refs.uploadedFile.value = null
+
         uploadReader.onload = e => {
-          this.imageData = e.target.result;
+          console.log(uploadedFile)
+          this.imageData = {result: e.target.result, name: this.getClearName(uploadedFile)};
         }
 
         uploadReader.readAsDataURL(uploadedFile);
@@ -52,11 +55,18 @@
       dragLeave(event){
         event.preventDefault();
         this.isAnimationIncluded = false
+      },
+      getClearName(file){
+        let type = file.type.replace('image/', '');
+        return file.name.replace('.' + type, '')
       }
     },
     watch: {
       imageData(data){
-        this.$emit('onUpload', data)
+        if(data){
+          this.imageData = null;
+          this.$emit('onUpload', data)
+        }
       }
     }
   }

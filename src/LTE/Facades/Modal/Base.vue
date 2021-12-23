@@ -8,7 +8,7 @@
       </div>
       <div class="modal-base-content"><slot name="content"/></div>
       <div class="modal-base-footer">
-        <button-secondary><slot name="button-cancel">Отмена</slot></button-secondary>
+        <button-secondary @onClick="$emit('onClose')"><slot name="button-cancel">Отмена</slot></button-secondary>
         <button-base @onClick="$emit('onOk')"><slot name="button-accept"/></button-base>
       </div>
     </div>

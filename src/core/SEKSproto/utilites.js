@@ -1,5 +1,5 @@
 import * as encUtils from 'enc-utils';
-import {bufferToArray, hexToArray, utf8ToArray, concatArrays, arrayToBuffer, arrayToHex, numberToArray} from 'enc-utils';
+import {bufferToArray, concatUint8Arrays, hexToArray, utf8ToArray, concatArrays, arrayToBuffer, arrayToHex, numberToArray, arrayToUtf8, arrayToNumber} from 'enc-utils';
 
 import * as ecies25519 from "ecies-25519";
 import CryptoJS from 'crypto-js';
@@ -42,7 +42,7 @@ function prepareType(el){
 }
 
 function arrayLenBytesToIntLen(arr){
-  return encUtils.arrayToNumber(arr);
+  return arrayToNumber(arr);
 }
 
 /**
@@ -138,6 +138,16 @@ async function checkHMACVerify(MAC256Key, IV128, mac, cipher) {
   );
 }
 
+
+  async function generateCipherData(storage, data){
+    let IV128 = ecies25519.randomBytes(16);
+    let cipher = await ecies25519.aesCbcEncrypt(IV128, storage.AES256Key, data);
+    let macData = concatArrays(IV128, cipher);
+    let mac = await ecies25519.hmacSha256Sign(storage.MAC256Key, macData);
+
+    return Array(IV128, mac, cipher)
+  }
+
 /**
  * Зашифровать данные.
  *
@@ -150,18 +160,25 @@ async function checkHMACVerify(MAC256Key, IV128, mac, cipher) {
  */
 async function encrypt(storage, component, method, data = null) {
   let fullPack;
-
+  console.log('in Encrypt')
   if(data){
-    let IV128 = ecies25519.randomBytes(16);
-
-    let cipher = await ecies25519.aesCbcEncrypt(IV128, storage.AES256Key, data);
-
-    let macData = concatArrays(IV128, cipher);
-    let mac = await ecies25519.hmacSha256Sign(storage.MAC256Key, macData);
-
-    fullPack = serialize(component, method, IV128, mac, cipher);
+    let cipherData = await generateCipherData(storage, data)
+    console.log('after cipher')
+    fullPack = serialize(component, method, ...cipherData);
   }else{
     fullPack = serialize(component, method);
+  }
+
+  return arrayToBuffer(fullPack)
+}
+
+async function encryptFile(storage, component, method, data, addData) {
+  let fullPack, cipherData = await generateCipherData(storage, data)
+
+  if(addData){
+    fullPack = serialize(component, method, ...cipherData, addData);
+  }else{
+    fullPack = serialize(component, method, ...cipherData);
   }
 
   return arrayToBuffer(fullPack)
@@ -241,19 +258,22 @@ function objectToArray(data) {
  * @param data
  */
 function arrayToObject(data) {
-  data = encUtils.arrayToUtf8(data)
+  data = arrayToUtf8(data)
 
   return JSON.parse(data)
 }
 
 export {
-  encUtils, //bufferToArray, hexToArray, utf8ToArray, concatArrays, arrayToHex
+  encUtils, //bufferToArray, hexToArray, utf8ToArray, concatArrays, arrayToHex, arrayToUtf8, arrayToNumber
   bufferToArray,
   hexToArray,
   utf8ToArray,
   arrayToHex,
   numberToArray,
   concatArrays,
+  concatUint8Arrays,
+  arrayToUtf8,
+  arrayToNumber,
 
   ecies25519,
   CryptoJS,
@@ -263,6 +283,7 @@ export {
   deserialize,
   checkHMACVerify,
   encrypt,
+  encryptFile,
   decrypt,
   arrayToWordArray,
   padLeft,

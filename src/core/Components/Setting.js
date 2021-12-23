@@ -6,7 +6,8 @@ import {
   serialize,
   hexToArray,
   arrayToHex,
-  ecies25519
+  ecies25519,
+  numberToArray
 } from "@/core/SEKSproto/utilites";
 import Router from '@/router'
 
@@ -36,7 +37,6 @@ export default class Setting {
     else
       this.storage.set('UserAliasError', null)
   }
-
 
   async fillProfile(){
     let concatPasswordAT = concatArrays(utf8ToArray(this.storage.get('UserPassword')), hexToArray(this.storage.get('AT')))
@@ -88,5 +88,22 @@ export default class Setting {
     }, 'ThirdEra', 'cloudPassword', data);
 
     this.SClient.Emit('listener', fullPack)
+  }
+
+
+  //Profile funcs
+
+
+  async editAvatar(avatarId){
+    const fullPack = await encrypt({
+      AES256Key: this.storage.get('AesKey'),
+      MAC256Key: this.storage.get('MacKey')
+    }, 'Setting', 'editAvatar', numberToArray(avatarId));
+
+    this.SClient.Emit('listener', fullPack)
+  }
+
+  async editAvatarRes({path}){
+    this.storage.set('UserAvatar', path)
   }
 }

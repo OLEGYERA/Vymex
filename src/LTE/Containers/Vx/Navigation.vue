@@ -11,7 +11,7 @@
             </sketch-title>
             <sketch-plate-account :tiny="!isFull"
                                   category="profile"
-                                  :data="{name: 'Oleg', lastname: 'Gerasimenko', id: 1}"
+                                  :data="{name: 'Oleg', lastname: 'Gerasimenko', logo: userAvatar, colorCode: userAvatarColor}"
                                   active
             />
           </div>
@@ -73,9 +73,10 @@
     },
     computed: {
       ...mapGetters({
-        userID: 'getUserID',
         userName: 'getUserName',
         userLastname: 'getUserLastname',
+        userAvatar: 'getUserAvatar',
+        userAvatarColor: 'getUserAvatarColor',
         isFull: 'getNavigationFull'
       }),
     },

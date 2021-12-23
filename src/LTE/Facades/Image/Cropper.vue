@@ -2,7 +2,7 @@
   <div class="facade-image-cropper">
     <cropper
       class="cropper"
-      :src="imageData"
+      :src="imageResult"
       :stencil-props="{
         aspectRatio: 1,
         previewClass: 'preview'
@@ -19,14 +19,14 @@
   /*eslint-disable*/
   import { Cropper } from 'vue-advanced-cropper'
   import 'vue-advanced-cropper/dist/style.css';
+
   export default {
     name: 'Facade.Image.Cropper',
     components: {
       Cropper
     },
     props: {
-      logo: String,
-      imageData: String
+      imageResult: String
     },
     methods: {
       change({canvas}) {

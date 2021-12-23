@@ -58,10 +58,9 @@
             }
           case 'profile':
             return {
-              colorId: String(this.data.id).substr(this.data.id.length - 1, 1),
+              colorId: this.data.colorCode,
               name: this.data.name + ' ' + this.data.lastname,
-              logo: this.data?.logo ?
-                this.data.logo : this.data.name.substr(0, 1) + this.data.lastname.substr(0, 1)
+              logo: this.data.logo
             }
         }
         return {}

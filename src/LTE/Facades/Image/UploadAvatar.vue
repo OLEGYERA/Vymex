@@ -5,10 +5,10 @@
       <button-upload @onUpload="handleUploadFile"/>
     </div>
     <modal-base :status="modalAvatarStatus" @onClose="modalAvatarStatus = false" @onOk="handlePressOk">
-      <template #title>Загрузите фото профиля</template>
-      <template #description>Загрузите фото профиля которое будут видеть другие пользователи</template>
+      <template #title><slot name="title"/></template>
+      <template #description><slot name="description"/></template>
       <template #content>
-        <image-cropper :imageData="imageData" @onCropped="handleCroppedUpdate"/>
+        <image-cropper :imageResult="imageData.result" @onCropped="handleCroppedUpdate"/>
       </template>
       <template #button-accept>Сохранить</template>
     </modal-base>
@@ -35,7 +35,7 @@
     },
     data(){
       return {
-        modalAvatarStatus: true,
+        modalAvatarStatus: false,
         imageData: null,
         imageCropper: null
       }
@@ -49,7 +49,11 @@
         this.imageCropper = cropper
       },
       handlePressOk(){
-        console.log(this.imageCropper.toDataURL())
+        this.modalAvatarStatus = false;
+        this.imageCropper.toBlob(blob => {
+          this.imageData.result = blob;
+          this.$emit('onAvatarFile', this.imageData)
+        })
       }
     }
   }

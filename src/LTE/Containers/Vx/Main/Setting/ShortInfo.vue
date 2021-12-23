@@ -2,8 +2,8 @@
   <div class="container-setting-short-info">
     <div class="short-info-avatar">
       <image-avatar
-        :logo="avatarInfo.logo"
-        :color-code="avatarInfo.colorId"
+        :logo="avatar"
+        :color-code="avatarColor"
         class="l-size"/>
     </div>
     <div class="short-info-names">
@@ -33,17 +33,12 @@
     },
     computed: {
       ...mapGetters({
-        id: 'getUserID',
         name: 'getUserName',
         lastname: 'getUserLastname',
-        alias: 'getUserAlias'
+        alias: 'getUserAlias',
+        avatar: 'getUserAvatar',
+        avatarColor: 'getUserAvatarColor'
       }),
-      avatarInfo(){
-        return {
-          colorId: String(this.id).substr(this.id.length - 1, 1),
-          logo: this.name.substr(0, 1) + this.lastname.substr(0, 1)
-        }
-      }
     }
   }
 </script>

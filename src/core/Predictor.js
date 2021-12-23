@@ -51,10 +51,13 @@ export default class Predictor{
   }
 
   prepareComponentManually(componentName, methodName, data = null){
+    console.log(componentName, methodName)
     this.currentActionData.component = this.Component[componentName];
     this.currentActionData.method = methodName;
     if(data !== null)
       this.currentActionData.data = data;
+
+    console.log(this.currentActionData)
 
     return this;
   }

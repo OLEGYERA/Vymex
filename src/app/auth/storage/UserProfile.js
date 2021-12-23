@@ -30,6 +30,14 @@ export default {
   getters: {
     getPhoneLthNumber: (state) => state.PhoneLthNumber,
     getUserID: (state) => state.ID,
+    getUserAvatar: (state) => {
+      if(!state.Avatar){
+        return state.Name.substr(0, 1) + state.Lastname.substr(0, 1)
+      } else {
+        return state.Avatar
+      }
+    },
+    getUserAvatarColor: (state) => String(state.ID).substr(state.ID.length - 1, 1),
     getUserName: (state) => state.Name,
     getUserLastname: (state) => state.Lastname,
     getUserAlias: (state) => state.Alias.data,
@@ -62,6 +70,8 @@ export default {
       state.IsNewDevice = payload.isNewDevice
       state.ShowEmail = payload.showEmail
       state.ShowPhone = payload.showPhone
-    }
+    },
+    setUserAvatar: (state, payload) => state.Avatar = payload,
+
   }
 }
