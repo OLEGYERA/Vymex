@@ -29,7 +29,7 @@ export default class UploadFile{
 
   getReader (){
     let reader = new FileReader();
-
+    console.log('reader')
     reader.onprogress = () => this.progressHandler();
     reader.onload = (e) => this.loadedHandler(e);
     reader.onerror = () => this.errorHandler();
@@ -90,7 +90,6 @@ export default class UploadFile{
    */
   progressHandler() {
     if(this.onprogress){
-
       let offset = this.offset > this.file.size ? this.file.size : this.offset;
       this.onprogress(100/ this.file.size  * offset);
     }
@@ -119,6 +118,7 @@ export default class UploadFile{
    * @returns {Promise<void>}
    */
   async emitCommand(method, data, addData = null){
+
     const fullPack = await encryptFile({
       AES256Key: this.storage.get('AesKey'),
       MAC256Key: this.storage.get('MacKey')

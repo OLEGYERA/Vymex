@@ -17,19 +17,28 @@ export default class Predictor{
   }
 
   dataPreparation(parsedData){
-    this.console.success('The data will guessed!')
-    let responseData = new Response(parsedData.data),
-        componentInfo;
+    this.console.success('The data will guessed!');
+    let componentInfo;
 
-
-    if(responseData.body.component === null) return this.cryptoBypass()
-
-    if(!responseData.body.component){
-      componentInfo = this.getComponentInfo(parsedData);
-      componentInfo.data = responseData.body
+    if(parsedData.component === 'Uploader'){
+      componentInfo = {
+        component: 'uploader',
+        method: parsedData.method,
+        data: parsedData.data
+      }
     } else {
-      componentInfo = this.getComponentInfo(responseData.body);
+      let responseData = new Response(parsedData.data);
+
+      if(responseData.body.component === null) return this.cryptoBypass()
+
+      if(!responseData.body.component){
+        componentInfo = this.getComponentInfo(parsedData);
+        componentInfo.data = responseData.body
+      } else {
+        componentInfo = this.getComponentInfo(responseData.body);
+      }
     }
+
 
 
     switch (componentInfo.type){

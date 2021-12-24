@@ -14,6 +14,7 @@
     :validation-status="validationStatus"
     :validation-text="validationText"
     @onInput="$emit('onAlias', $event)"
+    @onBlur="$emit('onBlur')"
     @onKeyEnter="$emit('onKeyEnter')"
     @onKeyTab="$emit('onKeyTab')"
   />

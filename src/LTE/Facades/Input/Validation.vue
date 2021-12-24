@@ -64,6 +64,7 @@ export default {
     },
     hideValidationAlert(){
       if(this.validationStatus) this.validationAlertStatus = false
+      this.$emit('onBlur')
     }
   }
 }

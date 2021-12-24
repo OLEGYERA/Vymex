@@ -106,4 +106,36 @@ export default class Setting {
   async editAvatarRes({path}){
     this.storage.set('UserAvatar', path)
   }
+
+
+  async editName(name){
+    this.storage.set('UserName', name);
+    const fullPack = await encrypt({
+      AES256Key: this.storage.get('AesKey'),
+      MAC256Key: this.storage.get('MacKey')
+    }, 'Setting', 'editName', utf8ToArray(name));
+
+    this.SClient.Emit('listener', fullPack)
+  }
+
+  async editLastname(lastname){
+    this.storage.set('UserLastname', lastname);
+    const fullPack = await encrypt({
+      AES256Key: this.storage.get('AesKey'),
+      MAC256Key: this.storage.get('MacKey')
+    }, 'Setting', 'editLastname', utf8ToArray(lastname));
+
+    this.SClient.Emit('listener', fullPack)
+  }
+
+  async editAlias(alias){
+    this.storage.set('UserAlias', alias);
+    const fullPack = await encrypt({
+      AES256Key: this.storage.get('AesKey'),
+      MAC256Key: this.storage.get('MacKey')
+    }, 'Setting', 'editAlias', utf8ToArray(alias.replace(/@/i, '')));
+
+    this.SClient.Emit('listener', fullPack)
+  }
+
 }

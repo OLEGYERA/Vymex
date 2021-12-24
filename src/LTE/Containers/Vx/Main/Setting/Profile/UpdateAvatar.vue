@@ -4,17 +4,20 @@
       <template #title>Загрузите фото профиля</template>
       <template #description>Загрузите фото профиля которое будут видеть другие пользователи</template>
     </image-upload-avatar>
+    <title-caption>JPG or PNG. Max size of 4MB</title-caption>
   </div>
 </template>
 
 <script>
   import ImageUploadAvatar from "@Facade/Image/UploadAvatar";
-  import {mapGetters} from 'vuex'
+  import TitleCaption from '@Facade/Title/Caption'
+  import {mapGetters, mapMutations} from 'vuex'
 
   export default {
     name: 'Container.Vx.Setting.Profile.UpdateAvatar',
     components: {
-      ImageUploadAvatar
+      ImageUploadAvatar,
+      TitleCaption
     },
     computed: {
       ...mapGetters({
@@ -23,6 +26,7 @@
       })
     },
     methods: {
+      ...mapMutations(['setUserAvatar']),
       async handleNewAvatarFile(avatarFile){
         const avatarNewFile = new File([avatarFile.result], `${avatarFile.name}.png`, {type:"image/png", lastModified:new Date()});
 
@@ -32,6 +36,7 @@
               this.handleUploadOnprogress, null,
               this.handleUploaderOnload
             ]).runPredictedData()
+
       },
       handleUploadOnprogress(progress){
         console.log(progress)
@@ -47,8 +52,11 @@
 
 <style lang="scss" scoped>
   .container-profile-update-avatar{
-    .facade-image-upload-avatar{
-
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .facade-title-caption{
+      margin: 18px 0 24px;
     }
   }
 </style>

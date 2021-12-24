@@ -97,7 +97,6 @@
       ...mapMutations({
         setName: 'setUserName',
         setLastname: 'setUserLastname',
-        setAliasError: 'setUserAliasError',
         setPassword: 'setUserPassword',
       }),
       focusOn(referral){

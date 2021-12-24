@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import {arrayToObject, arrayToUtf8} from "@/core/SEKSproto/utilites";
+import {arrayToObject} from "@/core/SEKSproto/utilites";
 import Router from '@/router'
 import SP from "@/core/StoragePad";
 import Storage from "@/storage";
@@ -30,14 +30,8 @@ export default class Response{
       this.body = res.body;
     }
     catch (e) {
-      try {
-        if('{}' === arrayToUtf8(data)) throw 'Структура response не валидна';
-        this.body = data
-        this.code = 200;
-      } catch (e){
-        alert(e.toString())
-        throw e; // создание исключения
-      }
+      alert(e.toString())
+      throw e;
     }
   }
 
