@@ -10,20 +10,15 @@
     <div class="faq-main" v-show="faqStatus">
       <div class="faq-plate-space" ref="faq-space">
         <div class="plate-space-rails" :style="{transform: `translateX(${scrollData.railPosition}px)`}">
-          <div class="rail-plate-body">
+
+          <div v-for="category in categories" :key="category.id" class="rail-plate-body">
             <plate-faq>
               <template #icon><icon-process/></template>
-              <template #title>Ресурсы</template>
-              <template #description>Короткое описание</template>
+              <template #title>{{ category.title }}</template>
+              <template #description>{{ category.subtitle }}</template>
             </plate-faq>
           </div>
-          <div class="rail-plate-body">
-            <plate-faq>
-              <template #icon><icon-process/></template>
-              <template #title>Ресурсы</template>
-              <template #description>Короткое описание</template>
-            </plate-faq>
-          </div>
+
         </div>
       </div>
       <div class="faq-control-panel">
@@ -38,6 +33,8 @@
 </template>
 
 <script>
+  import { mapGetters } from 'vuex'
+
   import TitleCaps from '@Facade/Title/Caps'
   import PlateFaq from '@Facade/Plate/Faq'
   import IconProcess from '@Icon/Colored/Process'
@@ -70,6 +67,7 @@
       }
     },
     computed: {
+      ...mapGetters({ categories: 'getCategories' }),
       railData(){
         if(this.scrollData.overflowWidth){
           let rightOffset = this.scrollData.railPosition + this.scrollData.overflowWidth,
@@ -96,7 +94,17 @@
         } else {
           this.overflowWidth = null
         }
+      },
+
+      getCategories() {
+        this.$engine.Predictor
+          .prepareComponentManually('faq', 'getCategories')
+          .runPredictedData();
       }
+    },
+
+    beforeMount() {
+      this.getCategories();
     }
   }
 </script>

@@ -24,6 +24,7 @@ import Secure from './Secure'
 Vue.use(Vuex);
 
 import Countries from '@/app/auth/storage/Countries'
+import Categories from '@/app/faq/storage/Categories'
 import UserProfile from '@/app/auth/storage/UserProfile'
 import VxInfo from "@/app/vx/storage/VxInfo"
 import File from "@/app/vx/storage/File"
@@ -36,6 +37,7 @@ export default new Vuex.Store({
   getters: {},
   modules: {
     Countries,
+    Categories,
     UserProfile,
     Crypto,
     VxInfo,

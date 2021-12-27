@@ -1,6 +1,7 @@
 import Auth from "@/core/Components/Auth";
 import Setting from "@/core/Components/Setting";
 import Uploader from "@/core/Components/Uploader";
+import Faq from '@/core/Components/Faq';
 
 
 import Api from "@/core/Components/Api";
@@ -11,7 +12,7 @@ export default class ComponentCollector{
     this.auth = new Auth(storagePad, SocketClient)
     this.setting = new Setting(storagePad, SocketClient)
     this.uploader = new Uploader(storagePad, SocketClient)
-
+    this.faq = new Faq(storagePad, SocketClient)
 
     this.api = new Api(storagePad, SocketClient)
 
