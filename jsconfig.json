@@ -6,7 +6,9 @@
       "@Container/*": ["src/LTE/Containers/*"],
       "@Icon/*": ["src/LTE/Icons/*"],
       "@Core/*": ["src/LTE/Core/*"],
-      "@Sketch/*": ["src/LTE/Sketches/*"]
+      "@Sketch/*": ["src/LTE/Sketches/*"],
+      "@Services/*": ["src/LTE/Services/*"],
+      "@Providers": ["src/LTE/Providers/index.js"]
     }
   }
 }

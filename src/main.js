@@ -1,9 +1,10 @@
 import Vue from 'vue'
 import App from './App.vue'
 import store from '@/storage'
-import router from '@/./router'
+import router from '@/router'
 import Notifications from 'vue-notification'
 import EnginePlugin from "@/plugins/Engine";
+import '@/directives/guesture'
 
 
 Vue.config.productionTip = false
@@ -13,7 +14,8 @@ Vue.config.devtools = true
 Vue.use(Notifications)
 Vue.use(EnginePlugin, {
   socketClient: {
-    connection: 'ws://ponchik.app:7777'
+    connection: 'wss://ponchik.app:7777',
+    secure: true
   }
 })
 

@@ -89,6 +89,7 @@ export default {
   
     .validation-alert{
       margin-top: 8px;
+      padding: 0 2px;
       text-align: left;
       font-size: 16px;
       line-height: 20px;

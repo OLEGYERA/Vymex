@@ -19,7 +19,6 @@ export default class Predictor{
   dataPreparation(parsedData){
     this.console.success('The data will guessed!');
     let componentInfo;
-
     if(parsedData.component === 'Uploader'){
       componentInfo = {
         component: 'uploader',

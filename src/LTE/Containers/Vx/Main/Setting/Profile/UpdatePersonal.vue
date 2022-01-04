@@ -22,6 +22,9 @@
       :validation-text="aliasError || 'Имя свободно'"
       @onBlur="updateAlias"
       @onAlias="verifyAlias"
+    /><dropdown-date
+      :model="testDate"
+      placeholder="Дата рождения"
     />
   </div>
 </template>
@@ -29,19 +32,22 @@
 <script>
   import InputBase from '@Facade/Input/Base'
   import InputAlias from '@Facade/Input/Alias'
+  import DropdownDate from '@Facade/Dropdown/Date'
   import {mapGetters} from 'vuex'
 
   export default {
     name: 'Container.Vx.Setting.Profile.UpdatePersonal',
     components: {
       InputBase,
-      InputAlias
+      InputAlias,
+      DropdownDate
     },
     data(){
       return {
         newName: null,
         newLastname: null,
-        newAlias: null
+        newAlias: null,
+        testDate: '12.12.1920'
       }
     },
     computed: {
@@ -82,6 +88,9 @@
   .container-profile-update-personal{
     .facade-input-base{
       margin-bottom: 16px;
+    }
+    .facade-input-date{
+      margin: 16px 0;
     }
 
   }

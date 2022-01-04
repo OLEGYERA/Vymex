@@ -25,5 +25,7 @@ module.exports = {
           .set('@Icon', resolve('src/LTE/Icons'))
           .set('@Core', resolve('src/LTE/Core'))
           .set('@Sketch', resolve('src/LTE/Sketches'))
+          .set('@Services', resolve('src/LTE/Services'))
+          .set('@Providers', resolve('src/LTE/Providers/index.js'))
     },
 }

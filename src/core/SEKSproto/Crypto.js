@@ -82,8 +82,6 @@ class Crypto{
       this.Predictor.dataPreparation(parsedData).runPredictedData()
     })
   }
-
-
 }
 
 export {

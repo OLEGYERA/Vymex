@@ -34,7 +34,6 @@
               uploadReader = new FileReader();
 
         this.$refs.uploadedFile.value = null
-
         uploadReader.onload = e => {
           console.log(uploadedFile)
           this.imageData = {result: e.target.result, name: this.getClearName(uploadedFile)};

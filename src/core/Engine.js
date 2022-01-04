@@ -11,8 +11,6 @@ class Engine{
       this.Predictor = predictor;
     })
   }
-
-
 }
 
 
