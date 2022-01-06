@@ -1,40 +1,8 @@
 <template>
   <div class="calendar-provider calendar-modal-ui">
     <div class="calendar-wrapper" v-gesture @someEvent="handleScroll">
-
-      <div class="wheel-alert" v-if="wheel">
-        deltaX: {{wheel.deltaX}}
-        <br>
-        deltaY: {{wheel.deltaY}}
-        <br>
-        deltaZ: {{wheel.deltaZ}}
-        <br>
-        wDelta: {{wheel.wheelDelta}}  wDeltaX: {{wheel.wheelDeltaX}} wDeltaY: {{wheel.wheelDeltaY}}
-        <br>
-        deltaMode: {{wheel.deltaMode}}
-        <br>
-
-        which: {{wheel.which}} | altKey: {{wheel.altKey}} | shiftKey: {{wheel.shiftKey}}
-        <br>
-        button: {{wheel.button}} | buttons: {{wheel.buttons}} | cancelable: {{wheel.cancelable}}
-        <br>
-
-        type: {{ other.type }}
-        <br>
-        category: {{ other.category }}
-        <br>
-        depth: {{ other.depth }}
-        <br>
-        time: {{ other.time }}
-        <br>
-        delta: {{ other.delta }} | deltaX: {{other.deltaX}} | deltaY: {{other.deltaY}}
-        <br>
-        speed: {{other.speed}}
-
-        <br>
-
-
-      </div>
+      <div class="wrapper" :style="{transform: stl}"></div>
+      
 
       <calendar-header/>
     </div>
@@ -54,7 +22,8 @@ export default {
   data: () => ({
     wheel: null,
     other: null,
-    onTouch: false
+    onTouch: false,
+    stl: 'translateY(0%)'
   }),
   mounted() {
     // let win = document.getElementsByClassName('calendar-wrapper')[0]
@@ -79,9 +48,9 @@ export default {
         console.log(e)
       }
     },
-    handleScroll(e, d){
-      this.other = d
-      this.wheel = e
+    handleScroll(percent){
+      this.stl = 'translateY(' + (percent) + '%)';
+      // console.log('In Vue', percent, this.stl)
     },
 
     handleScroll1(evt){
@@ -100,6 +69,12 @@ export default {
       width: 460px;
       height: 400px;
       border-radius: 12px;
+      overflow: visible;
+      .wrapper{
+        width: 100%;
+        height: 400px;
+        background-color: #fff;
+      }
     }
   }
 </style>
