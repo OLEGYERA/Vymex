@@ -14,8 +14,8 @@ Vue.config.devtools = true
 Vue.use(Notifications)
 Vue.use(EnginePlugin, {
   socketClient: {
-    connection: 'wss://ponchik.app:7777',
-    secure: true
+    connection: 'ws://ponchik.app:7777',
+    // secure: true
   }
 })
 

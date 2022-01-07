@@ -23,7 +23,7 @@ export default {
     wheel: null,
     other: null,
     onTouch: false,
-    stl: 'translateY(0%)'
+    stl: 'translateY(0%)',
   }),
   mounted() {
     // let win = document.getElementsByClassName('calendar-wrapper')[0]
@@ -48,8 +48,14 @@ export default {
         console.log(e)
       }
     },
-    handleScroll(percent){
-      this.stl = 'translateY(' + (percent) + '%)';
+    /*eslint-disable*/
+    handleScroll(e){
+      if(e.axisY){
+        this.stl = 'translateY(' + (e.delta) + '%)';
+      } else {
+        this.stl = 'translateX(' + (e.delta) + '%)';
+      }
+      // this.stl = 'translateY(' + (percent) + '%)';
       // console.log('In Vue', percent, this.stl)
     },
 
@@ -66,13 +72,15 @@ export default {
 <style lang="scss">
   .calendar-modal-ui{
     .calendar-wrapper{
-      width: 460px;
-      height: 400px;
+      width: 260px;
+      height: 200px;
+      //width: 460px;
+      //height: 400px;
       border-radius: 12px;
       overflow: visible;
       .wrapper{
         width: 100%;
-        height: 400px;
+        height: 100%;
         background-color: #fff;
       }
     }

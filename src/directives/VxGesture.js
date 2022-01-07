@@ -1,261 +1,130 @@
 /*eslint-disable*/
 const _REAL_META_KEY = navigator.platform === 'MacIntel';
 let BIND_EL, BIND_REF, BIND_NODE; // PRIVATE BIND VARIABLES
-let EVENT_STAGE=0, STREAM_TIMER, REPEAT_EVENT_COUNTER=0;
-let GESTURE_PROPERTIES=null;
-let SWIPE_MULTIPLIER=2;
-let DETECTED_SWIPE_SPEED=false
-let PLATFORM_BEYOND_BOUNDARY=0.3;
-let DELTA_SHIFT=0;
-let RECREATE_EVENT=true
+let EVENT_REPEAT_COUNTER = 0, STREAM_TIMER=null;
+let EVENT_DELTA=0;
+let AXIS_Y=null, AXIS_DELTA=0, AXIS_DELTA_PICK=0, GESTURE_RUN=false;
+let EMIT_DELTA=0;
+let PLATFORM_SIZE=0, TURN_CLOSER=false;
+let DISTANCE_MOVED=0
 
 
+let newPeakPossibleCounter=0
 
-
-
-
-
-function DATA_CLEANSING(){
-  EVENT_STAGE=0;
-  REPEAT_EVENT_COUNTER=0;
-  GESTURE_PROPERTIES=null;
-  DELTA_SHIFT=0
-  DETECTED_SWIPE_SPEED=0;
-  EMULATION_PERCENT=0;
+function clearData(){
+  EMIT_DELTA=0;
+  TURN_CLOSER=false;
+  DISTANCE_MOVED=0;
+  BIND_NODE.data.on.someEvent({axisY: AXIS_Y, delta: 0});
+  PLATFORM_SIZE=0
+  EVENT_REPEAT_COUNTER=0;
+  STREAM_TIMER=null;
+  EVENT_DELTA=0;
+  AXIS_Y=null;
+  AXIS_DELTA=0;
+  AXIS_DELTA_PICK=0;
+  GESTURE_RUN=false;
+  newPeakPossibleCounter=0;
+  console.log('DATA WAS CLEAN')
 }
-
-
-function CATCH_END_STREAM_GESTURE(timeout = 150){
-  if(timeout === 0) {
-    console.log('RECREATE')
-    setTimeout(() => BIND_EL.addEventListener('wheel', vxGestureHandler, false), 500)
-  }
-
+function closeStream(timeout = 150){
   if(STREAM_TIMER) STREAM_TIMER = clearTimeout(STREAM_TIMER)
-  STREAM_TIMER = setTimeout(() => _gestureEnd(), timeout);
+  if(TURN_CLOSER) BIND_NODE.data.on.someEvent({axisY: AXIS_Y, delta: PLATFORM_SIZE});
+
+  STREAM_TIMER = setTimeout(() => clearData(), timeout);
+}
+
+function getNewDelta(dY, dX){
+  return (AXIS_Y ? dY : dX) * 0.8;
 }
 
 
-function GET_GESTURE_TYPE(_ctrl, _meta, _shift){
-  let gestureType = {};
+function vxGestureHandler(e){
+  e.preventDefault();
+  const dY=e.deltaY, dX=e.deltaX;
+  const mdY=Math.abs(dY), mdX=Math.abs(dX);
 
-  if(_ctrl){
-    //all zoom gestures
-    gestureType.name = 'zoom';
-    gestureType.function = _meta ? 'outer' : 'inner';
-  } else {
-    //all swipe gestures
-    gestureType.name = 'swipe';
-    gestureType.priorityAxisX = _shift;
-    gestureType.holdAnimation = _meta;
-  }
-
-  return gestureType;
-}
-
-function GET_GESTURE_POSITION(dX, dY, type){
-  let gesturePosition = {}
-  if(type.name === 'zoom'){
-    gesturePosition.axis = {
-      getPlatformSize: BIND_EL.offsetHeight,
-      getDelta: 'deltaY'
+  if(EVENT_REPEAT_COUNTER === 0){
+    if(mdY > mdX){
+      AXIS_Y = true;
+      console.log('axis Y')
+    } else {
+      AXIS_Y = false;
+      console.log('axis X')
     }
-    gesturePosition.directionAboveZero = dY > 0;
-  } else {
-    const isAxisX = type.priorityAxisX || Math.abs(dX) > Math.abs(dY);
-    gesturePosition.axis = {
-      getPlatformSize: BIND_EL[isAxisX ? 'offsetWidth' : 'offsetHeight'],
-      getDelta: isAxisX ? 'deltaX' : 'deltaY'
+    AXIS_DELTA = getNewDelta(e.deltaY, e.deltaX)
+    closeStream(50)
+  }
+  else {
+    if(/*EVENT_REPEAT_COUNTER===1 && */STREAM_TIMER) STREAM_TIMER = clearTimeout(STREAM_TIMER);
+    const _newDelta = Math.abs(getNewDelta(e.deltaY, e.deltaX));
+    if(!GESTURE_RUN ){
+      let timlyPlatformSize = AXIS_Y ? BIND_EL.offsetHeight : BIND_EL.offsetWidth
+      if(_newDelta < timlyPlatformSize*.05){
+        closeStream(50)
+      } else {
+        PLATFORM_SIZE = AXIS_Y ? BIND_EL.offsetHeight : BIND_EL.offsetWidth;
+        GESTURE_RUN = true;
+        if(STREAM_TIMER) STREAM_TIMER = clearTimeout(STREAM_TIMER);
+      }
     }
-    gesturePosition.directionAboveZero = isAxisX ? dX > 0 : dY > 0;
-  }
+    else {
+      if(!TURN_CLOSER) EMIT_DELTA=_newDelta* 100 / PLATFORM_SIZE;
+      if(_newDelta > AXIS_DELTA){
+        // console.log('Рост', _newDelta);
+        if(AXIS_DELTA_PICK !== 0){
+          newPeakPossibleCounter++;
+          if(newPeakPossibleCounter > 2) {
+            //заканчиваем предидущую анимацию || если анимация не дошла до процента доводчика, ускореям данную анимацию
+            console.log('Clear AXIS_DELTA_PICK')
+            AXIS_DELTA_PICK = 0
+          }
+        }
+      } else {
+        newPeakPossibleCounter = 0;
 
-  return gesturePosition;
-}
+        if(AXIS_DELTA_PICK === 0){
+          AXIS_DELTA_PICK = AXIS_DELTA;
+          DISTANCE_MOVED = AXIS_DELTA * 100 / PLATFORM_SIZE;
+          if(DISTANCE_MOVED > 20){
+            TURN_CLOSER=true;
+          }
+          console.log('Точка вверха: ' + AXIS_DELTA, 'Пройденно: ' + DISTANCE_MOVED, 'size блока: ' + PLATFORM_SIZE)
+        } else if(AXIS_DELTA_PICK !== 0 && _newDelta === AXIS_DELTA){
+          // console.log('Схождение', AXIS_DELTA_PICK)
+          // return false;
+        } else {
+          if(TURN_CLOSER){
+            let newDistMoved = AXIS_DELTA * 100 / PLATFORM_SIZE;
+            let diffPlatform = PLATFORM_SIZE - AXIS_DELTA_PICK;
 
-function _gestureStart(e){
-  // console.log(e.deltaY)
-  if(REPEAT_EVENT_COUNTER === 1){
-    // console.log(e)
-    const _gestureType = GET_GESTURE_TYPE(e.ctrlKey, _REAL_META_KEY ? e.metaKey : e.altKey, e.shiftKey);
-    const _gesturePosition = GET_GESTURE_POSITION(e.deltaX, e.deltaY, _gestureType);
-    GESTURE_PROPERTIES = {..._gestureType, ..._gesturePosition}
-    // console.log(GESTURE_PROPERTIES)
-  } else {
-    EVENT_STAGE = GESTURE_PROPERTIES.name === 'swipe' ? 1 : 3
-  }
-} //// start
-
-function STEP_ANALYSIS_SWIPE(){
-  const _shiftPercent = DELTA_SHIFT_PERCENT()
-  if(REPEAT_EVENT_COUNTER < 5 && _shiftPercent > 60){
-    DETECTED_SWIPE_SPEED=4
-  } else if(REPEAT_EVENT_COUNTER < 5 && _shiftPercent > 30){
-    DETECTED_SWIPE_SPEED=3
-  } else if(REPEAT_EVENT_COUNTER < 5 && _shiftPercent > 20){
-    DETECTED_SWIPE_SPEED=2
-  } else if(REPEAT_EVENT_COUNTER > 3 && _shiftPercent > 10){
-    DETECTED_SWIPE_SPEED=1
-  } else if(REPEAT_EVENT_COUNTER > 4){
-    EVENT_STAGE=2 //change event
-  }
-}
-
-function DELTA_SHIFT_PERCENT(){
-  return Math.abs(DELTA_SHIFT) * 100 / GESTURE_PROPERTIES.axis.getPlatformSize;
-}
-
-let EMULATION_PERCENT = 0, EMULATION_PERCENTAGE_INTERVAL;
-
-let STEP=1
-
-function EMULATION_PERCENTAGE_CHANGE(){
-  // console.log('EMULATION_PERCENTAGE_CHANGE')
-  if(EMULATION_PERCENT >= 100){
-    console.log('before destroy')
-    BIND_EL.removeEventListener('wheel', vxGestureHandler, false);
-    EMULATION_PERCENTAGE_INTERVAL = clearInterval(EMULATION_PERCENTAGE_INTERVAL)
-    console.log('after destroy')
-    CATCH_END_STREAM_GESTURE(0)
-    // if(RECREATE_EVENT) CATCH_END_STREAM_GESTURE(0)
-    // else {
-    //   EVENT_STAGE = -1;
-    //   CATCH_END_STREAM_GESTURE(50)
-    // }
+            let deltaDistMoved = Math.abs(DISTANCE_MOVED-newDistMoved)*100/DISTANCE_MOVED;
+            EMIT_DELTA = (AXIS_DELTA_PICK + diffPlatform * deltaDistMoved/100)*100/PLATFORM_SIZE;
+            // EMIT_DELTA = deltaDistMoved
+            console.log(EMIT_DELTA)
+            // console.log('Отрабатываем доводчик: ' + deltaDistMoved + '%; In PX' + (AXIS_DELTA_PICK + diffPlatform * deltaDistMoved/100));
+          }
+          // console.log('ПАДАЕМ',  _newDelta)
+        }
+      }
+    }
 
 
-    return false
-    // нужно разделить ивенты
-  }
-  EMULATION_PERCENT += STEP;
-  BIND_NODE.data.on.someEvent(EMULATION_PERCENT)
-  // console.log(EMULATION_PERCENT + '%')
-}
-
-let animation = 400
-
-function _swipeEmulation(){
-  EVENT_STAGE = 5 //костыль
-
-  console.log(DETECTED_SWIPE_SPEED, 'Type Animation')
-  switch (DETECTED_SWIPE_SPEED){
-    case 4:
-      RECREATE_EVENT=true;
-      animation=400
-      STEP=4
-      break
-    case 3:
-      RECREATE_EVENT=false;
-      animation=300
-      STEP=3
-      break;
-    case 2:
-      RECREATE_EVENT=false;
-      animation=300
-      STEP=2
-      break;
-    case 1:
-      RECREATE_EVENT=false;
-      animation=200
-      STEP=1
-      break;
-  }
-
-  // if(DETECTED_SWIPE_SPEED > 3){
-  //   console.log('FAST')
-  //   RECREATE_EVENT=true;
-  //   animation=200
-  //   STEP=2
-  // } else {
-  //   console.log('NORMAL')
-  //   RECREATE_EVENT=false
-  //   animation=400
-  //   STEP=1
-  // }
-
-  STREAM_TIMER = clearTimeout(STREAM_TIMER);
-  EMULATION_PERCENTAGE_INTERVAL = setInterval(EMULATION_PERCENTAGE_CHANGE, animation/100*STEP)
-  // while (emulationPercent <= 100){
-  //   console.log(emulationPercent + '%')
-  //   ++emulationPercent;
-  // }
-}
-
-function _gestureSwipeStream(e){
-  DELTA_SHIFT += e[GESTURE_PROPERTIES.axis.getDelta] * SWIPE_MULTIPLIER;
-
-  if(!DETECTED_SWIPE_SPEED) STEP_ANALYSIS_SWIPE()
-
-  if(DETECTED_SWIPE_SPEED) _swipeEmulation()
-
-
-  //нужно добавить граничный допуск к выходу за ширину блока ~130% + скорость реверса до 100% (в мс анимация)
-  //добавить коэфициент прибавление/убавление процентов для ускорения/замедления шага [по дефолту 15%]
-  // проверку делать на основе прохождения 2-5 шагов
-  // [Не в этой версии] если за 5 шагов система прошла 5% - нужно ускорить систему, чтобы следующие 3 шага были [15% - коэф шага]
-  // [Не в этой версии] если за 2 шага система прошла 20% - нужно замедлить систему, чтобы следующие 4 шага были 15%
-
-  //добавить пограничный допуск для завершения анимации (скорость доводчика и реверса)
-
-  //опции времени - 1 для всех в мс
-  // - 2 по отдельности
-  // closerTime [40ms]
-  // beyondReversTime [200ms]
-  // inReversTime [40ms]
-  // simpleAnimationTime[200ms]
-
-}
-
-function _gestureSwipeInterceptStream(e){
-  DELTA_SHIFT += e[GESTURE_PROPERTIES.axis.getDelta] * SWIPE_MULTIPLIER;
-
-  if(GESTURE_PROPERTIES.holdAnimation){
-    console.log('Тут добавляем слушатель metaKey')
-  }
-
-  console.log(DELTA_SHIFT)
-}
-
-function _gestureZoomStream(e){
-  // console.log(e)
-}
-
-function _gestureEnd(){
-  if(REPEAT_EVENT_COUNTER === 1){
-    console.log('Тут автоматически дорабатываем анимацию')
-    DATA_CLEANSING()
-  } else {
-    DATA_CLEANSING()
+    AXIS_DELTA = _newDelta;
+    closeStream(80)
   }
 
 
-  console.log('--')
-  console.log('----------- END ------------')
-  console.log('--')
+  BIND_NODE.data.on.someEvent({axisY: AXIS_Y, delta: EMIT_DELTA});
 
+
+
+  EVENT_REPEAT_COUNTER++;
 }
 
 
-function vxGestureHandler(event){
-  event.preventDefault();
 
-  if(EVENT_STAGE === -1){
-    // console.log('Продолжение после анимации')
-    CATCH_END_STREAM_GESTURE(50)
-    return false;
-  }
 
-  ++REPEAT_EVENT_COUNTER;
-  if(EVENT_STAGE === 0) _gestureStart(event);
-  if(EVENT_STAGE === 1) _gestureSwipeStream(event);
-  if(EVENT_STAGE === 2) _gestureSwipeInterceptStream(event);
-  if(EVENT_STAGE === 3) _gestureZoomStream(event);
-  if(EVENT_STAGE === 5) return false;
-
-  // console.log(EVENT_STAGE, 1212)
-
-  CATCH_END_STREAM_GESTURE()
-}
 
 function createVxGestureDirective(){
   return {
@@ -270,3 +139,73 @@ const vxGestureDirective = createVxGestureDirective();
 
 export {vxGestureDirective as VxGesture}
 
+
+
+// let EL_WIDTH = BIND_EL.offsetWidth, EL_HEIGHT = BIND_EL.offsetHeight;
+
+
+// function DATA_CLEANSING(){
+//   EVENT_REPEAT_COUNTER=0;
+//   STREAM_TIMER=null;
+//   EVENT_DELTA=0;
+//   console.log('DATA WAS CLEAN')
+// }
+// function CATCH_END_STREAM_GESTURE(timeout = 150){
+//   if(STREAM_TIMER) STREAM_TIMER = clearTimeout(STREAM_TIMER)
+//   STREAM_TIMER = setTimeout(() => DATA_CLEANSING(), timeout);
+// }
+// function getInfo(e){
+//   const axisY = Math.abs(e.deltaY) > Math.abs(e.deltaX),
+//     posDir = axisY ? e.deltaY > 0 : e.deltaX > 0,
+//     delta = axisY ? e.deltaY : e.deltaX,
+//     deltaModular = Math.abs(delta);
+//
+//   EVENT_DELTA += deltaModular;
+//
+//
+//   // return {axisY, posDir, delta: EVENT_DELTA > 100 ? deltaModular : EVENT_DELTA}
+// }
+// function prepareGestureData(e){
+//   EVENT_STATE_KEYS = getEventStateKeys(e);
+//   EVENT_GESTURE_PROPS = getEventGestureProps(e);
+// }
+// function checkGestureData(e){
+//   if(JSON.stringify(getEventStateKeys(e)) !== JSON.stringify(EVENT_STATE_KEYS)){
+//     console.log('Prevent Func by change keys')
+//     return false
+//   }
+//
+//   if(JSON.stringify(getEventGestureProps(e)) !== JSON.stringify(EVENT_GESTURE_PROPS)){
+//     console.log(JSON.stringify(getEventGestureProps(e)))
+//     console.log(JSON.stringify(EVENT_GESTURE_PROPS))
+//
+//     console.log('Prevent Func by change direction')
+//   }
+// }
+//
+// function getEventStateKeys(e){
+//   let keysArr = [];
+//
+//   if(e.ctrlKey) keysArr.push('ctrl');
+//   else if(e.shiftKey) keysArr.push('shift');
+//   if(_REAL_META_KEY ? e.metaKey : e.altKey) keysArr.push('meta');
+//
+//   return keysArr;
+// }
+// function getEventGestureProps(e){
+//   const dY = e.deltaY, dX = e.deltaX;
+//   let axisY = true;
+//
+//   if(EVENT_STATE_KEYS.indexOf('ctrl') === -1){
+//     if(EVENT_STATE_KEYS.indexOf('shift') !== -1){
+//       axisY = false
+//     } else {
+//       axisY = Math.abs(dY) > Math.abs(dX)
+//     }
+//   }
+//
+//   const dirPositive = axisY ? dY > 0 : dX > 0;
+//
+//   return {axisY, dirPositive}
+//
+// }
