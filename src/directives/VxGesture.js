@@ -6,12 +6,14 @@ let EVENT_DELTA=0;
 let AXIS_Y=null, AXIS_DELTA=0, AXIS_DELTA_PICK=0, GESTURE_RUN=false;
 let EMIT_DELTA=0;
 let PLATFORM_SIZE=0, TURN_CLOSER=false;
-let DISTANCE_MOVED=0
+let DISTANCE_MOVED=0;
+let OPTI_ITER=null;
 
 
 let newPeakPossibleCounter=0
 
 function clearData(){
+  OPTI_ITER=null;
   EMIT_DELTA=0;
   TURN_CLOSER=false;
   DISTANCE_MOVED=0;
@@ -29,13 +31,13 @@ function clearData(){
 }
 function closeStream(timeout = 150){
   if(STREAM_TIMER) STREAM_TIMER = clearTimeout(STREAM_TIMER)
-  if(TURN_CLOSER) BIND_NODE.data.on.someEvent({axisY: AXIS_Y, delta: PLATFORM_SIZE});
+  // if(TURN_CLOSER) BIND_NODE.data.on.someEvent({axisY: AXIS_Y, delta: PLATFORM_SIZE});
 
   STREAM_TIMER = setTimeout(() => clearData(), timeout);
 }
 
 function getNewDelta(dY, dX){
-  return (AXIS_Y ? dY : dX) * 0.8;
+  return (AXIS_Y ? dY : dX) * 1.8;
 }
 
 
@@ -57,27 +59,36 @@ function vxGestureHandler(e){
   }
   else {
     if(/*EVENT_REPEAT_COUNTER===1 && */STREAM_TIMER) STREAM_TIMER = clearTimeout(STREAM_TIMER);
-    const _newDelta = Math.abs(getNewDelta(e.deltaY, e.deltaX));
+    // const _newDelta = Math.abs(getNewDelta(e.deltaY, e.deltaX));
+    const _newDelta = getNewDelta(e.deltaY, e.deltaX);
     if(!GESTURE_RUN ){
       let timlyPlatformSize = AXIS_Y ? BIND_EL.offsetHeight : BIND_EL.offsetWidth
       if(_newDelta < timlyPlatformSize*.05){
         closeStream(50)
       } else {
-        PLATFORM_SIZE = AXIS_Y ? BIND_EL.offsetHeight : BIND_EL.offsetWidth;
+        PLATFORM_SIZE = (AXIS_Y ? BIND_EL.offsetHeight : BIND_EL.offsetWidth);
         GESTURE_RUN = true;
         if(STREAM_TIMER) STREAM_TIMER = clearTimeout(STREAM_TIMER);
       }
     }
     else {
-      if(!TURN_CLOSER) EMIT_DELTA=_newDelta* 100 / PLATFORM_SIZE;
-      if(_newDelta > AXIS_DELTA){
+      // if(!TURN_CLOSER) EMIT_DELTA=_newDelta* 100 / PLATFORM_SIZE;
+      if(_newDelta > AXIS_DELTA){ //!TURN_CLOSER &&
         // console.log('Рост', _newDelta);
         if(AXIS_DELTA_PICK !== 0){
           newPeakPossibleCounter++;
           if(newPeakPossibleCounter > 2) {
             //заканчиваем предидущую анимацию || если анимация не дошла до процента доводчика, ускореям данную анимацию
             console.log('Clear AXIS_DELTA_PICK')
-            AXIS_DELTA_PICK = 0
+
+            if(TURN_CLOSER){
+              console.log('registered DISTANCE_MOVED')
+              DISTANCE_MOVED = 115 //костыль
+            } else {
+              AXIS_DELTA_PICK = 0
+            }
+
+
           }
         }
       } else {
@@ -86,7 +97,8 @@ function vxGestureHandler(e){
         if(AXIS_DELTA_PICK === 0){
           AXIS_DELTA_PICK = AXIS_DELTA;
           DISTANCE_MOVED = AXIS_DELTA * 100 / PLATFORM_SIZE;
-          if(DISTANCE_MOVED > 20){
+          BIND_NODE.data.on.someEvent({axisY: AXIS_Y, delta: DISTANCE_MOVED});
+          if(DISTANCE_MOVED > 10){
             TURN_CLOSER=true;
           }
           console.log('Точка вверха: ' + AXIS_DELTA, 'Пройденно: ' + DISTANCE_MOVED, 'size блока: ' + PLATFORM_SIZE)
@@ -95,14 +107,46 @@ function vxGestureHandler(e){
           // return false;
         } else {
           if(TURN_CLOSER){
+            // адаптировать систему с учетом рендринга до пика !!!!
+
+            // console.log('- ' + deltaDistMoved)
+
+            // EMIT_DELTA = (AXIS_DELTA_PICK + diffPlatform * deltaDistMoved/100)*100/PLATFORM_SIZE;
+            // EMIT_DELTA = deltaDistMoved
+            // console.log(deltaDistMoved)
+            // console.log('Отрабатываем доводчик: ' + deltaDistMoved + '%; In PX' + (AXIS_DELTA_PICK + diffPlatform * deltaDistMoved/100));
+
+
             let newDistMoved = AXIS_DELTA * 100 / PLATFORM_SIZE;
             let diffPlatform = PLATFORM_SIZE - AXIS_DELTA_PICK;
-
             let deltaDistMoved = Math.abs(DISTANCE_MOVED-newDistMoved)*100/DISTANCE_MOVED;
-            EMIT_DELTA = (AXIS_DELTA_PICK + diffPlatform * deltaDistMoved/100)*100/PLATFORM_SIZE;
-            // EMIT_DELTA = deltaDistMoved
-            console.log(EMIT_DELTA)
-            // console.log('Отрабатываем доводчик: ' + deltaDistMoved + '%; In PX' + (AXIS_DELTA_PICK + diffPlatform * deltaDistMoved/100));
+
+
+            let _newDistMoved = _newDelta * 100 / PLATFORM_SIZE;
+            let _deltaDistMoved = Math.abs(DISTANCE_MOVED-_newDistMoved)*100/DISTANCE_MOVED;
+
+            let deltaPlatformMoved = (AXIS_DELTA_PICK + diffPlatform * deltaDistMoved/100)*100/PLATFORM_SIZE;
+            let _deltaPlatformMoved = (AXIS_DELTA_PICK + diffPlatform * _deltaDistMoved/100)*100/PLATFORM_SIZE;
+
+
+            let difwithfutprev = _deltaPlatformMoved - deltaPlatformMoved;
+            if(difwithfutprev > 2 && difwithfutprev < 10){
+              let count=0, _stp = difwithfutprev/4, _stpSumm=0;
+
+              if(OPTI_ITER) clearInterval(OPTI_ITER);
+              OPTI_ITER = setInterval(function (){
+                count++;
+                _stpSumm=_stp*count;
+                // console.log('- '+ count + ' - ' + Number(deltaDistMoved + _stpSumm))
+                BIND_NODE.data.on.someEvent({axisY: AXIS_Y, delta: deltaPlatformMoved + _stpSumm});
+
+                if(count >= 4) OPTI_ITER = clearInterval(OPTI_ITER);
+              }, 1/100);
+            } else {
+              BIND_NODE.data.on.someEvent({axisY: AXIS_Y, delta: deltaPlatformMoved});
+            }
+            // console.log('______________', deltaDistMoved, _deltaDistMoved)
+
           }
           // console.log('ПАДАЕМ',  _newDelta)
         }
@@ -115,7 +159,7 @@ function vxGestureHandler(e){
   }
 
 
-  BIND_NODE.data.on.someEvent({axisY: AXIS_Y, delta: EMIT_DELTA});
+  // BIND_NODE.data.on.someEvent({axisY: AXIS_Y, delta: EMIT_DELTA});
 
 
 

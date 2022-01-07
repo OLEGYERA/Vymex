@@ -50,6 +50,7 @@ export default {
     },
     /*eslint-disable*/
     handleScroll(e){
+      console.log(e)
       if(e.axisY){
         this.stl = 'translateY(' + (e.delta) + '%)';
       } else {
@@ -72,16 +73,17 @@ export default {
 <style lang="scss">
   .calendar-modal-ui{
     .calendar-wrapper{
-      width: 260px;
-      height: 200px;
+      width: 460px;
+      height: 400px;
       //width: 460px;
       //height: 400px;
       border-radius: 12px;
       overflow: visible;
       .wrapper{
         width: 100%;
-        height: 100%;
+        height: 400px;
         background-color: #fff;
+        //transition: 200ms all ease;
       }
     }
   }
