@@ -1,6 +1,7 @@
 <template>
   <div class="calendar-provider calendar-modal-ui">
-    <div class="calendar-wrapper" v-gesture @someEvent="handleScroll">
+    <div class="calendar-wrapper" v-gesture
+         @gestureStart="gestureStart" @gestureProcess="gestureProcess" @gestureEnd="gestureEnd">
       <div class="wrapper" :style="{transform: stl}"></div>
       
 
@@ -17,7 +18,6 @@ import './style.scss'
 export default {
   name: 'Providers.CalendarModalUi',
   components: {CalendarHeader},
-  // directives: {scroll},
   mixins: [CalendarMixin],
   data: () => ({
     wheel: null,
@@ -25,28 +25,15 @@ export default {
     onTouch: false,
     stl: 'translateY(0%)',
   }),
-  mounted() {
-    // let win = document.getElementsByClassName('calendar-wrapper')[0]
-    // win.addEventListener('wheel', this.handleScroll1);
-    //
-    // if("ontouchstart" in window){
-    //   console.log(123)
-    //   win.addEventListener('touchstart', this.touchStartHandler);
-    //   win.addEventListener('touchmove', this.touchMoveHandler);
-    //   win.addEventListener('touchend', this.touchEndHandler);
-    // }
-  },
   methods: {
-    touchStartHandler(){
-      this.onTouch = true
+    gestureStart({type, axisY, posDir}){
+      console.log(type, axisY, posDir, 'Start')
     },
-    touchEndHandler(){
-      this.onTouch = false
+    gestureProcess(process){
+      console.log(process, 'Process')
     },
-    touchMoveHandler(e){
-      if(this.onTouch){
-        console.log(e)
-      }
+    gestureEnd(){
+      console.log('End')
     },
     /*eslint-disable*/
     handleScroll(opts){
@@ -57,9 +44,8 @@ export default {
           this.stl = 'translateX(' + (opts.posDir ? '-' : '') + (opts.deltaProgress) + '%)';
         }
       } else {
-        console.log(opts)
         let Progress = opts.deltaProgress / 100;
-        console.log(Progress)
+        // console.log(Progress)
         if(!opts.posDir){
           this.stl = 'scale(' + (Progress) + ')';
         } else {
@@ -67,24 +53,6 @@ export default {
 
         }
       }
-
-
-
-      // console.log(opts)
-      // if(e.axisY){
-      //   this.stl = 'translateY(' + (e.delta) + '%)';
-      // } else {
-      //   this.stl = 'translateX(' + (e.delta) + '%)';
-      // }
-      // this.stl = 'translateY(' + (percent) + '%)';
-      // console.log('In Vue', percent, this.stl)
-    },
-
-    handleScroll1(evt){
-      evt.preventDefault()
-      console.log(evt)
-      this.wheel = evt
-      // return true;
     },
   }
 }

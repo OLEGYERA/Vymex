@@ -1,5 +1,4 @@
 /*eslint-disable*/
-
 const _REAL_META_KEY = navigator.platform === 'MacIntel';
 let BIND_EL, BIND_REF, BIND_NODE; // PRIVATE BIND VARIABLES
 let HARD_GESTURE_TIMER, DEATH_SYSTEM_TIMER, DEATH_ZOOM_ANIMATION_TIMER;
@@ -67,22 +66,22 @@ function _getSwipeAnimationData(){
   }
 }
 function _getZoomAnimationData(){
-  if(PICK_DELTA_POSITION < 10){
+  if(PICK_DELTA_POSITION < 15){
     console.log('Base', PICK_DELTA_POSITION)
     return {
-      duration: 400,
+      duration: 300,
       pattern: ANIM_PAT_ACCELERATION_SPEED_1
-    }
-  } else if(PICK_DELTA_POSITION > 10){
-    console.log('Fast', PICK_DELTA_POSITION)
-    return {
-      duration: 375,
-      pattern: ANIM_PAT_ACCELERATION_SPEED_2
     }
   } else if(PICK_DELTA_POSITION > 50){
     console.log('Very Fast', PICK_DELTA_POSITION)
     return {
-      duration: 350,
+      duration: 200,
+      pattern: ANIM_PAT_ACCELERATION_SPEED_2
+    }
+  } else if(PICK_DELTA_POSITION > 15){
+    console.log('Fast', PICK_DELTA_POSITION)
+    return {
+      duration: 250,
       pattern: ANIM_PAT_ACCELERATION_SPEED_2
     }
   }
@@ -108,16 +107,13 @@ function __getBezierCurve(pattern, timeFraction) {
   return Curve
 }
 
-
-
-
 function FinishHardGesture(){
   console.log('Отработать единичный скролл')
 }
 function FinishAfterAnimation(){
   EVENT_ANIMATION = false;
   EVENT_GESTURE_EXPECTATION = true;
-  console.log('Я ПОЧИСТИЛЬ')
+  BIND_NODE.data.on.gestureEnd()
 }
 function EventDeath(){
   PLATFORM_SIZE = 0;
@@ -128,13 +124,12 @@ function EventDeath(){
   EVENT_GESTURE_RECOGNIZING = true;
   EVENT_ANIMATION_RECOGNIZING = false;
 }
-
-function TEST_DEATH_ZOOM(){
+function StartZoomGesture(){
   console.log('Тачбар зум')
   LAST_DELTA_POSITION = 0;
   EVENT_GESTURE_RECOGNIZING = false;
   EVENT_ANIMATION_RECOGNIZING = true;
-  _zoomGestureControlHandler()
+  _gestureControlHandler()
 }
 
 function __checkHardGesture(){
@@ -151,9 +146,9 @@ function __watchSystemDeath(cancel = false){
 function __waitAnimationDeath(){
   DEATH_SYSTEM_TIMER = setTimeout(() => FinishAfterAnimation(), 80)
 }
-function __watchZoomAnimationDeath(cancel = false){
+function __watchZoomAnimationGesture(cancel = false){
   if(DEATH_ZOOM_ANIMATION_TIMER) DEATH_ZOOM_ANIMATION_TIMER = clearTimeout(DEATH_ZOOM_ANIMATION_TIMER);
-  if(!cancel) DEATH_ZOOM_ANIMATION_TIMER = setTimeout(() => TEST_DEATH_ZOOM(), 80)
+  if(!cancel) DEATH_ZOOM_ANIMATION_TIMER = setTimeout(() => StartZoomGesture(), 80)
 }
 
 function _settingStates(e){
@@ -161,7 +156,6 @@ function _settingStates(e){
   const _meta = _REAL_META_KEY ? e.metaKey : e.altKey;
 
   const dX = e.deltaX, dY = e.deltaY;
-
 
   if(!IS_GESTURE_SWIPE){
     GESTURE_ZOOM.axisY = true;
@@ -225,7 +219,7 @@ function _initialHandler(e){
 
   _getDeltaPosition(e.deltaX, e.deltaY);
 }
-function _swipeGestureControlHandler(e){
+function _gestureControlHandler(e){
   // Ожидаем новую deltaPosition, для вызова нового жеста
   if(EVENT_GESTURE_EXPECTATION){
     let _mod_cur_delta_pos = Math.abs(CURRENT_DELTA_POSITION), _mod_last_delta_pos = Math.abs(LAST_DELTA_POSITION);
@@ -239,7 +233,7 @@ function _swipeGestureControlHandler(e){
   // Слушаем новый жест
   if(EVENT_GESTURE_RECOGNIZING){
     let _mod_cur_delta_pos = Math.abs(CURRENT_DELTA_POSITION),
-        _mod_last_delta_pos = Math.abs(LAST_DELTA_POSITION);
+      _mod_last_delta_pos = Math.abs(LAST_DELTA_POSITION);
     if(_mod_cur_delta_pos > _mod_last_delta_pos){
       PICK_DELTA_POSITION = _mod_cur_delta_pos;
       FALLOFF_CONTROL_DELTA_COUNT = 0;
@@ -249,7 +243,7 @@ function _swipeGestureControlHandler(e){
       ++FALLOFF_CONTROL_DELTA_COUNT;
     }
 
-    if(_getPlatformShiftProgress() > 60){
+    if(IS_GESTURE_SWIPE && _getPlatformShiftProgress() > 60){
       EVENT_GESTURE_RECOGNIZING = false;
       EVENT_ANIMATION_RECOGNIZING = true;
     }
@@ -257,89 +251,32 @@ function _swipeGestureControlHandler(e){
       EVENT_GESTURE_RECOGNIZING = false;
       EVENT_ANIMATION_RECOGNIZING = true;
     }
+
+    if(!IS_GESTURE_SWIPE) __watchZoomAnimationGesture();
+
   }
 
   // Определяем тип анимации для жеста
   if(!EVENT_GESTURE_RECOGNIZING && EVENT_ANIMATION_RECOGNIZING){
 
-    const {duration, pattern} = _getSwipeAnimationData();
-
-    console.log('Начало SWIPE анимации');
-    GestureAnimation({
-      duration,
-      pattern,
-      draw(progress) {
-        let emitOpts = {
-          isGestureSwipe: IS_GESTURE_SWIPE,
-          axisY: GESTURE_SWIPE.axisY,
-          posDir: GESTURE_SWIPE.isPositiveDirection,
-          deltaProgress: progress * 100
-        }
-        BIND_NODE.data.on.someEvent(emitOpts)
-      },
-      finish(){
-        console.log('Конец SWIPE анимации')
-        __waitAnimationDeath()
-      }
-    })
-
-    EVENT_ANIMATION_RECOGNIZING = false;
-    EVENT_ANIMATION = true;
-    __watchSystemDeath(true);
-  }
-}
-function _zoomGestureControlHandler(e = false){
-  if(EVENT_GESTURE_EXPECTATION){
-    let _mod_cur_delta_pos = Math.abs(CURRENT_DELTA_POSITION), _mod_last_delta_pos = Math.abs(LAST_DELTA_POSITION);
-    if(_mod_cur_delta_pos > _mod_last_delta_pos){
-      EventDeath();
-      _initialHandler(e);
-    }
-    else return false;
-  }
-
-  if(EVENT_GESTURE_RECOGNIZING) {
-    let _mod_cur_delta_pos = Math.abs(CURRENT_DELTA_POSITION),
-      _mod_last_delta_pos = Math.abs(LAST_DELTA_POSITION);
-
-    if(_mod_cur_delta_pos > _mod_last_delta_pos){
-      PICK_DELTA_POSITION = _mod_cur_delta_pos;
-      FALLOFF_CONTROL_DELTA_COUNT = 0;
-    } else if(_mod_cur_delta_pos === _mod_last_delta_pos && FALLOFF_CONTROL_DELTA_COUNT > 0){
-      ++FALLOFF_CONTROL_DELTA_COUNT;
+    //call Start Emit
+    if(IS_GESTURE_SWIPE) {
+      BIND_NODE.data.on.gestureStart({type: 'swipe', axisY: GESTURE_SWIPE.axisY, posDir: GESTURE_SWIPE.isPositiveDirection})
     } else {
-      ++FALLOFF_CONTROL_DELTA_COUNT;
+      __watchZoomAnimationGesture(true);
+      BIND_NODE.data.on.gestureStart({type: 'zoom', axisY: GESTURE_ZOOM.axisY, posDir: GESTURE_ZOOM.isPositiveDirection})
     }
 
+    //Получаем Данные об Анимации
+    const {duration, pattern} = IS_GESTURE_SWIPE ? _getSwipeAnimationData() : _getZoomAnimationData();
 
-    if(FALLOFF_CONTROL_DELTA_COUNT > 3) {
-      EVENT_GESTURE_RECOGNIZING = false;
-      EVENT_ANIMATION_RECOGNIZING = true;
-    }
-
-    __watchZoomAnimationDeath();
-  }
-
-  if(!EVENT_GESTURE_RECOGNIZING && EVENT_ANIMATION_RECOGNIZING) {
-    __watchZoomAnimationDeath(true);
-    const {duration, pattern} = _getZoomAnimationData();
-
-    console.log('Начало ZOOM анимации');
     GestureAnimation({
-      duration,
-      pattern,
+      duration, pattern,
       draw(progress) {
-        let emitOpts = {
-          isGestureSwipe: IS_GESTURE_SWIPE,
-          posDir: GESTURE_ZOOM.isPositiveDirection,
-          isOuter: GESTURE_ZOOM.isOuter,
-          deltaProgress: progress * 100
-        }
-        BIND_NODE.data.on.someEvent(emitOpts)
+        BIND_NODE.data.on.gestureProcess(progress * 100) //call Process Emit
       },
       finish(){
-        console.log('Конец ZOOM анимации')
-        __waitAnimationDeath()
+        __waitAnimationDeath() //call End Emit in __waitAnimationDeath
       }
     })
 
@@ -347,8 +284,6 @@ function _zoomGestureControlHandler(e = false){
     EVENT_ANIMATION = true;
     __watchSystemDeath(true);
   }
-
-
 }
 function _gonerHandler(){
   LAST_DELTA_POSITION = CURRENT_DELTA_POSITION;
@@ -360,12 +295,7 @@ function vxGestureHandler(e){
   e.preventDefault();
 
   _initialHandler(e);
-  if(IS_GESTURE_SWIPE){
-    _swipeGestureControlHandler(e);
-  } else {
-    _zoomGestureControlHandler(e);
-  }
-
+  _gestureControlHandler(e);
   _gonerHandler()
 }
 
@@ -373,7 +303,13 @@ function createVxGestureDirective(){
   return {
     bind: (e, r, n) => {
       BIND_EL = e; BIND_REF = r; BIND_NODE = n;
-      e.addEventListener('wheel', vxGestureHandler, false);
+
+      if(BIND_NODE.data.on.gestureStart && BIND_NODE.data.on.gestureProcess && BIND_NODE.data.on.gestureEnd){
+        e.addEventListener('wheel', vxGestureHandler, false);
+      } else {
+        console.error('Gestures can\'t work without listeners:  gestureStart, gestureProcess, gestureEnd!')
+      }
+
     },
   }
 }
