@@ -1,174 +1,373 @@
 /*eslint-disable*/
+
 const _REAL_META_KEY = navigator.platform === 'MacIntel';
 let BIND_EL, BIND_REF, BIND_NODE; // PRIVATE BIND VARIABLES
-let EVENT_REPEAT_COUNTER = 0, STREAM_TIMER=null;
-let EVENT_DELTA=0;
-let AXIS_Y=null, AXIS_DELTA=0, AXIS_DELTA_PICK=0, GESTURE_RUN=false;
-let EMIT_DELTA=0;
-let PLATFORM_SIZE=0, TURN_CLOSER=false;
-let DISTANCE_MOVED=0;
-let OPTI_ITER=null;
+let HARD_GESTURE_TIMER, DEATH_SYSTEM_TIMER, DEATH_ZOOM_ANIMATION_TIMER;
+
+let PLATFORM_SIZE=0;
+let EVENT_REPEAT_COUNTER=0, EVENT_GESTURE_EXPECTATION=false, EVENT_GESTURE_RECOGNIZING=true, EVENT_ANIMATION_RECOGNIZING=false, EVENT_ANIMATION=false;
+
+let CURRENT_DELTA_POSITION, LAST_DELTA_POSITION=0, PICK_DELTA_POSITION=0, FALLOFF_CONTROL_DELTA_COUNT=0;
+
+let IS_GESTURE_SWIPE, GESTURE_ZOOM={}, GESTURE_SWIPE={}; //IS_ZOOM_GESTURE!!
+
+const ANIM_PAT_REBOUND_SPEED_2 = [.3, .9, 1.6, 2, .6, .4, .6, .8, .9, .95, 1];
+const ANIM_PAT_REBOUND_SPEED_1 = [.25, .7, 1.2, 1.4, .8, .6, .8, 1];
+const ANIM_PAT_ACCELERATION_SPEED_2 = [.2, .9, 1.2, 1.1, 1];
+const ANIM_PAT_ACCELERATION_SPEED_1 = [.1, .95, .98, 1];
 
 
-let newPeakPossibleCounter=0
+function GestureAnimation({pattern, draw, duration, finish}) {
+  let start = performance.now();
+  requestAnimationFrame(function animate(time) {
+    let timeFraction = (time - start) / duration;     // timeFraction изменяется от 0 до 1
+    if (timeFraction > 1) timeFraction = 1;
 
-function clearData(){
-  OPTI_ITER=null;
-  EMIT_DELTA=0;
-  TURN_CLOSER=false;
-  DISTANCE_MOVED=0;
-  BIND_NODE.data.on.someEvent({axisY: AXIS_Y, delta: 0});
-  PLATFORM_SIZE=0
-  EVENT_REPEAT_COUNTER=0;
-  STREAM_TIMER=null;
-  EVENT_DELTA=0;
-  AXIS_Y=null;
-  AXIS_DELTA=0;
-  AXIS_DELTA_PICK=0;
-  GESTURE_RUN=false;
-  newPeakPossibleCounter=0;
-  console.log('DATA WAS CLEAN')
+    const progress = __getBezierCurve(pattern, timeFraction);
+    // console.log(progress)
+    draw(progress); // отрисовать её
+
+    if (timeFraction < 1) requestAnimationFrame(animate);
+    if (timeFraction === 1) finish();
+  });
 }
-function closeStream(timeout = 150){
-  if(STREAM_TIMER) STREAM_TIMER = clearTimeout(STREAM_TIMER)
-  // if(TURN_CLOSER) BIND_NODE.data.on.someEvent({axisY: AXIS_Y, delta: PLATFORM_SIZE});
+function _getSwipeAnimationData(){
+  const _shiftProgress = _getPlatformShiftProgress();
+  if(_shiftProgress > 100){
+    console.log('Very fast',_shiftProgress)
+    return {
+      duration: 350,
+      pattern: ANIM_PAT_REBOUND_SPEED_2
+    }
+  } else if(_shiftProgress > 70){
+    console.log('Fast',_shiftProgress)
+    return {
+      duration: 350,
+      pattern: ANIM_PAT_REBOUND_SPEED_1
+    }
+  } else if(_shiftProgress > 50){
+    console.log('Base',_shiftProgress)
+    return {
+      duration: 375,
+      pattern: ANIM_PAT_ACCELERATION_SPEED_2
+    }
+  } else if(_shiftProgress > 25){
+    console.log('Slow',_shiftProgress)
+    return {
+      duration: 400,
+      pattern: ANIM_PAT_ACCELERATION_SPEED_1
+    }
+  } else{
+    console.log('Cancel',_shiftProgress)
 
-  STREAM_TIMER = setTimeout(() => clearData(), timeout);
+    return {
+      duration: 200,
+      pattern: [_shiftProgress*.1/100, _shiftProgress*.6/100, _shiftProgress*1.8/100, _shiftProgress*.6/100, 0]
+    }
+  }
+}
+function _getZoomAnimationData(){
+  if(PICK_DELTA_POSITION < 10){
+    console.log('Base', PICK_DELTA_POSITION)
+    return {
+      duration: 400,
+      pattern: ANIM_PAT_ACCELERATION_SPEED_1
+    }
+  } else if(PICK_DELTA_POSITION > 10){
+    console.log('Fast', PICK_DELTA_POSITION)
+    return {
+      duration: 375,
+      pattern: ANIM_PAT_ACCELERATION_SPEED_2
+    }
+  } else if(PICK_DELTA_POSITION > 50){
+    console.log('Very Fast', PICK_DELTA_POSITION)
+    return {
+      duration: 350,
+      pattern: ANIM_PAT_ACCELERATION_SPEED_2
+    }
+  }
 }
 
-function getNewDelta(dY, dX){
-  return (AXIS_Y ? dY : dX) * 1.8;
+function __getBezierBasis(i, n, t) {
+  function factorial(n) {
+    return (n <= 1) ? 1 : n * factorial(n - 1)
+  }
+  // считаем i-й элемент полинома Берштейна
+  return (factorial(n)/(factorial(i)*factorial(n - i)))* Math.pow(t, i)*Math.pow(1 - t, n - i);
+}
+function __getBezierCurve(pattern, timeFraction) {
+  let Curve = 0;
+
+  if(pattern.length > 1)
+    for (let patternItem = 0; patternItem < pattern.length; patternItem++) {
+      Curve += pattern[patternItem] * __getBezierBasis(patternItem, pattern.length - 1, timeFraction);
+    }
+  else
+    Curve = __getBezierBasis(pattern[0], 1, timeFraction);
+
+  return Curve
+}
+
+
+
+
+function FinishHardGesture(){
+  console.log('Отработать единичный скролл')
+}
+function FinishAfterAnimation(){
+  EVENT_ANIMATION = false;
+  EVENT_GESTURE_EXPECTATION = true;
+  console.log('Я ПОЧИСТИЛЬ')
+}
+function EventDeath(){
+  PLATFORM_SIZE = 0;
+  EVENT_REPEAT_COUNTER = 0;
+  LAST_DELTA_POSITION = 0;
+  PICK_DELTA_POSITION = 0;
+  EVENT_GESTURE_EXPECTATION = false;
+  EVENT_GESTURE_RECOGNIZING = true;
+  EVENT_ANIMATION_RECOGNIZING = false;
+}
+
+function TEST_DEATH_ZOOM(){
+  console.log('Тачбар зум')
+  LAST_DELTA_POSITION = 0;
+  EVENT_GESTURE_RECOGNIZING = false;
+  EVENT_ANIMATION_RECOGNIZING = true;
+  _zoomGestureControlHandler()
+}
+
+function __checkHardGesture(){
+  if(HARD_GESTURE_TIMER === undefined){
+    HARD_GESTURE_TIMER = setTimeout(() => FinishHardGesture(), 50)
+  } else {
+    HARD_GESTURE_TIMER = clearTimeout(HARD_GESTURE_TIMER)
+  }
+}
+function __watchSystemDeath(cancel = false){
+  if(DEATH_SYSTEM_TIMER) DEATH_SYSTEM_TIMER = clearTimeout(DEATH_SYSTEM_TIMER)
+  if(!cancel) DEATH_SYSTEM_TIMER = setTimeout(() => EventDeath(), 150)
+}
+function __waitAnimationDeath(){
+  DEATH_SYSTEM_TIMER = setTimeout(() => FinishAfterAnimation(), 80)
+}
+function __watchZoomAnimationDeath(cancel = false){
+  if(DEATH_ZOOM_ANIMATION_TIMER) DEATH_ZOOM_ANIMATION_TIMER = clearTimeout(DEATH_ZOOM_ANIMATION_TIMER);
+  if(!cancel) DEATH_ZOOM_ANIMATION_TIMER = setTimeout(() => TEST_DEATH_ZOOM(), 80)
+}
+
+function _settingStates(e){
+  IS_GESTURE_SWIPE = !e.ctrlKey;
+  const _meta = _REAL_META_KEY ? e.metaKey : e.altKey;
+
+  const dX = e.deltaX, dY = e.deltaY;
+
+
+  if(!IS_GESTURE_SWIPE){
+    GESTURE_ZOOM.axisY = true;
+    GESTURE_ZOOM.isPositiveDirection = dY > 0;
+    GESTURE_ZOOM.isOuter = _meta;
+  } else {
+    GESTURE_SWIPE.isHolding= _meta;
+    if(Math.abs(dY) > Math.abs(dX)){
+      const _posDir = dY > 0;
+      if(e.shiftKey){
+        //watchOnAxis
+        GESTURE_SWIPE.executiveAxisY = true;
+        GESTURE_SWIPE.axisY = false;
+        GESTURE_SWIPE.isPositiveDirection = _posDir;
+      } else {
+        GESTURE_SWIPE.executiveAxisY = true;
+        GESTURE_SWIPE.axisY = true
+        GESTURE_SWIPE.isPositiveDirection = _posDir;
+      }
+    } else{
+      GESTURE_SWIPE.executiveAxisY = false;
+      GESTURE_SWIPE.axisY = false
+      GESTURE_SWIPE.isPositiveDirection = dX > 0;
+    }
+
+    PLATFORM_SIZE = GESTURE_SWIPE.axisY ? BIND_EL.offsetHeight : BIND_EL.offsetWidth;
+  }
+
+
+
+}
+function _getDeltaPosition(_dX, _dY){
+  if(IS_GESTURE_SWIPE){
+    if(GESTURE_SWIPE.axisY || GESTURE_SWIPE.executiveAxisY){
+      CURRENT_DELTA_POSITION = _dY;
+    } else {
+      CURRENT_DELTA_POSITION = _dX;
+    }
+  } else {
+    CURRENT_DELTA_POSITION = _dY;
+  }
+}
+function _getPlatformShiftProgress(){
+  return PICK_DELTA_POSITION * 100 / PLATFORM_SIZE;
+}
+
+
+function _initialHandler(e){
+  if(EVENT_REPEAT_COUNTER === 0){
+    _settingStates(e);
+    __checkHardGesture();
+  } else {
+    if(EVENT_REPEAT_COUNTER === 1) __checkHardGesture();
+    if(!(EVENT_ANIMATION || EVENT_GESTURE_EXPECTATION)) __watchSystemDeath();
+
+    if(EVENT_GESTURE_EXPECTATION && IS_GESTURE_SWIPE !== !e.ctrlKey){
+      console.log('Разные жесты! Меняю жест')
+      IS_GESTURE_SWIPE = !e.ctrlKey
+    }
+  }
+
+  _getDeltaPosition(e.deltaX, e.deltaY);
+}
+function _swipeGestureControlHandler(e){
+  // Ожидаем новую deltaPosition, для вызова нового жеста
+  if(EVENT_GESTURE_EXPECTATION){
+    let _mod_cur_delta_pos = Math.abs(CURRENT_DELTA_POSITION), _mod_last_delta_pos = Math.abs(LAST_DELTA_POSITION);
+    if(_mod_cur_delta_pos > _mod_last_delta_pos){
+      EventDeath();
+      _initialHandler(e);
+    }
+    else return false;
+  }
+
+  // Слушаем новый жест
+  if(EVENT_GESTURE_RECOGNIZING){
+    let _mod_cur_delta_pos = Math.abs(CURRENT_DELTA_POSITION),
+        _mod_last_delta_pos = Math.abs(LAST_DELTA_POSITION);
+    if(_mod_cur_delta_pos > _mod_last_delta_pos){
+      PICK_DELTA_POSITION = _mod_cur_delta_pos;
+      FALLOFF_CONTROL_DELTA_COUNT = 0;
+    } else if(_mod_cur_delta_pos === _mod_last_delta_pos && FALLOFF_CONTROL_DELTA_COUNT > 0){
+      ++FALLOFF_CONTROL_DELTA_COUNT;
+    } else {
+      ++FALLOFF_CONTROL_DELTA_COUNT;
+    }
+
+    if(_getPlatformShiftProgress() > 60){
+      EVENT_GESTURE_RECOGNIZING = false;
+      EVENT_ANIMATION_RECOGNIZING = true;
+    }
+    if(FALLOFF_CONTROL_DELTA_COUNT > 3) {
+      EVENT_GESTURE_RECOGNIZING = false;
+      EVENT_ANIMATION_RECOGNIZING = true;
+    }
+  }
+
+  // Определяем тип анимации для жеста
+  if(!EVENT_GESTURE_RECOGNIZING && EVENT_ANIMATION_RECOGNIZING){
+
+    const {duration, pattern} = _getSwipeAnimationData();
+
+    console.log('Начало SWIPE анимации');
+    GestureAnimation({
+      duration,
+      pattern,
+      draw(progress) {
+        let emitOpts = {
+          isGestureSwipe: IS_GESTURE_SWIPE,
+          axisY: GESTURE_SWIPE.axisY,
+          posDir: GESTURE_SWIPE.isPositiveDirection,
+          deltaProgress: progress * 100
+        }
+        BIND_NODE.data.on.someEvent(emitOpts)
+      },
+      finish(){
+        console.log('Конец SWIPE анимации')
+        __waitAnimationDeath()
+      }
+    })
+
+    EVENT_ANIMATION_RECOGNIZING = false;
+    EVENT_ANIMATION = true;
+    __watchSystemDeath(true);
+  }
+}
+function _zoomGestureControlHandler(e = false){
+  if(EVENT_GESTURE_EXPECTATION){
+    let _mod_cur_delta_pos = Math.abs(CURRENT_DELTA_POSITION), _mod_last_delta_pos = Math.abs(LAST_DELTA_POSITION);
+    if(_mod_cur_delta_pos > _mod_last_delta_pos){
+      EventDeath();
+      _initialHandler(e);
+    }
+    else return false;
+  }
+
+  if(EVENT_GESTURE_RECOGNIZING) {
+    let _mod_cur_delta_pos = Math.abs(CURRENT_DELTA_POSITION),
+      _mod_last_delta_pos = Math.abs(LAST_DELTA_POSITION);
+
+    if(_mod_cur_delta_pos > _mod_last_delta_pos){
+      PICK_DELTA_POSITION = _mod_cur_delta_pos;
+      FALLOFF_CONTROL_DELTA_COUNT = 0;
+    } else if(_mod_cur_delta_pos === _mod_last_delta_pos && FALLOFF_CONTROL_DELTA_COUNT > 0){
+      ++FALLOFF_CONTROL_DELTA_COUNT;
+    } else {
+      ++FALLOFF_CONTROL_DELTA_COUNT;
+    }
+
+
+    if(FALLOFF_CONTROL_DELTA_COUNT > 3) {
+      EVENT_GESTURE_RECOGNIZING = false;
+      EVENT_ANIMATION_RECOGNIZING = true;
+    }
+
+    __watchZoomAnimationDeath();
+  }
+
+  if(!EVENT_GESTURE_RECOGNIZING && EVENT_ANIMATION_RECOGNIZING) {
+    __watchZoomAnimationDeath(true);
+    const {duration, pattern} = _getZoomAnimationData();
+
+    console.log('Начало ZOOM анимации');
+    GestureAnimation({
+      duration,
+      pattern,
+      draw(progress) {
+        let emitOpts = {
+          isGestureSwipe: IS_GESTURE_SWIPE,
+          posDir: GESTURE_ZOOM.isPositiveDirection,
+          isOuter: GESTURE_ZOOM.isOuter,
+          deltaProgress: progress * 100
+        }
+        BIND_NODE.data.on.someEvent(emitOpts)
+      },
+      finish(){
+        console.log('Конец ZOOM анимации')
+        __waitAnimationDeath()
+      }
+    })
+
+    EVENT_ANIMATION_RECOGNIZING = false;
+    EVENT_ANIMATION = true;
+    __watchSystemDeath(true);
+  }
+
+
+}
+function _gonerHandler(){
+  LAST_DELTA_POSITION = CURRENT_DELTA_POSITION;
+  EVENT_REPEAT_COUNTER++;
 }
 
 
 function vxGestureHandler(e){
   e.preventDefault();
-  const dY=e.deltaY, dX=e.deltaX;
-  const mdY=Math.abs(dY), mdX=Math.abs(dX);
 
-  if(EVENT_REPEAT_COUNTER === 0){
-    if(mdY > mdX){
-      AXIS_Y = true;
-      console.log('axis Y')
-    } else {
-      AXIS_Y = false;
-      console.log('axis X')
-    }
-    AXIS_DELTA = getNewDelta(e.deltaY, e.deltaX)
-    closeStream(50)
-  }
-  else {
-    if(/*EVENT_REPEAT_COUNTER===1 && */STREAM_TIMER) STREAM_TIMER = clearTimeout(STREAM_TIMER);
-    // const _newDelta = Math.abs(getNewDelta(e.deltaY, e.deltaX));
-    const _newDelta = getNewDelta(e.deltaY, e.deltaX);
-    if(!GESTURE_RUN ){
-      let timlyPlatformSize = AXIS_Y ? BIND_EL.offsetHeight : BIND_EL.offsetWidth
-      if(_newDelta < timlyPlatformSize*.05){
-        closeStream(50)
-      } else {
-        PLATFORM_SIZE = (AXIS_Y ? BIND_EL.offsetHeight : BIND_EL.offsetWidth);
-        GESTURE_RUN = true;
-        if(STREAM_TIMER) STREAM_TIMER = clearTimeout(STREAM_TIMER);
-      }
-    }
-    else {
-      // if(!TURN_CLOSER) EMIT_DELTA=_newDelta* 100 / PLATFORM_SIZE;
-      if(_newDelta > AXIS_DELTA){ //!TURN_CLOSER &&
-        // console.log('Рост', _newDelta);
-        if(AXIS_DELTA_PICK !== 0){
-          newPeakPossibleCounter++;
-          if(newPeakPossibleCounter > 2) {
-            //заканчиваем предидущую анимацию || если анимация не дошла до процента доводчика, ускореям данную анимацию
-            console.log('Clear AXIS_DELTA_PICK')
-
-            if(TURN_CLOSER){
-              console.log('registered DISTANCE_MOVED')
-              DISTANCE_MOVED = 115 //костыль
-            } else {
-              AXIS_DELTA_PICK = 0
-            }
-
-
-          }
-        }
-      } else {
-        newPeakPossibleCounter = 0;
-
-        if(AXIS_DELTA_PICK === 0){
-          AXIS_DELTA_PICK = AXIS_DELTA;
-          DISTANCE_MOVED = AXIS_DELTA * 100 / PLATFORM_SIZE;
-          BIND_NODE.data.on.someEvent({axisY: AXIS_Y, delta: DISTANCE_MOVED});
-          if(DISTANCE_MOVED > 10){
-            TURN_CLOSER=true;
-          }
-          console.log('Точка вверха: ' + AXIS_DELTA, 'Пройденно: ' + DISTANCE_MOVED, 'size блока: ' + PLATFORM_SIZE)
-        } else if(AXIS_DELTA_PICK !== 0 && _newDelta === AXIS_DELTA){
-          // console.log('Схождение', AXIS_DELTA_PICK)
-          // return false;
-        } else {
-          if(TURN_CLOSER){
-            // адаптировать систему с учетом рендринга до пика !!!!
-
-            // console.log('- ' + deltaDistMoved)
-
-            // EMIT_DELTA = (AXIS_DELTA_PICK + diffPlatform * deltaDistMoved/100)*100/PLATFORM_SIZE;
-            // EMIT_DELTA = deltaDistMoved
-            // console.log(deltaDistMoved)
-            // console.log('Отрабатываем доводчик: ' + deltaDistMoved + '%; In PX' + (AXIS_DELTA_PICK + diffPlatform * deltaDistMoved/100));
-
-
-            let newDistMoved = AXIS_DELTA * 100 / PLATFORM_SIZE;
-            let diffPlatform = PLATFORM_SIZE - AXIS_DELTA_PICK;
-            let deltaDistMoved = Math.abs(DISTANCE_MOVED-newDistMoved)*100/DISTANCE_MOVED;
-
-
-            let _newDistMoved = _newDelta * 100 / PLATFORM_SIZE;
-            let _deltaDistMoved = Math.abs(DISTANCE_MOVED-_newDistMoved)*100/DISTANCE_MOVED;
-
-            let deltaPlatformMoved = (AXIS_DELTA_PICK + diffPlatform * deltaDistMoved/100)*100/PLATFORM_SIZE;
-            let _deltaPlatformMoved = (AXIS_DELTA_PICK + diffPlatform * _deltaDistMoved/100)*100/PLATFORM_SIZE;
-
-
-            let difwithfutprev = _deltaPlatformMoved - deltaPlatformMoved;
-            if(difwithfutprev > 2 && difwithfutprev < 10){
-              let count=0, _stp = difwithfutprev/4, _stpSumm=0;
-
-              if(OPTI_ITER) clearInterval(OPTI_ITER);
-              OPTI_ITER = setInterval(function (){
-                count++;
-                _stpSumm=_stp*count;
-                // console.log('- '+ count + ' - ' + Number(deltaDistMoved + _stpSumm))
-                BIND_NODE.data.on.someEvent({axisY: AXIS_Y, delta: deltaPlatformMoved + _stpSumm});
-
-                if(count >= 4) OPTI_ITER = clearInterval(OPTI_ITER);
-              }, 1/100);
-            } else {
-              BIND_NODE.data.on.someEvent({axisY: AXIS_Y, delta: deltaPlatformMoved});
-            }
-            // console.log('______________', deltaDistMoved, _deltaDistMoved)
-
-          }
-          // console.log('ПАДАЕМ',  _newDelta)
-        }
-      }
-    }
-
-
-    AXIS_DELTA = _newDelta;
-    closeStream(80)
+  _initialHandler(e);
+  if(IS_GESTURE_SWIPE){
+    _swipeGestureControlHandler(e);
+  } else {
+    _zoomGestureControlHandler(e);
   }
 
-
-  // BIND_NODE.data.on.someEvent({axisY: AXIS_Y, delta: EMIT_DELTA});
-
-
-
-  EVENT_REPEAT_COUNTER++;
+  _gonerHandler()
 }
-
-
-
-
 
 function createVxGestureDirective(){
   return {
@@ -182,74 +381,3 @@ function createVxGestureDirective(){
 const vxGestureDirective = createVxGestureDirective();
 
 export {vxGestureDirective as VxGesture}
-
-
-
-// let EL_WIDTH = BIND_EL.offsetWidth, EL_HEIGHT = BIND_EL.offsetHeight;
-
-
-// function DATA_CLEANSING(){
-//   EVENT_REPEAT_COUNTER=0;
-//   STREAM_TIMER=null;
-//   EVENT_DELTA=0;
-//   console.log('DATA WAS CLEAN')
-// }
-// function CATCH_END_STREAM_GESTURE(timeout = 150){
-//   if(STREAM_TIMER) STREAM_TIMER = clearTimeout(STREAM_TIMER)
-//   STREAM_TIMER = setTimeout(() => DATA_CLEANSING(), timeout);
-// }
-// function getInfo(e){
-//   const axisY = Math.abs(e.deltaY) > Math.abs(e.deltaX),
-//     posDir = axisY ? e.deltaY > 0 : e.deltaX > 0,
-//     delta = axisY ? e.deltaY : e.deltaX,
-//     deltaModular = Math.abs(delta);
-//
-//   EVENT_DELTA += deltaModular;
-//
-//
-//   // return {axisY, posDir, delta: EVENT_DELTA > 100 ? deltaModular : EVENT_DELTA}
-// }
-// function prepareGestureData(e){
-//   EVENT_STATE_KEYS = getEventStateKeys(e);
-//   EVENT_GESTURE_PROPS = getEventGestureProps(e);
-// }
-// function checkGestureData(e){
-//   if(JSON.stringify(getEventStateKeys(e)) !== JSON.stringify(EVENT_STATE_KEYS)){
-//     console.log('Prevent Func by change keys')
-//     return false
-//   }
-//
-//   if(JSON.stringify(getEventGestureProps(e)) !== JSON.stringify(EVENT_GESTURE_PROPS)){
-//     console.log(JSON.stringify(getEventGestureProps(e)))
-//     console.log(JSON.stringify(EVENT_GESTURE_PROPS))
-//
-//     console.log('Prevent Func by change direction')
-//   }
-// }
-//
-// function getEventStateKeys(e){
-//   let keysArr = [];
-//
-//   if(e.ctrlKey) keysArr.push('ctrl');
-//   else if(e.shiftKey) keysArr.push('shift');
-//   if(_REAL_META_KEY ? e.metaKey : e.altKey) keysArr.push('meta');
-//
-//   return keysArr;
-// }
-// function getEventGestureProps(e){
-//   const dY = e.deltaY, dX = e.deltaX;
-//   let axisY = true;
-//
-//   if(EVENT_STATE_KEYS.indexOf('ctrl') === -1){
-//     if(EVENT_STATE_KEYS.indexOf('shift') !== -1){
-//       axisY = false
-//     } else {
-//       axisY = Math.abs(dY) > Math.abs(dX)
-//     }
-//   }
-//
-//   const dirPositive = axisY ? dY > 0 : dX > 0;
-//
-//   return {axisY, dirPositive}
-//
-// }

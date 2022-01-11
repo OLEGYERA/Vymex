@@ -49,13 +49,33 @@ export default {
       }
     },
     /*eslint-disable*/
-    handleScroll(e){
-      console.log(e)
-      if(e.axisY){
-        this.stl = 'translateY(' + (e.delta) + '%)';
+    handleScroll(opts){
+      if(opts.isGestureSwipe){
+        if(opts.axisY){
+          this.stl = 'translateY(' + (opts.posDir ? '-' : '') + (opts.deltaProgress) + '%)';
+        } else {
+          this.stl = 'translateX(' + (opts.posDir ? '-' : '') + (opts.deltaProgress) + '%)';
+        }
       } else {
-        this.stl = 'translateX(' + (e.delta) + '%)';
+        console.log(opts)
+        let Progress = opts.deltaProgress / 100;
+        console.log(Progress)
+        if(!opts.posDir){
+          this.stl = 'scale(' + (Progress) + ')';
+        } else {
+          this.stl = 'scale(' + (1 - Progress) + ')';
+
+        }
       }
+
+
+
+      // console.log(opts)
+      // if(e.axisY){
+      //   this.stl = 'translateY(' + (e.delta) + '%)';
+      // } else {
+      //   this.stl = 'translateX(' + (e.delta) + '%)';
+      // }
       // this.stl = 'translateY(' + (percent) + '%)';
       // console.log('In Vue', percent, this.stl)
     },
