@@ -1,6 +1,14 @@
 /*eslint-disable*/
+
 const _REAL_META_KEY = navigator.platform === 'MacIntel';
-let BIND_EL, BIND_REF, BIND_NODE; // PRIVATE BIND VARIABLES
+const LIST_ANIMATION = {
+  rebound_h: [.3, .9, 1.6, 2, .6, .4, .6, .8, .9, .95, 1],
+  rebound: [.25, .7, 1.2, 1.4, .8, .6, .8, 1],
+  acceleration_h: [.2, .9, 1.2, 1.1, 1],
+  acceleration: [.1, .95, .98, 1],
+}
+
+let BIND_EL, BIND_REF, BIND_NODE, BIND_MODIFIER; // PRIVATE BIND VARIABLES
 let HARD_GESTURE_TIMER, DEATH_SYSTEM_TIMER, DEATH_ZOOM_ANIMATION_TIMER;
 
 let PLATFORM_SIZE=0;
@@ -10,10 +18,18 @@ let CURRENT_DELTA_POSITION, LAST_DELTA_POSITION=0, PICK_DELTA_POSITION=0, FALLOF
 
 let IS_GESTURE_SWIPE, GESTURE_ZOOM={}, GESTURE_SWIPE={}; //IS_ZOOM_GESTURE!!
 
-const ANIM_PAT_REBOUND_SPEED_2 = [.3, .9, 1.6, 2, .6, .4, .6, .8, .9, .95, 1];
-const ANIM_PAT_REBOUND_SPEED_1 = [.25, .7, 1.2, 1.4, .8, .6, .8, 1];
-const ANIM_PAT_ACCELERATION_SPEED_2 = [.2, .9, 1.2, 1.1, 1];
-const ANIM_PAT_ACCELERATION_SPEED_1 = [.1, .95, .98, 1];
+
+let BIND_ANIMATION = {
+  zoom: {
+    duration: 200,
+    animate: false
+  },
+  swipe: {
+    duration: 375,
+    animate: false,
+    animateThreshold: false
+  }
+}
 
 
 function GestureAnimation({pattern, draw, duration, finish}) {
@@ -32,57 +48,93 @@ function GestureAnimation({pattern, draw, duration, finish}) {
 }
 function _getSwipeAnimationData(){
   const _shiftProgress = _getPlatformShiftProgress();
-  if(_shiftProgress > 100){
-    console.log('Very fast',_shiftProgress)
-    return {
-      duration: 350,
-      pattern: ANIM_PAT_REBOUND_SPEED_2
-    }
-  } else if(_shiftProgress > 70){
-    console.log('Fast',_shiftProgress)
-    return {
-      duration: 350,
-      pattern: ANIM_PAT_REBOUND_SPEED_1
-    }
-  } else if(_shiftProgress > 50){
-    console.log('Base',_shiftProgress)
-    return {
-      duration: 375,
-      pattern: ANIM_PAT_ACCELERATION_SPEED_2
-    }
-  } else if(_shiftProgress > 25){
-    console.log('Slow',_shiftProgress)
-    return {
-      duration: 400,
-      pattern: ANIM_PAT_ACCELERATION_SPEED_1
-    }
-  } else{
-    console.log('Cancel',_shiftProgress)
+  if(!BIND_ANIMATION.swipe.animate){
+    if(_shiftProgress > 70){
+      console.log('Very fast',_shiftProgress)
+      return {
+        duration: BIND_ANIMATION.swipe.duration - 25,
+        pattern: LIST_ANIMATION.rebound_h
+      }
+    } else if(_shiftProgress > 50){
+      console.log('Fast',_shiftProgress)
+      return {
+        duration: BIND_ANIMATION.swipe.duration - 25,
+        pattern: LIST_ANIMATION.rebound
+      }
+    } else if(_shiftProgress > 30){
+      console.log('Base',_shiftProgress)
+      return {
+        duration: BIND_ANIMATION.swipe.duration,
+        pattern: LIST_ANIMATION.acceleration_h
+      }
+    } else if(_shiftProgress > 15){
+      console.log('Slow',_shiftProgress)
+      return {
+        duration: BIND_ANIMATION.swipe.duration + 25,
+        pattern: LIST_ANIMATION.acceleration
+      }
+    } else{
+      console.log('Cancel',_shiftProgress)
 
-    return {
-      duration: 200,
-      pattern: [_shiftProgress*.1/100, _shiftProgress*.6/100, _shiftProgress*1.8/100, _shiftProgress*.6/100, 0]
+      return {
+        duration: 200,
+        pattern: [_shiftProgress*.1/100, _shiftProgress*.6/100, _shiftProgress*1.8/100, _shiftProgress*.6/100, 0]
+      }
     }
+  }
+  else{
+    if(BIND_ANIMATION.swipe.animateThreshold){
+      if(_shiftProgress > 15){
+        return {
+          duration: BIND_ANIMATION.swipe.duration,
+          pattern: BIND_ANIMATION.swipe.animate
+        }
+      } else{
+        console.log('Cancel',_shiftProgress)
+        return {
+          duration: 200,
+          pattern: [_shiftProgress*.1/100, _shiftProgress*.6/100, _shiftProgress*1.8/100, _shiftProgress*.6/100, 0]
+        }
+      }
+    } else {
+      console.log('HERE', {
+        duration: BIND_ANIMATION.swipe.duration,
+        pattern: BIND_ANIMATION.swipe.animate
+      })
+      return {
+        duration: BIND_ANIMATION.swipe.duration,
+        pattern: BIND_ANIMATION.swipe.animate
+      }
+    }
+
   }
 }
 function _getZoomAnimationData(){
-  if(PICK_DELTA_POSITION < 15){
-    console.log('Base', PICK_DELTA_POSITION)
-    return {
-      duration: 300,
-      pattern: ANIM_PAT_ACCELERATION_SPEED_1
+  if(!BIND_ANIMATION.zoom.animate) {
+    if (PICK_DELTA_POSITION < 15) {
+      console.log('Base', PICK_DELTA_POSITION)
+      return {
+        duration: BIND_ANIMATION.swipe.duration + 100,
+        pattern: LIST_ANIMATION.acceleration
+      }
+    } else if (PICK_DELTA_POSITION > 50) {
+      console.log('Very Fast', PICK_DELTA_POSITION)
+      return {
+        duration: BIND_ANIMATION.swipe.duration,
+        pattern: LIST_ANIMATION.acceleration_h
+      }
+    } else if (PICK_DELTA_POSITION > 15) {
+      console.log('Fast', PICK_DELTA_POSITION)
+      return {
+        duration: BIND_ANIMATION.swipe.duration + 50,
+        pattern: LIST_ANIMATION.acceleration_h
+      }
     }
-  } else if(PICK_DELTA_POSITION > 50){
-    console.log('Very Fast', PICK_DELTA_POSITION)
+  }
+  else {
     return {
-      duration: 200,
-      pattern: ANIM_PAT_ACCELERATION_SPEED_2
-    }
-  } else if(PICK_DELTA_POSITION > 15){
-    console.log('Fast', PICK_DELTA_POSITION)
-    return {
-      duration: 250,
-      pattern: ANIM_PAT_ACCELERATION_SPEED_2
+      duration: BIND_ANIMATION.zoom.duration,
+      pattern: BIND_ANIMATION.zoom.animate
     }
   }
 }
@@ -123,6 +175,7 @@ function EventDeath(){
   EVENT_GESTURE_EXPECTATION = false;
   EVENT_GESTURE_RECOGNIZING = true;
   EVENT_ANIMATION_RECOGNIZING = false;
+  GESTURE_ZOOM={}; GESTURE_SWIPE={};
 }
 function StartZoomGesture(){
   console.log('Тачбар зум')
@@ -152,7 +205,15 @@ function __watchZoomAnimationGesture(cancel = false){
 }
 
 function _settingStates(e){
-  IS_GESTURE_SWIPE = !e.ctrlKey;
+  if(BIND_MODIFIER === 'swipe'){
+    IS_GESTURE_SWIPE = true;
+  } else if(BIND_MODIFIER === 'zoom'){
+    if(!e.ctrlKey) return false;
+    IS_GESTURE_SWIPE = !e.ctrlKey;
+  } else {
+    IS_GESTURE_SWIPE = !e.ctrlKey;
+  }
+
   const _meta = _REAL_META_KEY ? e.metaKey : e.altKey;
 
   const dX = e.deltaX, dY = e.deltaY;
@@ -211,9 +272,11 @@ function _initialHandler(e){
     if(EVENT_REPEAT_COUNTER === 1) __checkHardGesture();
     if(!(EVENT_ANIMATION || EVENT_GESTURE_EXPECTATION)) __watchSystemDeath();
 
-    if(EVENT_GESTURE_EXPECTATION && IS_GESTURE_SWIPE !== !e.ctrlKey){
-      console.log('Разные жесты! Меняю жест')
-      IS_GESTURE_SWIPE = !e.ctrlKey
+    if(!BIND_MODIFIER){
+      if(EVENT_GESTURE_EXPECTATION && IS_GESTURE_SWIPE !== !e.ctrlKey){
+        console.log('Разные жесты! Меняю жест')
+        IS_GESTURE_SWIPE = !e.ctrlKey
+      }
     }
   }
 
@@ -243,17 +306,18 @@ function _gestureControlHandler(e){
       ++FALLOFF_CONTROL_DELTA_COUNT;
     }
 
-    if(IS_GESTURE_SWIPE && _getPlatformShiftProgress() > 60){
-      EVENT_GESTURE_RECOGNIZING = false;
-      EVENT_ANIMATION_RECOGNIZING = true;
-    }
-    if(FALLOFF_CONTROL_DELTA_COUNT > 3) {
-      EVENT_GESTURE_RECOGNIZING = false;
-      EVENT_ANIMATION_RECOGNIZING = true;
-    }
+    if(GESTURE_SWIPE.axisY !== undefined || GESTURE_ZOOM.axisY  !== undefined){
+      if(IS_GESTURE_SWIPE && _getPlatformShiftProgress() > 60){
+        EVENT_GESTURE_RECOGNIZING = false;
+        EVENT_ANIMATION_RECOGNIZING = true;
+      }
+      if(FALLOFF_CONTROL_DELTA_COUNT > 3) {
+        EVENT_GESTURE_RECOGNIZING = false;
+        EVENT_ANIMATION_RECOGNIZING = true;
+      }
 
-    if(!IS_GESTURE_SWIPE) __watchZoomAnimationGesture();
-
+      if(!IS_GESTURE_SWIPE) __watchZoomAnimationGesture();
+    }
   }
 
   // Определяем тип анимации для жеста
@@ -264,7 +328,7 @@ function _gestureControlHandler(e){
       BIND_NODE.data.on.gestureStart({type: 'swipe', axisY: GESTURE_SWIPE.axisY, posDir: GESTURE_SWIPE.isPositiveDirection})
     } else {
       __watchZoomAnimationGesture(true);
-      BIND_NODE.data.on.gestureStart({type: 'zoom', axisY: GESTURE_ZOOM.axisY, posDir: GESTURE_ZOOM.isPositiveDirection})
+      BIND_NODE.data.on.gestureStart({type: 'zoom', axisY: GESTURE_ZOOM.axisY, posDir: GESTURE_ZOOM.isPositiveDirection, isOuter: GESTURE_ZOOM.isOuter})
     }
 
     //Получаем Данные об Анимации
@@ -303,6 +367,51 @@ function createVxGestureDirective(){
   return {
     bind: (e, r, n) => {
       BIND_EL = e; BIND_REF = r; BIND_NODE = n;
+      const DIRECTIVE = BIND_NODE.data.directives[0],
+            VALUE = BIND_REF.value;
+
+      if(DIRECTIVE.modifiers){
+        BIND_MODIFIER = DIRECTIVE.modifiers.zoom ? 'zoom' : (DIRECTIVE.modifiers.swipe ? 'swipe' : false);
+      } else {
+        BIND_MODIFIER = false
+      }
+
+
+      if(VALUE){
+        if(typeof VALUE !== 'object') {
+          console.error('Gesture value must be Object')
+          return;
+        }
+        //учесть свойства чисто для Zoom или Swipe
+        if(VALUE.duration){
+          BIND_ANIMATION.zoom.duration = BIND_ANIMATION.swipe.duration = VALUE.duration;
+        } else {
+          if(VALUE.zoomDuration){
+            BIND_ANIMATION.zoom.duration = VALUE.zoomDuration
+          }
+          if(VALUE.swipeDuration){
+            BIND_ANIMATION.swipe.duration = VALUE.swipeDuration
+          }
+        }
+
+        if(VALUE.animate && LIST_ANIMATION[VALUE.animate]){
+          BIND_ANIMATION.zoom.animate = BIND_ANIMATION.swipe.animate = LIST_ANIMATION[VALUE.animate];
+        } else {
+          if(VALUE.zoomAnimate && LIST_ANIMATION[VALUE.zoomAnimate]){
+            BIND_ANIMATION.zoom.animate = LIST_ANIMATION[VALUE.zoomAnimate]
+          }
+          if(VALUE.swipeAnimate && LIST_ANIMATION[VALUE.swipeAnimate]){
+            BIND_ANIMATION.swipe.animate = LIST_ANIMATION[VALUE.swipeAnimate]
+          }
+        }
+
+        if(VALUE.animateThreshold) {
+          BIND_ANIMATION.swipe.animateThreshold = VALUE.animateThreshold
+        }
+
+      }
+
+      console.log(BIND_ANIMATION)
 
       if(BIND_NODE.data.on.gestureStart && BIND_NODE.data.on.gestureProcess && BIND_NODE.data.on.gestureEnd){
         e.addEventListener('wheel', vxGestureHandler, false);

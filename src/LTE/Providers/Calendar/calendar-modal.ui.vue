@@ -1,11 +1,13 @@
 <template>
   <div class="calendar-provider calendar-modal-ui">
-    <div class="calendar-wrapper" v-gesture
-         @gestureStart="gestureStart" @gestureProcess="gestureProcess" @gestureEnd="gestureEnd">
-      <div class="wrapper" :style="{transform: stl}"></div>
-      
-
-      <calendar-header/>
+    <div class="calendar-wrapper" v-gesture.swipe="{animate: 'acceleration_h', duration: 300/*, animateThreshold: true*/}" @gestureStart="gestureStart" @gestureProcess="gestureProcess" @gestureEnd="gestureEnd">
+<!--      <div class="wrapper" :style="{transform: gestureStyle}"></div>-->
+      <calendar-header
+        :year="calendar.Year"
+        :month="calendar.Month"
+        :diapason="[1970, 2022]"
+        @onNewYear="calendar.updateYear($event)"/>
+      <calendar-main :calendar="calendar" :calendar-replica="calendarReplica" :gesture="gesture"/>
     </div>
   </div>
 </template>
@@ -13,28 +15,24 @@
 <script>
 import CalendarMixin from './mixin'
 import CalendarHeader from './calendar-header.atom'
+import CalendarMain from './calendar-main.atom'
+import {Calendar} from './calendar'
 import './style.scss'
 
 export default {
+  /*eslint-disable*/
   name: 'Providers.CalendarModalUi',
-  components: {CalendarHeader},
+  components: {CalendarHeader, CalendarMain},
   mixins: [CalendarMixin],
   data: () => ({
-    wheel: null,
-    other: null,
-    onTouch: false,
-    stl: 'translateY(0%)',
+    calendar: new Calendar(),
+    calendarReplica: null
   }),
+  mounted() {
+    // setInterval(() => {this.calendar.shiftYear(1)}, 1000)
+  },
   methods: {
-    gestureStart({type, axisY, posDir}){
-      console.log(type, axisY, posDir, 'Start')
-    },
-    gestureProcess(process){
-      console.log(process, 'Process')
-    },
-    gestureEnd(){
-      console.log('End')
-    },
+
     /*eslint-disable*/
     handleScroll(opts){
       if(opts.isGestureSwipe){
@@ -63,15 +61,11 @@ export default {
     .calendar-wrapper{
       width: 460px;
       height: 400px;
-      //width: 460px;
-      //height: 400px;
       border-radius: 12px;
-      overflow: visible;
       .wrapper{
+        height: 100%;
         width: 100%;
-        height: 400px;
         background-color: #fff;
-        //transition: 200ms all ease;
       }
     }
   }
