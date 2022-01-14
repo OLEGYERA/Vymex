@@ -31,7 +31,7 @@
 </template>
 
 <script>
-  import ButtonInfo from '@Facade/Button/Info'
+  import ButtonInfo from '@Icon/Colored/Info'
   import ButtonBase from '@Facade/Button/Base'
   import TitleSub from '@Facade/Title/Sub'
   import TitleCaption from '@Facade/Title/Caption'
@@ -71,6 +71,7 @@
       .message-part {
         display: flex;
         align-items: center;
+      }
       .message-icon {
         margin-right: 8px;
         height: 28px;
