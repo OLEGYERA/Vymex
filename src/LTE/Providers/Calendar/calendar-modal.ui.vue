@@ -1,13 +1,42 @@
 <template>
   <div class="calendar-provider calendar-modal-ui">
-    <div class="calendar-wrapper" v-gesture.swipe="{animate: 'acceleration_h', duration: 300/*, animateThreshold: true*/}" @gestureStart="gestureStart" @gestureProcess="gestureProcess" @gestureEnd="gestureEnd">
-<!--      <div class="wrapper" :style="{transform: gestureStyle}"></div>-->
-      <calendar-header
-        :year="calendar.Year"
-        :month="calendar.Month"
-        :diapason="[1970, 2022]"
-        @onNewYear="calendar.updateYear($event)"/>
-      <calendar-main :calendar="calendar" :calendar-replica="calendarReplica" :gesture="gesture"/>
+    <div class="calendar-wrapper" v-gesture @someEvent="handleScroll">
+
+      <div class="wheel-alert" v-if="wheel">
+        deltaX: {{wheel.deltaX}}
+        <br>
+        deltaY: {{wheel.deltaY}}
+        <br>
+        deltaZ: {{wheel.deltaZ}}
+        <br>
+        wDelta: {{wheel.wheelDelta}}  wDeltaX: {{wheel.wheelDeltaX}} wDeltaY: {{wheel.wheelDeltaY}}
+        <br>
+        deltaMode: {{wheel.deltaMode}}
+        <br>
+
+        which: {{wheel.which}} | altKey: {{wheel.altKey}} | shiftKey: {{wheel.shiftKey}}
+        <br>
+        button: {{wheel.button}} | buttons: {{wheel.buttons}} | cancelable: {{wheel.cancelable}}
+        <br>
+
+        type: {{ other.type }}
+        <br>
+        category: {{ other.category }}
+        <br>
+        depth: {{ other.depth }}
+        <br>
+        time: {{ other.time }}
+        <br>
+        delta: {{ other.delta }} | deltaX: {{other.deltaX}} | deltaY: {{other.deltaY}}
+        <br>
+        speed: {{other.speed}}
+
+        <br>
+
+
+      </div>
+
+      <calendar-header/>
     </div>
   </div>
 </template>
@@ -15,42 +44,51 @@
 <script>
 import CalendarMixin from './mixin'
 import CalendarHeader from './calendar-header.atom'
-import CalendarMain from './calendar-main.atom'
-import {Calendar} from './calendar'
 import './style.scss'
 
 export default {
-  /*eslint-disable*/
   name: 'Providers.CalendarModalUi',
-  components: {CalendarHeader, CalendarMain},
+  components: {CalendarHeader},
+  // directives: {scroll},
   mixins: [CalendarMixin],
   data: () => ({
-    calendar: new Calendar(),
-    calendarReplica: null
+    wheel: null,
+    other: null,
+    onTouch: false
   }),
   mounted() {
-    // setInterval(() => {this.calendar.shiftYear(1)}, 1000)
+    // let win = document.getElementsByClassName('calendar-wrapper')[0]
+    // win.addEventListener('wheel', this.handleScroll1);
+    //
+    // if("ontouchstart" in window){
+    //   console.log(123)
+    //   win.addEventListener('touchstart', this.touchStartHandler);
+    //   win.addEventListener('touchmove', this.touchMoveHandler);
+    //   win.addEventListener('touchend', this.touchEndHandler);
+    // }
   },
   methods: {
-
-    /*eslint-disable*/
-    handleScroll(opts){
-      if(opts.isGestureSwipe){
-        if(opts.axisY){
-          this.stl = 'translateY(' + (opts.posDir ? '-' : '') + (opts.deltaProgress) + '%)';
-        } else {
-          this.stl = 'translateX(' + (opts.posDir ? '-' : '') + (opts.deltaProgress) + '%)';
-        }
-      } else {
-        let Progress = opts.deltaProgress / 100;
-        // console.log(Progress)
-        if(!opts.posDir){
-          this.stl = 'scale(' + (Progress) + ')';
-        } else {
-          this.stl = 'scale(' + (1 - Progress) + ')';
-
-        }
+    touchStartHandler(){
+      this.onTouch = true
+    },
+    touchEndHandler(){
+      this.onTouch = false
+    },
+    touchMoveHandler(e){
+      if(this.onTouch){
+        console.log(e)
       }
+    },
+    handleScroll(e, d){
+      this.other = d
+      this.wheel = e
+    },
+
+    handleScroll1(evt){
+      evt.preventDefault()
+      console.log(evt)
+      this.wheel = evt
+      // return true;
     },
   }
 }
@@ -62,11 +100,6 @@ export default {
       width: 460px;
       height: 400px;
       border-radius: 12px;
-      .wrapper{
-        height: 100%;
-        width: 100%;
-        background-color: #fff;
-      }
     }
   }
 </style>
