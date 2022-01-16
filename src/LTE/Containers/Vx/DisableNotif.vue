@@ -2,20 +2,24 @@
   <div class="container-vx-disable-notif">
     <div class="notif-title">
       <title-semi>Отключить оповещения</title-semi>
-      <div class="button" :class="{switched: this.switch}" @click="changeSwitch">
+      <div class="button"
+           :class="{on: this.switch}"
+           @click="changeSwitch">
         <div class="button-switch"></div>
       </div>
     </div>
-    <div v-if="this.switch">
-      <div class="switch-time"
-           :key="timeKey"
-           :class="{active: timeKey === chooseTime}"
-           v-for="(timeItem, timeKey) in times"
-           @click="changeId(timeKey)">
-        <div>{{ timeItem }}</div>
-        <div class="radiobutton"></div>
+    <transition name="slide">
+      <div v-if="this.switch">
+        <div class="switch-time"
+             :key="timeKey"
+             :class="{active: timeKey === chooseTime}"
+             v-for="(timeItem, timeKey) in times"
+             @click="changeId(timeKey)">
+          <div>{{ timeItem }}</div>
+          <div class="radiobutton"></div>
+        </div>
       </div>
-    </div>
+    </transition>
   </div>
 </template>
 
@@ -34,9 +38,6 @@ export default {
     };
   },
   props: ['chooseTime'],
-  updated() {
-    console.log(this.chooseTime)
-  },
   methods: {
     changeSwitch() {
       this.switch = !this.switch
@@ -53,6 +54,7 @@ export default {
    box-sizing: border-box;
  }
  .container-vx-disable-notif {
+   height: 100%;
    .notif-title {
      margin-bottom: 24px;
      display: flex;
@@ -62,21 +64,20 @@ export default {
  }
   .button {
     display: flex;
-    text-align: right;
     padding: 2px;
     width: 36px;
     height: 20px;
-    background-color: rgba(130, 150, 170, 0.2);
     border-radius: 16px;
+    background-color: rgba(130, 150, 170, 0.2);
     cursor: pointer;
+    transition: all .2s;
     .button-switch {
       height: 16px;
       width: 16px;
       border-radius: 50%;
       background-color: #fff;
     }
-
-    &.switched {
+    &.on {
       background-color: $blue;
       justify-content: end;
     }
@@ -110,6 +111,19 @@ export default {
         border: $blue-scale-300 solid 5px;
         background-color: #fff;
       }
+    }
+  }
+  .slide {
+    &-enter-active, &-leave-active {
+      transition: all .2s linear;
+    }
+    &-enter-to, &-leave {
+      max-height: 200px;
+      overflow: hidden;
+    }
+    &-enter, &-leave-to {
+      overflow: hidden;
+      max-height: 0;
     }
   }
 </style>

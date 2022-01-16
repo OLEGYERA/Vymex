@@ -9,9 +9,11 @@
           <icon-points-vertical/>
         </div>
         <div class="notifications-main">
-          <disable-notif v-if="disable" @changeIcon="changeIcon" :chooseTime="chooseTime"/>
-          <messages-block v-else-if="openMessages"/>
-<!--          <no-notifications v-else/>-->
+          <transition name="blocks">
+            <messages-block v-if="openMessages"/>
+            <disable-notif v-else-if="disable" @changeIcon="changeIcon" :chooseTime="chooseTime"/>
+            <!--          <no-notifications v-else/>-->
+          </transition>
         </div>
       </div>
       <div class="side-panel">
@@ -21,7 +23,7 @@
         <div
             class="side-button side-button-special"
             :class="{active: disable}"
-            @click="openDisable"
+            @click="$emit('open-disable')"
         >
           <icon-volume :class="{active: disable}" v-if="chooseTime === null"/>
           <icon-volume-off :class="{active: disable}" v-else/>
@@ -59,19 +61,15 @@
     },
     data() {
       return {
-        disable: false,
-        openMessages: true,
         chooseTime: null,
       };
     },
     props: {
-      notify: Boolean
+      notify: Boolean,
+      openMessages: Boolean,
+      disable: Boolean,
     },
     methods: {
-      openDisable() {
-        this.disable = !this.disable;
-        this.openMessages= !this.openMessages;
-      },
       changeIcon(key) {
         if (this.chooseTime === key) {
           this.chooseTime = null
@@ -97,7 +95,7 @@
     background-color: $grey;
     width: 444px;
     transform: translateX(100%);
-    transition: transform 0.3s;
+    transition: transform 0.4s;
     .notifications-block {
       .notifications-head {
         width: 372px;
@@ -128,8 +126,8 @@
           }
         }
         .icon-points {
-          height: 16px;
-          margin-right: 10px;
+          padding: 10px;
+          cursor: pointer;
         }
       }
       .notifications-main {
@@ -160,10 +158,23 @@
   }
   .visible {
     transform: translateX(0);
-    transition: transform 0.3s;
   }
   .active {
     background-color: $grey;
     color: #fff;
+  }
+  .blocks {
+    &-enter{
+      transform: translateX(15%);
+    }
+    &-leave-to{
+      opacity: 0;
+    }
+    &-enter-active{
+      transition: $vx-tab-time all ease;
+    }
+    &-enter-to{
+      transform: translateX(0);
+    }
   }
 </style>

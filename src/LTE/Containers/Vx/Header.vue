@@ -16,9 +16,14 @@
     </div>
     <vx-notifications
       :notify="notify"
+      :openMessages="openMessages"
+      :disable="disable"
       @get-notify="getNotify"
+      @open-disable="openDisable"
     />
-    <div class="opacity" v-if="notify"></div>
+    <transition name="fade">
+      <div class="notifications-backdrop" v-if="notify"></div>
+    </transition>
   </div>
 </template>
 
@@ -36,13 +41,21 @@
     },
     data() {
       return {
-        notify: false
+        notify: false,
+        openMessages: true,
+        disable: false,
       };
     },
     methods: {
-      getNotify () {
+      getNotify() {
         this.notify = !this.notify;
-      }
+        this.openMessages = true;
+        this.disable = false;
+      },
+      openDisable() {
+        this.openMessages= !this.openMessages;
+        this.disable = !this.disable;
+      },
     }
   }
 </script>
@@ -77,15 +90,26 @@
         }
       }
     }
-    .opacity {
-      width: 100%;
-      height: 100%;
-      z-index: 2;
-      top: 0;
-      left: 0;
-      position: absolute;
-      background-color: $grey-scale-700;
-      opacity: 80%;
+  }
+  .notifications-backdrop {
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    top: 0;
+    left: 0;
+    position: absolute;
+    background-color: $grey-scale-700;
+    opacity: 80%;
+  }
+  .fade {
+    &-enter, &-leave-to {
+      opacity: 0;
+    }
+    &-enter-to, &-leave {
+      opacity: .8;
+    }
+    &-enter-active, &-leave-active {
+      transition: opacity .4s;
     }
   }
 </style>
