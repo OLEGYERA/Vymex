@@ -70,7 +70,7 @@ export default {
     }
     &.on {
       background-color: $blue;
-      justify-content: end;
+      justify-content: flex-end;
     }
   }
   .switch-time {

@@ -15,7 +15,7 @@
       </notify>
       <notify :info="cats.task">
         <template v-slot:text>
-          [Имя_пользователя] назначил вас ответсвенным [название_задачи]
+          [Имя_пользователя] назначил вас ответственным [название_задачи]
         </template>
       </notify>
       <notify :info="cats.process">
