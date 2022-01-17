@@ -4,7 +4,7 @@
       <div class="message-part">
         <div class="message-icon">
           <img v-if="info.icon" :src="info.icon"/>
-          <button-info
+          <icon-info
             v-else
             :class="{
               'icon-success': success,
@@ -31,7 +31,7 @@
 </template>
 
 <script>
-  import ButtonInfo from '@Icon/Colored/Info'
+  import IconInfo from '@Icon/Colored/Info'
   import ButtonBase from '@Facade/Button/Base'
   import TitleSub from '@Facade/Title/Sub'
   import TitleCaption from '@Facade/Title/Caption'
@@ -39,7 +39,7 @@
   export default {
     name: 'Container.Vx.NotificationPlate',
     components: {
-      ButtonInfo,
+      IconInfo,
       ButtonBase,
       TitleSub,
       TitleCaption

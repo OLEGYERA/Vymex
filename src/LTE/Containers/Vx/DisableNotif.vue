@@ -4,7 +4,7 @@
       <title-semi>Отключить оповещения</title-semi>
       <div class="button"
            :class="{on: this.switch}"
-           @click="changeSwitch">
+           @click="$emit('changeSwitch')">
         <div class="button-switch"></div>
       </div>
     </div>
@@ -14,7 +14,7 @@
              :key="timeKey"
              :class="{active: timeKey === chooseTime}"
              v-for="(timeItem, timeKey) in times"
-             @click="changeId(timeKey)">
+             @click="$emit('changeTime', timeKey)">
           <div>{{ timeItem }}</div>
           <div class="radiobutton"></div>
         </div>
@@ -33,19 +33,10 @@ export default {
   },
   data() {
     return {
-      times: ['Через 1 час', 'Через 4 час', 'Через 24 часа'],
-      switch: false,
+      times: ['Через 1 час', 'Через 4 час', 'Через 24 часа', 'Отключить'],
     };
   },
-  props: ['chooseTime'],
-  methods: {
-    changeSwitch() {
-      this.switch = !this.switch
-    },
-    changeId(timeKey) {
-      this.$emit('changeIcon', timeKey)
-    }
-  }
+  props: ['switch', 'chooseTime'],
 }
 </script>
 

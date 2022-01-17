@@ -11,7 +11,13 @@
         <div class="notifications-main">
           <transition name="blocks">
             <messages-block v-if="openMessages"/>
-            <disable-notif v-else-if="disable" @changeIcon="changeIcon" :chooseTime="chooseTime"/>
+            <disable-notif
+                v-else-if="disable"
+                @changeSwitch="changeSwitch"
+                @changeTime="changeTime"
+                :switch="this.switch"
+                :chooseTime="this.chooseTime"
+            />
             <!--          <no-notifications v-else/>-->
           </transition>
         </div>
@@ -25,7 +31,7 @@
             :class="{active: disable}"
             @click="$emit('open-disable')"
         >
-          <icon-volume :class="{active: disable}" v-if="chooseTime === null"/>
+          <icon-volume :class="{active: disable}" v-if="!this.switch"/>
           <icon-volume-off :class="{active: disable}" v-else/>
         </div>
         <div class="side-button side-button-special">
@@ -61,7 +67,8 @@
     },
     data() {
       return {
-        chooseTime: null,
+        switch: false,
+        chooseTime: 3,
       };
     },
     props: {
@@ -70,13 +77,15 @@
       disable: Boolean,
     },
     methods: {
-      changeIcon(key) {
-        if (this.chooseTime === key) {
-          this.chooseTime = null
-        } else {
-          this.chooseTime = key
+      changeTime(timeKey) {
+        this.chooseTime = timeKey;
+      },
+      changeSwitch() {
+        if (this.switch) {
+          this.chooseTime = 3;
         }
-      }
+        this.switch = !this.switch;
+      },
     }
   } 
 </script>
