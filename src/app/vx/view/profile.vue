@@ -4,6 +4,7 @@
   </div>
 </template>
 
+
 <script>
   import ProfileFaq from "@/LTE/Containers/Vx/Main/Faq";
 
