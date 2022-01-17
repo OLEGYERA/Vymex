@@ -1,83 +1,78 @@
 <template>
   <div class="facade-input-date">
-    <div class="input-date-intro" @click="handleIntroClick">
+    <div class="date-input" @click="calendarModalStatus = true">
       <input-base
-        :model="model"
-        :placeholder="placeholder"
-        :mask="[/[0-3]/, /[0-9]/, '.', /[0-1]/, /[0-9]/, '.', /[1-2]/, /[0-9]/, /[0-9]/, /[0-9]/]"
+        placeholder="День рождение"
+        :model="dateModel"
         labeled
       />
+      <icon-date/>
     </div>
-
+    <calendar-modal-ui
+      :status="calendarModalStatus"
+      :selected-date="dateModel"
+      @onDate="pickNewDate"
+      @onClose="calendarModalStatus=false"/>
   </div>
 </template>
 
 <script>
   import InputBase from '@Facade/Input/Base'
-  import ModalBase from '@Facade/Modal/Base'
-  import InputValidation from '@Facade/Input/Validation'
+  import IconDate from '@Icon/Date'
+  import {CalendarModalUi} from '@Providers'
 
   export default {
     name: 'Facade.Input.Date',
     components: {
       InputBase,
-      ModalBase,
-      InputValidation
+      IconDate,
+      CalendarModalUi
     },
     props: {
-      model: {
-        type: String,
-        validator: model => {
-          let splitTime = model.split('.')
-          if(splitTime.length === 3)
-            return Number(splitTime[0]) <= 31 && Number(splitTime[1]) <= 12 &&
-            Number(splitTime[2]) >= 1920
-
-          return false
-        }
-      },
-      placeholder: String,
+      model: String
     },
-    data(){
-      return {
-        modalDateStatus: false,
-        year: null,
-        newYear: null,
-        yearError: null,
-        day: null
-      }
+    mounted() {
+      this.dateModel = this.model;
     },
+    data: () => ({
+      calendarModalStatus: false,
+      dateModel: null
+    }),
     methods: {
-      handleIntroClick(){
-        this.modalDateStatus = true
-      },
-      handleNewYear(){
-        let _year = Number(this.newYear);
-        if(_year !== null){
-          if(_year >= 1920 && _year <= (new Date).getFullYear() - 16){
-            this.yearError = null;
-            this.newYear = null
-          } else {
-            this.yearError = false;
-            this.newYear = null;
-          }
-        }
-      },
-      handlePressOk(){
-
+      pickNewDate(date){
+        this.dateModel = date;
+        this.calendarModalStatus = false;
+        this.$emit('onDate', this.dateModel)
       }
     },
-    computed: {
-
+    watch: {
+      model(to){
+        if(this.dateModel !== to) this.dateModel = to;
+      }
     },
   }
 </script>
 
 <style lang="scss" scoped>
   .facade-input-date{
-    .input-date-intro{
+    width: 100%;
+    position: relative;
+    .date-input{
+      width: 100%;
       position: relative;
-      cursor: pointer;
+      display: flex;
+      align-items: center;
+      z-index: 0;
+      .icon-date{
+        height: min-content;
+        position: absolute;
+        right: 4px;
+        color: #fff;
+        z-index: -1;
+      }
+      .facade-input-base{
+        padding-right: 22px;
+      }
       &:after{
         content: '';
         position: absolute;
@@ -85,18 +80,8 @@
         left: 0;
         right: 0;
         bottom: 0;
+        cursor: pointer;
       }
     }
-    .facade-modal-base{
-      ::v-deep{
-        .modal-base-body{
-          height: 350px;
-        }
-        .date-picker{
-          display: flex;
-        }
-      }
-    }
-
   }
 </style>

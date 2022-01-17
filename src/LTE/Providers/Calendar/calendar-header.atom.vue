@@ -1,11 +1,14 @@
 <template>
   <div class="calendar-header-atom">
     <div class="calendar-date-box">
-      <div class="date-month">
-        <title-semi>{{ month }}</title-semi>
+      <div class="date-month" :class="{floatingMonth: (calendarReplica && calendar.Month !== calendarReplica.Month) }">
+        <title-semi
+          :style="{transform:  calendarReplica && calendar.Month !== calendarReplica.Month ? gesture.style : '' }"
+        >{{ calendar.Month }}</title-semi>
       </div>
-      <div class="date-year">
+      <div class="date-year" :class="{floatingYear: (calendarReplica && calendar.Year !== calendarReplica.Year) }">
        <input
+         :style="{transform:  calendarReplica && calendar.Year !== calendarReplica.Year ? gesture.style : '' }"
          type="text"
          class="transparentYear"
          ref="transparentYear"
@@ -17,6 +20,12 @@
          @keydown.enter="$refs['transparentYear'].blur()"
          @keydown.tab.prevent="$refs['transparentYear'].blur()"
        />
+        <input
+          v-if="calendarReplica && calendar.Year !== calendarReplica.Year"
+          :style="{transform: gesture.styleReplica}"
+          type="text"
+          class="transparentYear yearReplica"
+          :value="calendarReplica.Year">
       </div>
     </div>
     <div class="calendar-days-week-box">
@@ -36,62 +45,61 @@
   export default {
     name: 'Providers.CalendarHeaderAtom',
     props: {
-      year: {
-        type: Number,
+      calendar: {
+        type: Object,
         required: true
       },
-      month: {
-        type: String,
-        required: true
-      },
-      diapason: {
-        type: Array,
-        required: true,
-        validator: diapasonArr => {
-          return typeof diapasonArr[0] === 'number' && typeof diapasonArr[1] === 'number'
+      calendarReplica: {
+        validator: mR => {
+          return mR === null || typeof mR === 'object'
         }
+      },
+      // year: {
+      //   type: Number,
+      //   required: true
+      // },
+      // yearReplica: {
+      //   validator: yR => {
+      //     return yR === null || typeof yR === 'number'
+      //   }
+      // },
+      // diapason: {
+      //   type: Array,
+      //   required: true,
+      //   validator: diapasonArr => {
+      //     return typeof diapasonArr[0] === 'number' && typeof diapasonArr[1] === 'number'
+      //   }
+      // },
+      gesture: {
+        type: Object,
+        required: true
       },
     },
     components: {TitleSemi, TitleCaption},
     created() {
-      this.yearModel = this.year;
+      this.setYearModel();
     },
     data: () => ({
       daysWeek: ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'],
       yearModel: null,
     }),
     methods: {
+      setYearModel(){
+        this.yearModel = this.calendar.Year;
+      },
       handleNewYear(){
-        if(this.yearModel < this.diapason[0]){
-          this.yearModel = this.diapason[0]
-        } else if(this.yearModel > this.diapason[1]) {
-          this.yearModel = this.diapason[1]
-        }
-        this.$emit('onNewYear', this.yearModel)
+        if(!this.calendar.updateYear(this.yearModel)) this.setYearModel();
       },
       increaseYear(){
-        if(this.yearModel >= this.diapason[1]) {
-          this.yearModel = this.diapason[1]
-        } else {
-          this.yearModel += 1;
-        }
-
-        this.$emit('onNewYear', this.yearModel)
+        if(!this.calendar.updateYear(this.yearModel + 1)) this.setYearModel();
       },
-
       decreaseYear(){
-        if(this.yearModel <= this.diapason[0]){
-          this.yearModel = this.diapason[0]
-        } else {
-          this.yearModel -= 1;
-        }
-
-        this.$emit('onNewYear', this.yearModel)
+        if(!this.calendar.updateYear(this.yearModel - 1)) this.setYearModel();
       },
-
     },
     watch: {
-      year(to){
+      'calendar.Year'(to){
+        console.log(to)
         if(to !== this.yearModel) this.yearModel = to;
       }
     }
@@ -100,19 +108,6 @@
 
 
 <style lang="scss" scoped>
-  .transparentYear{
-    font-family: 'Iter', sans-serif;
-    font-weight: 600;
-    width: 50px;
-    color: #fff;
-    padding: 0;
-    text-align: center;
-    font-size: rem(16);
-    border: unset;
-    background-color: transparent;
-    outline: none;
-  }
-
   .facade-title-caption{
     font-size: rem(14);
   }

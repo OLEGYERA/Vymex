@@ -6,6 +6,8 @@ const LIST_ANIMATION = {
   rebound: [.25, .7, 1.2, 1.4, .8, .6, .8, 1],
   acceleration_h: [.2, .9, 1.2, 1.1, 1],
   acceleration: [.1, .95, .98, 1],
+  threshold: {factor: [.1/100, .6/100, 1.8/100, .6/100, 0]}
+
 }
 
 let BIND_EL, BIND_REF, BIND_NODE, BIND_MODIFIER; // PRIVATE BIND VARIABLES
@@ -46,6 +48,7 @@ function GestureAnimation({pattern, draw, duration, finish}) {
     if (timeFraction === 1) finish();
   });
 }
+
 function _getSwipeAnimationData(){
   const _shiftProgress = _getPlatformShiftProgress();
   if(!BIND_ANIMATION.swipe.animate){
@@ -85,22 +88,21 @@ function _getSwipeAnimationData(){
   else{
     if(BIND_ANIMATION.swipe.animateThreshold){
       if(_shiftProgress > 15){
+        if(BIND_ANIMATION.swipe.animate.length === undefined)
+          return __getFactorAnimate(BIND_ANIMATION.swipe.duration, BIND_ANIMATION.swipe.animate.factor, _shiftProgress)
+
         return {
           duration: BIND_ANIMATION.swipe.duration,
           pattern: BIND_ANIMATION.swipe.animate
         }
       } else{
         console.log('Cancel',_shiftProgress)
-        return {
-          duration: 200,
-          pattern: [_shiftProgress*.1/100, _shiftProgress*.6/100, _shiftProgress*1.8/100, _shiftProgress*.6/100, 0]
-        }
+        return __getFactorAnimate(200, LIST_ANIMATION.threshold.factor, _shiftProgress)
       }
     } else {
-      console.log('HERE', {
-        duration: BIND_ANIMATION.swipe.duration,
-        pattern: BIND_ANIMATION.swipe.animate
-      })
+      if(BIND_ANIMATION.swipe.animate.length === undefined)
+        return __getFactorAnimate(BIND_ANIMATION.swipe.duration, BIND_ANIMATION.swipe.animate.factor, _shiftProgress)
+
       return {
         duration: BIND_ANIMATION.swipe.duration,
         pattern: BIND_ANIMATION.swipe.animate
@@ -139,6 +141,12 @@ function _getZoomAnimationData(){
   }
 }
 
+function __getFactorAnimate(duration, pattern, progress){
+  return {
+    duration: duration,
+    pattern: pattern.map(x => x * progress)
+  }
+}
 function __getBezierBasis(i, n, t) {
   function factorial(n) {
     return (n <= 1) ? 1 : n * factorial(n - 1)
@@ -322,13 +330,12 @@ function _gestureControlHandler(e){
 
   // Определяем тип анимации для жеста
   if(!EVENT_GESTURE_RECOGNIZING && EVENT_ANIMATION_RECOGNIZING){
-
     //call Start Emit
     if(IS_GESTURE_SWIPE) {
-      BIND_NODE.data.on.gestureStart({type: 'swipe', axisY: GESTURE_SWIPE.axisY, posDir: GESTURE_SWIPE.isPositiveDirection})
+     BIND_NODE.data.on.gestureStart({type: 'swipe',axisY: GESTURE_SWIPE.axisY,posDir: GESTURE_SWIPE.isPositiveDirection})
     } else {
       __watchZoomAnimationGesture(true);
-      BIND_NODE.data.on.gestureStart({type: 'zoom', axisY: GESTURE_ZOOM.axisY, posDir: GESTURE_ZOOM.isPositiveDirection, isOuter: GESTURE_ZOOM.isOuter})
+     BIND_NODE.data.on.gestureStart({type: 'zoom', axisY: GESTURE_ZOOM.axisY, posDir: GESTURE_ZOOM.isPositiveDirection, isOuter: GESTURE_ZOOM.isOuter})
     }
 
     //Получаем Данные об Анимации
@@ -411,7 +418,6 @@ function createVxGestureDirective(){
 
       }
 
-      console.log(BIND_ANIMATION)
 
       if(BIND_NODE.data.on.gestureStart && BIND_NODE.data.on.gestureProcess && BIND_NODE.data.on.gestureEnd){
         e.addEventListener('wheel', vxGestureHandler, false);
@@ -420,6 +426,45 @@ function createVxGestureDirective(){
       }
 
     },
+    update: (e, r, n) => {
+      BIND_EL = e; BIND_REF = r; BIND_NODE = n;
+      const VALUE = BIND_REF.value;
+
+      if(VALUE){
+        if(typeof VALUE !== 'object') {
+          console.error('Gesture value must be Object')
+          return;
+        }
+        //учесть свойства чисто для Zoom или Swipe
+        if(VALUE.duration){
+          BIND_ANIMATION.zoom.duration = BIND_ANIMATION.swipe.duration = VALUE.duration;
+        } else {
+          if(VALUE.zoomDuration){
+            BIND_ANIMATION.zoom.duration = VALUE.zoomDuration
+          }
+          if(VALUE.swipeDuration){
+            BIND_ANIMATION.swipe.duration = VALUE.swipeDuration
+          }
+        }
+
+        if(VALUE.animate && LIST_ANIMATION[VALUE.animate]){
+          BIND_ANIMATION.zoom.animate = BIND_ANIMATION.swipe.animate = LIST_ANIMATION[VALUE.animate];
+        } else {
+          if(VALUE.zoomAnimate && LIST_ANIMATION[VALUE.zoomAnimate]){
+            BIND_ANIMATION.zoom.animate = LIST_ANIMATION[VALUE.zoomAnimate]
+          }
+          if(VALUE.swipeAnimate && LIST_ANIMATION[VALUE.swipeAnimate]){
+            BIND_ANIMATION.swipe.animate = LIST_ANIMATION[VALUE.swipeAnimate]
+          }
+        }
+
+        if(VALUE.animateThreshold) {
+          BIND_ANIMATION.swipe.animateThreshold = VALUE.animateThreshold
+        }
+
+      }
+    },
+
   }
 }
 

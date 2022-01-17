@@ -6,8 +6,9 @@ import {SocketClient} from "@/core/SocketClient";
 import PH from "@/core/SEKSproto/PackageHelper"
 import ConsoleNotifier from "@/core/ConsoleNotifier";
 
-class Crypto{
 
+
+class Crypto{
   constructor(Options) {
     this.console = new ConsoleNotifier('Сrypto');
     this.storagePad = new SP(Storage)

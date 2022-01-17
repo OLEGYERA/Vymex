@@ -44,6 +44,7 @@ export default {
     getUserAliasError: (state) => state.Alias.error,
     getUserPassword: (state) => state.Password,
     getUserIsJumpReg: (state) => state.IsJumpReg,
+    getUserBirthday: (state) => state.Birthday,
   },
   mutations: {
     setPhoneLthNumber: (state, payload) => state.PhoneLthNumber = payload,
@@ -72,6 +73,6 @@ export default {
       state.ShowPhone = payload.showPhone
     },
     setUserAvatar: (state, payload) => state.Avatar = payload,
-
+    setUserBirthday: (state, payload) => state.Birthday = payload,
   }
 }

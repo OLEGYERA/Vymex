@@ -1,19 +1,34 @@
 export default {
   props: {
     selectedDate: {
-      type: Date,
-      default: () => new Date()
+      type: String
     },
+    diapasonStart: {
+      type: Date,
+    },
+    diapasonEnd: {
+      type: Date,
+    },
+  },
+  mounted() {
+    if(this.selectedDate) {
+      this.calendar = this.calendar.createReplica(this.selectedDate);
+      console.log('Render', new Date(this.selectedDate), this.calendar)
+      this.calendar.selectedPoint = new Date(this.selectedDate);
+    }
   },
   data(){
     return {
+      animate: 'acceleration_h',
       gesture: {
         swipe: null,
         axisY: null,
         posDir: null,
         progress: 0,
         style: null,
-        styleReplica: null
+        styleReplica: null,
+        exit: null,
+        styleExit: null
       }
     }
   },
@@ -27,21 +42,24 @@ export default {
     gestureProcess(progress){
       this.gesture.progress = progress
       if(this.gesture.swipe){
-        this.gesture.style = (this.gesture.axisY ? 'translateY(' : 'translateX(') + (this.gesture.posDir ? 100-progress : -100+progress)  + '%)';
-        this.gesture.styleReplica = (this.gesture.axisY ? 'translateY(' : 'translateX(') + (this.gesture.posDir ? '-' : '') + progress + '%)';
+        if(this.calendarReplica){
+          this.gesture.style = (this.gesture.axisY ? 'translateY(' : 'translateX(') + (this.gesture.posDir ? 100 - progress : -100 + progress) + '%)';
+          this.gesture.styleReplica = (this.gesture.axisY ? 'translateY(' : 'translateX(') + (this.gesture.posDir ? '-' : '') + progress + '%)';
+        }
       } else {
         const scaledProgress = progress / 100;
-        this.gestureStyle = 'scale(' + (this.gesture.posDir ? 1 - scaledProgress : scaledProgress) + ')'
+        if(this.gesture.exit){
+          this.gesture.styleExit = 'scale(' + (this.gesture.posDir ? 1 - scaledProgress : scaledProgress) + ')'
+        } else {
+          this.gesture.style = 'scale(' + (this.gesture.posDir ? 1 - scaledProgress : scaledProgress) + ')'
+        }
       }
     },
     gestureEnd(){
-      if(this.gesture.progress !== 100){
-        // this.calendarReplica
-        // this.calendar = this.calendarReplica;
-        console.log(this.calendarReplica.Year, this.calendar.Year)
-        this.calendar = this.calendarReplica;
-        console.log(456, this.calendarReplica.Year, this.calendar.Year)
-
+      if(this.gesture.exit){
+        this.gesture.exit = null;
+        this.gesture.styleExit = null;
+        this.$emit('onClose')
       }
       this.gesture.style = null
       this.calendarReplica = null;
@@ -55,11 +73,28 @@ export default {
       if(this.gesture.swipe){
         if(!this.gesture.axisY){
           this.calendarReplica = this.calendar.createReplica();
-          console.log('0', this.calendarReplica.Year, this.calendar.Year)
-          this.calendar.updateYear(this.calendar.Year + (this.gesture.posDir ? 1 : -1))
-          console.log('123', this.calendarReplica.Year, this.calendar.Year)
+          if(!this.calendar.updateYear(this.calendar.Year + (this.gesture.posDir ? 1 : -1))){
+            this.calendar = this.calendarReplica.createReplica();
+            this.calendarReplica = null;
+          }
+        } else {
+          this.calendarReplica = this.calendar.createReplica();
+          if(!this.calendar.updateMonth(this.calendar.monthPoint.getMonth() + (this.gesture.posDir ? 1 : -1))){
+            this.calendar = this.calendarReplica.createReplica();
+            this.calendarReplica = null;
+          }
+        }
+      } else {
+        if(this.gesture.posDir){
+          this.gesture.exit = true;
         }
       }
+    }
+  },
+  watch: {
+    selectedDate(to){
+      this.calendar = this.calendar.createReplica(to);
+      this.calendar.selectedPoint = new Date(to);
     }
   }
 }

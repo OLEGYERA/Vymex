@@ -3,15 +3,16 @@
       <div class="calendar-days-matrices" :class="{floatingMatrices: calendarReplica}">
         <div class="calendar-matrix" :style="{transform: gesture.style}">
           <div class="matrix-body">
-            <calendar-cell v-for="(matrixItem, matrixKey) in calendar.generateMatrix()" :date="matrixItem" :is-weekend="(matrixKey+1)%7===0" :key="matrixKey"/>
+            <calendar-cell v-for="(matrixItem, matrixKey) in calendar.Matrix" :date="matrixItem" :is-weekend="(matrixKey+1)%7===0"
+                           :is-selected="calendar.isSelected(matrixItem)"
+                           :key="matrixKey" @onClick="$emit('onChoose', $event)"/>
           </div>
         </div>
         <div class="calendar-matrix matrix-replica" v-if="calendarReplica" :style="{transform: gesture.styleReplica}">
           <div class="matrix-body">
-            <calendar-cell v-for="(matrixItem, matrixKey) in calendarReplica.generateMatrix()" :date="matrixItem" :is-weekend="(matrixKey+1)%7===0" :key="matrixKey"/>
+            <calendar-cell v-for="(matrixItem, matrixKey) in calendarReplica.Matrix" :date="matrixItem" :is-weekend="(matrixKey+1)%7===0" :key="matrixKey"/>
           </div>
         </div>
-
       </div>
   </div>
 </template>

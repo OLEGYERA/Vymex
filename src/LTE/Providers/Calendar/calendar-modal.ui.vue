@@ -1,13 +1,11 @@
 <template>
-  <div class="calendar-provider calendar-modal-ui">
-    <div class="calendar-wrapper" v-gesture.swipe="{animate: 'acceleration_h', duration: 300/*, animateThreshold: true*/}" @gestureStart="gestureStart" @gestureProcess="gestureProcess" @gestureEnd="gestureEnd">
-<!--      <div class="wrapper" :style="{transform: gestureStyle}"></div>-->
+  <div class="calendar-provider calendar-modal-ui" v-if="status">
+    <div class="calendar-wrapper" v-gesture="{animate, duration: 400}" @gestureStart="gestureStart" @gestureProcess="gestureProcess" @gestureEnd="gestureEnd" :style="{transform: gesture.styleExit}">
       <calendar-header
-        :year="calendar.Year"
-        :month="calendar.Month"
-        :diapason="[1970, 2022]"
-        @onNewYear="calendar.updateYear($event)"/>
-      <calendar-main :calendar="calendar" :calendar-replica="calendarReplica" :gesture="gesture"/>
+        :calendar="calendar"
+        :calendarReplica="calendarReplica"
+        :gesture="gesture"/>
+      <calendar-main :calendar="calendar" :calendar-replica="calendarReplica" @onChoose="pickDate" :gesture="gesture"/>
     </div>
   </div>
 </template>
@@ -20,39 +18,25 @@ import {Calendar} from './calendar'
 import './style.scss'
 
 export default {
-  /*eslint-disable*/
   name: 'Providers.CalendarModalUi',
   components: {CalendarHeader, CalendarMain},
   mixins: [CalendarMixin],
+  props: {
+    status: {
+      type: Boolean,
+      required: true
+    },
+  },
   data: () => ({
     calendar: new Calendar(),
-    calendarReplica: null
+    calendarReplica: null,
   }),
-  mounted() {
-    // setInterval(() => {this.calendar.shiftYear(1)}, 1000)
-  },
   methods: {
-
-    /*eslint-disable*/
-    handleScroll(opts){
-      if(opts.isGestureSwipe){
-        if(opts.axisY){
-          this.stl = 'translateY(' + (opts.posDir ? '-' : '') + (opts.deltaProgress) + '%)';
-        } else {
-          this.stl = 'translateX(' + (opts.posDir ? '-' : '') + (opts.deltaProgress) + '%)';
-        }
-      } else {
-        let Progress = opts.deltaProgress / 100;
-        // console.log(Progress)
-        if(!opts.posDir){
-          this.stl = 'scale(' + (Progress) + ')';
-        } else {
-          this.stl = 'scale(' + (1 - Progress) + ')';
-
-        }
-      }
+    pickDate(day){
+      let month = this.calendar.monthPoint.getMonth() + 1;
+      this.$emit('onDate',  this.calendar.Year +  '-' + (month < 10 ? '' + 0 + month : month) + '-' + (day < 10 ? '' + 0 + day : day));
     },
-  }
+  },
 }
 </script>
 

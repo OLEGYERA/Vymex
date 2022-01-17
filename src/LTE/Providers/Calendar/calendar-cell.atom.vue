@@ -1,6 +1,6 @@
 <template>
   <div class="calendar-cell-atom cell-item">
-    <div class="cell-item-body" :class="{current: date.type === 0, weekend: isWeekend}">
+    <div class="cell-item-body" :class="{current: date.type === 0, weekend: isWeekend, today: date.today, selected: isSelected}" @click="date.type === 0 ? $emit('onClick', date.day) : ''">
       <title-caps>{{date.day}}</title-caps>
     </div>
   </div>
@@ -20,6 +20,9 @@ export default {
     isWeekend: {
       type: Boolean,
       required: true
+    },
+    isSelected: {
+      type: Boolean,
     },
   },
   components: {TitleCaps},
@@ -61,6 +64,16 @@ export default {
         .facade-title-caps{
           color: $red;
           opacity: .4;
+        }
+      }
+      &.today{
+        background-color: $grey-scale-300;
+      }
+      &.selected{
+        background-color: $blue;
+        .facade-title-caps{
+          color: #fff;
+          text-decoration: underline;
         }
       }
     }
