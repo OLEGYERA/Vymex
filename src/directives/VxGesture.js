@@ -169,6 +169,10 @@ function __getBezierCurve(pattern, timeFraction) {
 
 function FinishHardGesture(){
   console.log('Отработать единичный скролл')
+  EVENT_GESTURE_RECOGNIZING = false;
+  EVENT_ANIMATION_RECOGNIZING = true;
+  _gestureControlHandler();
+  EventDeath();
 }
 function FinishAfterAnimation(){
   EVENT_ANIMATION = false;
@@ -290,7 +294,7 @@ function _initialHandler(e){
 
   _getDeltaPosition(e.deltaX, e.deltaY);
 }
-function _gestureControlHandler(e){
+function _gestureControlHandler(e = null){
   // Ожидаем новую deltaPosition, для вызова нового жеста
   if(EVENT_GESTURE_EXPECTATION){
     let _mod_cur_delta_pos = Math.abs(CURRENT_DELTA_POSITION), _mod_last_delta_pos = Math.abs(LAST_DELTA_POSITION);
@@ -328,6 +332,8 @@ function _gestureControlHandler(e){
     }
   }
 
+  console.log(!EVENT_GESTURE_RECOGNIZING, EVENT_ANIMATION_RECOGNIZING)
+
   // Определяем тип анимации для жеста
   if(!EVENT_GESTURE_RECOGNIZING && EVENT_ANIMATION_RECOGNIZING){
     //call Start Emit
@@ -337,6 +343,7 @@ function _gestureControlHandler(e){
       __watchZoomAnimationGesture(true);
      BIND_NODE.data.on.gestureStart({type: 'zoom', axisY: GESTURE_ZOOM.axisY, posDir: GESTURE_ZOOM.isPositiveDirection, isOuter: GESTURE_ZOOM.isOuter})
     }
+
 
     //Получаем Данные об Анимации
     const {duration, pattern} = IS_GESTURE_SWIPE ? _getSwipeAnimationData() : _getZoomAnimationData();
