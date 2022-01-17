@@ -68,7 +68,7 @@
     data() {
       return {
         switch: false,
-        chooseTime: 3,
+        chooseTime: 0,
       };
     },
     props: {
@@ -82,7 +82,7 @@
       },
       changeSwitch() {
         if (this.switch) {
-          this.chooseTime = 3;
+          this.chooseTime = 0;
         }
         this.switch = !this.switch;
       },
