@@ -3,23 +3,18 @@ import App from './App.vue'
 import store from '@/storage'
 import router from '@/router'
 import Notifications from 'vue-notification'
-import EnginePlugin from "@/plugins/Engine";
-
 import '@/directives/guesture'
+// import {Engine} from "@/core/Engine";
+Vue.use(Notifications)
 
+import Core from "@/LTE/Core";
+
+
+// Vue.prototype.$engine = new Engine({socketClient: {connection: 'wss://ponchik.app:7777'}});
+Vue.prototype.$core = new Core({socket: {connection: 'wss://ponchik.app:7777'}});
 
 Vue.config.productionTip = false
 Vue.config.devtools = true
-
-
-Vue.use(Notifications)
-Vue.use(EnginePlugin, {
-  socketClient: {
-    connection: 'wss://ponchik.app:7777',
-    secure: true
-  }
-})
-
 
 
 // Vue.config.errorHandler = err => (new ErrorHandler('Error')).onError(err);

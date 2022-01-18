@@ -62,12 +62,12 @@
       },
       sendApproveCodeData(code){
         this.approveCodeStatus = false;
-        this.$engine.Predictor
+        this.$core.predictor
           .prepareEraManually('second', 'phase5', code)
           .runPredictedData()
       },
       resendCode(){
-        this.$engine.Predictor
+        this.$core.predictor
           .prepareEraManually('second', 'generateNewAuthData')
           .runPredictedData()
           .prepareComponentManually('auth', 'sendNewCode')
@@ -80,11 +80,11 @@
       },
       isEqualDash(status){
         if(status === true){
-          this.$engine.Predictor
+          this.$core.predictor
             .prepareEraManually('second', 'phase6')
             .runPredictedData()        }
         else if(status === false) {
-          this.$engine.Predictor
+          this.$core.predictor
             .prepareComponentManually('auth', 'sendKeyError')
             .runPredictedData()
         } else {

@@ -58,12 +58,12 @@
       },
       sendLoginData(){
         if(!this.isAfterBlocked)
-          this.$engine.Predictor
+          this.$core.predictor
             .prepareComponentManually('auth', 'sendPhoneData')
             .runPredictedData()
         else {
           this.isAfterBlocked = false;
-          this.$engine.Predictor
+          this.$core.predictor
             .prepareComponentManually('auth', 'sendNewCode')
             .runPredictedData()
         }

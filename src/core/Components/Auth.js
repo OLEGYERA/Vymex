@@ -1,8 +1,10 @@
 import {encrypt, hexToArray, serialize, utf8ToArray, ed25519} from '@/core/SEKSproto/utilites'
+import BaseComponent from '@/core/Components/Base';
 
-export default class Auth{
+export default class Auth extends BaseComponent{
 
   constructor(storagePad, SocketClient) {
+    super();
     this.storage = storagePad;
     this.SClient = SocketClient;
   }
@@ -97,5 +99,19 @@ export default class Auth{
 
     this.SClient.Emit('listener', fullPack)
     this.storage.set('ClearDaskDash');
+  }
+
+
+  async user(){
+    const fullPack = await encrypt({
+      AES256Key: this.storage.get('AesKey'),
+      MAC256Key: this.storage.get('MacKey')
+    }, 'Auth', 'user');
+
+    this.SClient.Emit('listener', fullPack)
+  }
+
+  userRes(data){
+    this.storage.set('UserProfileData', data);
   }
 }

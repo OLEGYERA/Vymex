@@ -1,18 +1,16 @@
-import Response from "@/core/Response";
-import ComponentCollector from "@/core/Components/ComponentCollector";
-import ConsoleNotifier from "@/core/ConsoleNotifier";
+import Response from "./Response";
+import Binder from "@/LTE/Core/Helpers/Binder";
 
-export default class Predictor{
-
+export default class Predictor extends Binder{
+  constructor(Era, Component) {
+    super();
+    this.Era = Era;
+    this.Component = Component;
+  }
   currentActionData = {
     component: null,
     method: null,
     data: null
-  }
-
-  constructor(EraCollector, storagePad, SClient) {
-    this.Era = EraCollector;
-    this.Component = new ComponentCollector(storagePad, SClient)
   }
 
   dataPreparation(parsedData){
@@ -51,34 +49,30 @@ export default class Predictor{
     this.currentActionData.data = componentInfo.data;
 
     console.groupCollapsed('The data was guessed')
-      this.console.info(`Component: ${componentInfo.name},  Method: ${this.currentActionData.method}`)
-      console.log(this.currentActionData.data)
+      this.$log.info(`Component: ${componentInfo.name},  Method: ${this.currentActionData.method}`)
     console.groupEnd('The data was guessed')
     return this;
   }
 
   prepareComponentManually(componentName, methodName, data = null){
+    console.log(componentName, methodName)
     this.currentActionData.component = this.Component[componentName];
     this.currentActionData.method = methodName;
     if(data !== null)
       this.currentActionData.data = data;
-
     return this;
   }
 
   prepareEraManually(eraName, methodName, data = null){
     this.currentActionData.component = this.Era[eraName];
     this.currentActionData.method = methodName;
-    if(data !== null)
-      this.currentActionData.data = data;
-
+    if(data !== null) this.currentActionData.data = data;
     return this;
   }
 
   getComponentInfo(componentBody){
     const componentFullName = componentBody.component
     let componentName;
-
 
     if(componentFullName.indexOf('Era') !== -1) {
       componentName = componentFullName.replace(/Era/gi, '').toLowerCase()

@@ -12,7 +12,7 @@
   export default {
     name: 'auth.code',
     created() {
-      this.$engine.Predictor
+      this.$core.predictor
         .prepareComponentManually('auth', 'verifyCode')
         .runPredictedData()
     },
@@ -21,7 +21,7 @@
     },
     watch: {
       Dash(){
-        this.$engine.Predictor
+        this.$core.predictor
           .prepareComponentManually('auth', 'flipFlopDash')
           .runPredictedData()
       },

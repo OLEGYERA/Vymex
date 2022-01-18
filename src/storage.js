@@ -29,6 +29,7 @@ import UserProfile from '@/app/auth/storage/UserProfile'
 import VxInfo from "@/app/vx/storage/VxInfo"
 import File from "@/app/vx/storage/File"
 import Crypto from '@/core/SEKSproto/CryptoStorage'
+import Messenger from '@/app/vx/app/messenger/storage/Messenger'
 
 
 export default new Vuex.Store({
@@ -41,12 +42,24 @@ export default new Vuex.Store({
     UserProfile,
     Crypto,
     VxInfo,
-    File
+    File,
+    Messenger
   },
   plugins: [
     createPersistedState({
       key: 'vymex_session',
       paths: ['Countries', 'Crypto', 'UserProfile', 'VxInfo'],
+      storage: {
+        getItem: (key) => {
+          return Secure.get(key)
+        },
+        setItem: (key, value) => Secure.set(key, value),
+        removeItem: (key) => Secure.remove(key),
+      },
+    }),
+    createPersistedState({
+      key: 'vymex_msg_session',
+      paths: ['Messenger'],
       storage: {
         getItem: (key) => {
           return Secure.get(key)

@@ -3,7 +3,7 @@
     <vx-navigation/>
     <div class="vx-body-space">
       <vx-header/>
-      <div class="body-space-router-view">
+      <div class="body-space-router-view" :class="{'not-adapt-styles': exceptionalStyle}">
         <div class="router-view-body">
           <router-view/>
         </div>
@@ -17,6 +17,7 @@
   import VxNavigation from '@Container/Vx/Navigation'
   import VxHeader from '@Container/Vx/Header'
   import {mapGetters} from 'vuex'
+  const exceptionalRoutes = ['vx.msg'];
 
   export default {
     name: 'app.vx',
@@ -25,10 +26,13 @@
       VxHeader
     },
     created() {
-      console.log('Vx App')
+      this.$core.predictor.prepareComponentManually('auth', 'user').runPredictedData()
     },
     computed: {
-      ...mapGetters(['getPage'])
+      ...mapGetters(['getPage']),
+      exceptionalStyle(){
+        return exceptionalRoutes.some(exceptionalRoute => this.$route.name.indexOf(exceptionalRoute) !== -1)
+      }
     },
     beforeRouteLeave(to, from, next){
       console.log(this.getPage, to, from, next)
@@ -57,6 +61,13 @@
         .router-view-body{
           max-width: 796px;
           margin: 0 auto;
+        }
+        &.not-adapt-styles{
+          padding: 0;
+          .router-view-body {
+            max-width: 100%;
+            height: 100%;
+          }
         }
       }
     }

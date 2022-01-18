@@ -97,7 +97,7 @@
       },
 
       getCategories() {
-        this.$engine.Predictor
+        this.$core.predictor
           .prepareComponentManually('faq', 'getCategories')
           .runPredictedData();
       }

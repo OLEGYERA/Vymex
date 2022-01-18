@@ -30,7 +30,7 @@
       async handleNewAvatarFile(avatarFile){
         const avatarNewFile = new File([avatarFile.result], `${avatarFile.name}.png`, {type:"image/png", lastModified:new Date()});
 
-        this.$engine.Predictor
+        this.$core.predictor
             .prepareComponentManually('uploader', 'init',[
               avatarNewFile,
               this.handleUploadOnprogress, null,
@@ -42,7 +42,7 @@
         console.log(progress)
       },
       handleUploaderOnload(fileId){
-        this.$engine.Predictor
+        this.$core.predictor
           .prepareComponentManually('setting', 'editAvatar', fileId)
           .runPredictedData()
       }

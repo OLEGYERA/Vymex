@@ -92,7 +92,7 @@
         }
       },
       emitData(){
-        this.$engine.Predictor
+        this.$core.predictor
           .prepareComponentManually('api', 'testApi',
             {name: this.componentName, method: this.componentMethod, data: this.dataGroup})
           .runPredictedData()

@@ -26,7 +26,11 @@
       :model="birthday"
       placeholder="Дата рождения"
       @onDate="updateBirthday"
-    />
+    /><input-area
+      :model="about"
+      placeholder="О себе"
+      labeled
+  />
   </div>
 </template>
 
@@ -34,6 +38,7 @@
   import InputBase from '@Facade/Input/Base'
   import InputAlias from '@Facade/Input/Alias'
   import InputDate from '@Facade/Input/Date'
+  import InputArea from '@Facade/Input/Area'
   import {mapGetters} from 'vuex'
 
   export default {
@@ -41,14 +46,16 @@
     components: {
       InputBase,
       InputAlias,
-      InputDate
+      InputDate,
+      InputArea
     },
     data(){
       return {
         newName: null,
         newLastname: null,
         newAlias: null,
-        newBirthdate: '1999-08-19'
+        newBirthdate: '1999-08-19',
+        about: ''
       }
     },
     computed: {
@@ -62,7 +69,7 @@
     },
     methods: {
       updateProfile(method, data){
-        this.$engine.Predictor
+        this.$core.predictor
           .prepareComponentManually('setting', method, data)
           .runPredictedData()
       },
@@ -77,7 +84,7 @@
       },
       verifyAlias(alias){
         this.newAlias = alias
-        this.$engine.Predictor
+        this.$core.predictor
           .prepareComponentManually('setting', 'checkAlias', alias)
           .runPredictedData();
       },

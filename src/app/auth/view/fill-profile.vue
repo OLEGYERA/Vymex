@@ -104,12 +104,12 @@
       },
       verifyAlias(alias){
         this.$console.variable(this.aliasError, 'aliasError', true)
-        this.$engine.Predictor
+        this.$core.predictor
           .prepareComponentManually('setting', 'checkAlias', alias)
           .runPredictedData();
       },
       createAccount(){
-        this.$engine.Predictor
+        this.$core.predictor
           .prepareComponentManually('setting', 'fillProfile')
           .runPredictedData();
       }

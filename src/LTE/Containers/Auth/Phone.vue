@@ -57,7 +57,7 @@
     },
     created() {
       if(!this.countries.length)
-        this.$engine.Predictor
+        this.$core.predictor
           .prepareComponentManually('auth', 'getCountries')
           .runPredictedData()
     },

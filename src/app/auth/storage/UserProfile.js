@@ -22,6 +22,8 @@ export default {
     Birthday: null,
     Email: null,
     Avatar: null,
+    PK: null,
+    KEY: null,
     IsNewDevice: true,
     ShowEmail: false,
     ShowPhone: true,
@@ -45,6 +47,8 @@ export default {
     getUserPassword: (state) => state.Password,
     getUserIsJumpReg: (state) => state.IsJumpReg,
     getUserBirthday: (state) => state.Birthday,
+    getUserKEY: (state) => state.KEY,
+    getUserPK: (state) => state.PK,
   },
   mutations: {
     setPhoneLthNumber: (state, payload) => state.PhoneLthNumber = payload,
@@ -68,6 +72,8 @@ export default {
       state.Birthday = payload.birthday
       state.Email = payload.email
       state.Avatar = payload.avatar
+      state.PK = payload.pk
+      state.KEY = payload.key
       state.IsNewDevice = payload.isNewDevice
       state.ShowEmail = payload.showEmail
       state.ShowPhone = payload.showPhone

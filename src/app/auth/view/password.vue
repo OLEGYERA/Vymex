@@ -53,7 +53,7 @@
         }
       },
       login(){
-        this.$engine.Predictor
+        this.$core.predictor
           .prepareComponentManually('setting', 'cloudPassword', this.password)
           .runPredictedData();
       }
