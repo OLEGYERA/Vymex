@@ -23,20 +23,20 @@
         </div>
       </div>
       <div class="side-panel">
-        <div class="side-button" @click="$emit('get-notify')">
-          <icon-error/>
-        </div>
-        <div
-            class="side-button side-button-special"
-            :class="{active: disable}"
-            @click="$emit('open-disable')"
-        >
-          <icon-volume :class="{active: disable}" v-if="!this.switch"/>
-          <icon-volume-off :class="{active: disable}" v-else/>
-        </div>
-        <div class="side-button side-button-special">
+        <span @click="$emit('get-notify')">
+          <side-button class="side-button-close">
+            <icon-error/>
+          </side-button>
+        </span>
+        <span @click="$emit('open-disable')">
+          <side-button :class="{disable: disable}">
+            <icon-volume v-if="!this.switch"/>
+            <icon-volume-off v-else/>
+          </side-button>
+        </span>
+        <side-button>
           <icon-setting/>
-        </div>
+        </side-button>
       </div>
     </div>
 </template>
@@ -47,9 +47,10 @@
   import IconPointsVertical from '@Icon/PointsVertical'
   import IconVolume from '@Icon/Volume'
   import IconVolumeOff from '@Icon/VolumeOff'
-  import DisableNotif from '@Container/Vx/DisableNotif'
+  import DisableNotif from '@Container/Vx/DisableNotifications'
   import MessagesBlock from '@Container/Vx/MessagesBlock'
   import TitleSub from '@Facade/Title/Sub'
+  import SideButton from '@Facade/Button/Side'
   // import NoNotifications from '@Container/Vx/NoNotifications'
 
   export default {
@@ -63,6 +64,7 @@
       MessagesBlock,
       IconVolumeOff,
       TitleSub,
+      SideButton
       // NoNotifications
     },
     data() {
@@ -91,9 +93,6 @@
 </script>
 
 <style lang="scss" scoped>
-  * {
-    box-sizing: border-box;
-  }
   .container-vx-notifications {
     position: fixed;
     top: 0;
@@ -102,14 +101,11 @@
     display: flex;
     height: 100%;
     background-color: $grey;
-    width: 444px;
     transform: translateX(100%);
     transition: transform 0.4s;
     .notifications-block {
       .notifications-head {
-        width: 372px;
-        padding: 0 20px;
-        height: 65px;
+        padding: 20px 20px 21px;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -118,15 +114,15 @@
         border-bottom: $grey-scale-700 solid 1px;
         .info {
           display: flex;
-          .facade-title-sub ::v-deep {
+          .facade-title-sub {
             margin-right: 16px;
             padding: 2px 0;
           }
           .info-amount {
             height: 24px;
             width: 32px;
-            line-height: 24px;
-            font-size: 12px;
+            line-height: rem(24);
+            font-size: rem(12);
             font-weight: bold;
             text-align: center;
             background-color: $grey-scale-300;
@@ -135,12 +131,14 @@
           }
         }
         .icon-points {
-          padding: 10px;
+          padding: 0 10px;
           cursor: pointer;
         }
       }
       .notifications-main {
-        padding: 24px 20px;
+        padding: rem(24) rem(20);
+        width: 372px;
+        box-sizing: border-box;
         height: 100%;
         overflow-y: scroll;
       }
@@ -150,27 +148,19 @@
       height: 100%;
       background-color: $grey-scale-500;
       border-left: $grey-scale-700 solid 1px;
-      .side-button {
-        width: 72px;
-        height: 65px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: $grey-scale-200;
+      .side-button-close {
         border-bottom: $grey-scale-700 solid 1px;
-        cursor: pointer;
-      }
-      .side-button-special {
-        border: none;
       }
     }
   }
   .visible {
     transform: translateX(0);
   }
-  .active {
+  .disable {
     background-color: $grey;
-    color: #fff;
+    .icon {
+      color: #fff;
+    }
   }
   .blocks {
     &-enter{

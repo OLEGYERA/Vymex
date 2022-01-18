@@ -18,15 +18,15 @@
 
 <style lang="scss" scoped>
   .container-vx-no-notifications {
-    padding: 4px 0;
+    padding: rem(4) 0;
     text-align: center;
     .no-notifications-icon {
       margin-bottom: 22px;
     }
     .no-notifications-title {
       font-weight: 600;
-      font-size: 17px;
-      line-height: 22px;
+      font-size: rem(17);
+      line-height: rem(22);
       color: $grey-scale-300;
     }
   }

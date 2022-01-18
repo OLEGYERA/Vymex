@@ -139,28 +139,25 @@
 </script>
 
 <style lang="scss" scoped>
-  * {
-    box-sizing: border-box;
-  }
   .container-vx-messages {
     .day-block {
       margin-bottom: 24px;
       .date-box {
-      padding: 4px 0;
-      margin-bottom: 4px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      .messages-count {
-        color: $blue;
+        padding: 4px 0;
+        margin-bottom: 4px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .messages-count {
+          color: $blue;
+        }
+        .facade-button-close {
+          height: 24px;
+          width: 24px;
+          margin-right: 4px;
+          background-color: $grey-scale-400;
+        }
       }
-      .facade-button-close {
-        height: 24px;
-        width: 24px;
-        margin-right: 4px;
-        background-color: $grey-scale-400;
-      }
-    }
     }
   }
 </style>

@@ -1,0 +1,47 @@
+<template>
+  <div class="container-vx-contacts">
+    <title-caps>
+      Контакты
+      <span class="contacts-amount">22</span>
+    </title-caps>
+    <icon-add/>
+  </div>
+</template>
+
+<script>
+import TitleCaps from '@Facade/Title/Caps'
+import IconAdd from '@Icon/Add'
+
+export default {
+  name: 'Container.Vx.Contacts',
+  components: {
+    TitleCaps,
+    IconAdd,
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+  .container-vx-contacts{
+    width: 100%;
+    padding: 4px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: $grey;
+    .contacts-amount{
+      color: $blue;
+    }
+    .icon-add{
+      height: 24px;
+      width: 24px;
+      display: inherit;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      background-color: $grey-scale-400;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  }
+</style>
