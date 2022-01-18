@@ -2,6 +2,7 @@ import Vx from './app'
 import Profile from './view/profile'
 import Setting from './app/setting/routing'
 import Api from './app/api/routing'
+import Company from './app/company/routing';
 
 export default [
   {
@@ -14,7 +15,8 @@ export default [
         component: Profile,
       },
       ...Setting,
-      ...Api
+      ...Api,
+      ...Company
     ]
   }
 ]

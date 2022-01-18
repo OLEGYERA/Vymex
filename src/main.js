@@ -4,14 +4,14 @@ import store from '@/storage'
 import router from '@/router'
 import Notifications from 'vue-notification'
 import EnginePlugin from "@/plugins/Engine";
+import panZoom from 'vue-panzoom'
 
 import '@/directives/guesture'
-
 
 Vue.config.productionTip = false
 Vue.config.devtools = true
 
-
+Vue.use(panZoom);
 Vue.use(Notifications)
 Vue.use(EnginePlugin, {
   socketClient: {

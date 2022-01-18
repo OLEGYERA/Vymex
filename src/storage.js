@@ -29,7 +29,7 @@ import UserProfile from '@/app/auth/storage/UserProfile'
 import VxInfo from "@/app/vx/storage/VxInfo"
 import File from "@/app/vx/storage/File"
 import Crypto from '@/core/SEKSproto/CryptoStorage'
-
+import CompanyInfo from "@/app/vx/app/company/storage/CompanyInfo";
 
 export default new Vuex.Store({
   state: {},
@@ -41,7 +41,8 @@ export default new Vuex.Store({
     UserProfile,
     Crypto,
     VxInfo,
-    File
+    File,
+    CompanyInfo
   },
   plugins: [
     createPersistedState({

@@ -1,10 +1,12 @@
 <template>
-  <div class="facade-plate-unit" :class="{'plate-account-tiny': tiny, 'active': active}">
-    <div class="plate-account-body">
+  <div class="facade-plate-unit">
+    <svg v-if="unitInfo.unitLevel > 1" class="line" viewBox="0 0 100 1" xmlns="http://www.w3.org/2000/svg">
+      <line x1="0" y1="0" x2="100" y2="0" stroke="white" />
+    </svg>
+    <div class="plate-account-body" :class="getColor">
       <image-avatar :logo="unitInfo.logo" :color-code="unitInfo.colorId"/>
       <div class="plate-account-info">
         <h2 class="plate-account-name">{{ unitInfo.name }}</h2>
-        <p class="plate-unit-name">{{ unitInfo.unitName }}</p>
       </div>
     </div>
   </div>
@@ -16,10 +18,6 @@ import ImageAvatar from '@Facade/Image/Avatar'
 export default {
   name: 'Facade.Plate.Unit',
   props: {
-    tiny: {
-      type: Boolean,
-      default: false
-    },
     category: {
       type: String,
       required: true
@@ -37,14 +35,18 @@ export default {
     unitInfo(){
       switch (this.category){
         case 'level1':
+          console.log(this.data);
           return {
             colorId: String(this.data.id).substr(this.data.id.length - 1, 1),
-            name: this.data.name + ' ' + this.data.lastname,
-            logo: this.data?.logo ? this.data.logo : this.data.name.substr(0, 1),
-            unitName: "level1"
+            name: this.data.name,
+            logo: this.data?.avatar ? this.data.avatar : this.data.name.substr(0, 1),
+            unitLevel: this.data.level,
           }
       }
       return {}
+    },
+    getColor(){
+      return this.data.level ? `color color-level-${this.data.level}` : '';
     }
   }
 
@@ -53,13 +55,16 @@ export default {
 
 <style lang="scss" scoped>
 .facade-plate-unit{
-  border-radius: 8px;
-  width: 332px;
+  width: 222px;
   height: 52px;
   box-sizing: border-box;
-  background: #D5F1C5;
-  padding: 8px;
+  margin-bottom: 20px;
+  margin-right: 44px;
+  position: relative;
   .plate-account-body{
+    border-radius: 8px;
+
+    padding: 8px;
     width: 100%;
     height: 100%;
     display: flex;
@@ -67,6 +72,7 @@ export default {
     flex-wrap: nowrap;
     overflow: hidden;
     box-sizing: border-box;
+    z-index: 99;
       .button-add,
       .facade-image-avatar {
         justify-self: flex-start;
@@ -79,7 +85,9 @@ export default {
       height: 36px;
       color: #212A33;
       display: flex;
-      flex-direction: column;
+      flex-wrap: wrap;
+      align-content: center;
+      //flex-direction: column;
       .facade-title-sub,
       .facade-text-base {
         width: 100%;
@@ -90,50 +98,31 @@ export default {
         line-height: 20px;
         margin: 0;
         display: block;
-        height: 16px;
+        font-weight: 400;
       }
-      .plate-unit-name{
-        font-size: 12px;
-        line-height: 16px;
-        margin-top: 4px;
+    }
+    &.color-level-{
+      &1{
+        background: #D5F1C5;
+      }
+      &2{
+        background: #FEF0BD;
+      }
+      &3{
+        background: #BAE7FF;
+      }
+      &4{
+        background: #F2CBF8;
       }
     }
   }
-  &.create{
-    border: 1px solid $grey-scale-400;
-    background: transparent;
-    .plate-account-body{
-      //padding: 11px 11px;
-      .button-add{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: $blue;
-        border-radius: 50%;
-        overflow: hidden;
-        flex-shrink: 0;
-        .icon-add{
-          height: 16px;
-          color: #fff;
-        }
-      }
-      .facade-text-base{
-        color: $blue;
-      }
-    }
-  }
-  &.plate-account-tiny{
-    .plate-account-body{
-      justify-content: center;
-      .button-add,
-      .facade-image-avatar{
-        margin-right: 0;
-      }
-    }
-  }
-
-  &.active{
-    border-color: $blue;
+  .line{
+    position: absolute;
+    right: -21%;
+    left: 99%;
+    top: 50%;
+    overflow: visible;
+    z-index: 1;
   }
 }
 
