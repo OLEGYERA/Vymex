@@ -22,9 +22,10 @@
       :validation-text="aliasError || 'Имя свободно'"
       @onBlur="updateAlias"
       @onAlias="verifyAlias"
-    /><dropdown-date
-      :model="testDate"
+    /><input-date
+      :model="birthday"
       placeholder="Дата рождения"
+      @onDate="updateBirthday"
     />
   </div>
 </template>
@@ -32,7 +33,7 @@
 <script>
   import InputBase from '@Facade/Input/Base'
   import InputAlias from '@Facade/Input/Alias'
-  import DropdownDate from '@Facade/Dropdown/Date'
+  import InputDate from '@Facade/Input/Date'
   import {mapGetters} from 'vuex'
 
   export default {
@@ -40,14 +41,14 @@
     components: {
       InputBase,
       InputAlias,
-      DropdownDate
+      InputDate
     },
     data(){
       return {
         newName: null,
         newLastname: null,
         newAlias: null,
-        testDate: '12.12.1920'
+        newBirthdate: '1999-08-19'
       }
     },
     computed: {
@@ -56,7 +57,7 @@
         lastname: 'getUserLastname',
         alias: 'getUserAlias',
         aliasError: 'getUserAliasError',
-
+        birthday: 'getUserBirthday',
       })
     },
     methods: {
@@ -80,6 +81,9 @@
           .prepareComponentManually('setting', 'checkAlias', alias)
           .runPredictedData();
       },
+      updateBirthday(date){
+        this.updateProfile('editBirthDate', date);
+      }
     }
   }
 </script>

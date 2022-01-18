@@ -138,4 +138,15 @@ export default class Setting {
     this.SClient.Emit('listener', fullPack)
   }
 
+
+  async editBirthDate(birthday){
+    this.storage.set('UserBirthday', birthday);
+    const fullPack = await encrypt({
+      AES256Key: this.storage.get('AesKey'),
+      MAC256Key: this.storage.get('MacKey')
+    }, 'Setting', 'editBirthDate', utf8ToArray(birthday));
+
+    this.SClient.Emit('listener', fullPack)
+  }
+
 }

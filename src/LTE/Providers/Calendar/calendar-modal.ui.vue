@@ -1,42 +1,11 @@
 <template>
-  <div class="calendar-provider calendar-modal-ui">
-    <div class="calendar-wrapper" v-gesture @someEvent="handleScroll">
-
-      <div class="wheel-alert" v-if="wheel">
-        deltaX: {{wheel.deltaX}}
-        <br>
-        deltaY: {{wheel.deltaY}}
-        <br>
-        deltaZ: {{wheel.deltaZ}}
-        <br>
-        wDelta: {{wheel.wheelDelta}}  wDeltaX: {{wheel.wheelDeltaX}} wDeltaY: {{wheel.wheelDeltaY}}
-        <br>
-        deltaMode: {{wheel.deltaMode}}
-        <br>
-
-        which: {{wheel.which}} | altKey: {{wheel.altKey}} | shiftKey: {{wheel.shiftKey}}
-        <br>
-        button: {{wheel.button}} | buttons: {{wheel.buttons}} | cancelable: {{wheel.cancelable}}
-        <br>
-
-        type: {{ other.type }}
-        <br>
-        category: {{ other.category }}
-        <br>
-        depth: {{ other.depth }}
-        <br>
-        time: {{ other.time }}
-        <br>
-        delta: {{ other.delta }} | deltaX: {{other.deltaX}} | deltaY: {{other.deltaY}}
-        <br>
-        speed: {{other.speed}}
-
-        <br>
-
-
-      </div>
-
-      <calendar-header/>
+  <div class="calendar-provider calendar-modal-ui" v-if="status">
+    <div class="calendar-wrapper" v-gesture="{animate, duration: 400}" @gestureStart="gestureStart" @gestureProcess="gestureProcess" @gestureEnd="gestureEnd" :style="{transform: gesture.styleExit}">
+      <calendar-header
+        :calendar="calendar"
+        :calendarReplica="calendarReplica"
+        :gesture="gesture"/>
+      <calendar-main :calendar="calendar" :calendar-replica="calendarReplica" @onChoose="pickDate" :gesture="gesture"/>
     </div>
   </div>
 </template>
@@ -44,53 +13,30 @@
 <script>
 import CalendarMixin from './mixin'
 import CalendarHeader from './calendar-header.atom'
+import CalendarMain from './calendar-main.atom'
+import {Calendar} from './calendar'
 import './style.scss'
 
 export default {
   name: 'Providers.CalendarModalUi',
-  components: {CalendarHeader},
-  // directives: {scroll},
+  components: {CalendarHeader, CalendarMain},
   mixins: [CalendarMixin],
-  data: () => ({
-    wheel: null,
-    other: null,
-    onTouch: false
-  }),
-  mounted() {
-    // let win = document.getElementsByClassName('calendar-wrapper')[0]
-    // win.addEventListener('wheel', this.handleScroll1);
-    //
-    // if("ontouchstart" in window){
-    //   console.log(123)
-    //   win.addEventListener('touchstart', this.touchStartHandler);
-    //   win.addEventListener('touchmove', this.touchMoveHandler);
-    //   win.addEventListener('touchend', this.touchEndHandler);
-    // }
+  props: {
+    status: {
+      type: Boolean,
+      required: true
+    },
   },
+  data: () => ({
+    calendar: new Calendar(),
+    calendarReplica: null,
+  }),
   methods: {
-    touchStartHandler(){
-      this.onTouch = true
+    pickDate(day){
+      let month = this.calendar.monthPoint.getMonth() + 1;
+      this.$emit('onDate',  this.calendar.Year +  '-' + (month < 10 ? '' + 0 + month : month) + '-' + (day < 10 ? '' + 0 + day : day));
     },
-    touchEndHandler(){
-      this.onTouch = false
-    },
-    touchMoveHandler(e){
-      if(this.onTouch){
-        console.log(e)
-      }
-    },
-    handleScroll(e, d){
-      this.other = d
-      this.wheel = e
-    },
-
-    handleScroll1(evt){
-      evt.preventDefault()
-      console.log(evt)
-      this.wheel = evt
-      // return true;
-    },
-  }
+  },
 }
 </script>
 
@@ -100,6 +46,11 @@ export default {
       width: 460px;
       height: 400px;
       border-radius: 12px;
+      .wrapper{
+        height: 100%;
+        width: 100%;
+        background-color: #fff;
+      }
     }
   }
 </style>

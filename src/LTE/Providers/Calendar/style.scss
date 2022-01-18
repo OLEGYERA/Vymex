@@ -11,6 +11,112 @@
   .calendar-wrapper{
     background-color: $grey-scale-400;
     overflow: hidden;
+    .calendar-header-atom{
+      .calendar-date-box{
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        padding: 24px 24px 18px;
+        background-color: $grey-scale-300;
+        .date-month{
+          width: 80px;
+          .facade-title-semi{
+            font-size: rem(18);
+            line-height: rem(20);
+          }
+
+          &.floatingMonth{
+            width: 100px;
+            position: relative;
+            overflow: hidden;
+            .floatTitle{
+              position: absolute;
+            }
+          }
+        }
+        .date-year{
+          width: 70px;
+          height: 18px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          .transparentYear{
+            font-family: 'Iter', sans-serif;
+            font-weight: 600;
+            width: 100%;
+            color: #fff;
+            padding: 0;
+            text-align: center;
+            font-size: rem(16);
+            border: unset;
+            background-color: transparent;
+            outline: none;
+          }
+
+          &.floatingYear{
+            position: relative;
+            overflow: hidden;
+            .transparentYear{
+              position: absolute;
+            }
+          }
+        }
+
+      }
+      .calendar-days-week-box{
+        padding: 12px 20px 4px;
+        display: flex;
+        justify-content: space-between;
+      }
+    }
+    .calendar-main-atom{
+      .calendar-days-matrices{
+        .calendar-matrix{
+          padding: 0 20px;
+          .matrix-body{
+            border-radius: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            transition: .05s background-color linear;
+          }
+        }
+
+        &.floatingMatrices{
+          display: flex;
+          position: relative;
+          overflow: hidden;
+          height: 264px;
+          .calendar-matrix{
+            position: absolute;
+            .matrix-body{
+              transition: .1s background-color linear;
+              //background-color: rgba($grey-scale-500, .3);
+            }
+          }
+        }
+      }
+    }
+
+    .cell-item{
+      width: 100%;
+      height: 40px;
+      max-width: calc(100% / 7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 2px 0;
+      .cell-item-body{
+        display: flex;
+        justify-content: inherit;
+        align-items: inherit;
+        width: 45px;
+        height: 100%;
+        border-radius: 8px;
+      }
+    }
+
+
   }
 
 
