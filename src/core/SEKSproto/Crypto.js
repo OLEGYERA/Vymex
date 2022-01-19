@@ -80,7 +80,7 @@ class Crypto{
   **/
   parsingGlobalListenerResponse(responsePackage){
     this.packageHelper.parser(responsePackage, (parsedData) => {
-      this.Predictor.dataPreparation(parsedData).runPredictedData()
+      this.Predictor.dataPreparation(parsedData)
     })
   }
 }

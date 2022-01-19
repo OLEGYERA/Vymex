@@ -72,9 +72,7 @@
         this.predictSearch(model);
       },
       predictSearch(query = ''){
-        this.$core.predictor
-          .prepareComponentManually('msgContact', 'search', query)
-          .runPredictedData();
+        this.$core.predictor.ManualProcess('msgContact', 'search', query);
       }
     },
     components: {

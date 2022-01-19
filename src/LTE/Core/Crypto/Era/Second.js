@@ -28,6 +28,7 @@ class Second extends Binder{
    * @param data
    */
   async phase4(data) {
+    console.log(data)
     this.$store.set('DashServer', data.dash)
     await this.$router.push({name: 'auth.code'})
   }

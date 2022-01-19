@@ -11,7 +11,7 @@ export default class Core{
     this.socket = new Socket(otps.socket);
     this.crypto = new SeksProto();
 
-    setTimeout(() => this.install(), 0);
+    setTimeout(() => this.install());
   }
 
   install(){

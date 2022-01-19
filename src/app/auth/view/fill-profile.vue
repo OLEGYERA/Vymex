@@ -103,15 +103,11 @@
         setTimeout(() => referral.$refs['facade-input-base-ref'].focus(), 100)
       },
       verifyAlias(alias){
-        this.$console.variable(this.aliasError, 'aliasError', true)
-        this.$core.predictor
-          .prepareComponentManually('setting', 'checkAlias', alias)
-          .runPredictedData();
+        this.$core.log.variable(this.aliasError, 'aliasError', true)
+        this.$core.predictor.ManualProcess('setting', 'checkAlias', alias);
       },
       createAccount(){
-        this.$core.predictor
-          .prepareComponentManually('setting', 'fillProfile')
-          .runPredictedData();
+        this.$core.predictor.ManualProcess('setting', 'fillProfile');
       }
     },
   }

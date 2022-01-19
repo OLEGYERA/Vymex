@@ -1,64 +1,68 @@
+/*eslint-disable*/
 import Vue from 'vue'
 import Binder from "@/LTE/Core/Helpers/Binder";
-import {arrayToObject} from "@/core/SEKSproto/utilites";
+import {arrayToObject, getType} from "@/core/SEKSproto/utilites";
 
 export default class Response extends Binder{
-  constructor(data) {
+  constructor(_package) {
     super();
-    this.code = null;
-    this.body = null;
-    
-    this.parsingData(data);
-    this.processing();
+    this.package = _package;
+    this.responseObj = arrayToObject(_package.data);
+    console.log('this.responseObj', this.responseObj)
   }
 
-  /**
-   * Парсинг данных
-   * @param data
-   */
-  parsingData(data){
-    try {
-      let res = arrayToObject(data);
-      if(!res.code || !res.body) throw 'Структура response не валидна';
-      this.code = res.code;
-      this.body = res.body;
-    }
-    catch (e) {
-      alert(e.toString())
-      throw e;
-    }
-  }
-
-  processing(){
-    switch (this.code){
+  getData(){
+    switch (this.responseObj.code){
       case 200:
-        break;
       case 201:
-        break;
+        return this.handleBaseSuccess();
       case 500:
-        this.parsingServerError();
-        break;
+        return this.handleServerError();
       default:
-        this.parsingBaseError();
+        return this.handleBaseError();
+    }
+
+    // try {
+    //   let res = arrayToObject(data);
+    //   console.log(res, 1212)
+    //   if(!res.code || !res.body) throw 'Структура response не валидна';
+    //   this.code = res.code;
+    //   this.body = res.body;
+    // }
+    // catch (e) {
+    //   alert(e.toString())
+    //   throw e;
+    // }
+  }
+
+  handleBaseSuccess(){
+    const responseData = this.responseObj.body;
+    console.log(responseData, this.package, 111)
+    switch (getType(responseData)){
+      case "object":
+        if(responseData.component === null && responseData.method === null){
+          return null;
+        } else if(responseData.component && responseData.method){
+          return {component: responseData.component, method: responseData.method}
+        } else {
+          return {component: this.package.component, method: this.package.method, data: responseData}
+        }
+      case "array":
+        return {component: this.package.component, method: this.package.method, data: responseData}
+      default:
+        console.log('DEFAULT - handleBaseSuccess', responseData)
         break;
     }
   }
 
-  parsingServerError(){
+  handleServerError(){
     // if(this.body.errors.length !== 0)
     //   this.forcedReturn = this.body.errors
-
-    Vue.notify({
-      text: this.body.message,
-      type: 'error',
-      duration: 3000,
-      speed: 500,
-    })
-
+    this.$notify({text: this.body.message, type: 'error', duration: 3000, speed: 500})
   }
 
 
-  parsingBaseError(){
+  handleBaseError(){
     console.log('key Error', this.body)
     if(this.body.errors){
       this.parsingServerError();
@@ -78,13 +82,7 @@ export default class Response extends Binder{
           break;
       }
 
-      Vue.notify({
-        text: this.body.message,
-        type: 'error',
-        duration: 3000,
-        speed: 500,
-      })
-
+      this.$notify({text: this.body.message, type: 'error', duration: 3000, speed: 500})
       throw this.body.message;
     }
   }

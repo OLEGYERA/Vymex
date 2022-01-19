@@ -1,5 +1,5 @@
 import * as encUtils from 'enc-utils';
-import {bufferToArray, hexToArray, utf8ToArray, concatArrays, arrayToBuffer, arrayToHex, numberToArray, arrayToUtf8, arrayToNumber} from 'enc-utils';
+import {bufferToArray, hexToArray, utf8ToArray, concatArrays, arrayToBuffer, arrayToHex, numberToArray, arrayToUtf8, arrayToNumber, getType} from 'enc-utils';
 
 import * as ecies25519 from "ecies-25519";
 import CryptoJS from 'crypto-js';
@@ -276,10 +276,18 @@ function objectToArray(data) {
  * @param data
  */
 function arrayToObject(data) {
-  data = arrayToUtf8(data)
-
-  return JSON.parse(data)
+  let presumablyJson = arrayToUtf8(data);
+  return (presumablyJson && (presumablyJson = isCorrectJsonString(presumablyJson))) ? presumablyJson : arrayToUtf8(data);
 }
+
+function isCorrectJsonString(presumablyJsonString){
+  try{
+    return JSON.parse(presumablyJsonString)
+  } catch (e){
+    return false;
+  }
+}
+
 
 export {
   encUtils, //bufferToArray, hexToArray, utf8ToArray, concatArrays, arrayToHex, arrayToUtf8, arrayToNumber
@@ -308,5 +316,6 @@ export {
   padRight,
   padString,
   objectToArray,
-  arrayToObject
+  arrayToObject,
+  getType
 }

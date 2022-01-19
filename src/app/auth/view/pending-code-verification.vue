@@ -12,18 +12,16 @@
   export default {
     name: 'auth.code',
     created() {
-      this.$core.predictor
-        .prepareComponentManually('auth', 'verifyCode')
-        .runPredictedData()
+      this.$core.predictor.ManualProcess('auth', 'verifyCode')
+
     },
     computed: {
       ...mapGetters({Dash: 'getDashClient', DashServer: 'getDashServer', isJumpReg: 'getUserIsJumpReg'}),
     },
     watch: {
       Dash(){
-        this.$core.predictor
-          .prepareComponentManually('auth', 'flipFlopDash')
-          .runPredictedData()
+        this.$core.predictor.ManualProcess('auth', 'flipFlopDash')
+
       },
       DashServer(){
         if(this.isJumpReg){

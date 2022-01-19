@@ -26,7 +26,7 @@
       VxHeader
     },
     created() {
-      this.$core.predictor.prepareComponentManually('auth', 'user').runPredictedData()
+      this.$core.predictor.ManualProcess('auth', 'user')
     },
     computed: {
       ...mapGetters(['getPage']),

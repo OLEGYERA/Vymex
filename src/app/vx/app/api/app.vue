@@ -92,10 +92,9 @@
         }
       },
       emitData(){
-        this.$core.predictor
-          .prepareComponentManually('api', 'testApi',
+        this.$core.predictor.ManualProcess('api', 'testApi',
             {name: this.componentName, method: this.componentMethod, data: this.dataGroup})
-          .runPredictedData()
+
       }
     }
   }

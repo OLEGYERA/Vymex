@@ -1,111 +1,75 @@
 import Response from "./Response";
 import Binder from "@/LTE/Core/Helpers/Binder";
 
+const ImmediatelyRun = ['uploader']
+
 export default class Predictor extends Binder{
-  constructor(Era, Component) {
+  constructor(Components) {
     super();
-    this.Era = Era;
-    this.Component = Component;
-  }
-  currentActionData = {
-    component: null,
-    method: null,
-    data: null
+    this.Components = Components;
   }
 
-  dataPreparation(parsedData){
-    this.$log.success('The data will guessed!');
-    let componentInfo;
-    if(parsedData.component === 'Uploader'){
-      componentInfo = {
-        component: 'uploader',
-        method: parsedData.method,
-        data: parsedData.data
-      }
-    } else {
-      let responseData = new Response(parsedData.data);
+  Process(_package){
+    if(_package.component.indexOf('Era') !== -1) return this.processEra(_package);
 
-      if(responseData.body.component === null) return this.cryptoBypass()
+    const newComponentName = this._getComponentName(_package.component)
+    if(ImmediatelyRun.some(x => newComponentName === x)) return this.processImmediatelyComponent(_package, newComponentName);
 
-      if(!responseData.body.component){
-        componentInfo = this.getComponentInfo(parsedData);
-        componentInfo.data = responseData.body
-      } else {
-        componentInfo = this.getComponentInfo(responseData.body);
-      }
-    }
-
-
-
-    switch (componentInfo.type){
-      case "Era":
-        this.currentActionData.component = this.Era[componentInfo.name];
-        break;
-      case "Component":
-        this.currentActionData.component = this.Component[componentInfo.name];
-        break;
-    }
-    this.currentActionData.method = componentInfo.method;
-    this.currentActionData.data = componentInfo.data;
-
-    console.groupCollapsed('The data was guessed')
-      this.$log.info(`Component: ${componentInfo.name},  Method: ${this.currentActionData.method}`)
-    console.groupEnd('The data was guessed')
-    return this;
+    return this.processBaseComponent(_package, newComponentName);
   }
-
-  prepareComponentManually(componentName, methodName, data = null){
-    console.log(componentName, methodName)
-    this.currentActionData.component = this.Component[componentName];
-    this.currentActionData.method = methodName;
-    if(data !== null)
-      this.currentActionData.data = data;
-    return this;
-  }
-
-  prepareEraManually(eraName, methodName, data = null){
-    this.currentActionData.component = this.Era[eraName];
-    this.currentActionData.method = methodName;
-    if(data !== null) this.currentActionData.data = data;
-    return this;
-  }
-
-  getComponentInfo(componentBody){
-    const componentFullName = componentBody.component
-    let componentName;
-
-    if(componentFullName.indexOf('Era') !== -1) {
-      componentName = componentFullName.replace(/Era/gi, '').toLowerCase()
-
-      return {
-        type: 'Era',
-        name: componentName,
-        method: componentBody.method
-      }
-    } else {
-      componentName = componentFullName.charAt(0).toLowerCase() + componentFullName.slice(1);
-
-      return {
-        type: 'Component',
-        name: componentName,
-        method: componentBody.method
-      }
-    }
-  }
-
-
-  runPredictedData(){
-    if(this.currentActionData.component === undefined){
-      throw 'Система: я к такому дерьму не готова!'
-    }
-    const shapedAction = this.currentActionData.component[this.currentActionData.method];
-
-    if(shapedAction) shapedAction.apply(this.currentActionData.component, [this.currentActionData.data])
+  
+  ManualProcess(component, method, data = null){
+    this.__execute(component, method, data);
     return this;
   }
 
   cryptoBypass(){
-    return this.prepareEraManually('third', 'bypass')
+    return this.__execute('third', 'bypass');
   }
 
+  processEra(_package){
+    const responseData = new Response(_package).getData();
+    if(!responseData) return this.cryptoBypass();
+    this.__execute(this._getEraName(responseData.component), responseData.method, responseData.data)
+  }
+
+  processImmediatelyComponent(_package, componentName){
+    const responseData = new Response({..._package, component: componentName}).getData();
+    this.__execute(responseData.component, responseData.method, responseData.data)
+  }
+
+  processBaseComponent(_package, componentName){
+    const responseData = new Response({..._package, component: componentName}).getData();
+    this.__execute(responseData.component, responseData.method, responseData.data)
+  }
+
+  _getEraName(_component){
+    return _component.replace(/Era/gi, '').toLowerCase()
+  }
+
+  _getComponentName(_component){
+    //Поправить логику для FAQ => fAQ(так сейчас работает)
+    return _component.charAt(0).toLowerCase() + _component.slice(1)
+  }
+
+  __execute(component, method, data = null){
+    const predictorBuffer = {component: this.Components[component], method: method, data};
+    console.log(predictorBuffer)
+    if(predictorBuffer.component === undefined) this.$log.warn('Система: Я к такому дерьму еще не готова!')
+    else {
+      console.groupCollapsed('_Predictor_ -> обнаружил данные')
+        this.$log.info(`Component: ${component},  Method: ${predictorBuffer.method}`)
+        if(data !== null){
+          this.$log.variable('Смотреть ниже', 'PredictorData', true);
+          console.log(data)
+        }
+      console.groupEnd('_Predictor_ -> обнаружил данные')
+    }
+
+    const shapedAction = predictorBuffer.component[predictorBuffer.method];
+    if(!shapedAction) return false;
+    shapedAction.apply(predictorBuffer.component, [predictorBuffer.data]);
+    this.$log.success(`_Predictor_ -> Функция Выполненна`)
+    return true;
+  }
 }

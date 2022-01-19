@@ -39,8 +39,8 @@
       }
     },
     mounted() {
-      // this.$console.info('lorem  this.$console.variable(this.clientBlocking  this.$console.variable(this.clientBlocking')
-      this.$console.variable(this.isClientBlocking, 'isClientBlocking', true)
+      // this.$core.log.info('lorem  this.$core.log.variable(this.clientBlocking  this.$core.log.variable(this.clientBlocking')
+      this.$core.log.variable(this.isClientBlocking, 'isClientBlocking', true)
       if(this.clientBlocking === 0) this.clientBlockExpired()
     },
     computed: {
@@ -52,20 +52,18 @@
     methods: {
       ...mapMutations(['setClientBlocking']),
       clientBlockExpired(){
-        this.$console.info('The client block has been removed!')
+        this.$core.log.info('The client block has been removed!')
         this.setClientBlocking(null);
         this.isAfterBlocked = true;
       },
       sendLoginData(){
         if(!this.isAfterBlocked)
-          this.$core.predictor
-            .prepareComponentManually('auth', 'sendPhoneData')
-            .runPredictedData()
+          this.$core.predictor.ManualProcess('auth', 'sendPhoneData')
+
         else {
           this.isAfterBlocked = false;
-          this.$core.predictor
-            .prepareComponentManually('auth', 'sendNewCode')
-            .runPredictedData()
+          this.$core.predictor.ManualProcess('auth', 'sendNewCode')
+
         }
       }
     },

@@ -1,13 +1,13 @@
-import {encrypt, hexToArray, serialize, utf8ToArray, ed25519} from '@/core/SEKSproto/utilites'
 import Binder from "@/LTE/Core/Helpers/Binder";
+import {encrypt, hexToArray, serialize, utf8ToArray, ed25519} from '@/core/SEKSproto/utilites'
 
-export default class Auth extends Binder{
-
+class Auth extends Binder{
   constructor() {
     super();
   }
 
   async getCountries(){
+    console.log('invoke getCountries')
     const fullPack = await encrypt({
       AES256Key: this.$store.get('AesKey'),
       MAC256Key: this.$store.get('MacKey')
@@ -113,3 +113,5 @@ export default class Auth extends Binder{
     this.$store.set('UserProfileData', data);
   }
 }
+
+export default new Auth();

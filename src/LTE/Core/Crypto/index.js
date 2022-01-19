@@ -14,7 +14,7 @@ export default class Crypto extends Binder{
   }
   launchScript(next){
     this.clearPastConnectionData();
-    this.Predictor = new Predictor(Era, Component);
+    this.Predictor = new Predictor(Object.assign(Era, Component));
 
     this.prepareKeyPair(() => {
       this.getPublicKey((FGDFullPack) => {
@@ -45,9 +45,8 @@ export default class Crypto extends Binder{
     this.$socket.on('listener', response => resPackage(response))
   }
   parsingGlobalListenerResponse(resPackage){
-    this.Packager.Parse(resPackage, (parsedData) => {
-      console.log(parsedData)
-      this.Predictor.dataPreparation(parsedData).runPredictedData()
+    this.Packager.Parse(resPackage, (preparedPackage) => {
+      this.Predictor.Process(preparedPackage);
     })
   }
 }

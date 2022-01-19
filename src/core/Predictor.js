@@ -100,7 +100,7 @@ export default class Predictor{
   }
 
 
-  runPredictedData(){
+  __execute(){
     if(this.currentActionData.component === undefined){
       throw 'Система: я к такому дерьму не готова!'
     }

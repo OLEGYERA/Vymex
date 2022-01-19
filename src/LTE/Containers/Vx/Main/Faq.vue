@@ -97,9 +97,7 @@
       },
 
       getCategories() {
-        this.$core.predictor
-          .prepareComponentManually('faq', 'getCategories')
-          .runPredictedData();
+        this.$core.predictor.ManualProcess('faq', 'getCategories');
       }
     },
 

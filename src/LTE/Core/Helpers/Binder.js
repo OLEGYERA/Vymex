@@ -17,4 +17,8 @@ export default class Binder{
   get $log(){
     return this.$core.log;
   }
+
+  get $notify(){
+    return Vue.notify
+  }
 }
