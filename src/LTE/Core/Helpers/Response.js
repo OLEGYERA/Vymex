@@ -9,7 +9,6 @@ export default class Response extends Binder{
     super();
     this.package = _package;
     this.responseObj = arrayToObject(_package.data);
-    console.log(this.package, this.responseObj)
   }
   getData(){
     switch (this.responseObj.code){
@@ -21,18 +20,6 @@ export default class Response extends Binder{
       default:
         return this.handleBaseError();
     }
-
-    // try {
-    //   let res = arrayToObject(data);
-    //   console.log(res, 1212)
-    //   if(!res.code || !res.body) throw 'Структура response не валидна';
-    //   this.code = res.code;
-    //   this.body = res.body;
-    // }
-    // catch (e) {
-    //   alert(e.toString())
-    //   throw e;
-    // }
   }
   handleBaseSuccess(){
     const responseData = this.responseObj.body;
@@ -53,30 +40,41 @@ export default class Response extends Binder{
     }
   }
   handleServerError(){
-    this.$notify({text: this.body.message, type: 'error', duration: 3000, speed: 500})
+    this.$notify({text: this.responseObj.body.message, type: 'error', duration: 3000, speed: 500})
+    return false;
   }
   handleBaseError(){
-    console.log('key Error', this.body)
-    if(this.body.errors){
-      this.parsingServerError();
-    } else {
-      switch (this.body.errorCode) {
-        case '1':
-          console.log('Проверить систему на данную ошибку!')
-          this.$store.set('ClientBlocking', 0)
-          setTimeout(() => this.$router.push({name: 'auth.login'}), 200)
-          break;
-        case '2':
-          this.$store.set('ClientBlocking', this.body.blockingTime)
-          setTimeout(() => this.$router.push({name: 'auth.login'}), 200)
-          break;
-        case '9':
-          this.$store.set('UserPassword', null)
-          break;
-      }
+    const responseData = this.responseObj.body;
 
-      this.$notify({text: this.body.message, type: 'error', duration: 3000, speed: 500})
-      throw this.body.message;
+    if (responseData === undefined) {
+      this.$log.error(`Component: ${this.package.component}, Method: ${this.package.method} ==> 'No data available!`);
+    } else {
+      this.$log.error('Key error:');
+      console.log(responseData)
+
+      if(responseData.errors){
+        this.parsingServerError();
+      } else {
+        switch (responseData.errorCode) {
+          case '1':
+            console.log('Проверить систему на данную ошибку!')
+            this.$store.set('ClientBlocking', 0)
+            setTimeout(() => this.$router.push({name: 'auth.login'}), 200)
+            break;
+          case '2':
+            this.$store.set('ClientBlocking', responseData.blockingTime)
+            setTimeout(() => this.$router.push({name: 'auth.login'}), 200)
+            break;
+          case '9':
+            this.$store.set('UserPassword', null)
+            break;
+        }
+
+        this.$notify({text: responseData.message, type: 'error', duration: 3000, speed: 500})
+        throw responseData.message;
+      }
     }
+
+    return false;
   }
 }

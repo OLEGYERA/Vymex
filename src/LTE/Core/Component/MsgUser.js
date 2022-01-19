@@ -4,8 +4,8 @@ eslint-disable
 import Binder from "@/LTE/Core/Helpers/Binder";
 import {encrypt, utf8ToArray} from "@/core/SEKSproto/utilites";
 
-class MsgContact extends Binder{
-  name='MsgContact'
+class MsgUser extends Binder{
+  name='MsgUser'
   constructor() {
     super();
   }
@@ -25,4 +25,4 @@ class MsgContact extends Binder{
   }
 }
 
-export default new MsgContact();
+export default new MsgUser();

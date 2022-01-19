@@ -3,7 +3,7 @@ import Setting from "./Setting";
 import Api from "./Api";
 import FAQ from "./Faq";
 import Uploader from "./Uploader";
-import MsgContact from "./MsgContact";
+import MsgUser from "./MsgUser";
 import MsgDlg from "./MsgDlg";
 
-export default {Auth, Setting, Api, FAQ, Uploader, MsgContact, MsgDlg}
+export default {Auth, Setting, Api, FAQ, Uploader, MsgUser, MsgDlg}

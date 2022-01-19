@@ -15,43 +15,39 @@ export default class Predictor extends Binder{
     return this.processBaseComponent(_package);
   }
   manualProcess(component, method, data = null){
-    this.__execute(component, method, data);
-    return this;
+    if(this.__execute(true, component, method, data)) return this
   }
 
   processEra(_package){
     const responseData = new Response(_package).getData();
     if(!responseData) return this.cryptoBypass();
-    this.__execute(responseData.component.replace(/Era/gi, ''), responseData.method, responseData.data)
+    this.__execute(false, responseData.component.replace(/Era/gi, ''), responseData.method, responseData.data)
   }
   processImmediatelyComponent(_package){
-    this.__execute(_package.component, _package.method, _package.data)
+    this.__execute(false, _package.component, _package.method, _package.data)
   }
   processBaseComponent(_package){
     const responseData = new Response(_package).getData();
-    this.__execute(responseData.component, responseData.method, responseData.data)
+    if(responseData) this.__execute(false, responseData.component, responseData.method, responseData.data)
   }
 
   cryptoBypass(){
-    return this.__execute('Third', 'bypass');
+    return this.__execute(true, 'Third', 'bypass');
   }
-  __execute(component, method, data = null){
-    const predictorBuffer = {component: this.Components[component], method: method, data};
-    if(predictorBuffer.component === undefined) this.$log.warn('Система: Я к такому дерьму еще не готова!')
+  __execute(fromPredictor, component, method, data = null){
+    const componentFunc = this.Components[component]
+    if(componentFunc === undefined) this.$log.warn('Система: Я к такому дерьму еще не готова!')
     else {
-      console.groupCollapsed('_Predictor_ -> обнаружил данные')
-        this.$log.info(`Component: ${component},  Method: ${predictorBuffer.method}`)
-        if(data !== null){
-          this.$log.variable('Смотреть ниже', 'PredictorData', true);
-          console.log(data)
-        }
-      console.groupEnd('_Predictor_ -> обнаружил данные')
+      const groupText = `Predictor ${fromPredictor ? '->' : '<-'} Component: ${component}, Method: ${method} ${data ? 'обнаружил данные' : 'не обнаружил данные'}`;
+      console.groupCollapsed(groupText)
+        this.$log.info(`Component: ${component},  Method: ${method}`)
+        console.log(data)
+      console.groupEnd(groupText)
     }
 
-    const shapedAction = predictorBuffer.component[predictorBuffer.method];
+    const shapedAction = componentFunc[method];
     if(!shapedAction) return false;
-    shapedAction.apply(predictorBuffer.component, [predictorBuffer.data]);
-    this.$log.success(`_Predictor_ -> Функция Выполненна`)
+    shapedAction.apply(componentFunc, [data]);
     return true;
   }
 }

@@ -178,10 +178,8 @@ async function checkHMACVerify(MAC256Key, IV128, mac, cipher) {
  */
 async function encrypt(storage, component, method, data = null) {
   let fullPack;
-  console.log('in Encrypt')
   if(data){
     let cipherData = await generateCipherData(storage, data)
-    console.log('after cipher')
     fullPack = serialize(component, method, ...cipherData);
   }else{
     fullPack = serialize(component, method);
