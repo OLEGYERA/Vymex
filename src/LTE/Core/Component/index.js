@@ -1,9 +1,9 @@
-import auth from "./Auth";
-import setting from "./Setting";
-import api from "./Api";
-import faq from "./Faq";
-import uploader from "./Uploader";
-import msgContact from "./MsgContact";
-import msgDlg from "./MsgDlg";
+import Auth from "./Auth";
+import Setting from "./Setting";
+import Api from "./Api";
+import FAQ from "./Faq";
+import Uploader from "./Uploader";
+import MsgContact from "./MsgContact";
+import MsgDlg from "./MsgDlg";
 
-export default {auth, setting, api, faq, uploader, msgContact, msgDlg}
+export default {Auth, Setting, Api, FAQ, Uploader, MsgContact, MsgDlg}

@@ -60,7 +60,7 @@
     },
     methods: {
       sendMessage(){
-        this.$core.predictor.ManualProcess('msgDlg', 'create', this.dialog);
+        this.$core.predictor.manualProcess('MsgDlg', 'create', this.dialog);
       }
     },
     components: {

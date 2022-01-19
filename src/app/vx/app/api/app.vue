@@ -92,7 +92,7 @@
         }
       },
       emitData(){
-        this.$core.predictor.ManualProcess('api', 'testApi',
+        this.$core.predictor.manualProcess('Api', 'testApi',
             {name: this.componentName, method: this.componentMethod, data: this.dataGroup})
 
       }

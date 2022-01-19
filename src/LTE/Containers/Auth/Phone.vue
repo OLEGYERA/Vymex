@@ -57,7 +57,7 @@
     },
     created() {
       if(!this.countries.length)
-        this.$core.predictor.ManualProcess('auth', 'getCountries');
+        this.$core.predictor.manualProcess('Auth', 'getCountries');
     },
     mounted() {
       this.phoneNumberModel = this.phoneLthNumber ? this.phoneLthNumber.withMask : ''; //relink vuex state on Container model

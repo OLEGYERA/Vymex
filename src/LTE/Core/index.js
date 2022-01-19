@@ -10,8 +10,6 @@ export default class Core{
     this.store = new StoragePad();
     this.socket = new Socket(otps.socket);
     this.crypto = new SeksProto();
-
-    setTimeout(() => this.install());
   }
 
   install(){

@@ -12,7 +12,7 @@
   export default {
     name: 'auth.code',
     created() {
-      this.$core.predictor.ManualProcess('auth', 'verifyCode')
+      this.$core.predictor.manualProcess('Auth', 'verifyCode')
 
     },
     computed: {
@@ -20,7 +20,7 @@
     },
     watch: {
       Dash(){
-        this.$core.predictor.ManualProcess('auth', 'flipFlopDash')
+        this.$core.predictor.manualProcess('Auth', 'flipFlopDash')
 
       },
       DashServer(){

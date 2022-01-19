@@ -20,7 +20,7 @@ Vue.config.devtools = true
 // Vue.config.errorHandler = err => (new ErrorHandler('Error')).onError(err);
 // Vue.config.warnHandler = err => (new ErrorHandler('Warn')).onError(err);
 
-
+Vue.prototype.$core.install();
 
 new Vue({
   store,

@@ -69,7 +69,7 @@
     },
     methods: {
       updateProfile(method, data){
-        this.$core.predictor.ManualProcess('setting', method, data)
+        this.$core.predictor.manualProcess('Setting', method, data)
 
       },
       updateName(){
@@ -83,7 +83,7 @@
       },
       verifyAlias(alias){
         this.newAlias = alias
-        this.$core.predictor.ManualProcess('setting', 'checkAlias', alias);
+        this.$core.predictor.manualProcess('Setting', 'checkAlias', alias);
       },
       updateBirthday(date){
         this.updateProfile('editBirthDate', date);

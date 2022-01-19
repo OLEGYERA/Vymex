@@ -30,12 +30,12 @@ export default class Crypto extends Binder{
     this.$store.set('ClientBlocking', null) //очистка от блокировщика
   }
   prepareKeyPair(next){
-    Era.zero.createKeyPair().then(() => next())
+    Era.Zero.createKeyPair().then(() => next())
   }
   getPublicKey(next){
     this.$socket.connect()
     this.$socket.on('setPublicKey', (serverPubKey) => {
-      Era.zero.createFGDfullPack(serverPubKey).then(pack => next(pack)) //FGDFullPack => pack
+      Era.Zero.createFGDfullPack(serverPubKey).then(pack => next(pack)) //FGDFullPack => pack
     })
   }
   sendPublicKey(pack){
@@ -46,7 +46,7 @@ export default class Crypto extends Binder{
   }
   parsingGlobalListenerResponse(resPackage){
     this.Packager.Parse(resPackage, (preparedPackage) => {
-      this.Predictor.Process(preparedPackage);
+      this.Predictor.systemProcess(preparedPackage);
     })
   }
 }

@@ -97,7 +97,7 @@
       },
 
       getCategories() {
-        this.$core.predictor.ManualProcess('faq', 'getCategories');
+        this.$core.predictor.manualProcess('FAQ', 'getCategories');
       }
     },
 

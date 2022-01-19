@@ -58,11 +58,11 @@
       },
       sendLoginData(){
         if(!this.isAfterBlocked)
-          this.$core.predictor.ManualProcess('auth', 'sendPhoneData')
+          this.$core.predictor.manualProcess('Auth', 'sendPhoneData')
 
         else {
           this.isAfterBlocked = false;
-          this.$core.predictor.ManualProcess('auth', 'sendNewCode')
+          this.$core.predictor.manualProcess('Auth', 'sendNewCode')
 
         }
       }

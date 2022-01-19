@@ -2,15 +2,15 @@
 import Vue from 'vue'
 import Binder from "@/LTE/Core/Helpers/Binder";
 import {arrayToObject, getType} from "@/core/SEKSproto/utilites";
+import {arrayToNumber} from "enc-utils";
 
 export default class Response extends Binder{
   constructor(_package) {
     super();
     this.package = _package;
     this.responseObj = arrayToObject(_package.data);
-    console.log('this.responseObj', this.responseObj)
+    console.log(this.package, this.responseObj)
   }
-
   getData(){
     switch (this.responseObj.code){
       case 200:
@@ -34,10 +34,8 @@ export default class Response extends Binder{
     //   throw e;
     // }
   }
-
   handleBaseSuccess(){
     const responseData = this.responseObj.body;
-    console.log(responseData, this.package, 111)
     switch (getType(responseData)){
       case "object":
         if(responseData.component === null && responseData.method === null){
@@ -54,14 +52,9 @@ export default class Response extends Binder{
         break;
     }
   }
-
   handleServerError(){
-    // if(this.body.errors.length !== 0)
-    //   this.forcedReturn = this.body.errors
     this.$notify({text: this.body.message, type: 'error', duration: 3000, speed: 500})
   }
-
-
   handleBaseError(){
     console.log('key Error', this.body)
     if(this.body.errors){

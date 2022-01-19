@@ -62,13 +62,13 @@
       },
       sendApproveCodeData(code){
         this.approveCodeStatus = false;
-        this.$core.predictor.ManualProcess('second', 'phase5', code)
+        this.$core.predictor.manualProcess('Second', 'phase5', code)
 
       },
       resendCode(){
-        this.$core.predictor.ManualProcess('second', 'generateNewAuthData')
+        this.$core.predictor.manualProcess('Second', 'generateNewAuthData')
 
-          .ManualProcess('auth', 'sendNewCode')
+          .manualProcess('Auth', 'sendNewCode')
 
       }
     },
@@ -78,10 +78,10 @@
       },
       isEqualDash(status){
         if(status === true){
-          this.$core.predictor.ManualProcess('second', 'phase6')
+          this.$core.predictor.manualProcess('Second', 'phase6')
                     }
         else if(status === false) {
-          this.$core.predictor.ManualProcess('auth', 'sendKeyError')
+          this.$core.predictor.manualProcess('Auth', 'sendKeyError')
 
         } else {
           this.approveCodeStatus = true

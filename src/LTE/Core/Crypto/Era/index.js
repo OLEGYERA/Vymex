@@ -1,5 +1,5 @@
-import zero from "./Zero";
-import second from "./Second";
-import third from "./Third";
+import Zero from "./Zero";
+import Second from "./Second";
+import Third from "./Third";
 
-export default {zero, second, third}
+export default {Zero, Second, Third}

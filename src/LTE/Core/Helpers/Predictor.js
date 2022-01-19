@@ -1,7 +1,7 @@
 import Response from "./Response";
 import Binder from "@/LTE/Core/Helpers/Binder";
 
-const ImmediatelyRun = ['uploader']
+const ImmediatelyRun = ['Uploader']
 
 export default class Predictor extends Binder{
   constructor(Components) {
@@ -9,52 +9,34 @@ export default class Predictor extends Binder{
     this.Components = Components;
   }
 
-  Process(_package){
+  systemProcess(_package){
     if(_package.component.indexOf('Era') !== -1) return this.processEra(_package);
-
-    const newComponentName = this._getComponentName(_package.component)
-    if(ImmediatelyRun.some(x => newComponentName === x)) return this.processImmediatelyComponent(_package, newComponentName);
-
-    return this.processBaseComponent(_package, newComponentName);
+    if(ImmediatelyRun.some(x => _package.component === x)) return this.processImmediatelyComponent(_package);
+    return this.processBaseComponent(_package);
   }
-  
-  ManualProcess(component, method, data = null){
+  manualProcess(component, method, data = null){
     this.__execute(component, method, data);
     return this;
-  }
-
-  cryptoBypass(){
-    return this.__execute('third', 'bypass');
   }
 
   processEra(_package){
     const responseData = new Response(_package).getData();
     if(!responseData) return this.cryptoBypass();
-    this.__execute(this._getEraName(responseData.component), responseData.method, responseData.data)
+    this.__execute(responseData.component.replace(/Era/gi, ''), responseData.method, responseData.data)
   }
-
-  processImmediatelyComponent(_package, componentName){
-    const responseData = new Response({..._package, component: componentName}).getData();
+  processImmediatelyComponent(_package){
+    this.__execute(_package.component, _package.method, _package.data)
+  }
+  processBaseComponent(_package){
+    const responseData = new Response(_package).getData();
     this.__execute(responseData.component, responseData.method, responseData.data)
   }
 
-  processBaseComponent(_package, componentName){
-    const responseData = new Response({..._package, component: componentName}).getData();
-    this.__execute(responseData.component, responseData.method, responseData.data)
+  cryptoBypass(){
+    return this.__execute('Third', 'bypass');
   }
-
-  _getEraName(_component){
-    return _component.replace(/Era/gi, '').toLowerCase()
-  }
-
-  _getComponentName(_component){
-    //Поправить логику для FAQ => fAQ(так сейчас работает)
-    return _component.charAt(0).toLowerCase() + _component.slice(1)
-  }
-
   __execute(component, method, data = null){
     const predictorBuffer = {component: this.Components[component], method: method, data};
-    console.log(predictorBuffer)
     if(predictorBuffer.component === undefined) this.$log.warn('Система: Я к такому дерьму еще не готова!')
     else {
       console.groupCollapsed('_Predictor_ -> обнаружил данные')
