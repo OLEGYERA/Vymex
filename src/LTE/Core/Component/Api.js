@@ -7,6 +7,7 @@ class Api extends Binder{
   }
 
   async testApi(emittedData){
+    console.log(emittedData)
     let dataArray = [];
     emittedData.data.forEach(data => {
       if(data.input !== null) dataArray.push(this.transformData(data.type.title, data.input))
@@ -29,8 +30,6 @@ class Api extends Binder{
         MAC256Key: this.$store.get('MacKey')
       }, emittedData.name, emittedData.method);
     }
-
-    console.log(dataArray)
 
     this.$socket.emit('listener', fullPack)
   }

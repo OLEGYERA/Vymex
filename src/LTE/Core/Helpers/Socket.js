@@ -1,5 +1,6 @@
 import { Manager } from "socket.io-client";
 import Binder from "@/LTE/Core/Helpers/Binder";
+// import {encrypt} from "@/core/SEKSproto/utilites";
 
 export default class SocketClient extends Binder{
   client;
@@ -23,12 +24,6 @@ export default class SocketClient extends Binder{
   }
   disconnect(){
     this.client.disconnect()
-  }
-  on(listenerName, method){
-    this.client.on(listenerName, method)
-  }
-  emit(emitName, data){
-    this.client.emit(emitName, data)
   }
   runConnectHooks(){
     this.on('connect', () => {
@@ -63,4 +58,18 @@ export default class SocketClient extends Binder{
       console.log('reconnect')
     })
   }
+  on(listenerName, method){
+    this.client.on(listenerName, method)
+  }
+  emit(emitName, data){
+    this.client.emit(emitName, data)
+  }
+  transferToClient(){
+    // const fullPack = await encrypt({
+    //   AES256Key: this.$store.get('AesKey'),
+    //   MAC256Key: this.$store.get('MacKey')
+    // }, 'Auth', 'getCountries');
+    // this.client.emit('listener', )
+  }
+
 }

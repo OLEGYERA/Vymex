@@ -1,68 +1,30 @@
 import {ecies25519 as ECIES, bufferToArray, serialize, hexToArray, utf8ToArray, concatArrays} from '@/core/SEKSproto/utilites'
 import Binder from "@/LTE/Core/Helpers/Binder";
 
-class Zero extends Binder{
-  /**
-   * Фаза - 3
-   * Генерация пары ключей
-   */
-  async createKeyPair(){
-    const keys = ECIES.generateKeyPair();
+let EsClPrKey;
 
-    this.$store.set('ESClientKeys', {
-      public: keys.publicKey,
-      private: keys.privateKey
-    })
+class Zero extends Binder{
+  async createKeyPair(){
+    const keyPair = ECIES.generateKeyPair();
+    EsClPrKey = keyPair.privateKey;
+    this.$store.set('EsClPbKey', keyPair.publicKey);
   }
-  /**
-   * Фазы - launch 5 phase
-   * Cборка
-   */
-  async createFGDfullPack(ServerPublicKey){
-    return this.createSharedKey(bufferToArray(ServerPublicKey))
-  }
-  /**
-   * Фаза - 5
-   * Созданеи общего ключа шифрования
-   */
-  async createSharedKey(serverPubKey) {
-    this.$store.set('ESServerPublicKey', serverPubKey);
-    this.$store.set('ESShareKey', await ECIES.derive(this.$store.get('ESClientPrivateKey'), serverPubKey))
-    return this.createAesMacKeys();
-  }
-  /**
-   * Фаза - 6
-   * Подготовка опций шифрования
-   */
-  async createAesMacKeys() {
-    let ShK512 = await ECIES.sha512(this.$store.get('ESSharedKey'));
-    this.$store.set('AesMacKeys', [ECIES.getEncryptionKey(ShK512), ECIES.getMacKey(ShK512)])
-   return this.createFGD();
-  }
-  /**
-   * Фаза - 7
-   * Шифрование FGD.
-   */
-  async createFGD(){
+
+  async createFGDPack(ServerPublicKey){
+    //createSharedKey
+    const ESSharedKey = await ECIES.derive(EsClPrKey, bufferToArray(ServerPublicKey));
+
+    //createAesMacKeys
+    let ShK512 = await ECIES.sha512(ESSharedKey);
+    const AesMac256 = [ECIES.getEncryptionKey(ShK512), ECIES.getMacKey(ShK512)];
+
+    //createFGD
     let IV128 = ECIES.randomBytes(16);
-    const FGDmsg = serialize(hexToArray(this.$store.get('AT')), utf8ToArray(this.$store.get('FP')));
-    const FGDcipher = await ECIES.aesCbcEncrypt(IV128, this.$store.get('AesKey'), FGDmsg);
-    this.$store.set('FGDcipher', FGDcipher);
-    let FGDmacData = concatArrays(IV128, this.$store.get('ESClientPublicKey'), this.$store.get('FGDcipher'));
-    this.$store.set('FGDmac', await ECIES.hmacSha256Sign(this.$store.get('MacKey'), FGDmacData));
-    return this.getPublicKey(IV128);
-  }
-  /**
-   * Фаза - 8
-   * Отправка FGD на Socket Server
-   */
-  getPublicKey(IV128) {
-    return concatArrays(
-      IV128,
-      this.$store.get('ESClientPublicKey'),
-      this.$store.get('FGDmac'),
-      this.$store.get('FGDcipher'),
-    );
+    const FGDcipher = await ECIES.aesCbcEncrypt(IV128, AesMac256[0], serialize(hexToArray(this.$store.get('AT')), utf8ToArray(this.$store.get('FP'))));
+    const FGDmac = await ECIES.hmacSha256Sign(AesMac256[1], concatArrays(IV128, this.$store.get('EsClPbKey'), FGDcipher))
+
+    //return FGDpac and AesMacKeys
+    return [concatArrays(IV128, this.$store.get('EsClPbKey'), FGDmac, FGDcipher), AesMac256];
   }
 }
 

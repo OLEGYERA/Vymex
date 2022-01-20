@@ -1,35 +1,16 @@
 import Binder from "@/LTE/Core/Helpers/Binder";
-import {encrypt, hexToArray, serialize, utf8ToArray, ed25519} from '@/core/SEKSproto/utilites'
+import {serialize, utf8ToArray, hexToArray, ed25519, encrypt} from '@/core/SEKSproto/utilites'
 
 class Auth extends Binder{
-  constructor() {
-    super();
-  }
-
   async getCountries(){
-    console.log('invoke getCountries')
-    const fullPack = await encrypt({
-      AES256Key: this.$store.get('AesKey'),
-      MAC256Key: this.$store.get('MacKey')
-    }, 'Auth', 'getCountries');
-
-    this.$socket.emit('listener', fullPack)
+    this.$socket.emit('listener', await encrypt(...arguments[1]));
   }
-
   setCountries(data){
     this.$store.set('Countries', data);
   }
 
-  /**
-   * sendPhoneData
-   * Фаза - 2
-   * Отправка пакета.
-   *
-   * @returns {Promise<void>}
-   */
-
   async sendPhoneData() {
-    this.$store.set('UT', Math.floor(Date.now() / 1000))
+    this.$store.set('UT', Math.floor(Date.now() / 1000));
     let data = serialize(
       utf8ToArray(String(this.$store.get('ChooseCountry').phoneIdent)),
       utf8ToArray(String(this.$store.get('ChooseCountry').phoneIdent + this.$store.get('PhoneLthNumber').withoutMask)),
@@ -37,14 +18,8 @@ class Auth extends Binder{
       hexToArray(this.$store.get('Salt')),
       hexToArray(this.$store.get('AT')),
     );
-    let fullPack = await encrypt({
-      AES256Key: this.$store.get('AesKey'),
-      MAC256Key: this.$store.get('MacKey')
-    }, 'SecondEra', 'phase3', data);
-
-    this.$socket.emit('listener', fullPack)
+    this.$socket.emit('listener', await encrypt(arguments[1][0], 'SecondEra', 'phase3', data))
   }
-
   async sendNewCode(){
     this.$store.set('UT', Math.floor(Date.now() / 1000))
     let data = serialize(
@@ -54,63 +29,36 @@ class Auth extends Binder{
       hexToArray(this.$store.get('AT')),
     );
 
-    let fullPack = await encrypt({
-      AES256Key: this.$store.get('AesKey'),
-      MAC256Key: this.$store.get('MacKey')
-    }, 'SecondEra', 'resendCode', data);
-
-    this.$socket.emit('listener', fullPack)
+    this.$socket.emit('listener', await encrypt(arguments[1][0], 'SecondEra', 'phase7', data))
   }
 
   async verifyCode(){
     const SGDFinalPack = serialize(
       this.$store.get('FP'),
-      this.$store.get('ESClientPublicKey'),
+      this.$store.get('EsClPbKey'),
       hexToArray(this.$store.get('AT'))
     );
-
     const SGDdsa = await ed25519.sign(SGDFinalPack, this.$store.get('Dask'));
     const data = serialize(SGDFinalPack, SGDdsa);
 
-    let fullPack = await encrypt({
-      AES256Key: this.$store.get('AesKey'),
-      MAC256Key: this.$store.get('MacKey')
-    }, 'SecondEra', 'phase7', data);
-
-    this.$socket.emit('listener', fullPack)
+    this.$socket.emit('listener', await encrypt(arguments[1][0], 'SecondEra', 'phase7', data))
   }
 
   async flipFlopDash(){
-    let fullPack = await encrypt({
-      AES256Key: this.$store.get('AesKey'),
-      MAC256Key: this.$store.get('MacKey')
-    }, 'SecondEra', 'phase10', hexToArray(this.$store.get('DashClient')));
-
-    this.$socket.emit('listener', fullPack)
+    this.$socket.emit('listener', await encrypt(arguments[1][0], 'SecondEra', 'phase10', hexToArray(this.$store.get('DashClient'))))
   }
 
   async sendKeyError() {
-    let fullPack = await encrypt({
-      AES256Key: this.$store.get('AesKey'),
-      MAC256Key: this.$store.get('MacKey')
-    }, 'SecondEra', 'keyError', utf8ToArray(String(this.$store.get('ChooseCountry').phoneIdent + this.$store.get('PhoneLthNumber').withoutMask)));
-
-    this.$socket.emit('listener', fullPack)
+    const Tel = utf8ToArray(String(this.$store.get('ChooseCountry').phoneIdent + this.$store.get('PhoneLthNumber').withoutMask));
+    this.$socket.emit('listener', await encrypt(arguments[1][0], 'SecondEra', 'keyError', Tel))
     this.$store.set('ClearDaskDash');
   }
 
-
   async user(){
-    const fullPack = await encrypt({
-      AES256Key: this.$store.get('AesKey'),
-      MAC256Key: this.$store.get('MacKey')
-    }, 'Auth', 'user');
-
-    this.$socket.emit('listener', fullPack)
+    this.$socket.emit('listener', await encrypt(...arguments[1]))
   }
-
   userRes(data){
-    this.$store.set('UserProfileData', data);
+    this.store.set('UserProfileData', data);
   }
 }
 

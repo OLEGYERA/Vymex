@@ -30,7 +30,7 @@
       async handleNewAvatarFile(avatarFile){
         const avatarNewFile = new File([avatarFile.result], `${avatarFile.name}.png`, {type:"image/png", lastModified:new Date()});
 
-        this.$core.predictor.manualProcess('Uploader', 'init',[
+        this.$core.execViaComponent('Uploader', 'init',[
               avatarNewFile,
               this.handleUploadOnprogress, null,
               this.handleUploaderOnload
@@ -41,7 +41,7 @@
         console.log(progress)
       },
       handleUploaderOnload(fileId){
-        this.$core.predictor.manualProcess('Setting', 'editAvatar', fileId)
+        this.$core.execViaComponent('Setting', 'editAvatar', fileId)
 
       }
     }

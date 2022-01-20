@@ -43,6 +43,7 @@ export default {
     getUserName: (state) => state.Name,
     getUserLastname: (state) => state.Lastname,
     getUserAlias: (state) => state.Alias.data,
+    getUserAliasMask: (state) => '@' + state.Alias.data,
     getUserAliasError: (state) => state.Alias.error,
     getUserPassword: (state) => state.Password,
     getUserIsJumpReg: (state) => state.IsJumpReg,

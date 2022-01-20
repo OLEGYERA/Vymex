@@ -7,21 +7,14 @@ class Setting extends Binder{
   }
 
   async checkAlias(newAlias){
-    this.$store.set('UserAlias', String(newAlias));
-
-    const fullPack = await encrypt({
-      AES256Key: this.$store.get('AesKey'),
-      MAC256Key: this.$store.get('MacKey')
-    }, 'Setting', 'checkAlias', utf8ToArray(this.$store.get('UserAlias').replace(/@/i, '')));
-
-    this.$socket.emit('listener', fullPack)
+    const Alias = String(newAlias);
+    this.$store.set('UserAlias', Alias);
+    this.$socket.emit('listener', await encrypt(...arguments[1], utf8ToArray(Alias.replace(/@/i, ''))));
   }
 
   async checkAliasRes(data){
-    if(data?.errors?.alias)
-      this.$store.set('UserAliasError', data.errors.alias[0])
-    else
-      this.$store.set('UserAliasError', null)
+    console.log(data)
+    this.$store.set('UserAliasError', data?.errors?.alias ? data.errors.alias[0] : null);
   }
 
   async fillProfile(){

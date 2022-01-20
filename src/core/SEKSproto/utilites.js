@@ -104,12 +104,12 @@ function concatUint8Arrays(...args){
  * @returns {}
  */
 function getPackage(data) {
-  let pac = deserialize(data);
+  const Pack = deserialize(new Uint8Array(data));
 
   return {
-    component: encUtils.arrayToUtf8(pac[0]),
-    method: encUtils.arrayToUtf8(pac[1]),
-    data: pac.slice(2),
+    component: encUtils.arrayToUtf8(Pack[0]),
+    method: encUtils.arrayToUtf8(Pack[1]),
+    data: Pack.slice(2),
   }
 }
 
@@ -157,11 +157,11 @@ async function checkHMACVerify(MAC256Key, IV128, mac, cipher) {
 }
 
 
-  async function generateCipherData(storage, data){
+  async function generateCipherData(key, data){
     let IV128 = ecies25519.randomBytes(16);
-    let cipher = await ecies25519.aesCbcEncrypt(IV128, storage.AES256Key, data);
+    let cipher = await ecies25519.aesCbcEncrypt(IV128, key.aes, data);
     let macData = concatArrays(IV128, cipher);
-    let mac = await ecies25519.hmacSha256Sign(storage.MAC256Key, macData);
+    let mac = await ecies25519.hmacSha256Sign(key.mac, macData);
 
     return Array(IV128, mac, cipher)
   }
@@ -169,17 +169,17 @@ async function checkHMACVerify(MAC256Key, IV128, mac, cipher) {
 /**
  * Зашифровать данные.
  *
- * @param storage
+ * @param key
  * @param component
  * @param method
  * @param data
  *
  * @returns Buffer
  */
-async function encrypt(storage, component, method, data = null) {
+async function encrypt(key, component, method, data = null) {
   let fullPack;
   if(data){
-    let cipherData = await generateCipherData(storage, data)
+    let cipherData = await generateCipherData(key, data)
     fullPack = serialize(component, method, ...cipherData);
   }else{
     fullPack = serialize(component, method);

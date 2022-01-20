@@ -4,11 +4,10 @@ import SKey from '@/core/SEKSproto/SKey'
 import {encrypt, hexToArray, numberToArray, serialize, utf8ToArray, ecies25519} from "@/core/SEKSproto/utilites";
 
 class MsgDlg extends Binder{
-  name='MsgDlg'
   constructor() {
     super();
     this.SKey = new SKey();
-    console.log(this.constructor.name)
+    // console.log(this.constructor.name)
   }
 
 

@@ -1,10 +1,18 @@
 import Binder from "@/LTE/Core/Helpers/Binder";
-import {ecies25519 as ECIES, ed25519 as ED, CryptoJS as CRYPTO, arrayToHex, arrayToWordArray, hexToArray} from '@/core/SEKSproto/utilites'
+import {
+  hexToArray,
+  ed25519 as Ed,
+  arrayToHex,
+  ecies25519 as ECIES,
+  CryptoJS as CRYPTO,
+  arrayToWordArray,
+} from '@/core/SEKSproto/utilites'
 
 class Second extends Binder{
   constructor() {
     super();
   }
+
   generateNewAuthData(){
     if(this.$store.get('AT').length === 0){
       this.$store.set('AT', arrayToHex(ECIES.randomBytes(16)))
@@ -12,24 +20,13 @@ class Second extends Binder{
     }
   }
 
-  /**
-   * Фаза - 1
-   * Ввод номер телефона.
-   */
   async phase1() {
-    this.generateNewAuthData()
+    this.generateNewAuthData();
     setTimeout(() => this.$router.push({name: 'auth.login'}), 1000)
   }
 
-  /**
-   * Фаза - 4
-   * Запись DASH.
-   *
-   * @param data
-   */
-  async phase4(data) {
-    console.log(data)
-    this.$store.set('DashServer', data.dash)
+  async phase4({dash}) {
+    this.$store.set('DashServer', dash)
     await this.$router.push({name: 'auth.code'})
   }
 
@@ -37,15 +34,14 @@ class Second extends Binder{
     const KDF1 = CRYPTO.PBKDF2(code + this.$store.get('UT'), arrayToWordArray(hexToArray(this.$store.get('Salt'))), {
       iterations: 10000
     }).toString();
-
-    this.$store.set('Dask', CRYPTO.PBKDF2(KDF1, arrayToWordArray(hexToArray(this.$store.get('Salt'))), {
+    const Dask = CRYPTO.PBKDF2(KDF1, arrayToWordArray(hexToArray(this.$store.get('Salt'))), {
       keySize: 256/32,
       iterations: 1,
       hasher: CRYPTO.algo.SHA256
-    }).toString());
+    }).toString();
 
-    const DashClient = await ED.getPublicKey(hexToArray(this.$store.get('Dask')));
-    this.$store.set('DashClient', arrayToHex(DashClient))
+    this.$store.set('Dask', Dask);
+    this.$store.set('DashClient', arrayToHex(await Ed.getPublicKey(hexToArray(Dask))))
   }
 
   async phase6() {
@@ -63,16 +59,17 @@ class Second extends Binder{
 
   async phase10() {
     const Dask = ECIES.randomBytes(32);
-    const DashClient = await ED.getPublicKey(Dask);
+    const DashClient = await Ed.getPublicKey(Dask);
 
     this.$store.set('Dask', arrayToHex(Dask))
     this.$store.set('DashClient', arrayToHex(DashClient))
   }
 
-  async newDASH(data) {
+
+  async newDASH({dash, user}) {
     if(!this.$store.get('IsEqualDash')){
-      this.$store.set('DashServer', data.dash)
-      this.$store.set('UserProfileData', data.user)
+      this.$store.set('DashServer', dash)
+      this.$store.set('UserProfileData', user)
     }
   }
 

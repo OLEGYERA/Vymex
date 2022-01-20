@@ -53,7 +53,7 @@
         }
       },
       login(){
-        this.$core.predictor.manualProcess('Setting', 'cloudPassword', this.password);
+        this.$core.execViaComponent('Setting', 'cloudPassword', this.password);
       }
     },
     watch:{

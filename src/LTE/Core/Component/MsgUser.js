@@ -2,7 +2,7 @@
 eslint-disable
 */
 import Binder from "@/LTE/Core/Helpers/Binder";
-import {encrypt, utf8ToArray} from "@/core/SEKSproto/utilites";
+import {encrypt, utf8ToArray, numberToArray} from "@/core/SEKSproto/utilites";
 
 class MsgUser extends Binder{
   name='MsgUser'
@@ -14,11 +14,23 @@ class MsgUser extends Binder{
     const fullPack = await encrypt({
       AES256Key: this.$store.get('AesKey'),
       MAC256Key: this.$store.get('MacKey')
-    }, this.name, 'search', utf8ToArray(query));
+    }, 'MsgUser', 'search', utf8ToArray(query));
 
     this.$socket.emit('listener', fullPack)
   }
 
+
+  shortRes(data){
+    console.log('short', data)
+  }
+
+  details(data){
+    console.log('details', data)
+  }
+
+  full(data){
+    console.log('full', data)
+  }
 
   searchRes(contacts){
     this.$store.set('MsgSearchContacts', contacts)

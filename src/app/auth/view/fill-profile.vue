@@ -104,10 +104,10 @@
       },
       verifyAlias(alias){
         this.$core.log.variable(this.aliasError, 'aliasError', true)
-        this.$core.predictor.manualProcess('Setting', 'checkAlias', alias);
+        this.$core.execViaComponent('Setting', 'checkAlias', alias);
       },
       createAccount(){
-        this.$core.predictor.manualProcess('Setting', 'fillProfile');
+        this.$core.execViaComponent('Setting', 'fillProfile');
       }
     },
   }

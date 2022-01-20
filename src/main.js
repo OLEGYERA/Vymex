@@ -4,7 +4,6 @@ import store from '@/storage'
 import router from '@/router'
 import Notifications from 'vue-notification'
 import '@/directives/guesture'
-// import {Engine} from "@/core/Engine";
 Vue.use(Notifications)
 
 import Core from "@/LTE/Core";
@@ -13,19 +12,17 @@ import Core from "@/LTE/Core";
 // Vue.prototype.$engine = new Engine({socketClient: {connection: 'wss://ponchik.app:7777'}});
 Vue.prototype.$core = new Core({socket: {connection: 'wss://ponchik.app:7777'}});
 
-Vue.config.productionTip = false
-Vue.config.devtools = true
+Vue.config.productionTip = false;
+Vue.config.devtools = false;
+Vue.config.debug = false;
+Vue.config.silent = true;
 
-
-// Vue.config.errorHandler = err => (new ErrorHandler('Error')).onError(err);
-// Vue.config.warnHandler = err => (new ErrorHandler('Warn')).onError(err);
-
-Vue.prototype.$core.install();
 
 new Vue({
   store,
   router,
-  beforeCreate() {
+  beforeCreate(){
+    this.$core.install();
     this.$router.push({name: 'preload.launch'}).catch(() => {})
   },
   render: h => h(App),

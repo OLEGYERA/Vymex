@@ -39,10 +39,10 @@ export default class Predictor extends Binder{
     if(componentFunc === undefined) this.$log.warn('Система: Я к такому дерьму еще не готова!')
     else {
       const groupText = `Predictor ${fromPredictor ? '->' : '<-'} Component: ${component}, Method: ${method} ${data ? 'обнаружил данные' : 'не обнаружил данные'}`;
-      console.groupCollapsed(groupText)
-        this.$log.info(`Component: ${component},  Method: ${method}`)
-        console.log(data)
-      console.groupEnd(groupText)
+      console.groupCollapsed(groupText);
+        this.$log.info(`Component: ${component},  Method: ${method}`);
+        console.log(data);
+      console.groupEnd(groupText);
     }
 
     const shapedAction = componentFunc[method];

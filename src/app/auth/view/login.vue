@@ -40,7 +40,6 @@
     },
     mounted() {
       // this.$core.log.info('lorem  this.$core.log.variable(this.clientBlocking  this.$core.log.variable(this.clientBlocking')
-      this.$core.log.variable(this.isClientBlocking, 'isClientBlocking', true)
       if(this.clientBlocking === 0) this.clientBlockExpired()
     },
     computed: {
@@ -58,11 +57,11 @@
       },
       sendLoginData(){
         if(!this.isAfterBlocked)
-          this.$core.predictor.manualProcess('Auth', 'sendPhoneData')
+          this.$core.execViaComponent('Auth', 'sendPhoneData')
 
         else {
           this.isAfterBlocked = false;
-          this.$core.predictor.manualProcess('Auth', 'sendNewCode')
+          this.$core.execViaComponent('Auth', 'sendNewCode')
 
         }
       }

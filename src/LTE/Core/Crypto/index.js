@@ -1,52 +1,41 @@
 import Binder from "@/LTE/Core/Helpers/Binder";
 import Era from "./Era";
 import Component from "@/LTE/Core/Component";
-import Predictor from "@/LTE/Core/Helpers/Predictor";
 import Packager from "./Packager"
 
 export default class Crypto extends Binder{
-  Predictor;
-  Packager;
-
   constructor() {
     super();
-    this.Packager = new Packager();
+    this.packager = new Packager(Object.assign(Era, Component), ['Uploader'])
   }
-  launchScript(next){
-    this.clearPastConnectionData();
-    this.Predictor = new Predictor(Object.assign(Era, Component));
-
-    this.prepareKeyPair(() => {
-      this.getPublicKey((FGDFullPack) => {
-        this.sendPublicKey(FGDFullPack);
-        next(this.Predictor)
-        this.$log.info('The predictor is ready to go')
-        this.createGlobalListener(resPackage => this.parsingGlobalListenerResponse(resPackage))
+  cryptoConnect(callback){
+    const handshake = Era.Zero;
+    handshake.createKeyPair().then(() => {
+      this.$socket.connect();
+      this.$socket.on('setPublicKey', (serverPubKey) => {
+        handshake.createFGDPack(serverPubKey).then(pack => {
+          this.packager.__setPackagerKey(pack[1])
+          this.$socket.emit('setPublicKey', pack[0]);
+          callback();
+          this._runGlobalListeners(pac => this.packager.predictor(pac));
+        })
       })
     })
   }
-  clearPastConnectionData(){
+  execViaComponent(packageWrapper){
+    const groupText = `EXEC --> | Component: ${packageWrapper.component}, Method: ${packageWrapper.method} | Data: ${!!packageWrapper.data}`;
+    console.groupCollapsed(groupText);
+    console.log(packageWrapper.data);
+    console.groupEnd(groupText);
+
+    return this.packager.wrapUp(packageWrapper);
+  }
+  _runGlobalListeners(resPackage){
+    this.$socket.on('listener', response => resPackage(response))
+  }
+  _clearPrevConnectionData(){
     this.$store.set('TempAT', '') //очистка от блокировщика
     this.$store.set('ClientBlocking', null) //очистка от блокировщика
   }
-  prepareKeyPair(next){
-    Era.Zero.createKeyPair().then(() => next())
-  }
-  getPublicKey(next){
-    this.$socket.connect()
-    this.$socket.on('setPublicKey', (serverPubKey) => {
-      Era.Zero.createFGDfullPack(serverPubKey).then(pack => next(pack)) //FGDFullPack => pack
-    })
-  }
-  sendPublicKey(pack){
-    this.$socket.emit('setPublicKey', pack) //FGDFullPack => pack
-  }
-  createGlobalListener(resPackage){
-    this.$socket.on('listener', response => resPackage(response))
-  }
-  parsingGlobalListenerResponse(resPackage){
-    this.Packager.Parse(resPackage, (preparedPackage) => {
-      this.Predictor.systemProcess(preparedPackage);
-    })
-  }
+
 }
