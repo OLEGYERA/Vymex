@@ -8,13 +8,13 @@ class Setting extends Binder{
 
   async checkAlias(newAlias){
     const Alias = String(newAlias);
-    this.$store.set('UserAlias', Alias);
+    this.$store.set('UserAlias', Alias); //нужно переделать!!
     this.$socket.emit('listener', await encrypt(...arguments[1], utf8ToArray(Alias.replace(/@/i, ''))));
   }
 
   async checkAliasRes(data){
-    console.log(data)
-    this.$store.set('UserAliasError', data?.errors?.alias ? data.errors.alias[0] : null);
+    let aliasError = data?.errors?.[Object.keys(data?.errors)]?.[0];
+    this.$store.set('UserAliasError', aliasError || null);
   }
 
   async fillProfile(){
@@ -22,7 +22,6 @@ class Setting extends Binder{
     let signPassword = await ed25519.sign(concatPasswordAT, this.$store.get('Dask'));
     let newAT = concatArrays(hexToArray(this.$store.get('AT')), ecies25519.randomBytes(32));
     this.$store.set('AT', arrayToHex(newAT));
-
     let data = serialize(
       utf8ToArray(String(this.$store.get('UserName'))),
       utf8ToArray(String(this.$store.get('UserLastname'))),
@@ -30,15 +29,8 @@ class Setting extends Binder{
       utf8ToArray(String(this.$store.get('UserPassword'))),
       newAT, signPassword
     );
-
-    const fullPack = await encrypt({
-      AES256Key: this.$store.get('AesKey'),
-      MAC256Key: this.$store.get('MacKey')
-    }, 'Setting', 'fillProfile', data);
-
-    this.$socket.emit('listener', fullPack)
+    this.$socket.emit('listener', await encrypt(...arguments[1], data));
   }
-
   async fillProfileRes(data){
     if(!data.length) {
       await this.$router.push({name: 'vx'})
@@ -47,88 +39,41 @@ class Setting extends Binder{
   }
 
   async cloudPassword(password){
-    this.$store.set('UserPassword', password)
-    const newPassword = utf8ToArray(password);
-
+    const newPassword =  utf8ToArray(password);
+    this.$store.set('UserPassword', newPassword);
     let newAT = concatArrays(hexToArray(this.$store.get('AT')), ecies25519.randomBytes(32));
-    let concatPasswordAT = concatArrays(newPassword, newAT)
-    let signPassword = await ed25519.sign(concatPasswordAT, this.$store.get('Dask'));
+    let signPassword = await ed25519.sign(concatArrays(newPassword, newAT), this.$store.get('Dask'));
     this.$store.set('TempAT', arrayToHex(newAT));
-
-    let data = serialize(
-      newPassword,
-      newAT,
-      signPassword
+    this.$socket.emit('listener', await encrypt(
+      arguments[1][0],
+      'ThirdEra',
+      arguments[1][2],
+      serialize(newPassword, newAT, signPassword))
     );
-
-    const fullPack = await encrypt({
-      AES256Key: this.$store.get('AesKey'),
-      MAC256Key: this.$store.get('MacKey')
-    }, 'ThirdEra', 'cloudPassword', data);
-
-    this.$socket.emit('listener', fullPack)
   }
-
 
   //Profile funcs
-
-
   async editAvatar(avatarId){
-    const fullPack = await encrypt({
-      AES256Key: this.$store.get('AesKey'),
-      MAC256Key: this.$store.get('MacKey')
-    }, 'Setting', 'editAvatar', numberToArray(avatarId));
-
-    this.$socket.emit('listener', fullPack)
+    this.$socket.emit('listener', await encrypt(...arguments[1], numberToArray(avatarId)));
   }
-
   async editAvatarRes({path}){
     this.$store.set('UserAvatar', path)
   }
-
-
   async editName(name){
     this.$store.set('UserName', name);
-    const fullPack = await encrypt({
-      AES256Key: this.$store.get('AesKey'),
-      MAC256Key: this.$store.get('MacKey')
-    }, 'Setting', 'editName', utf8ToArray(name));
-
-    this.$socket.emit('listener', fullPack)
+    this.$socket.emit('listener', await encrypt(...arguments[1], utf8ToArray(name)));
   }
-
   async editLastname(lastname){
     this.$store.set('UserLastname', lastname);
-    const fullPack = await encrypt({
-      AES256Key: this.$store.get('AesKey'),
-      MAC256Key: this.$store.get('MacKey')
-    }, 'Setting', 'editLastname', utf8ToArray(lastname));
-
-    this.$socket.emit('listener', fullPack)
+    this.$socket.emit('listener', await encrypt(...arguments[1], utf8ToArray(lastname)));
   }
-
-  async editAlias(alias){
-    this.$store.set('UserAlias', alias);
-    const fullPack = await encrypt({
-      AES256Key: this.$store.get('AesKey'),
-      MAC256Key: this.$store.get('MacKey')
-    }, 'Setting', 'editAlias', utf8ToArray(alias.replace(/@/i, '')));
-
-    this.$socket.emit('listener', fullPack)
+  async editAlias(){
+    this.$socket.emit('listener', await encrypt(...arguments[1], utf8ToArray(this.$store.get('UserAlias').replace(/@/i, ''))));
   }
-
-
   async editBirthDate(birthday){
     this.$store.set('UserBirthday', birthday);
-    const fullPack = await encrypt({
-      AES256Key: this.$store.get('AesKey'),
-      MAC256Key: this.$store.get('MacKey')
-    }, 'Setting', 'editBirthDate', utf8ToArray(birthday));
-
-    this.$socket.emit('listener', fullPack)
+    this.$socket.emit('listener', await encrypt(...arguments[1], utf8ToArray(birthday)));
   }
-
 }
-
 
 export default new Setting();

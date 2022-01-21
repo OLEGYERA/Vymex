@@ -12,16 +12,18 @@ import Core from "@/LTE/Core";
 // Vue.prototype.$engine = new Engine({socketClient: {connection: 'wss://ponchik.app:7777'}});
 Vue.prototype.$core = new Core({socket: {connection: 'wss://ponchik.app:7777'}});
 
-Vue.config.productionTip = false;
-Vue.config.devtools = false;
-Vue.config.debug = false;
-Vue.config.silent = true;
+Vue.config.productionTip = true;
+Vue.config.devtools = true;
+Vue.config.debug = true;
+// Vue.config.silent = true;
 
 
 new Vue({
   store,
   router,
   beforeCreate(){
+    console.log(this.$core)
+
     this.$core.install();
     this.$router.push({name: 'preload.launch'}).catch(() => {})
   },

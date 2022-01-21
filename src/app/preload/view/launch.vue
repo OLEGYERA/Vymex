@@ -11,17 +11,14 @@
 <script>
 export default {
   name: 'auth.launch',
-  mounted() {
-    this.showLogo = true;
-  },
   data() {
     return{
-      showLogo: false
+      showLogo: true
     }
   },
   beforeRouteLeave(to, from, next){
     this.showLogo = false;
-    setTimeout(() => next(), 500)
+    setTimeout(() => next(), 200)
   }
 }
 </script>
@@ -43,10 +40,10 @@ export default {
     }
   }
 
-  .fade-enter-active, .fade-leave-active {
-    transition: opacity 1s;
+  .fade-leave-active {
+    transition: opacity .15s ease-out;
   }
-  .fade-enter, .fade-leave-to {
+  .fade-leave-to {
     opacity: 0;
   }
 </style>

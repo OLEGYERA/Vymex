@@ -37,12 +37,13 @@ export default class Packager extends Binder{
 
   wrapUp({component, method, data}){
     const instance = this.Components[component], protoFunc = instance?.[method];
-    if(!protoFunc) throw 'Система: Я к такому дерьму еще не готова!';
+    if(instance && !protoFunc) this.$log.warn('Вась, я метод не нашла... Иди-ка ты н**уй =)')
+    else if(!protoFunc) throw 'Система: Я к такому дерьму еще не готова!';
     protoFunc.call(instance,  data, [PackagerPrvKey, component, method])
   }
 
   _validatePackageResponseData(decPac){
-    if(this.priorityComponents.indexOf(decPac.component) !== -1) return {component: 'Third', method: bypass};
+    if(this.priorityComponents.indexOf(decPac.component) !== -1) return decPac;
     decPac.data = arrayToObject(decPac.data);
     return this._delegateByResponseCode(decPac) ?? null;
   }

@@ -57,8 +57,9 @@ class Auth extends Binder{
   async user(){
     this.$socket.emit('listener', await encrypt(...arguments[1]))
   }
+
   userRes(data){
-    this.store.set('UserProfileData', data);
+    this.$store.set('UserProfileData', data);
   }
 }
 

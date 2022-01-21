@@ -12,6 +12,7 @@ export default class Crypto extends Binder{
     const handshake = Era.Zero;
     handshake.createKeyPair().then(() => {
       this.$socket.connect();
+
       this.$socket.on('setPublicKey', (serverPubKey) => {
         handshake.createFGDPack(serverPubKey).then(pack => {
           this.packager.__setPackagerKey(pack[1])

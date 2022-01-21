@@ -10,14 +10,13 @@ class Uploader extends Binder{
   async init(data){
     const file = data[0], onprogress = data[1] ? data[1] : null, onerror = data[2] ? data[2] : null,
       onload = data[3] ? data[3] : null;
-
     let uploadFile = new UploadFile(this.$store, this.$socket, file, onprogress, onerror, onload);
-    this.start(uploadFile);
+    this.start(uploadFile, arguments[1][0]);
   }
 
-  start (uploadFile){
-    this.$store.set('UploadingFile', uploadFile)
-    uploadFile.startHandler();
+  start (uploadFile, key){
+    this.$store.set('UploadingFile', uploadFile);
+    uploadFile.startHandler(key);
   }
 
   async complete (data){
@@ -28,6 +27,7 @@ class Uploader extends Binder{
 
   async next (data){
     let f = this.$store.get('UploadingFile')[arrayToUtf8(data)];
+    console.log(f)
     f.reader.readAsArrayBuffer(f.getChunk())
   }
 }

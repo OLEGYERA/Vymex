@@ -64,7 +64,7 @@ export default {
       state.ID = payload.id
       state.IsJumpReg = payload.isJumpReg
       state.Alias = {
-        data: payload.alias,
+        data: '@' + payload.alias,
         error: null,
       }
       state.Name = payload.name

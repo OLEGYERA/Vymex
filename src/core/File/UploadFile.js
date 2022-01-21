@@ -14,6 +14,8 @@ export default class UploadFile{
   reader = this.getReader();
   serverComponent = 'Uploader'
 
+
+
   constructor(store, socket, file, onprogress, onerror, onload) {
     this.$store = store;
     this.$socket = socket;
@@ -61,9 +63,10 @@ export default class UploadFile{
   /**
    * Отправка первого пакета, старт загрузки
    */
-  startHandler(){
+  startHandler(_enc_key){
     let data = serialize(this.hash, this.file.name);
-    this.emitCommand('start', data)
+    console.log('emit start', _enc_key)
+    this.emitCommand('start', data, _enc_key)
   }
 
   /**
@@ -116,12 +119,10 @@ export default class UploadFile{
    * @param addData
    * @returns {Promise<void>}
    */
-  async emitCommand(method, data, addData = null){
+  async emitCommand(method, data, enc_key, addData = null){
+    console.log('emit in ', enc_key)
 
-    const fullPack = await encryptFile({
-      AES256Key: this.$store.get('AesKey'),
-      MAC256Key: this.$store.get('MacKey')
-    }, this.serverComponent, method, data, addData);
+    const fullPack = await encryptFile(enc_key, this.serverComponent, method, data, addData);
 
     this.$socket.emit('listener', fullPack);
   }
@@ -141,6 +142,8 @@ export default class UploadFile{
    * @returns {*}
    */
   getChunk() {
+    console.log(this.file.slice(this.offset, Math.min(this.offset + this.chunkSize, this.file.size)));
+    console.log(this.file);
     return  this.file.slice(this.offset, Math.min(this.offset + this.chunkSize, this.file.size));
   }
 }

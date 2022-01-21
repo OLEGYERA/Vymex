@@ -14,6 +14,8 @@ export default class UploadFile{
   reader = this.getReader();
   serverComponent = 'Uploader'
 
+
+
   constructor(store, socket, file, onprogress, onerror, onload) {
     this.$store = store;
     this.$socket = socket;
@@ -28,9 +30,8 @@ export default class UploadFile{
 
   getReader (){
     let reader = new FileReader();
-    console.log('reader')
     reader.onprogress = () => this.progressHandler();
-    reader.onload = (e) => this.loadedHandler(e);
+    reader.onload = (e, b) => this.loadedHandler(e, b);
     reader.onerror = () => this.errorHandler();
 
     return reader;
@@ -40,9 +41,11 @@ export default class UploadFile{
    * Отправка части файла.
    *
    * @param e
+   * @param b
    * @returns {Promise<void>}
    */
-  async loadedHandler(e) {
+  async loadedHandler(e, b) {
+    console.log(b)
     if(this.uploadComplete) return;
     await this.emitCommand('chunk', serialize(this.hash, new Uint8Array(e.target.result)))
     this.checkRemainder();
@@ -61,9 +64,9 @@ export default class UploadFile{
   /**
    * Отправка первого пакета, старт загрузки
    */
-  startHandler(){
+  startHandler(_enc_key){
     let data = serialize(this.hash, this.file.name);
-    this.emitCommand('start', data)
+    this.emitCommand('start', data, _enc_key)
   }
 
   /**
@@ -113,17 +116,12 @@ export default class UploadFile{
    *
    * @param method
    * @param data
+   * @param enc_key
    * @param addData
    * @returns {Promise<void>}
    */
-  async emitCommand(method, data, addData = null){
-
-    const fullPack = await encryptFile({
-      AES256Key: this.$store.get('AesKey'),
-      MAC256Key: this.$store.get('MacKey')
-    }, this.serverComponent, method, data, addData);
-
-    this.$socket.emit('listener', fullPack);
+  async emitCommand(method, data, enc_key, addData = null){
+    await encryptFile(enc_key, this.serverComponent, method, data, addData);
   }
 
   /**
