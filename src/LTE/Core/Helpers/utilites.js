@@ -159,9 +159,9 @@ async function checkHMACVerify(MAC256Key, IV128, mac, cipher) {
 
 async function generateCipherData(key, data){
   let IV128 = ecies25519.randomBytes(16);
-  let cipher = await ecies25519.aesCbcEncrypt(IV128, key.aes, data);
+  let cipher = await ecies25519.aesCbcEncrypt(IV128, key[0], data);
   let macData = concatArrays(IV128, cipher);
-  let mac = await ecies25519.hmacSha256Sign(key.mac, macData);
+  let mac = await ecies25519.hmacSha256Sign(key[1], macData);
 
   return Array(IV128, mac, cipher)
 }
