@@ -1,5 +1,5 @@
 <template>
-  <div class="container-vx-private-dialog" @click="$emit('changeMessenger', 'owner')">
+  <div class="singleton-messenger-private-dialog" @click="$emit('changeMessenger', 'owner')">
     <div class="private-info">
       <div class="dialog-image">
         <avatar :logo="logo" :colorCode="color"/>
@@ -19,7 +19,7 @@
    import Avatar from "@Facade/Image/Avatar";
 
 export default {
-  name: 'Container.Vx.PrivateDialog',
+  name: 'Singleton.Messenger.MessagesHeader',
   components: {
     TitleCaption,
     TextBase,
@@ -48,7 +48,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .container-vx-private-dialog {
+  .singleton-messenger-private-dialog {
     //width: 100%;
     padding: rem(12) rem(20);
     display: flex;

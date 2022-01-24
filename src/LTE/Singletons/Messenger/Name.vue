@@ -1,5 +1,5 @@
 <template>
-  <div class="container-vx-name">
+  <div class="singleton-messenger-name">
     <div class="name-part">
       <arrow-left/>
       <div class="block">{{name}}</div>
@@ -13,7 +13,7 @@ import ArrowLeft from '@Icon/ArrowLeftBold'
 import PointsVertical from '@Icon/PointsVertical'
 
 export default {
-  name: 'Container.Vx.Messenger.Name',
+  name: 'Singleton.Messenger.Name',
   components: {
     ArrowLeft,
     PointsVertical
@@ -26,7 +26,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .container-vx-name {
+  .singleton-messenger-name {
   //width: 100%;
   //padding: 11px 0;
   display: flex;
@@ -34,6 +34,7 @@ export default {
   align-items: center;
   color: #fff;
   background-color: $grey;
+    margin-bottom: 36px;
   .icon-arrow-left-bold {
     margin-right: 12px;
     height: 18px;

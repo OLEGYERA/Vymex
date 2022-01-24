@@ -1,5 +1,5 @@
 <template>
-  <div class="container-vx-contacts-block">
+  <div class="singleton-messenger-contacts-block">
     <input-search :placeholder="placeholder"/>
     <contacts>
       <template #title>Контакты</template>
@@ -10,11 +10,11 @@
 </template>
 
 <script>
-  import Contacts from '@Container/Vx/Messenger/Contacts'
+  import Contacts from '@/LTE/Singletons/Messenger/Contacts'
   import InputSearch from '@Facade/Input/Search'
-  import Person from '@Container/Vx/Messenger/Person'
+  import Person from '@/LTE/Singletons/Messenger/Person'
   export default {
-    name: 'Container.Vx.ContactsBlock',
+    name: 'Singleton.Messenger.ContactsBlock',
     components: {
       Contacts,
       InputSearch,

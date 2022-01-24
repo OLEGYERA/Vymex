@@ -1,11 +1,11 @@
 <template>
-  <div class="container-vx-side-panel">
+  <div class="singleton-messenger-side-panel">
     <div @click="$emit('openPanel')">
       <side-button class="side-button-close">
         <icon-error/>
       </side-button>
     </div>
-    <div v-if="openBlock==='messenger'">
+    <div v-if="type==='messenger'">
       <div @click="$emit('changeMessenger', 'contacts')" :class="{active: open==='contacts'}">
         <side-button>
           <icon-profile/>
@@ -21,7 +21,7 @@
         <icon-volume/>
       </side-button>
     </div>
-    <div v-if="openBlock==='notify'">
+    <div v-if="type==='notify'">
       <span @click="$emit('changeNotification')">
           <side-button :class="{active: !notification}">
             <icon-volume v-if="!this.switch"/>
@@ -45,7 +45,7 @@ import IconSetting from '@Icon/Setting'
 import IconVolumeOff from '@Icon/VolumeOff'
 
 export default {
-  name: 'Container.Vx.SidePanel',
+  name: 'Singleton.Messenger.SidePanel',
   components: {
     IconVolume,
     IconError,
@@ -60,13 +60,14 @@ export default {
     messenger: Boolean,
     openBlock: String,
     switch: Boolean,
-    notification: Boolean
+    notification: Boolean,
+    type: String
   },
 }
 </script>
 
 <style lang="scss" scoped>
-  .container-vx-side-panel {
+  .singleton-messenger-side-panel {
     height: 100%;
     background-color: $grey-scale-500;
     border-left: $grey-scale-700 solid 1px;

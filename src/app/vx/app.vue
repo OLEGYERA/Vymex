@@ -12,7 +12,13 @@
       </div>
     </main>
     <section class="vx-other-apps">
-      <messenger-app/>
+      <messenger-app @change-messenger="changeMessenger" :open="open"/>
+<!--      <notifications-app-->
+<!--          @change-time="changeTime"-->
+<!--          @change-switch="changeSwitch"-->
+<!--          :switch="this.switch"-->
+<!--          :chooseTime="chooseTime"-->
+<!--      />-->
     </section>
   </div>
 </template>
@@ -25,13 +31,37 @@
   const exceptionalRoutes = ['vx.msg'];
 
   import {MessengerApp} from '@Singletons'
+  // import NotificationsApp from "@/LTE/Singletons/Notifications/app";
 
   export default {
     name: 'app.vx',
     components: {
       VxNavigation,
       VxHeader,
-      MessengerApp
+      MessengerApp,
+      // NotificationsApp
+    },
+    data() {
+      return {
+        open: 'contacts',
+        switch: false,
+        chooseTime: 0,
+      }
+    },
+    methods: {
+      changeMessenger(type) {
+        this.open = type;
+      },
+      changeSwitch() {
+        if (this.switch) {
+          this.chooseTime = 0;
+        }
+        this.switch = !this.switch;
+        console.log(this.switch)
+      },
+      changeTime(timeKey) {
+        this.chooseTime = timeKey;
+      },
     },
     created() {
       this.$core.execViaComponent('Auth', 'user')

@@ -1,5 +1,5 @@
 <template>
-  <div class="notifications-head">
+  <div class="singleton-notifications-head">
     <div class="info">
       <title-sub>Уведомления</title-sub>
       <div class="info-amount">24</div>
@@ -13,7 +13,7 @@ import IconPointsVertical from '@Icon/PointsVertical'
 import TitleSub from '@Facade/Title/Sub'
 
 export default {
-  name: 'Container.Vx.NotificationsHead',
+  name: 'Singleton.Notifications.NotificationsHead',
   components: {
     IconPointsVertical,
     TitleSub,
@@ -22,7 +22,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .notifications-head {
+  .singleton-notifications-head {
     padding: 20px;
     display: flex;
     align-items: center;

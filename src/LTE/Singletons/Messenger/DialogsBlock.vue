@@ -1,5 +1,5 @@
 <template>
-  <div class="container-vx-dialogs-block">
+  <div class="singleton-messenger-dialogs-block">
     <input-search :placeholder="placeholder" v-model="search"/>
     <div>{{search}}</div>
     <contacts>
@@ -11,12 +11,12 @@
 </template>
 
 <script>
-import Contacts from '@Container/Vx/Messenger/Contacts'
+import Contacts from '@/LTE/Singletons/Messenger/Contacts'
 import InputSearch from '@Facade/Input/Search'
-import Chat from '@Container/Vx/Messenger/Chat'
+import Chat from '@/LTE/Singletons/Messenger/Chat'
 
 export default {
-  name: 'Container.Vx.DialogsBlock',
+  name: 'Singleton.Messenger.DialogsBlock',
   components: {
     Contacts,
     InputSearch,

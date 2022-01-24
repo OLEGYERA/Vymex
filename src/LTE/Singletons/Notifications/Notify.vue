@@ -1,5 +1,5 @@
 <template>
-  <div class="container-vx-message">
+  <div class="singleton-notifications-notify">
     <div class="message-head">
       <div class="message-part">
         <div class="message-icon">
@@ -40,7 +40,7 @@
   import TextBase from '@Facade/Text/Base'
 
   export default {
-    name: 'Container.Vx.NotificationPlate',
+    name: 'Singleton.Notifications.Notify',
     components: {
       IconInfo,
       ButtonBase,
@@ -62,7 +62,7 @@
 </script>
 
 <style lang="scss" scoped>
-  .container-vx-message {
+  .singleton-notifications-notify{
     margin-bottom: 12px;
     .message-head {
       display: flex;

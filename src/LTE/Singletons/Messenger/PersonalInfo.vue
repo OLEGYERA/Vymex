@@ -1,5 +1,5 @@
 <template>
-  <div class="container-vx-personal-info">
+  <div class="singleton-messenger-personal-info">
     <name :name="user.name"/>
     <div class="photo">
       <avatar :logo="logo" :colorCode="colorCode"/>
@@ -43,7 +43,7 @@
 </template>
 
 <script>
- import Name from '@Container/Vx/Messenger/Name'
+ import Name from '@/LTE/Singletons/Messenger/Name'
  import Avatar from '@Facade/Image/Avatar'
  import TextBase from '@Facade/Text/Base'
  import TitleCaption from '@Facade/Title/Caption'
@@ -55,7 +55,7 @@
  import TextArea from "@Facade/Input/TextArea";
 
  export default {
-   name: 'Container.Vx.OwnerInfo',
+   name: 'Singleton.Messenger.PersonalInfo',
    components: {
      Name,
      Avatar,
@@ -86,7 +86,7 @@
 </script>
 
 <style lang="scss" scoped>
-.container-vx-personal-info {
+.singleton-messenger-personal-info {
   height: 100%;
   box-sizing: border-box;
   .container-vx-name {

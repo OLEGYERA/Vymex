@@ -1,5 +1,5 @@
 <template>
-  <div class="container-vx-person">
+  <div class="singleton-messenger-person">
     <div class="private-info">
       <div class="dialog-image">
         <avatar :logo="logo" :colorCode="color"/>
@@ -19,7 +19,7 @@ import PointsVertical from '@Icon/PointsVertical'
 import Avatar from '@Facade/Image/Avatar'
 
 export default {
-  name: 'Container.Vx.Person',
+  name: 'Singleton.Messenger.Person',
   components: {
     TitleCaption,
     PointsVertical,
@@ -46,7 +46,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .container-vx-person {
+  .singleton-messenger-person {
     margin-bottom: 4px;
     padding: rem(16) rem(12);
     display: flex;

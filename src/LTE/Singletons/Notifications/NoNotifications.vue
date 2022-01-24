@@ -1,5 +1,5 @@
 <template>
-  <div class="container-vx-no-notifications">
+  <div class="singleton-notifications-no-notifications">
     <div class="no-notifications-icon"><icon-setting/></div>
     <div class="no-notifications-title">Нет новых уведомлений</div>
   </div>
@@ -9,7 +9,7 @@
   import IconSetting from '@Icon/Colored/Settings'
 
   export default {
-    name: 'Container.Vx.NoNotifications',
+    name: 'Singleton.Notifications.NoNotifications',
     components: {
       IconSetting
     },
@@ -17,7 +17,7 @@
 </script>
 
 <style lang="scss" scoped>
-  .container-vx-no-notifications {
+  .singleton-notifications-no-notifications {
     padding: rem(4) 0;
     text-align: center;
     .no-notifications-icon {

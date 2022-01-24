@@ -1,5 +1,5 @@
 <template>
-  <div class="container-vx-contacts">
+  <div class="singleton-messenger-contacts">
     <title-caps>
       <slot name="title"/>
       <span class="contacts-amount"><slot name="amount"/></span>
@@ -13,7 +13,7 @@ import TitleCaps from '@Facade/Title/Caps'
 import IconAdd from '@Icon/Add'
 
 export default {
-  name: 'Container.Vx.Contacts',
+  name: 'Singleton.Messenger.Contacts',
   components: {
     TitleCaps,
     IconAdd,
@@ -22,7 +22,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .container-vx-contacts{
+  .singleton-messenger-contacts{
     width: 100%;
     padding: 4px 0;
     display: flex;

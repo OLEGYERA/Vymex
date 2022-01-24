@@ -1,5 +1,5 @@
 <template>
-  <div class="container-vx-messages">
+  <div class="singleton-notifications-messages-block">
     <div class="day-block">
       <div class="date-box">
         <title-caps>
@@ -70,11 +70,11 @@
 
 <script>
   import ButtonClose from '@Facade/Button/Close'
-  import Notify from '@Container/Vx/Notify'
+  import Notify from '@/LTE/Singletons/Notifications/Notify'
   import TitleCaps from '@Facade/Title/Caps'
 
   export default {
-    name: 'Container.Vx.Notifications',
+    name: 'Singleton.Notifications.MessagesBlock',
     components: {
       ButtonClose,
       Notify,
@@ -139,7 +139,7 @@
 </script>
 
 <style lang="scss" scoped>
-  .container-vx-messages {
+  .singleton-notifications-messages-block {
     .day-block {
       margin-bottom: 24px;
       .date-box {

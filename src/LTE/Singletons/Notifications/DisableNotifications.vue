@@ -1,5 +1,5 @@
 <template>
-  <div class="container-vx-disable-notifications">
+  <div class="singleton-notifications-disable-notifications">
     <div class="notifications-title">
       <title-semi>Отключить оповещения</title-semi>
       <div class="button-switch"
@@ -28,7 +28,7 @@
  import TextBase from '@Facade/Text/Base'
 
 export default {
-  name: 'Container.Vx.Header',
+  name: 'Singleton.Notifications.DisableNotifications',
   components: {
     TitleSemi,
     TextBase
@@ -46,7 +46,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
- .container-vx-disable-notifications {
+ .singleton-notifications-disable-notifications {
    height: 100%;
    .notifications-title {
      margin-bottom: 24px;

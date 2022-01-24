@@ -1,6 +1,5 @@
 <template>
-  <div class="container-vx-group-header">
-    <!--    <image-cropper :imageResult="'/wp-content/uploads/flamingo.jpg'" :color-code="2"/>-->
+  <div class="singleton-messenger-group-header">
     <div class="private-info">
       <div class="dialog-image"></div>
       <div class="info-text">
@@ -14,16 +13,14 @@
 </template>
 
 <script>
-  // import ImageCropper from '@Facade/Image/Cropper'
   import TitleCaption from '@Facade/Title/Caption'
   import TextBase from '@Facade/Text/Base'
   import PointsVertical from '@Icon/PointsVertical'
   import IconError from '@Icon/Error'
 
   export default {
-    name: 'Container.Vx.GroupHeader',
+    name: 'Singleton.Messenger.GroupHeader',
     components: {
-      // ImageCropper
       TitleCaption,
       TextBase,
       PointsVertical,
@@ -33,7 +30,7 @@
 </script>
 
 <style lang="scss" scoped>
-  .container-vx-group-header {
+  .singleton-messenger-group-header {
     width: 100%;
     padding: 12px 10px 12px 20px;
     display: flex;

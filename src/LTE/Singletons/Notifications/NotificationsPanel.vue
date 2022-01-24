@@ -1,5 +1,5 @@
 <template>
-  <div class="container-vx-notifications">
+  <div class="singleton-notifications-notifications-panel">
     <div class="notifications-block">
       <notifications-head v-if="openBlock==='notify'"/>
       <messages-header v-if="openBlock==='messenger'" @changeMessenger="changeMessenger" :name="user.name"/>
@@ -15,7 +15,6 @@
                   :switch="this.switch"
                   :chooseTime="this.chooseTime"
               />
-<!--            <no-notifications v-else/>-->
             </transition>
           </div>
           <div v-if="openBlock==='messenger'">
@@ -47,17 +46,17 @@
 </template>
 
 <script>
-import DisableNotification from '@Container/Vx/DisableNotifications'
-import MessagesBlock from '@Container/Vx/MessagesBlock'
-import NotificationsHead from "@Container/Vx/NotificationsHead"
-import MessagesHeader from "@Container/Vx/Messenger/MessagesHeader"
-import SidePanel from "@Container/Vx/Messenger/SidePanel"
-import ContactsBlock from '@Container/Vx/ContactsBlock'
-import DialogsBlock from '@Container/Vx/DialogsBlock'
-import PersonalInfo from '@Container/Vx/PersonalInfo'
+import DisableNotification from '@/LTE/Singletons/Notifications/DisableNotifications'
+import MessagesBlock from '@/LTE/Singletons/Notifications/MessagesBlock'
+import NotificationsHead from "@/LTE/Singletons/Notifications/NotificationsHead"
+import MessagesHeader from "@/LTE/Singletons/Messenger/MessagesHeader"
+import SidePanel from "@/LTE/Singletons/Facades/SidePanel"
+import ContactsBlock from '@/LTE/Singletons/Messenger/ContactsBlock'
+import DialogsBlock from '@/LTE/Singletons/Messenger/DialogsBlock'
+import PersonalInfo from '@/LTE/Singletons/Messenger/PersonalInfo'
 
 export default {
-  name: 'Container.Vx.Notifications',
+  name: 'Singleton.Notifications.NotificationsPanel',
   components: {
     DisableNotification,
     MessagesBlock,
@@ -67,7 +66,6 @@ export default {
     DialogsBlock,
     PersonalInfo,
     ContactsBlock
-    // NoNotifications
   },
   data() {
     return {
@@ -109,37 +107,37 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.container-vx-notifications {
-  position: fixed;
-  top: 0;
-  right: 0;
-  box-sizing: border-box;
-  z-index: 3;
-  display: flex;
-  height: 100%;
-  background-color: $grey;
-  .notifications-block {
-    .notifications-main {
-      padding: rem(24) rem(20);
-      width: 372px;
-      box-sizing: border-box;
-      height: 100%;
-      overflow-y: scroll;
+  .singleton-notifications-notifications-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    box-sizing: border-box;
+    z-index: 4;
+    display: flex;
+    height: 100%;
+    background-color: $grey;
+    .notifications-block {
+      .notifications-main {
+        padding: rem(24) rem(20);
+        width: 372px;
+        box-sizing: border-box;
+        height: 100%;
+        overflow-y: scroll;
+      }
     }
   }
-}
-.blocks {
-  &-enter{
-    transform: translateX(15%);
+  .blocks {
+    &-enter{
+      transform: translateX(15%);
+    }
+    &-leave-to{
+      opacity: 0;
+    }
+    &-enter-active{
+      transition: $vx-tab-time all ease;
+    }
+    &-enter-to{
+      transform: translateX(0);
+    }
   }
-  &-leave-to{
-    opacity: 0;
-  }
-  &-enter-active{
-    transition: $vx-tab-time all ease;
-  }
-  &-enter-to{
-    transform: translateX(0);
-  }
-}
 </style>
