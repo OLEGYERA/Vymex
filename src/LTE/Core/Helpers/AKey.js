@@ -1,4 +1,4 @@
-import {ecies25519} from '@/core/SEKSproto/utilites';
+import {ecies25519} from '@/LTE/Core/Helpers/utilites';
 
 class AKey{
   publicKey; privateKey;

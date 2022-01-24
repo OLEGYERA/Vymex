@@ -1,5 +1,5 @@
 import Binder from "@/LTE/Core/Helpers/Binder";
-import {serialize, utf8ToArray, hexToArray, ed25519, encrypt} from '@/core/SEKSproto/utilites'
+import {serialize, utf8ToArray, hexToArray, ed25519, encrypt} from '@/LTE/Core/Helpers/utilites'
 
 class Auth extends Binder{
   async getCountries(){

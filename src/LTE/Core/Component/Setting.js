@@ -1,5 +1,5 @@
 import Binder from "@/LTE/Core/Helpers/Binder";
-import {concatArrays, encrypt, utf8ToArray, ed25519, serialize, hexToArray, arrayToHex, ecies25519, numberToArray} from "@/core/SEKSproto/utilites";
+import {concatArrays, encrypt, utf8ToArray, ed25519, serialize, hexToArray, arrayToHex, ecies25519, numberToArray} from "@/LTE/Core/Helpers/utilites";
 
 class Setting extends Binder{
   constructor() {

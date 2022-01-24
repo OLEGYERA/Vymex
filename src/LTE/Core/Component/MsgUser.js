@@ -2,7 +2,7 @@
 eslint-disable
 */
 import Binder from "@/LTE/Core/Helpers/Binder";
-import {encrypt, utf8ToArray, numberToArray} from "@/core/SEKSproto/utilites";
+import {encrypt, utf8ToArray, numberToArray} from "@/LTE/Core/Helpers/utilites";
 
 class MsgUser extends Binder{
   name='MsgUser'

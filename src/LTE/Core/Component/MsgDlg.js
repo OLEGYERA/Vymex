@@ -1,7 +1,7 @@
 /*eslint-disable*/
 import Binder from "@/LTE/Core/Helpers/Binder";
-import SKey from '@/core/SEKSproto/SKey'
-import {encrypt, hexToArray, numberToArray, serialize, utf8ToArray, ecies25519} from "@/core/SEKSproto/utilites";
+import SKey from '@/LTE/Core/Helpers/SKey'
+import {encrypt, hexToArray, numberToArray, serialize, utf8ToArray, ecies25519} from "@/LTE/Core/Helpers/utilites";
 
 class MsgDlg extends Binder{
   constructor() {

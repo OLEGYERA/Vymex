@@ -1,5 +1,5 @@
 import Binder from "@/LTE/Core/Helpers/Binder";
-import { encrypt } from '@/core/SEKSproto/utilites';
+import { encrypt } from '@/LTE/Core/Helpers/utilites';
 
 class Faq extends Binder{
   constructor() {

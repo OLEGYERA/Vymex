@@ -8,7 +8,7 @@ import {
   arrayToObject,
   getType,
   encrypt, serialize
-} from '@/core/SEKSproto/utilites'
+} from '@/LTE/Core/Helpers/utilites'
 
 
 export default class Packager extends Binder{

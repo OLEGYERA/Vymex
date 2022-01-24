@@ -1,6 +1,6 @@
 import { Manager } from "socket.io-client";
 import Binder from "@/LTE/Core/Helpers/Binder";
-// import {encrypt} from "@/core/SEKSproto/utilites";
+// import {encrypt} from "@/LTE/Core/Helpers/utilites";
 
 export default class SocketClient extends Binder{
   client;

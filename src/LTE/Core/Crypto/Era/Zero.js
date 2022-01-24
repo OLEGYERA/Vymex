@@ -1,4 +1,4 @@
-import {ecies25519 as ECIES, bufferToArray, serialize, hexToArray, utf8ToArray, concatArrays} from '@/core/SEKSproto/utilites'
+import {ecies25519 as ECIES, bufferToArray, serialize, hexToArray, utf8ToArray, concatArrays} from '@/LTE/Core/Helpers/utilites'
 import Binder from "@/LTE/Core/Helpers/Binder";
 
 let EsClPrKey;

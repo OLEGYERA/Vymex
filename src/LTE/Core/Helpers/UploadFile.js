@@ -3,7 +3,7 @@ import {
   serialize,
   utf8ToArray,
   encryptFile
-} from "@/core/SEKSproto/utilites";
+} from "@/LTE/Core/Helpers/utilites";
 
 
 export default class UploadFile{

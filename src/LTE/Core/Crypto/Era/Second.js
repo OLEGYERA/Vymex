@@ -6,7 +6,7 @@ import {
   ecies25519 as ECIES,
   CryptoJS as CRYPTO,
   arrayToWordArray,
-} from '@/core/SEKSproto/utilites'
+} from '@/LTE/Core/Helpers/utilites'
 
 class Second extends Binder{
   constructor() {

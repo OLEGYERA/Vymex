@@ -1,6 +1,6 @@
 import Binder from "@/LTE/Core/Helpers/Binder";
 import UploadFile from "@/LTE/Core/Helpers/UploadFile";
-import {deserialize, arrayToNumber, arrayToUtf8} from "@/core/SEKSproto/utilites";
+import {deserialize, arrayToNumber, arrayToUtf8} from "@/LTE/Core/Helpers/utilites";
 
 class Uploader extends Binder{
   constructor() {

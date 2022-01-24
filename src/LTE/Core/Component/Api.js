@@ -1,5 +1,5 @@
 import Binder from "@/LTE/Core/Helpers/Binder";
-import {encrypt, serialize, utf8ToArray, numberToArray} from '@/core/SEKSproto/utilites'
+import {encrypt, serialize, utf8ToArray, numberToArray} from '@/LTE/Core/Helpers/utilites'
 
 class Api extends Binder{
   constructor() {

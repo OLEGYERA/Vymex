@@ -1,4 +1,4 @@
-import {concatArrays, arrayToHex, ecies25519} from '@/core/SEKSproto/utilites';
+import {concatArrays, arrayToHex, ecies25519} from '@/LTE/Core/Helpers/utilites';
 
 class SKey {
   IV; AES; MACKey;
