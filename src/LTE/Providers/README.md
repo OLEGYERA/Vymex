@@ -1,7 +1,7 @@
-#Providers 🚢
+# Providers 🚢
 Система поставки готовых функциональных решений Vymex, для многократного использования в проекте!
 
-##Setting 📦 
+## Setting 📦
  - UploadAvatar ([upload-avatar.ui.vue]('/Setting/upload-avatar.ui.vue'))
  
     **Props:** 
