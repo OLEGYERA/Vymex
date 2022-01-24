@@ -1,35 +1,34 @@
 <template>
-  <div class="container-dashboard-resources">
-    <div class="resources-header">
-      <span class="header-title">Склад ресурсов</span>
+  <div class="container-dashboard-coQueues">
+    <div class="coQueues-header">
+      <span class="coQueues-header-title">Соучередители</span>
     </div>
-    <div class="resources-body">
-      <div class="body-coast">
-        <span class="coast-total">Общая стоимость ресурсов</span>
-        <span class="coast-sum">8699₴</span>
+    <div class="coQueues-body">
+      <div class="body-forSale">
+        <span class="forSale-title">Доля компании на продажу:</span>
+        <span class="forSale-percent">54 %</span>
       </div>
-      <div class="body-coast"
+      <div class="body-forSale"
            :style="{ marginLeft: '16px' }">
-        <spnan class="coast-total">Количество свободных ресурсов</spnan>
-        <span class="coast-sum">23</span>
+        <span class="forSale-title">Активные голосования:</span>
+        <span class="forSale-percent">23</span>
       </div>
     </div>
-    <div class="resources-footer">
-      <span>Запросы на ресурс</span>
-      <span class="footer-num">2</span>
+    <div class="coQueues-footer">
+      <span>Количество соучредителей</span>
+      <span class="footer-num">1</span>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: "Resources"
-
+  name: "CoQueues"
 }
 </script>
 
 <style lang="scss" scoped>
-.container-dashboard-resources {
+.container-dashboard-coQueues {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -37,12 +36,12 @@ export default {
   background-color: $grey-scale-500;
   padding: 16px;
 
-  .resources-header {
+  .coQueues-header {
     display: flex;
     justify-content: flex-start;
-    margin-bottom: 29px;
+    margin-bottom: 10%;
 
-    .header-title {
+    .coQueues-header-title {
       font-weight: 600;
       font-size: 17px;
       line-height: 22px;
@@ -50,10 +49,10 @@ export default {
     }
   }
 
-  .resources-body {
+  .coQueues-body {
     display: flex;
 
-    .body-coast {
+    .body-forSale {
       display: flex;
       flex-direction: column;
       align-items: flex-start;
@@ -63,22 +62,22 @@ export default {
       border-radius: 12px;
       width: 100%;
 
-      .coast-total {
+      .forSale-title {
         font-size: 12px;
         line-height: 16px;
         color: $grey-scale-200;
       }
 
-      .coast-sum {
+      .forSale-percent {
         font-weight: 600;
         font-size: 20px;
         color: #FFF;
-        margin-top: 6%;
+        margin-top: 5%;
       }
     }
   }
 
-  .resources-footer {
+  .coQueues-footer {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -91,7 +90,7 @@ export default {
 
     .footer-num {
       text-align: center;
-      background: $red;
+      background: $grey-scale-300;
       border-radius: 10px;
       width: 24px;
       height: 16px;
