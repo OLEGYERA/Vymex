@@ -1,5 +1,5 @@
 <template>
-  <div class="singleton-messenger-app">
+  <div class="singleton-messenger-app" v-if="0">
     <main class="messenger-app-main">
 
     </main>
