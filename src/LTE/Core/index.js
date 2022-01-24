@@ -1,4 +1,4 @@
-import ConsoleNotifier from "@/core/ConsoleNotifier";
+import ConsoleNotifier from "@/LTE/Core/Helpers/ConsoleNotifier";
 import StoragePad from "@/LTE/Core/Helpers/StoragePad";
 import Socket from "@/LTE/Core/Helpers/Socket";
 import Crypto from "@/LTE/Core/Crypto"

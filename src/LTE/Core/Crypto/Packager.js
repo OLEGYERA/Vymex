@@ -9,9 +9,7 @@ import {
   getType,
   encrypt, serialize
 } from '@/core/SEKSproto/utilites'
-import Response from "@/LTE/Core/Helpers/Response";
 
-let PackagerPrvKey;
 
 export default class Packager extends Binder{
   constructor(Components, priorityComponents = []){
@@ -39,7 +37,7 @@ export default class Packager extends Binder{
     const instance = this.Components[component], protoFunc = instance?.[method];
     if(instance && !protoFunc) this.$log.warn('Вась, я метод не нашла... Иди-ка ты н**уй =)')
     else if(!protoFunc) throw 'Система: Я к такому дерьму еще не готова!';
-    protoFunc.call(instance,  data, [PackagerPrvKey, component, method])
+    protoFunc.call(instance,  data, [this.$store.get('AES256MAC'), component, method])
   }
 
   _validatePackageResponseData(decPac){
@@ -132,17 +130,14 @@ export default class Packager extends Binder{
     console.log(message)
     return false;
   }
-  __setPackagerKey(key){
-    PackagerPrvKey = {aes: key[0], mac: key[1]}
-  }
 
 
   async Decrypt(IV128, mac, cipher){
     await this.CheckHMACVerify(IV128, mac, cipher);
-    return decrypt(IV128, PackagerPrvKey.aes, cipher);
+    return decrypt(IV128, this.$store.get('AES256MAC')[0], cipher);
   }
   async CheckHMACVerify(...data){
-    let HMACVerify = await checkHMACVerify(PackagerPrvKey.mac, ...data);
+    let HMACVerify = await checkHMACVerify(this.$store.get('AES256MAC')[1], ...data);
 
     // Убиваем соединение.
     if(!HMACVerify){

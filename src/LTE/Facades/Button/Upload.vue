@@ -6,7 +6,9 @@
       <icon-camera/>
       <input class="button-upload-input" ref="uploadedFile"
              type="file" id="assetsFieldHandle"
-             @change="onChange" accept=".pdf,.jpg,.jpeg,.png" />
+             @change="onChange"
+             accept=".pdf,.jpg,.jpeg,.png"
+      />
     </label>
   </div>
 </template>

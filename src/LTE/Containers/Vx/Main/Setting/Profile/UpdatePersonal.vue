@@ -30,7 +30,7 @@
       :model="about"
       placeholder="О себе"
       labeled
-  />
+    /><upload-test/>
   </div>
 </template>
 
@@ -39,6 +39,7 @@
   import InputAlias from '@Facade/Input/Alias'
   import InputDate from '@Facade/Input/Date'
   import InputArea from '@Facade/Input/Area'
+  import UploadTest from '@Facade/Button/Uploda4Test'
   import {mapGetters} from 'vuex'
 
   export default {
@@ -47,7 +48,8 @@
       InputBase,
       InputAlias,
       InputDate,
-      InputArea
+      InputArea,
+      UploadTest
     },
     data(){
       return {

@@ -16,9 +16,10 @@ export default {
       showLogo: true
     }
   },
+  /*eslint-disable*/
   beforeRouteLeave(to, from, next){
     this.showLogo = false;
-    setTimeout(() => next(), 200)
+    setTimeout(() => next(), 400);
   }
 }
 </script>
@@ -41,7 +42,7 @@ export default {
   }
 
   .fade-leave-active {
-    transition: opacity .15s ease-out;
+    transition: opacity .35s ease-out;
   }
   .fade-leave-to {
     opacity: 0;

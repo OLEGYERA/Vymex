@@ -15,8 +15,8 @@ export default class Crypto extends Binder{
 
       this.$socket.on('setPublicKey', (serverPubKey) => {
         handshake.createFGDPack(serverPubKey).then(pack => {
-          this.packager.__setPackagerKey(pack[1])
-          this.$socket.emit('setPublicKey', pack[0]);
+          this.$store.set('AES256MAC', pack[0]);
+          this.$socket.emit('setPublicKey', pack[1]);
           callback();
           this._runGlobalListeners(pac => this.packager.predictor(pac));
         })
@@ -38,5 +38,4 @@ export default class Crypto extends Binder{
     this.$store.set('TempAT', '') //очистка от блокировщика
     this.$store.set('ClientBlocking', null) //очистка от блокировщика
   }
-
 }

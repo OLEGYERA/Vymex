@@ -11,7 +11,6 @@ export default class UploadFile{
   chunkSize = 940048;
   success = false;
   uploadComplete = false;
-  reader = this.getReader();
   serverComponent = 'Uploader'
 
 
@@ -25,48 +24,47 @@ export default class UploadFile{
     this.onprogress = onprogress;
     this.onerror = onerror;
     this.onload = onload;
+    this.reader = new FileReader();
   }
 
 
-  getReader (){
-    let reader = new FileReader();
-    reader.onprogress = () => this.progressHandler();
-    reader.onload = (e, b) => this.loadedHandler(e, b);
-    reader.onerror = () => this.errorHandler();
+  getReader (encKey){
+    this.reader.onprogress = () => this.progressHandler();
+    this.reader.onload = (e) => this.loadedHandler(e, encKey);
+    this.reader.onerror = () => this.errorHandler();
 
-    return reader;
+    return this.reader;
   }
 
   /**
    * Отправка части файла.
    *
    * @param e
-   * @param b
+   * @param encKey
    * @returns {Promise<void>}
    */
-  async loadedHandler(e, b) {
-    console.log(b)
+  async loadedHandler(e, encKey) {
     if(this.uploadComplete) return;
-    await this.emitCommand('chunk', serialize(this.hash, new Uint8Array(e.target.result)))
-    this.checkRemainder();
+    await this.emitCommand('chunk', serialize(this.hash, new Uint8Array(e.target.result)), encKey)
+    this.checkRemainder(encKey);
   }
 
   /**
    * Проверка окончания загрузки файла.
    */
-  checkRemainder() {
+  checkRemainder(encKey) {
     this.offset += this.chunkSize;
     if (this.offset >= this.file.size) {
-      this.transmitDone();
+      this.transmitDone(encKey);
     }
   }
 
   /**
    * Отправка первого пакета, старт загрузки
    */
-  startHandler(_enc_key){
+  startHandler(encKey){
     let data = serialize(this.hash, this.file.name);
-    this.emitCommand('start', data, _enc_key)
+    this.emitCommand('start', data, encKey)
   }
 
   /**
@@ -75,7 +73,7 @@ export default class UploadFile{
   errorHandler(){
     this.uploadComplete = true;
     this.success = false;
-    this.onerror();
+    this.onerror?.();
   }
 
   /**
@@ -84,7 +82,7 @@ export default class UploadFile{
   completeHandler(id){
     this.uploadComplete = true;
     this.success = true;
-    this.onload(id);
+    this.onload?.(id);
   }
 
   /**
@@ -102,12 +100,12 @@ export default class UploadFile{
    *
    * @returns {Promise<void>}
    */
-  transmitDone(){
+  transmitDone(encKey){
     this.uploadComplete = true;
     this.success = true;
 
 
-    this.emitCommand('done', utf8ToArray(this.hash))
+    this.emitCommand('done', utf8ToArray(this.hash), encKey)
   }
 
   /**
@@ -121,7 +119,9 @@ export default class UploadFile{
    * @returns {Promise<void>}
    */
   async emitCommand(method, data, enc_key, addData = null){
-    await encryptFile(enc_key, this.serverComponent, method, data, addData);
+    console.time('emitCommand')
+    this.$socket.emit('listener', await encryptFile(enc_key, this.serverComponent, method, data, addData));
+    console.timeEnd('emitCommand')
   }
 
   /**

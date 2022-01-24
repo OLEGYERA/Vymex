@@ -11,15 +11,10 @@ export default {
     UT: '',
     Salt: '',
     EsClPbKey: null,
-    // ES_Server_Public_Key: null,
-    // ES_Shared_key: null,
     DASH_Server: null,
     DASH_Client: null,
     DASK: null,
-    // AES256Key: null,
-    // MAC256Key: null,
-    // FGDcipher: null,
-    // FGDmac: null,
+    AES256MAC: null,
     ClientBlocking: null
   },
   getters: {
@@ -32,11 +27,7 @@ export default {
     getDashServer: (state) => state.DASH_Server,
     getDashClient: (state) => state.DASH_Client,
     getDask: (state) => state.DASK,
-    // getESSharedKey: (state) => state.ES_Shared_key,
-    // getAesKey: (state) => state.AES256Key,
-    // getMacKey: (state) => state.MAC256Key,
-    // getFGDcipher: (state) => state.FGDcipher,
-    // getFGDmac: (state) => state.FGDmac,
+    getAES256MAC: (state) => state.AES256MAC,
     getIsEqualDash: (state) => {
       if(state.DASH_Server === null || state.DASH_Client === null) return null
       return state.DASH_Server === state.DASH_Client
@@ -51,6 +42,7 @@ export default {
       state.AT = state.TempAT;
       state.TempAT = ''
     },
+    setAES256MAC: (state, payload) => state.AES256MAC = payload,
     setUT: (state, payload) => state.UT = payload,
     setSalt: (state, payload) => state.Salt = payload,
     setEsClPbKey: (state, payload) => state.EsClPbKey = payload,

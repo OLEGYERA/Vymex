@@ -15,20 +15,11 @@ class Api extends Binder{
     let fullPack;
 
     if(dataArray.length === 1){
-      fullPack = await encrypt({
-        AES256Key: this.$store.get('AesKey'),
-        MAC256Key: this.$store.get('MacKey')
-      }, emittedData.name, emittedData.method, ...dataArray);
+      fullPack = await encrypt(arguments[1][0], emittedData.name, emittedData.method, ...dataArray);
     } else if(dataArray.length > 1){
-      fullPack = await encrypt({
-        AES256Key: this.$store.get('AesKey'),
-        MAC256Key: this.$store.get('MacKey')
-      }, emittedData.name, emittedData.method, serialize(...dataArray));
+      fullPack = await encrypt(arguments[1][0], emittedData.name, emittedData.method, serialize(...dataArray));
     } else {
-      fullPack = await encrypt({
-        AES256Key: this.$store.get('AesKey'),
-        MAC256Key: this.$store.get('MacKey')
-      }, emittedData.name, emittedData.method);
+      fullPack = await encrypt(arguments[1][0], emittedData.name, emittedData.method);
     }
 
     this.$socket.emit('listener', fullPack)

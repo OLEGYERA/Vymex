@@ -28,7 +28,7 @@ import Categories from '@/app/faq/storage/Categories'
 import UserProfile from '@/app/auth/storage/UserProfile'
 import VxInfo from "@/app/vx/storage/VxInfo"
 import File from "@/app/vx/storage/File"
-import Crypto from '@/core/SEKSproto/CryptoStorage'
+import Crypto from '@/models/CryptoStorage'
 import Messenger from '@/app/vx/app/messenger/storage/Messenger'
 
 

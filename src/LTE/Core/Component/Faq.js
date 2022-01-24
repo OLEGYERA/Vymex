@@ -11,12 +11,7 @@ class Faq extends Binder{
   }
 
   async getCategories() {
-    const fullPack = await encrypt({
-      AES256Key: this.$store.get('AesKey'),
-      MAC256Key: this.$store.get('MacKey')
-    }, 'FAQ', 'getCategories');
-
-    this.$socket.emit('listener', fullPack)
+    this.$socket.emit('listener', await encrypt(...arguments[1]))
   }
 }
 
