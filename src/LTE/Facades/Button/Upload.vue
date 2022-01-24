@@ -7,7 +7,7 @@
       <input class="button-upload-input" ref="uploadedFile"
              type="file" id="assetsFieldHandle"
              @change="onChange"
-             accept=".pdf,.jpg,.jpeg,.png"
+             :accept="allowedTypes"
       />
     </label>
   </div>
@@ -18,22 +18,34 @@
 
   export default {
     name: 'Facade.Button.Upload',
-    components: {
-      IconCamera
-    },
+    components: {IconCamera},
     props: {
+      maxSize: {
+        type: Number,
+        default: () => {
+          return 20;
+        }
+      },
+      allowedTypes: {
+        type: String,
+        default: () => {
+          return null;
+        }
+      },
       disable: Boolean,
     },
-    data(){
-      return {
-        isAnimationIncluded: false,
-        imageData: null
-      }
-    },
+    data: () => ({
+      isAnimationIncluded: false,
+      imageData: null
+    }),
     methods: {
       onChange() {
         const uploadedFile = this.$refs.uploadedFile.files[0],
               uploadReader = new FileReader();
+        if(uploadedFile.size > this.maxSize * 1000000){
+          alert(`File Size is Greater than ${this.maxSize}MB`);
+          return false;
+        }
 
         this.$refs.uploadedFile.value = null
         uploadReader.onload = e => {

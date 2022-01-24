@@ -8,7 +8,7 @@
     </div>
     <div class="short-info-names">
       <title-base>{{ name + ' ' + lastname }}</title-base>
-      <text-base>@{{alias}}</text-base>
+      <text-base>{{alias}}</text-base>
     </div>
   </div>
 </template>

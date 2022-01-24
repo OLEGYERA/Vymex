@@ -107,8 +107,8 @@ export default {
       position: absolute;
       color: $grey-scale-200;
       font-weight: 400;
-      font-size: 16px;
-      line-height: 20px;
+      font-size: 14px;
+      line-height: 16px;
       cursor: text;
     }
 
@@ -120,6 +120,7 @@ export default {
       width: 28px;
       height: 28px;
     }
+
     input{
       width: 100%;
       height: 100%;
@@ -128,8 +129,8 @@ export default {
       outline: none;
       color: #fff;
       font-weight: 400;
-      font-size: 16px;
-      line-height: 20px;
+      font-size: rem(15);
+      line-height: rem(20);
       &::placeholder{
         color: $grey-scale-200;
       }

@@ -34,7 +34,7 @@
     .child-view {
       width: 100%;
       position: absolute;
-      transition: all .75s cubic-bezier(.55,0,.1,1);
+      transition: all .35s cubic-bezier(.55,0,.1,1);
       padding-bottom: 24px;
     }
   }

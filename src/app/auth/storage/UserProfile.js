@@ -18,7 +18,7 @@ export default {
     },
     Name: null,
     Lastname: null,
-    About: null,
+    About: '',
     Birthday: null,
     Email: null,
     Avatar: null,
@@ -48,6 +48,7 @@ export default {
     getUserPassword: (state) => state.Password,
     getUserIsJumpReg: (state) => state.IsJumpReg,
     getUserBirthday: (state) => state.Birthday,
+    getUserAbout: (state) => state.About,
     getUserKEY: (state) => state.KEY,
     getUserPK: (state) => state.PK,
   },
@@ -69,7 +70,7 @@ export default {
       }
       state.Name = payload.name
       state.Lastname = payload.lastname
-      state.About = payload.about
+      state.About = payload.about || ''
       state.Birthday = payload.birthday
       state.Email = payload.email
       state.Avatar = payload.avatar
@@ -81,5 +82,6 @@ export default {
     },
     setUserAvatar: (state, payload) => state.Avatar = payload,
     setUserBirthday: (state, payload) => state.Birthday = payload,
+    setUserAbout: (state, payload) => state.About = payload,
   }
 }
