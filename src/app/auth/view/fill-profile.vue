@@ -98,12 +98,13 @@
         setName: 'setUserName',
         setLastname: 'setUserLastname',
         setPassword: 'setUserPassword',
+        setAlias: 'setUserAlias'
       }),
       focusOn(referral){
         setTimeout(() => referral.$refs['facade-input-base-ref'].focus(), 100)
       },
       verifyAlias(alias){
-        this.$core.log.variable(this.aliasError, 'aliasError', true)
+        this.setAlias(alias);
         this.$core.execViaComponent('Setting', 'checkAlias', alias);
       },
       createAccount(){

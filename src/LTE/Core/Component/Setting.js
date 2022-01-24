@@ -7,9 +7,7 @@ class Setting extends Binder{
   }
 
   async checkAlias(newAlias){
-    const Alias = String(newAlias);
-    this.$store.set('UserAlias', Alias); //нужно переделать!!
-    this.$socket.emit('listener', await encrypt(...arguments[1], utf8ToArray(Alias.replace(/@/i, ''))));
+    this.$socket.emit('listener', await encrypt(...arguments[1], utf8ToArray(String(newAlias).replace(/@/i, ''))));
   }
 
   async checkAliasRes(data){
@@ -67,13 +65,22 @@ class Setting extends Binder{
     this.$store.set('UserLastname', lastname);
     this.$socket.emit('listener', await encrypt(...arguments[1], utf8ToArray(lastname)));
   }
-  async editAlias(){
-    this.$socket.emit('listener', await encrypt(...arguments[1], utf8ToArray(this.$store.get('UserAlias').replace(/@/i, ''))));
+  async editAlias(alias){
+    let Alias = String(alias);
+    this.$store.set('UserAlias', Alias);
+    this.$socket.emit('listener', await encrypt(...arguments[1], utf8ToArray(Alias.replace(/@/i, ''))));
   }
   async editBirthDate(birthday){
     this.$store.set('UserBirthday', birthday);
     this.$socket.emit('listener', await encrypt(...arguments[1], utf8ToArray(birthday)));
   }
+  async editAbout(about){
+    this.$store.set('UserAbout', about);
+    this.$socket.emit('listener', await encrypt(...arguments[1], utf8ToArray(about)));
+  }
+
+
+
 }
 
 export default new Setting();

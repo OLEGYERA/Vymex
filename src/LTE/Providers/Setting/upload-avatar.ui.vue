@@ -19,7 +19,6 @@
 </template>
 
 <script>
-/*eslint-disable*/
   import ImageAvatar from '@Facade/Image/Avatar'
   import ButtonUpload from '@Facade/Button/Upload'
   import ModalBase from '@Facade/Modal/Base'
