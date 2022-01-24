@@ -1,14 +1,19 @@
 <template>
   <div class="app-vx">
-    <vx-navigation/>
-    <div class="vx-body-space">
-      <vx-header/>
-      <div class="body-space-router-view" :class="{'not-adapt-styles': exceptionalStyle}">
-        <div class="router-view-body">
-          <router-view/>
+    <main class="app-vx-main">
+      <vx-navigation/>
+      <div class="vx-body-space">
+        <vx-header/>
+        <div class="body-space-router-view" :class="{'not-adapt-styles': exceptionalStyle}">
+          <div class="router-view-body">
+            <router-view/>
+          </div>
         </div>
       </div>
-    </div>
+    </main>
+    <section class="vx-other-apps">
+      <messenger-app/>
+    </section>
   </div>
 </template>
 
@@ -19,11 +24,14 @@
   import {mapGetters} from 'vuex'
   const exceptionalRoutes = ['vx.msg'];
 
+  import {MessengerApp} from '@Singletons'
+
   export default {
     name: 'app.vx',
     components: {
       VxNavigation,
-      VxHeader
+      VxHeader,
+      MessengerApp
     },
     created() {
       this.$core.execViaComponent('Auth', 'user')
@@ -45,31 +53,40 @@
   .app-vx{
     width: 100%;
     height: 100%;
-    display: flex;
-    justify-content: space-between;
     overflow: hidden;
     background-color: $grey;
-    .vx-body-space{
-      display: flex;
-      flex-direction: column;
+    position: relative;
+    .app-vx-main{
       width: 100%;
-      .body-space-router-view{
-        height: 100%;
-        box-sizing: border-box;
-        padding: 24px 0;
-        overflow-y: scroll;
-        .router-view-body{
-          max-width: 796px;
-          margin: 0 auto;
-        }
-        &.not-adapt-styles{
-          padding: 0;
-          .router-view-body {
-            max-width: 100%;
-            height: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: space-between;
+      overflow: hidden;
+      .vx-body-space{
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        .body-space-router-view{
+          height: 100%;
+          box-sizing: border-box;
+          padding: 24px 0;
+          overflow-y: scroll;
+          .router-view-body{
+            max-width: 796px;
+            margin: 0 auto;
+          }
+          &.not-adapt-styles{
+            padding: 0;
+            .router-view-body {
+              max-width: 100%;
+              height: 100%;
+            }
           }
         }
       }
+    }
+    .vx-other-apps{
+
     }
   }
 </style>

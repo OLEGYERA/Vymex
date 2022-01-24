@@ -8,7 +8,8 @@
       "@Core/*": ["src/LTE/Core/*"],
       "@Sketch/*": ["src/LTE/Sketches/*"],
       "@Services/*": ["src/LTE/Services/*"],
-      "@Providers": ["src/LTE/Providers/index.js"]
+      "@Providers": ["src/LTE/Providers/index.js"],
+      "@Singletons": ["src/LTE/Singletons/index.js"]
     }
   }
 }

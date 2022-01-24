@@ -27,5 +27,6 @@ module.exports = {
           .set('@Sketch', resolve('src/LTE/Sketches'))
           .set('@Services', resolve('src/LTE/Services'))
           .set('@Providers', resolve('src/LTE/Providers/index.js'))
+          .set('@Singletons', resolve('src/LTE/Singletons/index.js'))
     },
 }

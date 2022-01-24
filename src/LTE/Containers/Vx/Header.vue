@@ -15,6 +15,7 @@
         </div>
       </div>
     </div>
+
     <transition name="panel">
       <notifications-panel
           v-if="openBlock==='messenger'"
