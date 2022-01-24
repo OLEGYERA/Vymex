@@ -1,8 +1,8 @@
 <template>
   <div class="container-vx-contacts">
     <title-caps>
-      Контакты
-      <span class="contacts-amount">22</span>
+      <slot name="title"/>
+      <span class="contacts-amount"><slot name="amount"/></span>
     </title-caps>
     <icon-add/>
   </div>
@@ -30,6 +30,7 @@ export default {
     align-items: center;
     background-color: $grey;
     .contacts-amount{
+      padding: 0 rem(3);
       color: $blue;
     }
     .icon-add{

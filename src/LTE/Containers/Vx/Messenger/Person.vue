@@ -1,11 +1,12 @@
 <template>
   <div class="container-vx-person">
-    <!--    <image-cropper :imageResult="'/wp-content/uploads/flamingo.jpg'" :color-code="2"/>-->
     <div class="private-info">
-      <div class="dialog-image"></div>
+      <div class="dialog-image">
+        <avatar :logo="logo" :colorCode="color"/>
+      </div>
       <div class="info-text">
-        <div class="name">Виталий Боцман</div>
-        <title-caption>@lable_kers</title-caption>
+        <div class="name">{{contact.name}}</div>
+        <title-caption>{{contact.nickname}}</title-caption>
       </div>
     </div>
     <points-vertical/>
@@ -13,29 +14,47 @@
 </template>
 
 <script>
-// import ImageCropper from '@Facade/Image/Cropper'
 import TitleCaption from '@Facade/Title/Caption'
 import PointsVertical from '@Icon/PointsVertical'
+import Avatar from '@Facade/Image/Avatar'
 
 export default {
   name: 'Container.Vx.Person',
   components: {
-    // ImageCropper
     TitleCaption,
     PointsVertical,
+    Avatar
+  },
+  data() {
+    return {
+      color: '4'
+    }
+  },
+  props: ['contact'],
+  computed: {
+    logo: function () {
+      let initials = ''
+      for (const char of this.contact.name) {
+        if (char === char.toUpperCase() && char !== ' ') {
+          initials += char
+        }
+      }
+      return initials.slice(0, 2);
+    },
   }
 }
 </script>
 
 <style lang="scss" scoped>
   .container-vx-person {
-    width: 100%;
+    margin-bottom: 4px;
     padding: rem(16) rem(12);
     display: flex;
     justify-content: space-between;
     align-items: center;
     background-color: $grey-scale-400;
     border-radius: 12px;
+    cursor: pointer;
     .private-info {
       display: inherit;
       align-items: center;
@@ -43,8 +62,6 @@ export default {
         margin-right: 8px;
         height: 40px;
         width: 40px;
-        border-radius: 50%;
-        background-color: #fff;
       }
       .name {
         font-weight: 600;

@@ -8,6 +8,7 @@
   .side-button {
     width: 72px;
     height: 65px;
+    box-sizing: border-box;
     display: flex;
     justify-content: center;
     align-items: center;

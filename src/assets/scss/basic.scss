@@ -7,6 +7,7 @@ $vx-tab-time-delay: .05s;
 @import './animation';
 
 $grey: #181F26;
+$gray-scale-100: #C1CFDB;
 $grey-scale-200: #8296AA;
 $grey-scale-300: #4A5A6A;
 $grey-scale-400: #313D49;
@@ -29,7 +30,3 @@ $green: #73D13D;
 @function rem($value) {
   @return #{($value / 16)}rem;
 }
-
-
-
-

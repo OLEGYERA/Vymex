@@ -6,23 +6,35 @@
       </div>
       <div class="header-icons">
         <div
-          class="header-icon icon-alarm"
-          @click="getNotify"
+          @click="openPanel('notify')"
         >
           <icon-alarm/>
         </div>
-        <div class="header-icon icon-comments"><icon-comments/></div>
+        <div @click="openPanel('messenger')">
+          <icon-comments/>
+        </div>
       </div>
     </div>
-    <vx-notifications
-      :notify="notify"
-      :openMessages="openMessages"
-      :disable="disable"
-      @get-notify="getNotify"
-      @open-disable="openDisable"
-    />
+    <transition name="panel">
+      <notifications-panel
+          v-if="openBlock==='messenger'"
+          :openBlock="openBlock"
+          @open-panel="openPanel"
+          @change-messenger="changeMessenger"
+          :open="open"
+      />
+      <notifications-panel
+          v-if="openBlock==='notify'"
+          :openBlock="openBlock"
+          @open-panel="openPanel"
+          @change-switch="changeSwitch"
+          :switch="this.switch"
+          :chooseTime="chooseTime"
+          @change-time="changeTime"
+      />
+    </transition>
     <transition name="fade">
-      <div class="notifications-backdrop" v-if="notify"></div>
+      <div class="notifications-backdrop" v-if="openBlock"></div>
     </transition>
   </div>
 </template>
@@ -30,33 +42,45 @@
 <script>
   import IconAlarm from '@Icon/Alarm'
   import IconComments from '@Icon/Comments'
-  import VxNotifications from '@Container/Vx/Notifications'
+  import NotificationsPanel from "@Container/Vx/NotificationsPanel";
 
   export default {
     name: 'Container.Vx.Header',
     components: {
       IconAlarm,
       IconComments,
-      VxNotifications
+      NotificationsPanel
     },
     data() {
       return {
-        notify: false,
-        openMessages: true,
-        disable: false,
+        openBlock: '',
+        open: 'contacts',
+        switch: false,
+        chooseTime: 0,
       };
     },
     methods: {
-      getNotify() {
-        this.notify = !this.notify;
-        this.openMessages = true;
-        this.disable = false;
+      openPanel(type) {
+        if (this.openBlock) {
+          this.openBlock = '';
+        } else {
+          this.openBlock = type
+        }
       },
-      openDisable() {
-        this.openMessages= !this.openMessages;
-        this.disable = !this.disable;
+      changeMessenger(type) {
+        this.open = type;
       },
-    }
+      changeSwitch() {
+        if (this.switch) {
+          this.chooseTime = 0;
+        }
+        this.switch = !this.switch;
+        console.log(this.switch)
+      },
+      changeTime(timeKey) {
+        this.chooseTime = timeKey;
+      },
+    },
   }
 </script>
 
@@ -79,10 +103,11 @@
       }
       .header-icons {
         display: flex;
-        .header-icon {
+        .icon {
           padding: 10px;
           cursor: pointer;
           height: 16px;
+          color: $grey-scale-200;
         }
         .icon-alarm {
           width: 16px;
@@ -112,4 +137,16 @@
       transition: opacity .4s;
     }
   }
+  .panel {
+    &-enter, &-leave-to{
+      transform: translateX(100%);
+    }
+    &-enter-active, &-leave-active{
+      transition: .4s all ease;
+    }
+    &-enter-to{
+      transform: translateX(0);
+    }
+  }
+
 </style>

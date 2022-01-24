@@ -1,4 +1,4 @@
-<template>
+ <template>
   <div class="facade-input-base"
        tabindex="0"
        @click="focusInput"

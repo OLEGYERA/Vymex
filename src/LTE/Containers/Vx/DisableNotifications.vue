@@ -38,7 +38,10 @@ export default {
       times: ['Через 1 час', 'Через 4 час', 'Через 24 часа', 'Отключить'],
     };
   },
-  props: ['switch', 'chooseTime'],
+  props: {
+    switch: Boolean,
+    chooseTime: Number,
+  },
 }
 </script>
 

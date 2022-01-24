@@ -1,58 +1,80 @@
 <template>
   <div class="container-vx-group-chat">
-    <!--    <image-cropper :imageResult="'/wp-content/uploads/flamingo.jpg'" :color-code="2"/>-->
     <div class="dialog-image">
-      <span><icon-group/></span>
+      <avatar :colorCode="color" :logo="logo"/>
+      <span v-if="dialog.name"><icon-group/></span>
     </div>
     <div class="info-text">
       <div class="top-part">
-        <text-base><slot name="title">Поездка в Чернобыль</slot></text-base>
+        <text-base>{{dialog.title}}</text-base>
         <div class="message-info">
           <double-check/>
-          <title-caption>15:30</title-caption>
+          <title-caption>{{dialog.time}}</title-caption>
         </div>
       </div>
       <div class="down-part">
         <div>
-          <title-caption class="name"><slot name="name">Виталина</slot></title-caption>
-          <title-caption><slot name="message">Ребята, общий сбор в 9:30</slot></title-caption>
+          <title-caption class="name">{{dialog.name}}</title-caption>
+          <title-caption>{{dialog.message}}</title-caption>
         </div>
-        <div class="message-count">2</div>
+        <div v-if="dialog.unread" class="message-count">{{dialog.unread}}</div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-// import ImageCropper from '@Facade/Image/Cropper'
 import TitleCaption from '@Facade/Title/Caption'
 import TextBase from '@Facade/Text/Base'
-import DoubleCheck from "@Icon/DoubleCheck";
+import DoubleCheck from "@Icon/DoubleCheck"
 import IconGroup from "@Icon/Group"
+import Avatar from '@Facade/Image/Avatar'
 
 export default {
   name: 'Container.Vx.PrivateDialog',
   components: {
-    // ImageCropper
     TitleCaption,
     TextBase,
     DoubleCheck,
-    IconGroup
+    IconGroup,
+    Avatar
+  },
+  data() {
+    return {
+      color: '1'
+    }
+  },
+  props: {
+    dialog: {
+      type: Object,
+      required: true,
+    },
+  },
+  computed: {
+    logo: function () {
+      let initials = ''
+        for (const char of this.dialog.title) {
+          if (char === char.toUpperCase() && char !== ' ') {
+            initials += char
+          }
+        }
+      return initials.slice(0, 2);
+    },
   }
 }
 </script>
 
 <style lang="scss" scoped>
-* {
-  box-sizing: border-box;
-}
 .container-vx-group-chat {
   width: 100%;
+  box-sizing: border-box;
+  min-height: 68px;
   padding: rem(12);
   display: flex;
   align-items: center;
   background-color: $grey;
   border-radius: 12px;
+  cursor: pointer;
   &:hover {
     background-color: $grey-scale-500;
   }

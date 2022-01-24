@@ -1,11 +1,12 @@
 <template>
-  <div class="container-vx-private-dialog">
-<!--    <image-cropper :imageResult="'/wp-content/uploads/flamingo.jpg'" :color-code="2"/>-->
+  <div class="container-vx-private-dialog" @click="$emit('changeMessenger', 'owner')">
     <div class="private-info">
-      <div class="dialog-image"></div>
+      <div class="dialog-image">
+        <avatar :logo="logo" :colorCode="color"/>
+      </div>
       <div class="info-text">
         <title-caption>Личные диалоги</title-caption>
-        <text-base>Александр Ким</text-base>
+        <text-base>{{name}}</text-base>
       </div>
     </div>
     <div class="message-count">2</div>
@@ -13,28 +14,49 @@
 </template>
 
 <script>
-// import ImageCropper from '@Facade/Image/Cropper'
    import TitleCaption from '@Facade/Title/Caption'
    import TextBase from '@Facade/Text/Base'
+   import Avatar from "@Facade/Image/Avatar";
 
 export default {
   name: 'Container.Vx.PrivateDialog',
   components: {
-    // ImageCropper
     TitleCaption,
     TextBase,
+    Avatar
+  },
+  props: {
+    name: String,
+  },
+  data() {
+    return {
+      color: '5'
+    }
+  },
+  computed: {
+    logo: function () {
+      let initials = ''
+      for (const char of this.name) {
+        if (char === char.toUpperCase() && char !== ' ') {
+          initials += char
+        }
+      }
+      return initials.slice(0, 2);
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
   .container-vx-private-dialog {
-    width: 100%;
+    //width: 100%;
     padding: rem(12) rem(20);
     display: flex;
     justify-content: space-between;
     align-items: center;
     background-color: $grey-scale-500;
+    border-bottom: $grey-scale-700 solid 1px;
+    cursor: pointer;
     .private-info {
       display: inherit;
       align-items: center;
