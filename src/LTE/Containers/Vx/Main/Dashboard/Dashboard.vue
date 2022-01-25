@@ -40,7 +40,7 @@ export default {
     Tasks,
     CoQueues,
     Team,
-    ControlCenter
+    ControlCenter,
   },
 }
 </script>
