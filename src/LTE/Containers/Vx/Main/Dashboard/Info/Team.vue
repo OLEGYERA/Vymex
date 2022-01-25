@@ -1,7 +1,9 @@
 <template>
   <div class="container-dashboard-team">
     <div class="team-header">
+      <img :src="icon"/>
       <span class="header-title">Команда</span>
+      <img :src="context"/>
     </div>
     <div class="team-body">
       <div class="body-people">
@@ -17,8 +19,11 @@
     <div class="team-footer">
       <span class="footer-title">Последняя активность:</span>
       <div class="footer-positions">
-        <span class="positions-title" v-for="men in people"
-        :key="men.id">{{ men.position }}</span>
+        <div class="positions-title" v-for="men in people"
+        :key="men.id">
+          <img :src="avatar"/>
+          <span>{{ men.position }}</span>
+        </div>
       </div>
     </div>
   </div>
@@ -29,6 +34,9 @@ export default {
   name: "Team",
   data() {
     return {
+      icon: require('@/assets/img/my/team.svg'),
+      context: require('@/assets/img/icons/context.svg'),
+      avatar: require('@/assets/img/icons/avatar.svg'),
       people: [
         {id: new Date(), position: "СЕО"},
         {id: new Date(), position: "СМО"},
@@ -59,6 +67,7 @@ export default {
       font-size: 17px;
       line-height: 22px;
       color: #FFF;
+      margin: 1% 62% 0% 2%;
     }
   }
 
@@ -107,7 +116,7 @@ export default {
 
     .footer-positions {
       display: flex;
-      justify-content: space-between;
+      justify-content: space-around;
       width: 100%;
 
       .positions-title {
@@ -115,7 +124,8 @@ export default {
         line-height: 16px;
         text-align: center;
         color: #FFF;
-        margin: 16% 0px 0px 5%;
+        margin: 6% 0px 0px 5%;
+        width: 15%;
       }
     }
   }

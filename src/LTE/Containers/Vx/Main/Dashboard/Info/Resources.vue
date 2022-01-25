@@ -1,7 +1,9 @@
 <template>
   <div class="container-dashboard-resources">
     <div class="resources-header">
+      <img :src="icon"/>
       <span class="header-title">Склад ресурсов</span>
+      <img :src="context"/>
     </div>
     <div class="resources-body">
       <div class="body-coast">
@@ -10,7 +12,7 @@
       </div>
       <div class="body-coast"
            :style="{ marginLeft: '16px' }">
-        <spnan class="coast-total">Количество свободных ресурсов</spnan>
+        <span class="coast-total">Количество свободных ресурсов</span>
         <span class="coast-sum">23</span>
       </div>
     </div>
@@ -23,7 +25,13 @@
 
 <script>
 export default {
-  name: "Resources"
+  name: "Resources",
+  data(){
+    return{
+      icon: require('@/assets/img/my/storage.svg'),
+      context: require('@/assets/img/icons/context.svg'),
+    }
+  }
 
 }
 </script>
@@ -40,13 +48,14 @@ export default {
   .resources-header {
     display: flex;
     justify-content: flex-start;
-    margin-bottom: 29px;
+    margin-bottom: 9%;
 
     .header-title {
       font-weight: 600;
       font-size: 17px;
       line-height: 22px;
       color: #FFF;
+      margin: 1% 43% 0% 2%;
     }
   }
 

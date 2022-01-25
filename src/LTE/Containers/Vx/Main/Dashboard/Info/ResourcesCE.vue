@@ -1,7 +1,9 @@
 <template>
   <div class="container-dashboard-resourcesCE">
     <div class="resourcesCE-header">
+      <img :src="icon"/>
       <span class="header-title">Ресурсы С.Е.</span>
+      <img :src="context"/>
     </div>
     <div class="resourcesCE-body">
       <span class="body-title">Последние</span>
@@ -9,6 +11,7 @@
         <div class="content-item"
              v-for="file in files"
              :key="file.id">
+          <img :src="file.picture"/>
           <span class="item-text">{{ file.file }}</span>
           <div class="item-border"></div>
         </div>
@@ -22,10 +25,24 @@ export default {
   name: "ResourcesCE",
   data() {
     return {
+      icon: require('@/assets/img/my/resource.svg'),
+      context: require('@/assets/img/icons/context.svg'),
       files: [
-        {id: new Date(), file: "Новая папка(2)"},
-        {id: new Date(), file: "document create element.zip"},
-        {id: new Date(), file: "Снимок экрана монитора 2021-10-2 ... .jpg"},
+        {
+          id: new Date(),
+          file: "Новая папка(2)",
+          picture: require('@/assets/img/icons/folder.svg')
+        },
+        {
+          id: new Date(),
+          file: "document create element.zip",
+          picture: require('@/assets/img/icons/document.svg')
+        },
+        {
+          id: new Date(),
+          file: "Снимок экрана монитора 2021-10-2 ... .jpg",
+          picture: require('@/assets/img/icons/screen.svg')
+        },
       ]
     }
   }
@@ -51,6 +68,7 @@ export default {
       font-size: 17px;
       line-height: 22px;
       color: #FFF;
+      margin: 1% 52% 0% 2%;
     }
   }
 
@@ -75,12 +93,13 @@ export default {
       justify-content: flex-start;
 
       .content-item {
-        margin-top: 12px;
+        margin-top: 5%;
 
         .item-text {
           color: #FFF;
           font-size: 12px;
           line-height: 16px;
+          margin-left: 2%;
         }
 
         .item-border {
