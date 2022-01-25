@@ -1,1 +1,1 @@
-export {MessengerApp, MessengerStore} from './Messenger'
+export {MessengerApp, MessengerStore, MessengerComponents} from './Messenger'

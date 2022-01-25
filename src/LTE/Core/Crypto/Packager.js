@@ -15,6 +15,7 @@ export default class Packager extends Binder{
   constructor(Components, priorityComponents = []){
     super();
     this.Components = Components;
+    console.log(Components, 'Components')
     this.priorityComponents = priorityComponents;
   }
 
