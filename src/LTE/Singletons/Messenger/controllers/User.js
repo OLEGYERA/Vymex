@@ -2,7 +2,7 @@
 import Binder from "@Core/Helpers/Binder";
 import {encrypt, utf8ToArray, numberToArray} from "@Core/Helpers/utilites";
 
-class MsgUser extends Binder{
+class User extends Binder{
   constructor() {
     super();
   }
@@ -33,4 +33,4 @@ class MsgUser extends Binder{
   // }
 }
 
-export default new MsgUser();
+export default new User();

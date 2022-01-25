@@ -3,7 +3,7 @@ import Binder from "@/LTE/Core/Helpers/Binder";
 import SKey from '@/LTE/Core/Helpers/SKey'
 import {encrypt, hexToArray, numberToArray, serialize, utf8ToArray, ecies25519} from "@/LTE/Core/Helpers/utilites";
 
-class MsgDlg extends Binder{
+class Dialog extends Binder{
   constructor() {
     super();
     this.SKey = new SKey();
@@ -51,4 +51,4 @@ class MsgDlg extends Binder{
   }
 }
 
-export default new MsgDlg();
+export default new Dialog();

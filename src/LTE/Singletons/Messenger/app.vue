@@ -32,6 +32,9 @@
     components: {
       Sidebar, SidebarHeader, SidebarView,
     },
+    created() {
+      console.log(this.$store, this.test)
+    },
     computed: {
       ...mapGetters({
         //messenger
