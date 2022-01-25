@@ -6,12 +6,13 @@
       <img :src="context"/>
     </div>
     <div class="resources-body">
-      <div class="body-coast">
+      <div class="body-coast"
+           :style="{ marginRight: '8px' }">
         <span class="coast-total">Общая стоимость ресурсов</span>
         <span class="coast-sum">8699₴</span>
       </div>
       <div class="body-coast"
-           :style="{ marginLeft: '16px' }">
+           :style="{ marginLeft: '8px' }">
         <span class="coast-total">Количество свободных ресурсов</span>
         <span class="coast-sum">23</span>
       </div>
@@ -26,8 +27,8 @@
 <script>
 export default {
   name: "Resources",
-  data(){
-    return{
+  data() {
+    return {
       icon: require('@/assets/img/my/storage.svg'),
       context: require('@/assets/img/icons/context.svg'),
     }
@@ -44,11 +45,12 @@ export default {
   border-radius: 16px;
   background-color: $grey-scale-500;
   padding: 16px;
+  height: 224px;
 
   .resources-header {
     display: flex;
     justify-content: flex-start;
-    margin-bottom: 9%;
+    margin-bottom: 8%;
 
     .header-title {
       font-weight: 600;
@@ -82,7 +84,7 @@ export default {
         font-weight: 600;
         font-size: 20px;
         color: #FFF;
-        margin-top: 6%;
+        margin-top: 5%;
       }
     }
   }
@@ -93,10 +95,10 @@ export default {
     justify-content: center;
     color: #FFF;
     padding: 12px;
-    height: 100%;
+    height: 40px;
     background: $grey-scale-400;
     border-radius: 12px;
-    margin-top: 7%;
+    margin-top: 6.4%;
 
     .footer-num {
       text-align: center;

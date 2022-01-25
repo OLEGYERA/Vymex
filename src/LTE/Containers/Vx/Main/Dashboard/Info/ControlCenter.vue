@@ -16,7 +16,8 @@
       </div>
     </div>
     <div class="controlCenter-footer">
-      <div class="footer-el">
+      <div class="footer-el"
+           :style="{ marginRight: '8px' }">
         <span class="el-title">Структурные единицы</span>
         <div class="el-indicators">
           <div class="indicators-sum">23</div>
@@ -28,7 +29,7 @@
           </div>
         </div>
       </div>
-      <div class="footer-el" :style="{ marginLeft: '16px' }">
+      <div class="footer-el" :style="{ marginLeft: '8px' }">
         <span class="el-title">Файлы в корзине</span>
         <div class="el-indicators">
           <div class="indicators-sum">23</div>
@@ -61,19 +62,18 @@ export default {
   border-radius: 16px;
   background-color: $grey-scale-500;
   padding: 16px;
-
+  height: 224px;
   .controlCenter-header {
     display: flex;
     justify-content: flex-start;
-    margin-bottom: 12%;
+    margin-bottom: 8%;
 
     .controlCenter-header-title {
       font-weight: 600;
       font-size: 17px;
       line-height: 22px;
       color: #FFF;
-      margin: 1% 40% 0% 2%;
-
+      margin: 1% 37.5% 0% 2%;
     }
   }
 
@@ -126,7 +126,7 @@ export default {
 
   .controlCenter-footer {
     display: flex;
-    margin: 8% 0%;
+    margin-top: 8%;
 
     .footer-el {
       display: flex;
@@ -147,7 +147,7 @@ export default {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-top: 8px;
+        margin-top: 2px;
         width: 100%;
         height: 100%;
         .indicators-sum {
@@ -169,7 +169,7 @@ export default {
             align-items: center;
             width: 45%;
             margin-right: 5%;
-            padding: 4px 2px;
+            padding: 1.5px 2px;
             box-sizing: border-box;
 
             .item-num{

@@ -9,6 +9,7 @@
          v-for="task in tasks"
          :key="task.id">
       <div class="body-task">
+        <img :src="bell" class="task-bell"/>
         <span class="task-event">{{ task.event }}</span>
       </div>
       <span class="body-title">{{ task.title }}</span>
@@ -17,7 +18,7 @@
           color: task.textColor,
           background: task.background
         }">
-          <img :src="task.calendarIcon" class="date-calendar"/>
+          <img :src="task.calendarIcon"/>
           <span>{{ task.date }}</span>
         </div>
         <img :src="task.messageIcon" class="panel-alerts-icon"/>
@@ -39,6 +40,7 @@ export default {
     return {
       icon: require('@/assets/img/my/task.svg'),
       context: require('@/assets/img/icons/context.svg'),
+      bell: require('@/assets/img/icons/bell.svg'),
       tasks: [
         {
           id: new Date(),
@@ -84,11 +86,12 @@ export default {
   border-radius: 16px;
   background-color: $grey-scale-500;
   padding: 16px;
+  height: 224px;
 
   .tasks-header {
     display: flex;
     justify-content: flex-start;
-    margin-bottom: 8%;
+    margin-bottom: 7%;
 
     .header-title {
       font-weight: 600;
@@ -103,12 +106,17 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    margin-bottom: 4%;
+    margin-bottom: 3%;
 
     .body-task {
       display: flex;
-      flex-direction: column;
       justify-content: flex-start;
+
+      .task-bell {
+        height: 11px;
+        width: 10px;
+        margin-top: 2px;
+      }
 
       .task-event {
         display: flex;
@@ -118,6 +126,7 @@ export default {
         font-size: 12px;
         line-height: 16px;
         color: $grey-scale-200;
+        margin-left: 2%;
       }
     }
 
@@ -126,7 +135,7 @@ export default {
       font-size: 15px;
       line-height: 20px;
       color: #FFF;
-      margin: 2% 0px 2% 0px;
+      margin: 2% 0px 2% 0%;
     }
 
     .body-panel {
@@ -136,14 +145,14 @@ export default {
       line-height: 16px;
       color: $grey-scale-200;
 
-      .date-calendar {
-        margin-right: 6%;
-      }
       .panel-date {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
         font-size: 12px;
         line-height: 16px;
         border-radius: 14px;
-        padding: 0.5% 1%;
+        padding: 0.5% 1.5%;
         width: 30%;
       }
 
@@ -151,6 +160,7 @@ export default {
         margin-left: 1%;
         margin-top: 1%;
       }
+
       .panel-alerts-icon {
         margin-left: 2%;
       }

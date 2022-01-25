@@ -53,6 +53,4 @@ export default {
   grid-gap: 24px;
   display: grid;
 }
-
-
 </style>

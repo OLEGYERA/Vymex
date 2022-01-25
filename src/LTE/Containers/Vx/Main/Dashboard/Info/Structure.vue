@@ -48,11 +48,12 @@ export default {
   border-radius: 16px;
   background-color: $grey-scale-500;
   padding: 16px;
+  height: 224px;
 
   .structure-header {
     display: flex;
     justify-content: flex-start;
-    margin-bottom: 9%;
+    margin-bottom: 8%;
     .structure-header-title{
       font-weight: 600;
       font-size: 17px;

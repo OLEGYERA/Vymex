@@ -67,11 +67,12 @@ export default {
   border-radius: 16px;
   background-color: $grey-scale-500;
   padding: 16px;
+  height: 224px;
 
   .calendar-header {
     display: flex;
     justify-content: flex-start;
-    margin-bottom: 10%;
+    margin-bottom: 7%;
 
     .header-title {
       font-weight: 600;
@@ -132,7 +133,7 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    margin-top: 10%;
+    margin-top: 5%;
 
     .footer-meeting {
       display: flex;
@@ -152,7 +153,7 @@ export default {
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
-        margin-bottom: 4%;
+        margin-bottom: 3%;
 
         .data-text {
           height: 20px;
@@ -176,7 +177,7 @@ export default {
       font-size: 15px;
       line-height: 20px;
       color: $blue;
-      margin: 4% 0% 2% 0%;
+      margin: 2% 0% 4% 0%;
     }
   }
 }

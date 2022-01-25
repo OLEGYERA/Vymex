@@ -6,20 +6,21 @@
       <img :src="context"/>
     </div>
     <div class="costs-body">
-      <span class="body-title">Количество свободных ресурсов</span>
+      <span class="body-title">Зарплатный фонд на месяц</span>
       <div class="body-resources">
         <span class="resources-free">134 002₴</span>
         <span class="body-title">/$5200</span>
       </div>
     </div>
     <div class="costs-footer">
-      <div class="footer-wage">
+      <div class="footer-wage"
+           :style="{ marginRight: '8px' }">
         <span class="wage-mediumWage">Средняя ЗП</span>
         <span class="wage-wageUAH">35 000₴</span>
         <span class="wage-mediumWage">$1256</span>
       </div>
       <div class="footer-wage"
-           :style="{ marginLeft: '16px' }">
+           :style="{ marginLeft: '8px' }">
         <span class="wage-mediumWage">Остаток выплат по ЗП</span>
         <span class="wage-wageUAH">8 000₴</span>
         <span class="wage-mediumWage">$322</span>
@@ -31,8 +32,8 @@
 <script>
 export default {
   name: "Costs",
-  data(){
-    return{
+  data() {
+    return {
       icon: require('@/assets/img/my/costs.svg'),
       context: require('@/assets/img/icons/context.svg'),
     }
@@ -48,11 +49,12 @@ export default {
   border-radius: 16px;
   background-color: $grey-scale-500;
   padding: 16px;
+  height: 224px;
 
   .costs-header {
     display: flex;
     justify-content: flex-start;
-    margin-bottom: 10%;
+    margin-bottom: 8%;
 
     .header-title {
       font-weight: 600;
@@ -70,6 +72,7 @@ export default {
     padding: 8px;
     background: $grey-scale-400;
     border-radius: 12px;
+    height: 21.4%;
 
     .body-title {
       font-size: 12px;
@@ -79,7 +82,7 @@ export default {
     }
 
     .body-resources {
-      margin-top: 5%;
+      margin-top: 3%;
     }
 
     .resources-free {
@@ -91,7 +94,8 @@ export default {
 
   .costs-footer {
     display: flex;
-    margin-top: 7%;
+    margin-top: 5%;
+    height: 35.7%;
 
     .footer-wage {
       display: flex;

@@ -6,12 +6,13 @@
       <img :src="context"/>
     </div>
     <div class="coQueues-body">
-      <div class="body-forSale">
+      <div class="body-forSale"
+           :style="{ marginRight: '8px' }">
         <span class="forSale-title">Доля компании на продажу:</span>
         <span class="forSale-percent">54 %</span>
       </div>
       <div class="body-forSale"
-           :style="{ marginLeft: '16px' }">
+           :style="{ marginLeft: '8px' }">
         <span class="forSale-title">Активные голосования:</span>
         <span class="forSale-percent">0</span>
       </div>
@@ -43,11 +44,12 @@ export default {
   border-radius: 16px;
   background-color: $grey-scale-500;
   padding: 16px;
+  height: 224px;
 
   .coQueues-header {
     display: flex;
     justify-content: flex-start;
-    margin-bottom: 10%;
+    margin-bottom: 7%;
 
     .coQueues-header-title {
       font-weight: 600;
@@ -75,6 +77,7 @@ export default {
         font-size: 12px;
         line-height: 16px;
         color: $grey-scale-200;
+        margin-right: 15%;
       }
 
       .forSale-percent {
@@ -92,10 +95,10 @@ export default {
     justify-content: center;
     color: #FFF;
     padding: 12px;
-    height: 100%;
+    height: 200%;
     background: $grey-scale-400;
     border-radius: 12px;
-    margin-top: 7%;
+    margin-top: 6.8%;
 
     .footer-num {
       text-align: center;

@@ -6,13 +6,14 @@
       <img :src="context"/>
     </div>
     <div class="result-body">
-      <div class="body-bill">
+      <div class="body-bill"
+           :style="{ marginRight: '8px' }">
         <span class="bill-coast">Всего на счету</span>
         <span class="bill-sum">841 002₴</span>
       </div>
       <div class="body-bill"
-           :style="{ marginLeft: '16px' }">
-        <spnan class="bill-coast">Сумма на конец мес.</spnan>
+           :style="{ marginLeft: '8px' }">
+        <span class="bill-coast">Сумма на конец мес.</span>
         <div class="bill-res">
           <div class="bill-sum">41 002₴</div>
           <div class="bill-proc">
@@ -37,12 +38,14 @@
                :style="{
           height: date.height.frontHeight,
           background: date.color.frontColor,
+          bottom: '20px',
           zIndex: +date.height.frontHeight.split('px')[0] < +date.height.backHeight.split('px')[0] ? 2 : 0
           }"></div>
           <div class="footer-absolutePlot"
                :style="{
           height: date.height.backHeight,
           background: date.color.backColor,
+          bottom: '21px',
           zIndex: 1
        }"></div>
         </div>
@@ -99,11 +102,12 @@ export default {
   border-radius: 16px;
   background-color: $grey-scale-500;
   padding: 16px;
+  height: 256px;
 
   .result-header {
     display: flex;
     justify-content: flex-start;
-    margin-bottom: 9%;
+    margin-bottom: 8%;
 
     .header-title {
       font-weight: 600;
@@ -116,7 +120,7 @@ export default {
 
   .result-body {
     display: flex;
-    margin-bottom: 8%;
+    margin-bottom: 5%;
 
     .body-bill {
       display: flex;
@@ -127,6 +131,7 @@ export default {
       background: $grey-scale-400;
       border-radius: 12px;
       width: 100%;
+      height: 76%;
 
       .bill-coast {
         font-size: 12px;
@@ -189,7 +194,6 @@ export default {
       width: 12px;
       border-radius: 4px;
       position: absolute;
-      bottom: 15px;
     }
 
     .footer-date {

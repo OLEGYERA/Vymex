@@ -6,12 +6,13 @@
       <img :src="context"/>
     </div>
     <div class="team-body">
-      <div class="body-people">
+      <div class="body-people"
+           :style="{ marginRight: '8px' }">
         <span class="people-total">Людей в компании</span>
         <span class="people-sum">1</span>
       </div>
       <div class="body-people"
-           :style="{ marginLeft: '16px' }">
+           :style="{ marginLeft: '8px' }">
         <span class="people-total">Вакансии</span>
         <span class="people-sum">3</span>
       </div>
@@ -19,10 +20,12 @@
     <div class="team-footer">
       <span class="footer-title">Последняя активность:</span>
       <div class="footer-positions">
-        <div class="positions-title" v-for="men in people"
-        :key="men.id">
-          <img :src="avatar"/>
-          <span>{{ men.position }}</span>
+        <div v-for="men in people"
+             :key="men.id">
+          <div class="footer-unit">
+            <img :src="avatar" class="positions-avatar"/>
+            <span class="positions-title">{{ men.position }}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -56,11 +59,12 @@ export default {
   border-radius: 16px;
   background-color: $grey-scale-500;
   padding: 16px;
+  height: 224px;
 
   .team-header {
     display: flex;
     justify-content: flex-start;
-    margin-bottom: 10%;
+    margin-bottom: 7%;
 
     .header-title {
       font-weight: 600;
@@ -73,7 +77,7 @@ export default {
 
   .team-body {
     display: flex;
-    padding-bottom: 8%;
+    padding-bottom: 4%;
 
     .body-people {
       display: flex;
@@ -112,20 +116,34 @@ export default {
       letter-spacing: 0.05em;
       text-transform: uppercase;
       color: $grey-scale-200;
+      margin-top: 3%;
     }
 
     .footer-positions {
       display: flex;
       justify-content: space-around;
       width: 100%;
+      margin-top: 3%;
 
-      .positions-title {
-        font-size: 10px;
-        line-height: 16px;
+      .footer-unit {
+        display: flex;
+        justify-content: center;
         text-align: center;
-        color: #FFF;
-        margin: 6% 0px 0px 5%;
-        width: 15%;
+        flex-direction: column;
+        width: 66px;
+
+        .positions-avatar {
+          height: 32px;
+          width: 32px;
+          margin: auto;
+        }
+
+        .positions-title {
+          font-size: 10px;
+          line-height: 16px;
+          color: #FFF;
+          margin-top: 6%;
+        }
       }
     }
   }

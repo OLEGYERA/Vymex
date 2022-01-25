@@ -57,11 +57,12 @@ export default {
   border-radius: 16px;
   background-color: $grey-scale-500;
   padding: 16px;
+  height: 224px;
 
   .resourcesCE-header {
     display: flex;
     justify-content: flex-start;
-    margin-bottom: 8%;
+    margin-bottom: 7%;
 
     .header-title {
       font-weight: 600;
@@ -84,7 +85,7 @@ export default {
       letter-spacing: 0.05em;
       text-transform: uppercase;
       color: $grey-scale-200;
-      margin-bottom: 2%;
+      margin-bottom: 1%;
     }
 
     .body-content {
@@ -93,7 +94,7 @@ export default {
       justify-content: flex-start;
 
       .content-item {
-        margin-top: 5%;
+        margin-top: 3%;
 
         .item-text {
           color: #FFF;

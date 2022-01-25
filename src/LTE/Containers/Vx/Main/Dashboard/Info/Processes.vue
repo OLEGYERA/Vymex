@@ -56,11 +56,12 @@ export default {
   border-radius: 16px;
   background-color: $grey-scale-500;
   padding: 16px;
+  height: 224px;
 
   .processes-header {
     display: flex;
     justify-content: flex-start;
-    margin-bottom: 9%;
+    margin-bottom: 7%;
 
     .header-title {
       font-weight: 600;
@@ -109,7 +110,7 @@ export default {
     font-size: 15px;
     line-height: 20px;
     color: $blue;
-    margin-top: 2%;
+    margin-top: 1%;
   }
 }
 
