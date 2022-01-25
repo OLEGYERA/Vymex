@@ -1,10 +1,10 @@
 <template>
   <div class="singleton-messenger-name">
     <div class="name-part">
-      <arrow-left/>
+      <div @click="$emit('onNewRoute', null)"><arrow-left/></div>
       <div class="block">{{name}}</div>
     </div>
-    <points-vertical v-if="type==='contact'"/>
+    <points-vertical v-if="type==='user'"/>
   </div>
 </template>
 
@@ -27,18 +27,19 @@ export default {
 
 <style lang="scss" scoped>
   .singleton-messenger-name {
-  //width: 100%;
-  //padding: 11px 0;
+  width: 100%;
+  padding: 8px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   color: #fff;
+    box-sizing: border-box;
   background-color: $grey;
     margin-bottom: 36px;
   .icon-arrow-left-bold {
     margin-right: 12px;
     height: 18px;
-    padding: 0 8px;
+    padding: 5px 8px;
     cursor: pointer;
   }
   .name-part {
@@ -52,7 +53,7 @@ export default {
   }
   .icon-points {
     height: 16px;
-    padding: 0 10px;
+    padding: 5px 10px;
     cursor: pointer;
   }
 }
