@@ -1,7 +1,9 @@
 <template>
   <div class="container-dashboard-tasks">
     <div class="tasks-header">
+      <img :src="icon"/>
       <span class="header-title">Задачи С.Е.</span>
+      <img :src="context"/>
     </div>
     <div class="tasks-body"
          v-for="task in tasks"
@@ -14,10 +16,15 @@
         <div class="panel-date" :style="{
           color: task.textColor,
           background: task.background
-        }">{{ task.date }}
+        }">
+          <img :src="task.calendarIcon" class="date-calendar"/>
+          <span>{{ task.date }}</span>
         </div>
+        <img :src="task.messageIcon" class="panel-alerts-icon"/>
         <div class="panel-alerts">{{ task.messages }}</div>
+        <img :src="task.attach" class="panel-alerts-icon"/>
         <div class="panel-alerts">{{ task.files }}</div>
+        <img :src="task.completedIcon" class="panel-alerts-icon"/>
         <div class="panel-alerts">{{ task.completed }}</div>
       </div>
       <div class="body-border"></div>
@@ -30,6 +37,8 @@ export default {
   name: "Tasks",
   data() {
     return {
+      icon: require('@/assets/img/my/task.svg'),
+      context: require('@/assets/img/icons/context.svg'),
       tasks: [
         {
           id: new Date(),
@@ -40,7 +49,11 @@ export default {
           files: 1,
           completed: "3/5",
           background: "#FACD23",
-          textColor: "#010203"
+          textColor: "#010203",
+          calendarIcon: require('@/assets/img/icons/calendar-black.svg'),
+          messageIcon: require('@/assets/img/icons/message.svg'),
+          attach: require('@/assets/img/icons/attach.svg'),
+          completedIcon: require('@/assets/img/icons/completed.svg'),
         },
         {
           id: new Date(),
@@ -51,8 +64,11 @@ export default {
           files: 1,
           completed: "3/5",
           background: "#1890FF",
-          textColor: "#FFF"
-
+          textColor: "#FFF",
+          calendarIcon: require('@/assets/img/icons/calendar-white.svg'),
+          messageIcon: require('@/assets/img/icons/message.svg'),
+          attach: require('@/assets/img/icons/attach.svg'),
+          completedIcon: require('@/assets/img/icons/completed.svg'),
         },
       ]
     }
@@ -79,6 +95,7 @@ export default {
       font-size: 17px;
       line-height: 22px;
       color: #FFF;
+      margin: 1% 55% 0% 2%;
     }
   }
 
@@ -119,16 +136,23 @@ export default {
       line-height: 16px;
       color: $grey-scale-200;
 
+      .date-calendar {
+        margin-right: 6%;
+      }
       .panel-date {
         font-size: 12px;
         line-height: 16px;
         border-radius: 14px;
-        padding: 1% 2%;
+        padding: 0.5% 1%;
+        width: 30%;
       }
 
       .panel-alerts {
-        margin-left: 2%;
+        margin-left: 1%;
         margin-top: 1%;
+      }
+      .panel-alerts-icon {
+        margin-left: 2%;
       }
     }
 

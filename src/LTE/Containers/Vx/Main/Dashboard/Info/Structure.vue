@@ -1,7 +1,9 @@
 <template>
   <div class="container-dashboard-structure">
     <div class="structure-header">
-      <span>Структура компании</span>
+      <img :src="icon"/>
+      <span class="structure-header-title">Структура компании</span>
+      <img :src="context"/>
     </div>
     <div class="structure-body">
       <div v-for="men of mens"
@@ -11,6 +13,7 @@
         <span class="part-level">{{ men.level }} УР.</span>
         <div class="part-mens">
           <span class="part-num">{{ men.numMens }}</span>
+          <img :src="human"/>
         </div>
       </div>
     </div>
@@ -22,10 +25,14 @@ export default {
   name: "Structure",
   data() {
     return {
+      icon: require('@/assets/img/my/structure.svg'),
+      context: require('@/assets/img/icons/context.svg'),
+      human: require('@/assets/img/icons/human.svg'),
       mens: [
         {level: 1, color: "#D5F1C5", numMens: 1},
-        {level: 2, color: "#FEF0BD", numMens: 1},
-        {level: 4, color: "#F2CBF8", numMens: 1},
+        {level: 2, color: "#FEF0BD", numMens: 2},
+        {level: 3, color: "#BAE7FF", numMens: 5},
+        {level: 4, color: "#F2CBF8", numMens: 22},
       ]
     }
   }
@@ -45,11 +52,14 @@ export default {
   .structure-header {
     display: flex;
     justify-content: flex-start;
-    font-weight: 600;
-    font-size: 17px;
-    line-height: 22px;
-    color: #FFF;
     margin-bottom: 9%;
+    .structure-header-title{
+      font-weight: 600;
+      font-size: 17px;
+      line-height: 22px;
+      color: #FFF;
+      margin: 1% 32% 0% 2%;
+    }
   }
 
   .structure-body {
@@ -57,12 +67,12 @@ export default {
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    margin-bottom: 12%;
+    margin-bottom: 2%;
 
     .body-part {
       display: flex;
       justify-content: space-between;
-      border-radius: 4px;
+      border-radius: 12px;
       width: 100%;
       margin: 4px;
 
@@ -92,6 +102,7 @@ export default {
           font-weight: 600;
           font-size: 12px;
           line-height: 16px;
+          margin-right: 15%;
         }
       }
     }

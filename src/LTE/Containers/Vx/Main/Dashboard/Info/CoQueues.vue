@@ -1,7 +1,9 @@
 <template>
   <div class="container-dashboard-coQueues">
     <div class="coQueues-header">
+      <img :src="icon"/>
       <span class="coQueues-header-title">Соучередители</span>
+      <img :src="context"/>
     </div>
     <div class="coQueues-body">
       <div class="body-forSale">
@@ -11,7 +13,7 @@
       <div class="body-forSale"
            :style="{ marginLeft: '16px' }">
         <span class="forSale-title">Активные голосования:</span>
-        <span class="forSale-percent">23</span>
+        <span class="forSale-percent">0</span>
       </div>
     </div>
     <div class="coQueues-footer">
@@ -23,7 +25,13 @@
 
 <script>
 export default {
-  name: "CoQueues"
+  name: "CoQueues",
+  data(){
+    return{
+      icon: require('@/assets/img/my/co-queues.svg'),
+      context: require('@/assets/img/icons/context.svg'),
+    }
+  }
 }
 </script>
 
@@ -46,6 +54,7 @@ export default {
       font-size: 17px;
       line-height: 22px;
       color: #FFF;
+      margin: 1% 45% 0% 2%;
     }
   }
 

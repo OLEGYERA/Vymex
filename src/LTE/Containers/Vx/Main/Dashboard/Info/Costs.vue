@@ -1,7 +1,9 @@
 <template>
   <div class="container-dashboard-costs">
     <div class="costs-header">
+      <img :src="icon"/>
       <span class="header-title">Расходы С.Е.</span>
+      <img :src="context"/>
     </div>
     <div class="costs-body">
       <span class="body-title">Количество свободных ресурсов</span>
@@ -28,7 +30,13 @@
 
 <script>
 export default {
-  name: "Costs"
+  name: "Costs",
+  data(){
+    return{
+      icon: require('@/assets/img/my/costs.svg'),
+      context: require('@/assets/img/icons/context.svg'),
+    }
+  }
 }
 </script>
 
@@ -51,6 +59,7 @@ export default {
       font-size: 17px;
       line-height: 22px;
       color: #FFF;
+      margin: 1% 50% 0% 2%;
     }
   }
 

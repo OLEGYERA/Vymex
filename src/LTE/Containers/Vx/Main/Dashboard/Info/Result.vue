@@ -1,7 +1,9 @@
 <template>
   <div class="container-dashboard-result">
     <div class="result-header">
+      <img :src="icon"/>
       <span class="header-title">Результат компании</span>
+      <img :src="context"/>
     </div>
     <div class="result-body">
       <div class="body-bill">
@@ -56,6 +58,8 @@ export default {
   name: "Result",
   data() {
     return {
+      icon: require('@/assets/img/my/result.svg'),
+      context: require('@/assets/img/icons/context.svg'),
       dates: [
         {color: "#1890FF", height: "20px"},
         {color: "#1890FF", height: "34px"},
@@ -106,6 +110,7 @@ export default {
       font-size: 17px;
       line-height: 22px;
       color: #FFF;
+      margin: 1% 32% 0% 2%;
     }
   }
 

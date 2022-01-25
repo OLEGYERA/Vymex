@@ -1,7 +1,9 @@
 <template>
   <div class="container-dashboard-controlCenter">
     <div class="controlCenter-header">
+      <img :src="icon"/>
       <span class="controlCenter-header-title">Центр управления</span>
+      <img :src="context"/>
     </div>
     <div class="controlCenter-body">
       <span class="body-title">Дисковое хранилище</span>
@@ -10,6 +12,7 @@
           <span class="memory-string-reserved">45 GB</span>
           <span class="memory-string-all">50 GB</span>
         </div>
+        <img :src="plot"/>
       </div>
     </div>
     <div class="controlCenter-footer">
@@ -40,7 +43,11 @@ export default {
   name: "ControlCenter",
   data(){
     return{
-      items: ['#D5F1C5', '#BAE7FF', '#FEF0BD', '#F2CBF8']
+      icon: require('@/assets/img/my/control-center.svg'),
+      context: require('@/assets/img/icons/context.svg'),
+      plot: require('@/assets/img/icons/plot.svg'),
+      items: ['#D5F1C5', '#BAE7FF', '#FEF0BD', '#F2CBF8'],
+
     }
   }
 }
@@ -65,6 +72,8 @@ export default {
       font-size: 17px;
       line-height: 22px;
       color: #FFF;
+      margin: 1% 40% 0% 2%;
+
     }
   }
 
@@ -94,7 +103,7 @@ export default {
         flex-direction: column;
         justify-content: space-between;
         align-items: flex-end;
-
+        margin-right: 5%;
         .memory-string-reserved {
           width: 60px;
           height: 24px;
@@ -117,7 +126,7 @@ export default {
 
   .controlCenter-footer {
     display: flex;
-    margin-top: 24px;
+    margin: 8% 0%;
 
     .footer-el {
       display: flex;
