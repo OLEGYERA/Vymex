@@ -39,9 +39,20 @@ export default {
         return state.Avatar
       }
     },
+    getUserAvatarData: (state) => {
+      let logo;
+      if(!state.Avatar){
+        logo = state.Name.substr(0, 1) + state.Lastname.substr(0, 1);
+      } else {
+        logo = state.Avatar;
+      }
+
+      return {logo, colorCode: String(state.ID).substr(state.ID.length - 1, 1)}
+    },
     getUserAvatarColor: (state) => String(state.ID).substr(state.ID.length - 1, 1),
     getUserName: (state) => state.Name,
     getUserLastname: (state) => state.Lastname,
+    getUserFullName: (state) => state.Name + ' ' + state.Lastname,
     getUserAlias: (state) => state.Alias.data,
     getUserAliasMask: (state) => '@' + state.Alias.data,
     getUserAliasError: (state) => state.Alias.error,

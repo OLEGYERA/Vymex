@@ -8,6 +8,9 @@ Vue.use(Notifications)
 
 import Core from "@/LTE/Core";
 
+import '@Icon/index'
+
+
 
 // Vue.prototype.$engine = new Engine({socketClient: {connection: 'wss://ponchik.app:7777'}});
 Vue.prototype.$core = new Core({socket: {connection: 'wss://ponchik.app:7777'}});

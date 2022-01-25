@@ -5,12 +5,10 @@
         <img src="@/assets/img/vymex/base-reverse.svg" alt="">
       </div>
       <div class="header-icons">
-        <div
-          @click="openPanel('notify')"
-        >
+        <div @click="openPanel('notify')">
           <icon-alarm/>
         </div>
-        <div @click="openPanel('messenger')">
+        <div @click="messengerShow()">
           <icon-comments/>
         </div>
       </div>
@@ -21,12 +19,18 @@
 <script>
   import IconAlarm from '@Icon/Alarm'
   import IconComments from '@Icon/Comments'
+  import {mapMutations} from 'vuex'
 
   export default {
     name: 'Container.Vx.Header',
     components: {
       IconAlarm,
       IconComments,
+    },
+    methods: {
+      ...mapMutations({
+        messengerShow: 'Messenger/show'
+      })
     }
   }
 </script>

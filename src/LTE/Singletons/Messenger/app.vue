@@ -1,65 +1,53 @@
 <template>
-  <div class="singleton-messenger-app">
-    <div class="messenger-app-block">
-      <main class="messenger-app-main">
-        <div>
-          <messages-header @changeMessenger="changeMessenger" :name="user.name"/>
-          <div class="messenger-app-info">
-            <transition name="blocks">
-              <personal-info :user="user" v-if="open==='owner'"/>
-              <dialogs-block v-if="open==='dialogs'"/>
-              <contacts-block v-if="open==='contacts'"/>
-            </transition>
-          </div>
-        </div>
-      </main>
-      <aside class="messenger-app-sidebar">
-        <side-panel
-          :type="type"
-          @changeMessenger="changeMessenger"
-          :open="open"
-        />
-      </aside>
-    </div>
+  <div class="singleton-messenger-app" v-if="status">
+    <main class="messenger-app-main"></main>
+    <sidebar
+      class="messenger-app-sidebar" @onClose="close()"
+      :tab-list="sidebarView.tabList" :tab-active="sidebarView.tabActive"
+      @onChangeTab="switchTab($event)">
+      <template #main-header>
+        <sidebar-header
+          @click.native="setRouterName('personal')"
+          :avatar="avatar"
+          :full-name="fullName"
+          unread-messages="1"/>
+      </template>
+      <template #main-content>
+        <sidebar-view/>
+      </template>
+    </sidebar>
   </div>
 </template>
 
 <script>
-  import MessagesHeader from "@/LTE/Singletons/Messenger/MessagesHeader"
-  import ContactsBlock from '@/LTE/Singletons/Messenger/ContactsBlock'
-  import DialogsBlock from '@/LTE/Singletons/Messenger/DialogsBlock'
-  import PersonalInfo from '@/LTE/Singletons/Messenger/PersonalInfo'
-  import SidePanel from "@/LTE/Singletons/Facades/SidePanel"
+  import {mapGetters, mapMutations} from 'vuex'
+
+  //for sidebar
+  import Sidebar from "@Facade/Navigation/SidebarRight"
+  import SidebarHeader from './facades/sidebar-header'
+  import SidebarView from './sidebar.view'
 
   export default {
     name: 'Singleton.Messenger.app',
     components: {
-      MessagesHeader,
-      ContactsBlock,
-      DialogsBlock,
-      PersonalInfo,
-      SidePanel
+      Sidebar, SidebarHeader, SidebarView,
     },
-    data() {
-      return {
-        user: {
-          name: 'Александр Ким',
-          nickname: '@arnoldino22',
-          phone: '+380(63)-222-33-44',
-          mail: 'makaroni@mail.com',
-          birthday: '2 апреля',
-          about: 'Короткий но емкий текст о том насколько я хорош, профессионален, и самое главное — скромен до глубины души.'
-        },
-        type: 'messenger'
-      };
-    },
-    props: {
-      open: String,
+    computed: {
+      ...mapGetters({
+        //messenger
+        status: 'Messenger/status',
+        sidebarView: 'Messenger/sidebarView',
+        //user
+        avatar: 'getUserAvatarData',
+        fullName: 'getUserFullName'
+      })
     },
     methods: {
-      changeMessenger(type) {
-        this.$emit('change-messenger', type)
-      }
+      ...mapMutations({
+        close: 'Messenger/close',
+        switchTab: 'Messenger/switchTab',
+        setRouterName: 'Messenger/setRouterName',
+      }),
     },
   }
 </script>
@@ -75,24 +63,27 @@
     position: fixed;
     background-color: rgba($grey-scale-700, .8);
     z-index: 3;
-    .messenger-app-block {
-      display: flex;
+
+    .messenger-app-sidebar {
       height: 100%;
+      display: flex;
       background-color: $grey;
-      .messenger-app-main {
-        height: 100%;
-        background-color: $grey;
-        width: 372px;
-        .messenger-app-info {
-          padding: rem(24) rem(20);
-          width: 100%;
-          box-sizing: border-box;
+      ::v-deep{
+        .sidebar-main{
           height: 100%;
-          overflow-y: scroll;
+          width: 372px;
+          .messenger-app-info {
+            padding: rem(24) rem(20);
+            width: 100%;
+            box-sizing: border-box;
+            height: 100%;
+            overflow-y: scroll;
+          }
         }
       }
     }
   }
+
   .blocks {
     &-enter{
       transform: translateX(15%);

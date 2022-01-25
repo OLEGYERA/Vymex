@@ -29,7 +29,8 @@ import UserProfile from '@/app/auth/storage/UserProfile'
 import VxInfo from "@/app/vx/storage/VxInfo"
 import File from "@/app/vx/storage/File"
 import Crypto from '@/models/CryptoStorage'
-import Messenger from '@/app/vx/app/messenger/storage/Messenger'
+// import Messenger from '@/app/vx/app/messenger/storage/Messenger'
+import {MessengerStore as Messenger} from '@Singletons'
 
 
 export default new Vuex.Store({
@@ -61,9 +62,7 @@ export default new Vuex.Store({
       key: 'vymex_msg_session',
       paths: ['Messenger'],
       storage: {
-        getItem: (key) => {
-          return Secure.get(key)
-        },
+        getItem: (key) => Secure.get(key),
         setItem: (key, value) => Secure.set(key, value),
         removeItem: (key) => Secure.remove(key),
       },
