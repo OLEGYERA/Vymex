@@ -163,6 +163,7 @@ export default {
 
       .panel-alerts-icon {
         margin-left: 2%;
+        margin-top: 3px;
       }
     }
 

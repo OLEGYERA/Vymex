@@ -2,7 +2,7 @@
   <div class="container-dashboard-coQueues">
     <div class="coQueues-header">
       <img :src="icon"/>
-      <span class="coQueues-header-title">Соучередители</span>
+      <span class="coQueues-header-title">Соучредители</span>
       <img :src="context"/>
     </div>
     <div class="coQueues-body">

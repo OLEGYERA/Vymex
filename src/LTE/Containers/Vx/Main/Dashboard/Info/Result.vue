@@ -38,14 +38,14 @@
                :style="{
           height: date.height.frontHeight,
           background: date.color.frontColor,
-          bottom: '20px',
+          bottom: '19px',
           zIndex: +date.height.frontHeight.split('px')[0] < +date.height.backHeight.split('px')[0] ? 2 : 0
           }"></div>
           <div class="footer-absolutePlot"
                :style="{
           height: date.height.backHeight,
           background: date.color.backColor,
-          bottom: '21px',
+          bottom: '20px',
           zIndex: 1
        }"></div>
         </div>
