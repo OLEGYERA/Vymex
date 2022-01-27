@@ -11,7 +11,9 @@ export default {
         ],
         group: [0, 1, null, 2]
       },
-    }
+    },
+    disableNotifications: false,
+    disableTime: 0,
   },
   getters: {
     status: (state) => state.status,
@@ -22,6 +24,8 @@ export default {
         tabActive: sidebarView.tabList.data[sidebarView.tabIndex],
       }
     },
+    disableNotifications: (state) => state.disableNotifications,
+    disableTime: (state) => state.disableTime
   },
   mutations: {
     show: (state) => state.status = true,
@@ -35,5 +39,10 @@ export default {
       const sidebarView = state.sidebarData;
       sidebarView.tabList.data[sidebarView.tabIndex].routerName = routerName
     },
+    switchNotifications: (state) => {
+      state.disableNotifications = !state.disableNotifications;
+      state.disableTime = 0;
+    },
+    changeTime: (state, newTime) => state.disableTime = newTime
   }
 }

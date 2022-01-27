@@ -39,7 +39,7 @@
       padding: 10px 12px 10px 44px;
       box-sizing: border-box;
       border-radius: 30px;
-      border: #4A5A6A solid 1px;
+      border: $grey-scale-300 solid 1px;
       color: #fff;
       background-color: $grey;
       font-size: 15px;

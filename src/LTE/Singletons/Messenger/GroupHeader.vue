@@ -36,7 +36,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    box-sizing: border-box;
     background-color: $grey-scale-500;
+    border-bottom: $grey-scale-700 solid 1px;
     .private-info {
       display: inherit;
       align-items: center;

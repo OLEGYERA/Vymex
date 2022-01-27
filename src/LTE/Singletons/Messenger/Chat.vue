@@ -8,7 +8,8 @@
       <div class="top-part">
         <text-base>{{dialog.title}}</text-base>
         <div class="message-info">
-          <double-check/>
+          <double-check v-if="dialog.status==='delivered'"/>
+<!--          <single-check v-if="dialog.status==='sent'"/>-->
           <title-caption>{{dialog.time}}</title-caption>
         </div>
       </div>
@@ -29,6 +30,7 @@ import TextBase from '@Facade/Text/Base'
 import DoubleCheck from "@Icon/DoubleCheck"
 import IconGroup from "@Icon/Group"
 import Avatar from '@Facade/Image/Avatar'
+// import SingleCheck from '@Icon/SingleCheck'
 
 export default {
   name: 'Singleton.Messenger.Chat',
@@ -37,7 +39,8 @@ export default {
     TextBase,
     DoubleCheck,
     IconGroup,
-    Avatar
+    Avatar,
+    // SingleCheck
   },
   data() {
     return {
@@ -50,17 +53,6 @@ export default {
       required: true,
     },
   },
-  computed: {
-    logo: function () {
-      let initials = ''
-        for (const char of this.dialog.title) {
-          if (char === char.toUpperCase() && char !== ' ') {
-            initials += char
-          }
-        }
-      return initials.slice(0, 2);
-    },
-  }
 }
 </script>
 
@@ -68,7 +60,7 @@ export default {
   .singleton-messenger-chat {
     width: 100%;
     box-sizing: border-box;
-    min-height: 68px;
+    min-height: 76px;
     padding: rem(12);
     display: flex;
     align-items: center;
@@ -116,7 +108,7 @@ export default {
       .down-part {
         display: flex;
         justify-content: space-between;
-        align-items: center;
+        //align-items: center;
         .name {
           color: $gray-scale-100;
         }

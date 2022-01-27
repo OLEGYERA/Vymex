@@ -1,5 +1,7 @@
 <template>
-  <component :is="componentName" @onNewRoute="setRouterName($event)"/>
+  <transition name="blocks">
+    <component :is="componentName" @onNewRoute="setRouterName($event)"/>
+  </transition>
 </template>
 
 <script>
