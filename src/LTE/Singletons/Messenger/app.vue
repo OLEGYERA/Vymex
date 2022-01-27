@@ -32,6 +32,9 @@
     components: {
       Sidebar, SidebarHeader, SidebarView,
     },
+    created() {
+      console.log(this.$store, this.test)
+    },
     computed: {
       ...mapGetters({
         //messenger
@@ -81,21 +84,6 @@
           }
         }
       }
-    }
-  }
-
-  .blocks {
-    &-enter{
-      transform: translateX(15%);
-    }
-    &-leave-to{
-      opacity: 0;
-    }
-    &-enter-active{
-      transition: $vx-tab-time all ease;
-    }
-    &-enter-to{
-      transform: translateX(0);
     }
   }
 </style>

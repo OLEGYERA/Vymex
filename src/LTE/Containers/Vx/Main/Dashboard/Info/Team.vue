@@ -20,8 +20,8 @@
     <div class="team-footer">
       <span class="footer-title">Последняя активность:</span>
       <div class="footer-positions">
-        <div v-for="men in people"
-             :key="men.id">
+        <div v-for="(men, i) in people"
+             :key="i">
           <div class="footer-unit">
             <img :src="avatar" class="positions-avatar"/>
             <span class="positions-title">{{ men.position }}</span>
@@ -40,14 +40,9 @@ export default {
       icon: require('@/assets/img/my/team.svg'),
       context: require('@/assets/img/icons/context.svg'),
       avatar: require('@/assets/img/icons/avatar.svg'),
-      people: [
-        {id: new Date(), position: "СЕО"},
-        {id: new Date(), position: "СМО"},
-        {id: new Date(), position: "Исполнитель"},
-        {id: new Date(), position: "Соучредит..."},
-      ]
     }
-  }
+  },
+  props: ['people']
 }
 </script>
 

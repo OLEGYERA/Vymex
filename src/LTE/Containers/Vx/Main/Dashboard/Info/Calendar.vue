@@ -45,17 +45,9 @@ export default {
     return {
       icon: require('@/assets/img/my/calendar.svg'),
       context: require('@/assets/img/icons/context.svg'),
-      calendar: [
-        {id: new Date(), day: "Пн", date: 28, rectangles: ["#FF4D4F", "#73D13D"]},
-        {id: new Date(), day: "Вт", date: 29, rectangles: []},
-        {id: new Date(), day: "Ср", date: 30, rectangles: ["#FF4D4F", "#FACD23", "#73D13D", "#73D13D", "#FACD23"]},
-        {id: new Date(), day: "Чт", date: 31, rectangles: ["#73D13D"]},
-        {id: new Date(), day: "Пт", date: 1, rectangles: ["#FACD23", "#FACD23", "#73D13D"]},
-        {id: new Date(), day: "Сб", date: 2, rectangles: []},
-        {id: new Date(), day: "Вс", date: 3, rectangles: ["#73D13D"]},
-      ]
     }
-  }
+  },
+  props: ['calendar']
 }
 </script>
 

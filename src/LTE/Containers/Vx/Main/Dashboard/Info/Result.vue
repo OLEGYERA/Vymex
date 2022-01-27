@@ -63,33 +63,9 @@ export default {
     return {
       icon: require('@/assets/img/my/result.svg'),
       context: require('@/assets/img/icons/context.svg'),
-      dates: [
-        {color: "#1890FF", height: "20px"},
-        {color: "#1890FF", height: "34px"},
-        {color: "#1890FF", height: "17px"},
-        {color: "#1890FF", height: "48px"},
-        {color: "#1890FF", height: "39px"},
-        {color: "#1890FF", height: "16px"},
-        {color: "#1890FF", height: "7px"},
-        {color: "#1890FF", height: "65px"},
-        {color: "#1890FF", height: "45px"},
-        {color: "#1890FF", height: "9px"},
-        {color: "#1890FF", height: "25px"},
-        {color: "#FACD23", height: "2px"},
-        {color: "#92C0EE", height: "16px"},
-        {
-          color: {frontColor: "#4D3139", backColor: "#92C0EE"},
-          height: {frontHeight: "17px", backHeight: "34px"}
-        },
-        {
-          color: {frontColor: "#92C0EE", backColor: "#4D3139"},
-          height: {frontHeight: "6px", backHeight: "40px"}
-        },
-        {color: "#92C0EE", height: "17px"},
-        {color: "#92C0EE", height: "27px"},
-      ]
     }
   },
+  props: ['dates']
 }
 </script>
 

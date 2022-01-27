@@ -6,13 +6,13 @@
       <img :src="context"/>
     </div>
     <div class="processes-body"
-         v-for="process in processes"
-         :key="process.id">
+         v-for="(process, i) in processes"
+         :key="i">
       <div class="body-titleProcess">{{ process.titleProcess }}</div>
       <div class="body-date">
-        <img :src="process.calendarIcon"/>
+        <img :src="calendarIcon"/>
         <div class="date-titleDate">{{ process.titleDate }}</div>
-        <img :src="process.changeIcon"/>
+        <img :src="changeIcon"/>
       </div>
       <div class="body-border"></div>
     </div>
@@ -27,24 +27,11 @@ export default {
     return {
       icon: require('@/assets/img/my/process.svg'),
       context: require('@/assets/img/icons/context.svg'),
-      processes: [
-        {
-          id: new Date(),
-          titleProcess: "Длинное название процесса, которое ...",
-          titleDate: "15 янв. 2021",
-          calendarIcon: require('@/assets/img/icons/calendar-grey.svg'),
-          changeIcon: require('@/assets/img/icons/change.svg'),
-        },
-        {
-          id: new Date(),
-          titleProcess: "Длинное название процесса, которое ...",
-          titleDate: "15 янв. 2021",
-          calendarIcon: require('@/assets/img/icons/calendar-grey.svg'),
-          changeIcon: require('@/assets/img/icons/change.svg'),
-        },
-      ]
+      calendarIcon: require('@/assets/img/icons/calendar-grey.svg'),
+      changeIcon: require('@/assets/img/icons/change.svg'),
     }
-  }
+  },
+  props: ['processes']
 }
 </script>
 

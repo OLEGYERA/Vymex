@@ -16,7 +16,7 @@ export default {
   getters: {
     status: (state) => state.status,
     sidebarView: (state) => {
-      const sidebarView = state.system.sidebarData;
+      const sidebarView = state.sidebarData;
       return {
         tabList: sidebarView.tabList,
         tabActive: sidebarView.tabList.data[sidebarView.tabIndex],

@@ -27,25 +27,9 @@ export default {
     return {
       icon: require('@/assets/img/my/resource.svg'),
       context: require('@/assets/img/icons/context.svg'),
-      files: [
-        {
-          id: new Date(),
-          file: "Новая папка(2)",
-          picture: require('@/assets/img/icons/folder.svg')
-        },
-        {
-          id: new Date(),
-          file: "document create element.zip",
-          picture: require('@/assets/img/icons/document.svg')
-        },
-        {
-          id: new Date(),
-          file: "Снимок экрана монитора 2021-10-2 ... .jpg",
-          picture: require('@/assets/img/icons/screen.svg')
-        },
-      ]
     }
-  }
+  },
+  props: ['files']
 }
 </script>
 

@@ -6,8 +6,8 @@
       <img :src="context"/>
     </div>
     <div class="structure-body">
-      <div v-for="men of mens"
-           :key="men.level"
+      <div v-for="(men, i) of mens"
+           :key="i"
            class="body-part"
            :style="{ backgroundColor: men.color }">
         <span class="part-level">{{ men.level }} УР.</span>
@@ -28,15 +28,9 @@ export default {
       icon: require('@/assets/img/my/structure.svg'),
       context: require('@/assets/img/icons/context.svg'),
       human: require('@/assets/img/icons/human.svg'),
-      mens: [
-        {level: 1, color: "#D5F1C5", numMens: 1},
-        {level: 2, color: "#FEF0BD", numMens: 2},
-        {level: 3, color: "#BAE7FF", numMens: 5},
-        {level: 4, color: "#F2CBF8", numMens: 22},
-      ]
     }
-  }
-
+  },
+  props: ['mens']
 }
 </script>
 

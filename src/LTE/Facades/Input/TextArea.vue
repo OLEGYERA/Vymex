@@ -47,7 +47,6 @@ export default {
   },
   mounted () {
     this.resize()
-    this.currentValue += this.type;
   },
   methods: {
     resize () {

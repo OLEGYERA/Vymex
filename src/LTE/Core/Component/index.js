@@ -4,8 +4,8 @@ import Api from "./Api";
 import FAQ from "./Faq";
 import Uploader from "./Uploader";
 
-import {MessengerComponents} from '@Singletons';
+import {MessengerControllers} from '@Singletons';
 
 export default Object.assign({
   Auth, Setting, Api, FAQ, Uploader
-}, MessengerComponents)
+}, MessengerControllers)

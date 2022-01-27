@@ -6,8 +6,8 @@
       <img :src="context"/>
     </div>
     <div class="tasks-body"
-         v-for="task in tasks"
-         :key="task.id">
+         v-for="(task, i) in tasks"
+         :key="i">
       <div class="body-task">
         <img :src="bell" class="task-bell"/>
         <span class="task-event">{{ task.event }}</span>
@@ -21,11 +21,11 @@
           <img :src="task.calendarIcon"/>
           <span>{{ task.date }}</span>
         </div>
-        <img :src="task.messageIcon" class="panel-alerts-icon"/>
+        <img :src="messageIcon" class="panel-alerts-icon"/>
         <div class="panel-alerts">{{ task.messages }}</div>
-        <img :src="task.attach" class="panel-alerts-icon"/>
+        <img :src="attach" class="panel-alerts-icon"/>
         <div class="panel-alerts">{{ task.files }}</div>
-        <img :src="task.completedIcon" class="panel-alerts-icon"/>
+        <img :src="completedIcon" class="panel-alerts-icon"/>
         <div class="panel-alerts">{{ task.completed }}</div>
       </div>
       <div class="body-border"></div>
@@ -41,40 +41,12 @@ export default {
       icon: require('@/assets/img/my/task.svg'),
       context: require('@/assets/img/icons/context.svg'),
       bell: require('@/assets/img/icons/bell.svg'),
-      tasks: [
-        {
-          id: new Date(),
-          event: "Срок задачи был пересен",
-          title: "Разработка айдентики компании и кор...",
-          date: "16 янв., 14:30",
-          messages: 2,
-          files: 1,
-          completed: "3/5",
-          background: "#FACD23",
-          textColor: "#010203",
-          calendarIcon: require('@/assets/img/icons/calendar-black.svg'),
-          messageIcon: require('@/assets/img/icons/message.svg'),
-          attach: require('@/assets/img/icons/attach.svg'),
-          completedIcon: require('@/assets/img/icons/completed.svg'),
-        },
-        {
-          id: new Date(),
-          event: "Добавлен новый комментарий",
-          title: "Обыкновенная плановая задача",
-          date: "22 янв., 14:30",
-          messages: 1,
-          files: 1,
-          completed: "3/5",
-          background: "#1890FF",
-          textColor: "#FFF",
-          calendarIcon: require('@/assets/img/icons/calendar-white.svg'),
-          messageIcon: require('@/assets/img/icons/message.svg'),
-          attach: require('@/assets/img/icons/attach.svg'),
-          completedIcon: require('@/assets/img/icons/completed.svg'),
-        },
-      ]
+      messageIcon: require('@/assets/img/icons/message.svg'),
+      attach: require('@/assets/img/icons/attach.svg'),
+      completedIcon: require('@/assets/img/icons/completed.svg'),
     }
-  }
+  },
+  props: ['tasks']
 }
 </script>
 
