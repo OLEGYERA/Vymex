@@ -102,7 +102,7 @@ export default {
   border-radius: 16px;
   background-color: $grey-scale-500;
   padding: 16px;
-  height: 256px;
+  height: 98.3%;
 
   .result-header {
     display: flex;

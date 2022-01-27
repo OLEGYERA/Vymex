@@ -86,12 +86,11 @@ export default {
   border-radius: 16px;
   background-color: $grey-scale-500;
   padding: 16px;
-  height: 224px;
 
   .tasks-header {
     display: flex;
     justify-content: flex-start;
-    margin-bottom: 7%;
+    margin-bottom: 3%;
 
     .header-title {
       font-weight: 600;
@@ -106,7 +105,7 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    margin-bottom: 3%;
+    margin-top: 3%;
 
     .body-task {
       display: flex;
