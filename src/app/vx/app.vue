@@ -12,7 +12,7 @@
       </div>
     </main>
     <section class="vx-other-apps">
-      <messenger-app @change-messenger="changeMessenger" :open="open"/>
+      <messenger-app/>
 <!--      <notifications-app-->
 <!--          @change-time="changeTime"-->
 <!--          @change-switch="changeSwitch"-->
@@ -25,12 +25,13 @@
 
 
 <script>
+/*eslint-disable*/
   import VxNavigation from '@Container/Vx/Navigation'
   import VxHeader from '@Container/Vx/Header'
+
   import {mapGetters} from 'vuex'
   const exceptionalRoutes = ['vx.msg'];
 
-  import {MessengerApp} from '@Singletons'
   // import NotificationsApp from "@/LTE/Singletons/Notifications/app";
 
   export default {
@@ -38,8 +39,7 @@
     components: {
       VxNavigation,
       VxHeader,
-      MessengerApp,
-      // NotificationsApp
+      MessengerApp: async () => (await import('@Singletons')).MessengerApp,
     },
     data() {
       return {
