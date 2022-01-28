@@ -9,17 +9,17 @@
       <div class="body-forSale"
            :style="{ marginRight: '8px' }">
         <span class="forSale-title">Доля компании на продажу:</span>
-        <span class="forSale-percent">54 %</span>
+        <span class="forSale-percent">{{data.forSale}} %</span>
       </div>
       <div class="body-forSale"
            :style="{ marginLeft: '8px' }">
         <span class="forSale-title">Активные голосования:</span>
-        <span class="forSale-percent">0</span>
+        <span class="forSale-percent">{{data.activeVoting}}</span>
       </div>
     </div>
     <div class="coQueues-footer">
       <span>Количество соучредителей</span>
-      <span class="footer-num">1</span>
+      <span class="footer-num">{{data.coQueues}}</span>
     </div>
   </div>
 </template>
@@ -32,7 +32,8 @@ export default {
       icon: require('@/assets/img/my/co-queues.svg'),
       context: require('@/assets/img/icons/context.svg'),
     }
-  }
+  },
+  props: ['data']
 }
 </script>
 

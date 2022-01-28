@@ -8,22 +8,22 @@
     <div class="costs-body">
       <span class="body-title">Зарплатный фонд на месяц</span>
       <div class="body-resources">
-        <span class="resources-free">134 002₴</span>
-        <span class="body-title">/$5200</span>
+        <span class="resources-free">{{data.salaryFund.UAH}}₴</span>
+        <span class="body-title">/${{data.salaryFund.dollar}}</span>
       </div>
     </div>
     <div class="costs-footer">
       <div class="footer-wage"
            :style="{ marginRight: '8px' }">
         <span class="wage-mediumWage">Средняя ЗП</span>
-        <span class="wage-wageUAH">35 000₴</span>
-        <span class="wage-mediumWage">$1256</span>
+        <span class="wage-wageUAH">{{data.averageSalary.UAH}}₴</span>
+        <span class="wage-mediumWage">${{data.averageSalary.dollar}}</span>
       </div>
       <div class="footer-wage"
            :style="{ marginLeft: '8px' }">
         <span class="wage-mediumWage">Остаток выплат по ЗП</span>
-        <span class="wage-wageUAH">8 000₴</span>
-        <span class="wage-mediumWage">$322</span>
+        <span class="wage-wageUAH">{{data.remainderSalary.UAH}}₴</span>
+        <span class="wage-mediumWage">${{data.remainderSalary.UAH}}</span>
       </div>
     </div>
   </div>
@@ -37,7 +37,8 @@ export default {
       icon: require('@/assets/img/my/costs.svg'),
       context: require('@/assets/img/icons/context.svg'),
     }
-  }
+  },
+  props: ['data']
 }
 </script>
 

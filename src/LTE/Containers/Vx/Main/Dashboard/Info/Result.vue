@@ -9,23 +9,23 @@
       <div class="body-bill"
            :style="{ marginRight: '8px' }">
         <span class="bill-coast">Всего на счету</span>
-        <span class="bill-sum">841 002₴</span>
+        <span class="bill-sum">{{data.allBill}}₴</span>
       </div>
       <div class="body-bill"
            :style="{ marginLeft: '8px' }">
         <span class="bill-coast">Сумма на конец мес.</span>
         <div class="bill-res">
-          <div class="bill-sum">41 002₴</div>
+          <div class="bill-sum">{{data.endOfMonth}}₴</div>
           <div class="bill-proc">
             <div class="proc-triangle"></div>
-            <div class="proc-development">4%</div>
+            <div class="proc-development">{{data.development}}%</div>
           </div>
         </div>
       </div>
     </div>
     <div class="result-footer">
       <div
-          v-for="(date, i) in dates"
+          v-for="(date, i) in data.dates"
           :key="i">
         <div class="footer-plot"
              v-if="(typeof date.height !== 'object') && (typeof date.color !== 'object')"
@@ -65,7 +65,7 @@ export default {
       context: require('@/assets/img/icons/context.svg'),
     }
   },
-  props: ['dates']
+  props: ['data']
 }
 </script>
 

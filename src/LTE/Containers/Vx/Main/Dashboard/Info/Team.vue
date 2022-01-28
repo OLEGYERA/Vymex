@@ -9,21 +9,21 @@
       <div class="body-people"
            :style="{ marginRight: '8px' }">
         <span class="people-total">Людей в компании</span>
-        <span class="people-sum">1</span>
+        <span class="people-sum">{{data.humans}}</span>
       </div>
       <div class="body-people"
            :style="{ marginLeft: '8px' }">
         <span class="people-total">Вакансии</span>
-        <span class="people-sum">3</span>
+        <span class="people-sum">{{data.vacancies}}</span>
       </div>
     </div>
     <div class="team-footer">
       <span class="footer-title">Последняя активность:</span>
       <div class="footer-positions">
-        <div v-for="(men, i) in people"
+        <div v-for="(men, i) in data.people"
              :key="i">
           <div class="footer-unit">
-            <img :src="avatar" class="positions-avatar"/>
+            <img :src="men.avatar" class="positions-avatar"/>
             <span class="positions-title">{{ men.position }}</span>
           </div>
         </div>
@@ -39,10 +39,9 @@ export default {
     return {
       icon: require('@/assets/img/my/team.svg'),
       context: require('@/assets/img/icons/context.svg'),
-      avatar: require('@/assets/img/icons/avatar.svg'),
     }
   },
-  props: ['people']
+  props: ['data']
 }
 </script>
 

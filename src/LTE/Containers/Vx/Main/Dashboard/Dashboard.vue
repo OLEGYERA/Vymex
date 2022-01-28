@@ -1,16 +1,16 @@
 <template>
   <div class="dashboard">
     <structure v-bind:mens="mens"/>
-    <resources/>
-    <result v-bind:dates="dates"/>
-    <costs/>
+    <resources v-bind:data="resourcesData"/>
+    <result v-bind:data="resultData"/>
+    <costs v-bind:data="coastsData"/>
     <resources-c-e v-bind:files="files"/>
-    <calendar v-bind:calendar="calendar"/>
+    <calendar v-bind:data="calendarData"/>
     <processes v-bind:processes="processes"/>
     <tasks v-bind:tasks="tasks"/>
-    <co-queues/>
-    <team v-bind:people="people"/>
-    <control-center/>
+    <co-queues v-bind:data="coQueuesData"/>
+    <team v-bind:data="teamData"/>
+    <control-center v-bind:data="controlCenterData"/>
   </div>
 </template>
 
@@ -44,15 +44,26 @@ export default {
   },
   data() {
     return {
-      calendar: [
-        {id: new Date(), day: "Пн", date: 28, rectangles: ["#FF4D4F", "#73D13D"]},
-        {id: new Date(), day: "Вт", date: 29, rectangles: []},
-        {id: new Date(), day: "Ср", date: 30, rectangles: ["#FF4D4F", "#FACD23", "#73D13D", "#73D13D", "#FACD23"]},
-        {id: new Date(), day: "Чт", date: 31, rectangles: ["#73D13D"]},
-        {id: new Date(), day: "Пт", date: 1, rectangles: ["#FACD23", "#FACD23", "#73D13D"]},
-        {id: new Date(), day: "Сб", date: 2, rectangles: []},
-        {id: new Date(), day: "Вс", date: 3, rectangles: ["#73D13D"]},
-      ],
+      coQueuesData: {forSale: "54", activeVoting: "0", coQueues: "1"},
+      coastsData: {
+        salaryFund: {UAH: "134 002", dollar: "5200"},
+        averageSalary: {UAH: "35 000", dollar: "1256"},
+        remainderSalary: {UAH: "8 000", dollar: "322"},
+      },
+      resourcesData: {coastSum: "8699", resourcesSum: "23", requests: "2"},
+      calendarData: {
+        events: [{title: "Встреча с инвестором", time: "09:00 - 10:00"}],
+        otherEvents: "+4 события",
+        calendar: [
+          {day: "Пн", date: 28, rectangles: ["#FF4D4F", "#73D13D"]},
+          {day: "Вт", date: 29, rectangles: []},
+          {day: "Ср", date: 30, rectangles: ["#FF4D4F", "#FACD23", "#73D13D", "#73D13D", "#FACD23"]},
+          {day: "Чт", date: 31, rectangles: ["#73D13D"]},
+          {day: "Пт", date: 1, rectangles: ["#FACD23", "#FACD23", "#73D13D"]},
+          {day: "Сб", date: 2, rectangles: []},
+          {day: "Вс", date: 3, rectangles: ["#73D13D"]},
+        ]
+      },
       processes: [
         {
           titleProcess: "Длинное название процесса, которое ...",
@@ -77,31 +88,36 @@ export default {
           picture: require('@/assets/img/icons/screen.svg')
         },
       ],
-      dates: [
-        {color: "#1890FF", height: "20px"},
-        {color: "#1890FF", height: "34px"},
-        {color: "#1890FF", height: "17px"},
-        {color: "#1890FF", height: "48px"},
-        {color: "#1890FF", height: "39px"},
-        {color: "#1890FF", height: "16px"},
-        {color: "#1890FF", height: "7px"},
-        {color: "#1890FF", height: "65px"},
-        {color: "#1890FF", height: "45px"},
-        {color: "#1890FF", height: "9px"},
-        {color: "#1890FF", height: "25px"},
-        {color: "#FACD23", height: "2px"},
-        {color: "#92C0EE", height: "16px"},
-        {
-          color: {frontColor: "#4D3139", backColor: "#92C0EE"},
-          height: {frontHeight: "17px", backHeight: "34px"}
-        },
-        {
-          color: {frontColor: "#92C0EE", backColor: "#4D3139"},
-          height: {frontHeight: "6px", backHeight: "40px"}
-        },
-        {color: "#92C0EE", height: "17px"},
-        {color: "#92C0EE", height: "27px"},
-      ],
+      resultData: {
+        allBill: "841 002",
+        endOfMonth: "41 002",
+        development: "4",
+        dates: [
+          {color: "#1890FF", height: "20px"},
+          {color: "#1890FF", height: "34px"},
+          {color: "#1890FF", height: "17px"},
+          {color: "#1890FF", height: "48px"},
+          {color: "#1890FF", height: "39px"},
+          {color: "#1890FF", height: "16px"},
+          {color: "#1890FF", height: "7px"},
+          {color: "#1890FF", height: "65px"},
+          {color: "#1890FF", height: "45px"},
+          {color: "#1890FF", height: "9px"},
+          {color: "#1890FF", height: "25px"},
+          {color: "#FACD23", height: "2px"},
+          {color: "#92C0EE", height: "16px"},
+          {
+            color: {frontColor: "#4D3139", backColor: "#92C0EE"},
+            height: {frontHeight: "17px", backHeight: "34px"}
+          },
+          {
+            color: {frontColor: "#92C0EE", backColor: "#4D3139"},
+            height: {frontHeight: "6px", backHeight: "40px"}
+          },
+          {color: "#92C0EE", height: "17px"},
+          {color: "#92C0EE", height: "27px"},
+        ]
+      },
       mens: [
         {level: 1, color: "#D5F1C5", numMens: 1},
         {level: 2, color: "#FEF0BD", numMens: 2},
@@ -110,7 +126,7 @@ export default {
       ],
       tasks: [
         {
-          event: "Срок задачи был пересен",
+          event: "Срок задачи был перенесен",
           title: "Разработка айдентики компании и кор...",
           date: "16 янв., 14:30",
           messages: 2,
@@ -133,12 +149,23 @@ export default {
           calendarIcon: require('@/assets/img/icons/calendar-white.svg'),
         },
       ],
-      people: [
-        {position: "СЕО"},
-        {position: "СМО"},
-        {position: "Исполнитель"},
-        {position: "Соучредит..."},
-      ],
+      teamData: {
+        humans: "1",
+        vacancies: "3",
+        people: [
+          {avatar: require('@/assets/img/icons/avatar.svg'), position: "СЕО"},
+          {avatar: require('@/assets/img/icons/avatar.svg'), position: "СМО"},
+          {avatar: require('@/assets/img/icons/avatar.svg'), position: "Исполнитель"},
+          {avatar: require('@/assets/img/icons/avatar.svg'), position: "Соучредит..."},
+        ]
+      },
+      controlCenterData: {
+        structuralUnits: "23",
+        files: "23",
+        memoryReserved: "45 GB",
+        memoryAll: "50 GB",
+        items: ['#D5F1C5', '#BAE7FF', '#FEF0BD', '#F2CBF8'],
+      }
     }
   },
 

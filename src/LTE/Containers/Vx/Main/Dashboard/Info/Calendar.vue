@@ -6,8 +6,8 @@
       <img :src="context"/>
     </div>
     <div class="calendar-body">
-      <div v-for="day in calendar"
-           :key="day.id"
+      <div v-for="(day, i) in data.calendar"
+           :key="i"
            class="body-dates"
            :style="{
           backgroundColor: day.day === 'Ср' ? '#212A33' : '',
@@ -26,14 +26,16 @@
       </div>
     </div>
     <div class="calendar-footer">
-      <div class="footer-meeting">
+      <div class="footer-meeting"
+           v-for="(event, i) in data.events"
+           :key="i">
         <div class="meeting-dot"></div>
         <div class="meeting-data">
-          <span class="data-text">Встреча с инвестором</span>
-          <span class="data-time">09:00 - 10:00</span>
+          <span class="data-text">{{event.title}}</span>
+          <span class="data-time">{{event.time}}</span>
         </div>
       </div>
-      <span class="footer-events">+4 события</span>
+      <span class="footer-events">{{data.otherEvents}}</span>
     </div>
   </div>
 </template>
@@ -47,7 +49,7 @@ export default {
       context: require('@/assets/img/icons/context.svg'),
     }
   },
-  props: ['calendar']
+  props: ['data']
 }
 </script>
 

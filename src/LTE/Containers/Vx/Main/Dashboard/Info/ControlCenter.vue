@@ -9,10 +9,12 @@
       <span class="body-title">Дисковое хранилище</span>
       <div class="body-memory">
         <div class="memory-string">
-          <span class="memory-string-reserved">45 GB</span>
-          <span class="memory-string-all">50 GB</span>
+          <span class="memory-string-reserved">{{ data.memoryReserved }}</span>
+          <span class="memory-string-all">{{ data.memoryAll }}</span>
         </div>
-        <img :src="plot"/>
+        <div class="memory-plot">
+          <div class="plot"></div>
+        </div>
       </div>
     </div>
     <div class="controlCenter-footer">
@@ -20,10 +22,10 @@
            :style="{ marginRight: '8px' }">
         <span class="el-title">Структурные единицы</span>
         <div class="el-indicators">
-          <div class="indicators-sum">23</div>
+          <div class="indicators-sum">{{ data.structuralUnits }}</div>
           <div class="indicators-box">
-            <div class="indicator-item" v-for="(item, i) in items" :key="i">
-              <div class="item-num">{{i + 1}}</div>
+            <div class="indicator-item" v-for="(item, i) in data.items" :key="i">
+              <div class="item-num">{{ i + 1 }}</div>
               <div class="item-indicator" :style="{backgroundColor: item}"></div>
             </div>
           </div>
@@ -32,7 +34,7 @@
       <div class="footer-el" :style="{ marginLeft: '8px' }">
         <span class="el-title">Файлы в корзине</span>
         <div class="el-indicators">
-          <div class="indicators-sum">23</div>
+          <div class="indicators-sum">{{ data.files }}</div>
         </div>
       </div>
     </div>
@@ -42,19 +44,27 @@
 <script>
 export default {
   name: "ControlCenter",
-  data(){
-    return{
+  data() {
+    return {
       icon: require('@/assets/img/my/control-center.svg'),
       context: require('@/assets/img/icons/context.svg'),
-      plot: require('@/assets/img/icons/plot.svg'),
-      items: ['#D5F1C5', '#BAE7FF', '#FEF0BD', '#F2CBF8'],
-
     }
-  }
+  },
+  methods: {
+    freeMemoryPercent() {
+      let memoryAll = this.data.memoryAll.split(' ')[0]
+      let memoryReserved = this.data.memoryReserved.split(' ')[0]
+      let difference = memoryAll - memoryReserved
+      let result = difference / (memoryAll / 100)
+      return result
+    }
+  },
+  props: ['data']
 }
 </script>
 
 <style lang="scss" scoped>
+
 .container-dashboard-controlCenter {
   display: flex;
   flex-direction: column;
@@ -63,6 +73,7 @@ export default {
   background-color: $grey-scale-500;
   padding: 16px;
   height: 224px;
+
   .controlCenter-header {
     display: flex;
     justify-content: flex-start;
@@ -104,6 +115,7 @@ export default {
         justify-content: space-between;
         align-items: flex-end;
         margin-right: 5%;
+
         .memory-string-reserved {
           width: 60px;
           height: 24px;
@@ -121,12 +133,24 @@ export default {
           color: $grey-scale-200;
         }
       }
+
+      .memory-plot {
+        display: flex;
+        align-items: center;
+
+        .plot {
+          background: conic-gradient($grey-scale-300 0% 10%, $green 10% 100%);
+          border-radius: 50%;
+          width: 36px;
+          height: 36px;
+        }
+      }
     }
   }
 
   .controlCenter-footer {
     display: flex;
-    margin-top: 8%;
+    margin-top: 7%;
 
     .footer-el {
       display: flex;
@@ -143,13 +167,15 @@ export default {
         line-height: 16px;
         color: $grey-scale-200;
       }
+
       .el-indicators {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-top: 2px;
+        margin-top: 6px;
         width: 100%;
         height: 100%;
+
         .indicators-sum {
           width: 35%;
           flex-shrink: 0;
@@ -158,13 +184,13 @@ export default {
           color: #FFF;
         }
 
-        .indicators-box{
+        .indicators-box {
           display: flex;
           flex-wrap: wrap;
           width: 100%;
           max-width: 200px;
 
-          .indicator-item{
+          .indicator-item {
             display: flex;
             align-items: center;
             width: 45%;
@@ -172,7 +198,7 @@ export default {
             padding: 1.5px 2px;
             box-sizing: border-box;
 
-            .item-num{
+            .item-num {
               width: 6px;
               height: rem(12);
               font-weight: 600;
@@ -182,13 +208,15 @@ export default {
               text-align: center;
               color: #C1CFDB;
             }
-            .item-indicator{
+
+            .item-indicator {
               content: '';
               width: 100%;
               height: 6px;
               border-radius: 20px;
             }
-            &:nth-child(2n), &:last-child{
+
+            &:nth-child(2n), &:last-child {
               margin-right: 0;
             }
           }

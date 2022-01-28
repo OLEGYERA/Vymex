@@ -9,17 +9,17 @@
       <div class="body-coast"
            :style="{ marginRight: '8px' }">
         <span class="coast-total">Общая стоимость ресурсов</span>
-        <span class="coast-sum">8699₴</span>
+        <span class="coast-sum">{{data.coastSum}}₴</span>
       </div>
       <div class="body-coast"
            :style="{ marginLeft: '8px' }">
         <span class="coast-total">Количество свободных ресурсов</span>
-        <span class="coast-sum">23</span>
+        <span class="coast-sum">{{data.resourcesSum}}</span>
       </div>
     </div>
     <div class="resources-footer">
       <span>Запросы на ресурс</span>
-      <span class="footer-num">2</span>
+      <span class="footer-num">{{data.requests}}</span>
     </div>
   </div>
 </template>
@@ -32,8 +32,8 @@ export default {
       icon: require('@/assets/img/my/storage.svg'),
       context: require('@/assets/img/icons/context.svg'),
     }
-  }
-
+  },
+  props: ['data']
 }
 </script>
 
