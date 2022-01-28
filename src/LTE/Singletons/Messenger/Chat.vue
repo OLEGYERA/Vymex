@@ -107,6 +107,7 @@ export default {
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
+        height: 20px;
         .facade-text-base {
           color: #fff;
         }
@@ -114,8 +115,8 @@ export default {
           display: inherit;
           align-items: center;
           .message-check {
-            margin-bottom: 3px;
             margin-right: 12px;
+            margin-top: -2px;
             .icon-double-check {
               color: $blue;
             }

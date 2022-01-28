@@ -30,7 +30,7 @@ export default {
           type: 'response',
           name: 'Нина Меркулова,',
           time : '04:20',
-          text: 'Норм, а чтор по задачам?'
+          text: 'Норм, а что по задачам?'
         },
         {
           type: 'response',
@@ -60,7 +60,7 @@ export default {
           type: 'response',
           name: 'Нина Меркулова,',
           time : '04:20',
-          text: 'Норм, а чтор по задачам?'
+          text: 'Норм, а что по задачам?'
         },
         {
           type: 'response',
@@ -100,7 +100,6 @@ export default {
     height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     box-sizing: border-box;
     background-color: $grey;
     border-right: $grey-scale-700 solid 1px;
