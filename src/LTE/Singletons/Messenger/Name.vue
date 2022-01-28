@@ -33,7 +33,7 @@ export default {
     justify-content: space-between;
     align-items: center;
     color: #fff;
-    background-color: $grey;
+    background-color: transparent;
     box-sizing: border-box;
     margin-bottom: 36px;
     .icon-arrow-left-bold {

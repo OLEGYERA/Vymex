@@ -1,24 +1,26 @@
 <template>
-  <div class="singleton-messenger-app" v-if="status">
-    <main class="messenger-app-main">
-      <messenger-main/>
-    </main>
-    <sidebar
-      class="messenger-app-sidebar" @onClose="close()"
-      :tab-list="sidebarView.tabList" :tab-active="sidebarView.tabActive"
-      @onChangeTab="switchTab($event)">
-      <template #main-header>
-        <sidebar-header
-          @click.native="setRouterName('personal')"
-          :avatar="avatar"
-          :full-name="fullName"
-          unread-messages="1"/>
-      </template>
-      <template #main-content>
-        <sidebar-view/>
-      </template>
-    </sidebar>
-  </div>
+  <transition name="fade">
+    <div class="singleton-messenger-app" v-if="status">
+      <main class="messenger-app-main">
+        <messenger-main/>
+      </main>
+      <sidebar
+          class="messenger-app-sidebar" @onClose="close()"
+          :tab-list="sidebarView.tabList" :tab-active="sidebarView.tabActive"
+          @onChangeTab="switchTab($event)">
+        <template #main-header>
+          <sidebar-header
+              @click.native="setRouterName('personal')"
+              :avatar="avatar"
+              :full-name="fullName"
+              unread-messages="1"/>
+        </template>
+        <template #main-content>
+          <sidebar-view/>
+        </template>
+      </sidebar>
+    </div>
+  </transition>
 </template>
 
 <script>
@@ -28,7 +30,7 @@
   import Sidebar from "@Facade/Navigation/SidebarRight"
   import SidebarHeader from './facades/sidebar-header'
   import SidebarView from './sidebar.view'
-  import MessengerMain from "@/LTE/Singletons/Messenger/MessengerMain";
+  import MessengerMain from "@/LTE/Singletons/Messenger/messenger/MessengerMain";
 
   export default {
     name: 'Singleton.Messenger.app',
@@ -92,6 +94,17 @@
           }
         }
       }
+    }
+  }
+  .fade {
+    &-enter, &-leave-to {
+      opacity: 0;
+    }
+    &-enter-to, &-leave {
+      opacity: .8;
+    }
+    &-enter-active, &-leave-active {
+      transition: opacity .2s;
     }
   }
 </style>

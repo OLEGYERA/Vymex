@@ -1,39 +1,27 @@
 <template>
-  <div class="messenger-main">
-    <group-header/>
+  <div class="singleton-messenger-main">
+    <messenger-header/>
     <main class="messenger-main-plate">
-      <div class="messenger-time">
-        22 апреля, 2022
-      </div>
+      <messenger-date/>
       <message v-for="(message, key) in messages" :message="message" :key="key"/>
     </main>
-    <div class="messenger-input">
-      <div class="messenger-attach-button">
-        <icon-attach/>
-      </div>
-      <input-message/>
-      <div class="messenger-send-button">
-        <icon-send-message/>
-      </div>
-    </div>
+    <input-area/>
   </div>
 </template>
 
 <script>
-import GroupHeader from "@/LTE/Singletons/Messenger/GroupHeader";
+import MessengerHeader from "@/LTE/Singletons/Messenger/facades/messenger-header";
 import Message from "@/LTE/Singletons/Messenger/facades/message";
-import InputMessage from "@Facade/Input/Message";
-import IconAttach from '@Icon/Attach'
-import IconSendMessage from '@Icon/SendMessage'
+import MessengerDate from "@/LTE/Singletons/Messenger/facades/messenger-date";
+import InputArea from "@/LTE/Singletons/Messenger/messenger/InputArea";
 
 export default {
   name: 'Singleton.Messenger.MessengerMain',
   components: {
-    GroupHeader,
+    MessengerHeader,
     Message,
-    InputMessage,
-    IconAttach,
-    IconSendMessage
+    MessengerDate,
+    InputArea
   },
   data() {
     return {
@@ -108,7 +96,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .messenger-main {
+  .singleton-messenger-main {
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -119,38 +107,8 @@ export default {
     .messenger-main-plate {
       padding: 12px 20px 0;
       overflow-y: scroll;
-      .messenger-time{
+      .facade-messenger-date{
         margin-bottom: 17px;
-        font-size: rem(12);
-        line-height: rem(12);
-        text-align: center;
-        color: #FFF;
-        opacity: 0.4;
-      }
-    }
-    .messenger-input {
-      padding: 24px 20px;
-      display: flex;
-      justify-content: space-between;
-      box-sizing: border-box;
-      width: 100%;
-      .icon {
-        height: 36px;
-        width: 36px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border-radius: 50%;
-        cursor: pointer;
-      }
-      .icon-attach {
-        margin-right: 10px;
-        color: #fff;
-      }
-      .icon-send-message {
-        margin-left: 10px;
-        color: $grey-scale-300;
-        background-color: $grey-scale-400;
       }
     }
   }

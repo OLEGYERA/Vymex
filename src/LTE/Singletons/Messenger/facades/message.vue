@@ -41,7 +41,6 @@ export default {
     .message-header{
       display: flex;
       align-items: center;
-      padding:rem(2) 0;
       font-size: rem(11);
       line-height: rem(12);
       margin-bottom: 4px;
@@ -53,9 +52,6 @@ export default {
         align-self: center;
         margin-right: 4px;
       }
-      .icon-double-check{
-        height: 16px;
-      }
     }
     .facade-text-base {
       color: #fff;
@@ -65,8 +61,5 @@ export default {
     background-color: $blue;
     border-radius: 12px 2px 12px 12px;
     margin: 0 0 12px auto;
-  }
-  .read {
-    color: $blue;
   }
 </style>

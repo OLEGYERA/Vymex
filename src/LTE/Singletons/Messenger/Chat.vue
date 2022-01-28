@@ -1,15 +1,17 @@
 <template>
   <div class="singleton-messenger-chat">
     <div class="dialog-image">
-      <avatar :colorCode="color" :logo="logo"/>
+      <avatar :logo="logo" :colorCode="color"/>
       <span v-if="dialog.name"><icon-group/></span>
     </div>
     <div class="info-text">
       <div class="top-part">
         <text-base>{{dialog.title}}</text-base>
         <div class="message-info">
-          <double-check v-if="dialog.status==='delivered'"/>
-<!--          <single-check v-if="dialog.status==='sent'"/>-->
+          <div class="message-check">
+            <double-check v-if="dialog.status==='delivered'"/>
+            <single-check v-if="dialog.status==='sent'"/>
+          </div>
           <title-caption>{{dialog.time}}</title-caption>
         </div>
       </div>
@@ -30,7 +32,8 @@ import TextBase from '@Facade/Text/Base'
 import DoubleCheck from "@Icon/DoubleCheck"
 import IconGroup from "@Icon/Group"
 import Avatar from '@Facade/Image/Avatar'
-// import SingleCheck from '@Icon/SingleCheck'
+import SingleCheck from '@Icon/SingleCheck'
+
 
 export default {
   name: 'Singleton.Messenger.Chat',
@@ -40,7 +43,7 @@ export default {
     DoubleCheck,
     IconGroup,
     Avatar,
-    // SingleCheck
+    SingleCheck
   },
   data() {
     return {
@@ -53,6 +56,17 @@ export default {
       required: true,
     },
   },
+  computed: {
+    logo: function () {
+      let initials = ''
+      for (const char of this.dialog.title) {
+        if (char === char.toUpperCase() && char !== ' ') {
+          initials += char
+        }
+      }
+      return initials.slice(0, 2);
+    },
+  }
 }
 </script>
 
@@ -92,23 +106,29 @@ export default {
       .top-part {
         display: flex;
         justify-content: space-between;
+        align-items: flex-start;
         .facade-text-base {
           color: #fff;
         }
         .message-info {
           display: inherit;
           align-items: center;
-          .icon-double-check {
-            color: $blue;
-            height: 16px;
+          .message-check {
+            margin-bottom: 3px;
             margin-right: 12px;
+            .icon-double-check {
+              color: $blue;
+            }
+            .icon-single-check {
+              color: rgba($blue, .4);
+            }
           }
         }
       }
       .down-part {
         display: flex;
         justify-content: space-between;
-        //align-items: center;
+        align-items: center;
         .name {
           color: $gray-scale-100;
         }

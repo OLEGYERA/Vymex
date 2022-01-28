@@ -1,38 +1,38 @@
 <template>
   <div class="sidebar-router-personal">
-    <name :name="user.name" @onNewRoute="onNewRoute"/>
+    <name :name="fullName" @onNewRoute="onNewRoute"/>
     <div class="photo">
-      <avatar :logo="logo" :colorCode="colorCode"/>
+      <avatar :logo="avatar.logo" :colorCode="avatar.colorCode"/>
     </div>
     <div class="info-block">
       <div class="user-info">
         <div class="icon-info"><icon-mail/></div>
         <div>
-          <text-base>{{user.nickname}}</text-base>
+          <text-base>{{alias}}</text-base>
           <title-caption>Имя пользователя VYMEX</title-caption>
         </div>
         <icon-copy/>
       </div>
-      <div v-if="user.phone" class="user-info">
+      <div class="user-info">
         <div class="icon-info"><icon-phone/></div>
         <div>
-          <text-base>{{user.phone}}</text-base>
+          <text-base>{{phone}}</text-base>
           <title-caption>Телефон</title-caption>
         </div>
         <icon-copy/>
       </div>
-      <div v-if="user.mail" class="user-info">
+      <div class="user-info">
         <div class="icon-info"><icon-letter/></div>
         <div>
-          <text-base>{{user.mail}}</text-base>
+          <text-base>{{email}}</text-base>
           <title-caption>Электронная почта</title-caption>
         </div>
         <icon-copy/>
       </div>
-      <div v-if="user.birthday" class="user-info">
+      <div class="user-info">
         <div class="icon-info"><icon-calendar/></div>
         <div>
-          <text-base>{{user.birthday}}</text-base>
+          <text-base>{{birthday}}</text-base>
           <title-caption>День рождения</title-caption>
         </div>
         <icon-copy/>
@@ -46,6 +46,7 @@
 
 <script>
 /*eslint-disable*/
+
  import Name from "@/LTE/Singletons/Messenger/Name";
  import Avatar from "@Facade/Image/Avatar";
  import TextBase from "@Facade/Text/Base";
@@ -56,6 +57,7 @@
  import IconCalendar from "@Icon/Calendar";
  import IconCopy from "@Icon/Copy";
  import TextArea from "@Facade/Input/TextArea";
+import {mapGetters, mapMutations} from "vuex";
 
 export default {
   name: 'Singleton.Messenger.Sidebar.RouterPersonal',
@@ -73,33 +75,41 @@ export default {
   },
   data() {
     return {
-      logo: 'AK',
-      colorCode: '1',
-      user: {
-        name: 'Александр Ким',
-        nickname: '@arnoldino22',
-        phone: '+380(63)-222-33-44',
-        mail: 'makaroni@mail.com',
-        birthday: '2 апреля',
-      },
       textarea: '',
-      value: 'Короткий но емкий текст о том насколько я хорош, профессионален, и самое главное — скромен до глубины души.'
+      value: this.about || 'Безумно талантлив и безупречно красив! Ни один пиксель не проскочит мимо моего зоркого глаза. Одним словом, тестировщик от Бога!',
     }
+  },
+  computed: {
+    ...mapGetters({
+      fullName: 'getUserFullName',
+      birthday: 'getUserBirthday',
+      alias: 'getUserAlias',
+      phone: 'getUserTelephone',
+      email: 'getUserEmail',
+      about: 'getUserAbout',
+      avatar: 'getUserAvatarData',
+    }),
   },
   methods: {
     onNewRoute(value) {
       this.$emit('onNewRoute', value)
-    }
-  }
+    },
+    ...mapMutations({
+      setRouterName: 'Messenger/setRouterName',
+      setUserProfileData: 'setUserProfileData',
+      setUserAvatar: 'setUserAvatar'
+    }),
+  },
 }
 </script>
 
 <style lang="scss" scoped>
   .sidebar-router-personal{
     width: 100%;
-    //height: 100%;
+    height: 100%;
     padding: 8px 0;
     box-sizing: border-box;
+    overflow-y: scroll;
     .container-vx-name {
       margin-bottom: 36px;
     }
@@ -108,8 +118,12 @@ export default {
       height: 120px;
       width: 120px;
     }
-    .facade-image-avatar::v-deep {
-      font-size: 18px;
+    .facade-image-avatar{
+      &::v-deep {
+        .color {
+          font-size: 24px;
+        }
+      }
     }
     .info-block {
       padding: 0 20px;
@@ -142,7 +156,7 @@ export default {
         width: 16px;
       }
     }
-    .user-info:active {
+    .user-info:hover {
       .icon-copy {
         display: block;
       }

@@ -8,6 +8,7 @@ export default {
           {name: 'chats', iconName: 'icon-chat', routerName: null},
           {name: 'contacts', iconName: 'icon-profile', routerName: null},
           {name: 'volumes', iconName: 'icon-volume', routerName: null},
+          // {name: 'volumes', iconName: 'icon-volume-off', routerName: null},
         ],
         group: [0, 1, null, 2]
       },
@@ -40,9 +41,14 @@ export default {
       sidebarView.tabList.data[sidebarView.tabIndex].routerName = routerName
     },
     switchNotifications: (state) => {
+      if (state.disableNotifications === false) {
+        state.sidebarData.tabList.data[2].iconName = 'icon-volume-off';
+      } else {
+        state.disableTime = 0;
+        state.sidebarData.tabList.data[2].iconName = 'icon-volume';
+      }
       state.disableNotifications = !state.disableNotifications;
-      state.disableTime = 0;
     },
-    changeTime: (state, newTime) => state.disableTime = newTime
+    changeTime: (state, newTime) => state.disableTime = newTime,
   }
 }
