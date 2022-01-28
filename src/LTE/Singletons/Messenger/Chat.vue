@@ -129,13 +129,14 @@ export default {
       .down-part {
         display: flex;
         justify-content: space-between;
-        align-items: center;
+        //align-items: center;
         .name {
           color: $gray-scale-100;
         }
         .message-count {
           height: 24px;
           width: 24px;
+          align-self: center;
           border-radius: 8px;
           background-color: $blue;
           color: #fff;
