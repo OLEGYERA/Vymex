@@ -15,14 +15,10 @@
           <title-caption>{{dialog.time}}</title-caption>
         </div>
       </div>
-      <div class="down-part">
-        <div>
-          <title-caption class="name">{{dialog.name}}</title-caption>
-          <title-caption>{{dialog.message}}</title-caption>
-        </div>
-        <div v-if="dialog.unread" class="message-count">{{dialog.unread}}</div>
-      </div>
+      <title-caption class="name">{{dialog.name}}</title-caption>
+      <title-caption>{{dialog.message}}</title-caption>
     </div>
+    <div v-if="dialog.unread" class="message-count">{{dialog.unread}}</div>
   </div>
 </template>
 
@@ -72,12 +68,12 @@ export default {
 
 <style lang="scss" scoped>
   .singleton-messenger-chat {
+    position: relative;
     width: 100%;
     box-sizing: border-box;
     min-height: 76px;
     padding: rem(12);
     display: flex;
-    align-items: center;
     background-color: $grey;
     border-radius: 12px;
     cursor: pointer;
@@ -90,6 +86,7 @@ export default {
     .dialog-image {
       position: relative;
       margin-right: 12px;
+      align-self: center;
       height: 40px;
       width: 40px;
       border-radius: 50%;
@@ -106,7 +103,6 @@ export default {
       .top-part {
         display: flex;
         justify-content: space-between;
-        align-items: flex-start;
         height: 20px;
         .facade-text-base {
           color: #fff;
@@ -126,26 +122,23 @@ export default {
           }
         }
       }
-      .down-part {
-        display: flex;
-        justify-content: space-between;
-        //align-items: center;
-        .name {
-          color: $gray-scale-100;
-        }
-        .message-count {
-          height: 24px;
-          width: 24px;
-          align-self: center;
-          border-radius: 8px;
-          background-color: $blue;
-          color: #fff;
-          font-weight: 600;
-          font-size: rem(12);
-          line-height: rem(24);
-          text-align: center;
-        }
+      .name {
+        color: $gray-scale-100;
       }
+    }
+    .message-count {
+      position: absolute;
+      right: 12px;
+      bottom: 16px;
+      height: 24px;
+      width: 24px;
+      border-radius: 8px;
+      background-color: $blue;
+      color: #fff;
+      font-weight: 600;
+      font-size: rem(12);
+      line-height: rem(24);
+      text-align: center;
     }
   }
 </style>

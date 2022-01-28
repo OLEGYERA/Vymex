@@ -86,6 +86,30 @@ export default {
           status: 'sent',
           text: 'А ты как там? Гоу тусить?'
         },
+        {
+          type: 'response',
+          name: 'Нина Меркулова,',
+          time : '04:20',
+          text: 'Норм, а что по задачам?'
+        },
+        {
+          type: 'response',
+          name: 'Нина Меркулова,',
+          time : '04:20',
+          text: 'Всё четко, смотри, файлик...'
+        },
+        {
+          type: 'owner',
+          time : '04:20',
+          status: 'delivered',
+          text: 'Да всё нормас, давайте сразу подумаем, как будем покупать акваланг, я в этом нуб...'
+        },
+        {
+          type: 'owner',
+          time : '04:20',
+          status: 'sent',
+          text: 'да и в целом всё гуд'
+        },
       ],
     }
   },
@@ -100,6 +124,7 @@ export default {
     height: 100%;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     box-sizing: border-box;
     background-color: $grey;
     border-right: $grey-scale-700 solid 1px;
