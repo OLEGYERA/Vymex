@@ -30,6 +30,7 @@ export default {
   padding: 24px 20px;
   display: flex;
   justify-content: space-between;
+  align-items: flex-end;
   box-sizing: border-box;
   width: 100%;
   .icon {

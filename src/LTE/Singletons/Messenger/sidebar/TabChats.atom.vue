@@ -100,6 +100,55 @@
             img: './',
             status: 'sent'
           },
+          {
+            title: 'Анастасия Куликова',
+            message: 'Рада что все круто)',
+            time: '04:20',
+            img: './'
+          },
+          {
+            title: 'Андрей Вашуленко',
+            message: 'Погнали пилить апку, че его просто...',
+            time: '04:20',
+            img: './',
+            status: 'delivered'
+          },
+          {
+            title: 'Дмитрий Погодин',
+            message: 'Погнали пилить апку, че его просто...',
+            time: '04:20',
+            img: './',
+            status: 'sent'
+          },
+          {
+            title: 'Нина Меркулова',
+            message: 'Норм, а что по задачам?',
+            time: '04:20',
+            img: './',
+            unread: 5,
+          },
+          {
+            title: 'Дария Шевченко',
+            message: 'Офигеть, здесь можно переписыват...',
+            time: '04:20',
+            img: './',
+            status: 'sent'
+          },
+          {
+            title: 'Поездка в Чернобыль',
+            name: 'Вы',
+            message: 'Ребята, общий сбор в 9:30',
+            time: '04:20',
+            img: './',
+            status: 'delivered'
+          },
+          {
+            title: 'Андрей Вашуленко',
+            message: 'Погнали пилить апку, че его просто...',
+            time: '04:20',
+            img: './',
+            status: 'sent'
+          },
         ],
       }
     },
@@ -113,6 +162,14 @@
     padding: 20px;
     box-sizing: border-box;
     overflow-y: scroll;
+    //&::-webkit-scrollbar {
+    //  width: 5px;
+    //  background-color: transparent;
+    //}
+    //&::-webkit-scrollbar-thumb {
+    //  background-color: $grey-scale-400;
+    //  border-radius: 5px;
+    //}
     .facade-input-search {
       margin-bottom: 12px;
     }

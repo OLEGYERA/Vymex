@@ -37,7 +37,7 @@
         </div>
         <icon-copy/>
       </div>
-      <text-area v-model="textarea" :type="value">
+      <text-area v-model="textarea" :textAreaValue="about" :max-length="1000">
         <template #title>О себе</template>
       </text-area>
     </div>
@@ -76,7 +76,7 @@ export default {
   data() {
     return {
       textarea: '',
-      value: this.about || 'Безумно талантлив и безупречно красив! Ни один пиксель не проскочит мимо моего зоркого глаза. Одним словом, тестировщик от Бога!',
+      about: this.about || 'Короткий но емкий текст о том насколько я хорош, профессионален, и самое главное — скромен до глубины души.',
     }
   },
   computed: {
@@ -172,16 +172,12 @@ export default {
       color: #fff;
       margin-bottom: 4px;
     }
-
-    .textarea-count {
-      color: #fff;
-    }
     .facade-text-area {
-      padding: 20px 0;
-    }
-    .facade-text-area::v-deep {
-      .textarea{
-        padding: 0 0 24px;
+      margin-top: 12px;
+      ::v-deep {
+        .textarea-container{
+          padding-bottom: 24px;
+        }
       }
     }
   }
