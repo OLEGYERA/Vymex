@@ -6,7 +6,7 @@
       <img :src="context"/>
     </div>
     <div class="structure-body">
-      <div v-for="(men, i) of data"
+      <div v-for="(men, i) of mens"
            :key="i"
            class="body-part"
            :style="{ backgroundColor: men.color }">
@@ -22,7 +22,7 @@
 
 <script>
 export default {
-  name: "Structure",
+  name: "StructureChild",
   data() {
     return {
       icon: require('@/assets/img/my/structure.svg'),
@@ -30,7 +30,7 @@ export default {
       human: require('@/assets/img/icons/human.svg'),
     }
   },
-  props: ['data']
+  props: ['mens']
 }
 </script>
 

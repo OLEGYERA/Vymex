@@ -6,7 +6,7 @@
       <img :src="context"/>
     </div>
     <div class="processes-body"
-         v-for="(process, i) in data"
+         v-for="(process, i) in processes"
          :key="i">
       <div class="body-titleProcess">{{ process.titleProcess }}</div>
       <div class="body-date">
@@ -22,7 +22,7 @@
 
 <script>
 export default {
-  name: "Processes",
+  name: "ProcessesChild",
   data() {
     return {
       icon: require('@/assets/img/my/process.svg'),
@@ -31,7 +31,7 @@ export default {
       changeIcon: require('@/assets/img/icons/change.svg'),
     }
   },
-  props: ['data']
+  props: ['processes']
 }
 </script>
 

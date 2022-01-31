@@ -6,7 +6,7 @@
       <img :src="context"/>
     </div>
     <div class="tasks-body"
-         v-for="(task, i) in data"
+         v-for="(task, i) in tasks"
          :key="i">
       <div class="body-task">
         <img :src="bell" class="task-bell"/>
@@ -35,7 +35,7 @@
 
 <script>
 export default {
-  name: "Tasks",
+  name: "TasksChild",
   data() {
     return {
       icon: require('@/assets/img/my/task.svg'),
@@ -46,7 +46,7 @@ export default {
       completedIcon: require('@/assets/img/icons/completed.svg'),
     }
   },
-  props: ['data']
+  props: ['tasks']
 }
 </script>
 

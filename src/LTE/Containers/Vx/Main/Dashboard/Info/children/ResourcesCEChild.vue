@@ -9,7 +9,7 @@
       <span class="body-title">Последние</span>
       <div class="body-content">
         <div class="content-item"
-             v-for="file in data"
+             v-for="file in files"
              :key="file.id">
           <img :src="file.picture"/>
           <span class="item-text">{{ file.file }}</span>
@@ -22,14 +22,14 @@
 
 <script>
 export default {
-  name: "ResourcesCE",
+  name: "ResourcesCEChild",
   data() {
     return {
       icon: require('@/assets/img/my/resource.svg'),
       context: require('@/assets/img/icons/context.svg'),
     }
   },
-  props: ['data']
+  props: ['files']
 }
 </script>
 

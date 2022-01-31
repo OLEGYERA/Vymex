@@ -1,13 +1,13 @@
 <template>
   <div class="dashboard">
-    <structure v-bind:mens="mens"/>
+    <structure v-bind:data="structureData"/>
     <resources v-bind:data="resourcesData"/>
     <result v-bind:data="resultData"/>
     <costs v-bind:data="coastsData"/>
-    <resources-c-e v-bind:files="files"/>
+    <resources-c-e v-bind:data="resourcesCEData"/>
     <calendar v-bind:data="calendarData"/>
-    <processes v-bind:processes="processes"/>
-    <tasks v-bind:tasks="tasks"/>
+    <processes v-bind:data="processesData"/>
+    <tasks v-bind:data="tasksData"/>
     <co-queues v-bind:data="coQueuesData"/>
     <team v-bind:data="teamData"/>
     <control-center v-bind:data="controlCenterData"/>
@@ -64,7 +64,7 @@ export default {
           {day: "Вс", date: 3, rectangles: ["#73D13D"]},
         ]
       },
-      processes: [
+      processesData: [
         {
           titleProcess: "Длинное название процесса, которое ...",
           titleDate: "15 янв. 2021",
@@ -74,7 +74,7 @@ export default {
           titleDate: "15 янв. 2021",
         },
       ],
-      files: [
+      resourcesCEData: [
         {
           file: "Новая папка(2)",
           picture: require('@/assets/img/icons/folder.svg')
@@ -118,13 +118,13 @@ export default {
           {color: "#92C0EE", height: "27px"},
         ]
       },
-      mens: [
+      structureData: [
         {level: 1, color: "#D5F1C5", numMens: 1},
         {level: 2, color: "#FEF0BD", numMens: 2},
         {level: 3, color: "#BAE7FF", numMens: 5},
         {level: 4, color: "#F2CBF8", numMens: 22},
       ],
-      tasks: [
+      tasksData: [
         {
           event: "Срок задачи был перенесен",
           title: "Разработка айдентики компании и кор...",

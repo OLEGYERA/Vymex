@@ -13,7 +13,7 @@
           <span class="memory-string-all">{{ data.memoryAll }}</span>
         </div>
         <div class="memory-plot">
-          <div class="plot"></div>
+          <div class="plot" :style="{background: `conic-gradient(#4A5A6A 0% ${freeMemoryPercent}%, #73D13D ${freeMemoryPercent}% 100%)`}"></div>
         </div>
       </div>
     </div>
@@ -50,7 +50,7 @@ export default {
       context: require('@/assets/img/icons/context.svg'),
     }
   },
-  methods: {
+  computed: {
     freeMemoryPercent() {
       let memoryAll = this.data.memoryAll.split(' ')[0]
       let memoryReserved = this.data.memoryReserved.split(' ')[0]
@@ -139,7 +139,6 @@ export default {
         align-items: center;
 
         .plot {
-          background: conic-gradient($grey-scale-300 0% 10%, $green 10% 100%);
           border-radius: 50%;
           width: 36px;
           height: 36px;
