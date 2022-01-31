@@ -1,6 +1,6 @@
 <template>
   <div class="sidebar-router-personal">
-    <name :name="user.name" @onNewRoute="onNewRoute"/>
+    <name :name="user.name" @updateRouter="updateRouter"/>
     <div class="photo">
       <avatar :logo="logo" :colorCode="colorCode"/>
     </div>
@@ -87,8 +87,8 @@ export default {
     }
   },
   methods: {
-    onNewRoute(value) {
-      this.$emit('onNewRoute', value)
+    updateRouter(value) {
+      this.$emit('updateRouter', value)
     }
   }
 }

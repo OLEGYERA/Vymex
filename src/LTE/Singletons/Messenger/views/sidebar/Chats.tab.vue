@@ -1,32 +1,31 @@
 <template>
-  <div class="sidebar-tab-chats">
-    <input-search :placeholder="placeholder" v-model="search"/>
-    <div>{{search}}</div>
-    <contacts>
-      <template #title>Диалоги</template>
-      <template #amount>{{dialogs.length}}</template>
-    </contacts>
-    <chat v-for="(dialog, key) in dialogs" :dialog="dialog" :key="key"></chat>
+  <div class="chats-tab-view">
+    <tab-view :search-placeholder="'Поиск по диалогам'" search-disable
+              @onSearchClick="$emit('updateRouter', 'search')">
+      <template #header-title>Диалоги</template>
+      <template #header-amount>5</template>
+
+      <template #content>
+        <div class="chats-table">
+          <chat v-for="(dialog, key) in dialogs" :dialog="dialog" :key="key"></chat>
+        </div>
+      </template>
+    </tab-view>
   </div>
 </template>
 
 <script>
-
-  import Contacts from "@/LTE/Singletons/Messenger/Contacts";
-  import InputSearch from "@Facade/Input/Search";
+  import TabView from "../../facades/TabView"
   import Chat from "@/LTE/Singletons/Messenger/Chat";
 
   export default {
-    name: 'Singleton.Messenger.Sidebar.TabChats',
+    name: 'Singleton.Messenger.Views.Sidebar.Chats.Tab',
     components: {
-      Contacts,
-      InputSearch,
-      Chat,
+      TabView, Chat,
     },
     data() {
       return {
         placeholder: 'Поиск по диалогам',
-        search: '',
         dialogs: [
           {
             title: 'Корпоративный Движ',
@@ -94,6 +93,54 @@
             time: '04:20',
             img: './'
           },
+          {
+            title: 'Андрей Вашуленко',
+            message: 'Погнали пилить апку, че его просто...',
+            time: '04:20',
+            img: './'
+          },
+          {
+            title: 'Андрей Вашуленко',
+            message: 'Погнали пилить апку, че его просто...',
+            time: '04:20',
+            img: './'
+          },
+          {
+            title: 'Андрей Вашуленко',
+            message: 'Погнали пилить апку, че его просто...',
+            time: '04:20',
+            img: './'
+          },
+          {
+            title: 'Андрей Вашуленко',
+            message: 'Погнали пилить апку, че его просто...',
+            time: '04:20',
+            img: './'
+          },
+          {
+            title: 'Андрей Вашуленко',
+            message: 'Погнали пилить апку, че его просто...',
+            time: '04:20',
+            img: './'
+          },
+          {
+            title: 'Андрей Вашуленко',
+            message: 'Погнали пилить апку, че его просто...',
+            time: '04:20',
+            img: './'
+          },
+          {
+            title: 'Андрей Вашуленко',
+            message: 'Погнали пилить апку, че его просто...',
+            time: '04:20',
+            img: './'
+          },
+          {
+            title: 'Андрей Вашуленко',
+            message: 'Погнали пилить апку, че его просто...',
+            time: '04:20',
+            img: './'
+          },
         ],
       }
     },
@@ -101,21 +148,9 @@
 </script>
 
 <style lang="scss" scoped>
-  .sidebar-tab-chats{
-    width: 100%;
-    height: 100%;
-    padding: 20px;
-    box-sizing: border-box;
-    overflow-y: scroll;
-    .facade-input-search {
-      margin-bottom: 12px;
-    }
-    .container-vx-contacts {
-      position: sticky;
-      margin-bottom: 4px;
-    }
-    .container-vx-group-chat {
-      margin-bottom: 4px;
+  .chats-tab-view{
+    .facade-tab-view{
+      min-width: 372px;
     }
   }
 </style>

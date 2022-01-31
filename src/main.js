@@ -25,8 +25,6 @@ new Vue({
   store,
   router,
   beforeCreate(){
-    console.log(this.$core)
-
     this.$core.install();
     this.$router.push({name: 'preload.launch'}).catch(() => {})
   },

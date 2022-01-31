@@ -57,7 +57,6 @@
           this.chooseTime = 0;
         }
         this.switch = !this.switch;
-        console.log(this.switch)
       },
       changeTime(timeKey) {
         this.chooseTime = timeKey;

@@ -69,7 +69,6 @@ class CalendarBase{
 
     if(remainderDayWeekPrev > 0){
       const LAST_DAY_PREV_MONTH = Calendar.getLastDayPrevMonth(this.monthPoint, true);
-      console.log(LAST_DAY_PREV_MONTH)
       while(remainderDayWeekPrev > 0)
         MATRIX_ARR.push({
           month: prevMonth,
