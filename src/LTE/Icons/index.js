@@ -11,3 +11,4 @@ Vue.component('icon-volume', () => import('./Volume'));
 Vue.component('icon-profile', () => import('./Profile'));
 Vue.component('icon-chat', () => import('./Comments')); //Should be refactor
 Vue.component('icon-setting', () => import('./Setting'));
+Vue.component('icon-search', () => import('./Search'));

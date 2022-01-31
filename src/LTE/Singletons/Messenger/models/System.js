@@ -11,6 +11,7 @@ export default {
         ],
         group: [0, 1, null, 2]
       },
+      animation: null
     }
   },
   getters: {
@@ -20,6 +21,7 @@ export default {
       return {
         tabList: sidebarView.tabList,
         tabActive: sidebarView.tabList.data[sidebarView.tabIndex],
+        animation: sidebarView.animation
       }
     },
   },
@@ -33,7 +35,13 @@ export default {
     },
     setRouterName: (state, routerName) => {
       const sidebarView = state.sidebarData;
-      sidebarView.tabList.data[sidebarView.tabIndex].routerName = routerName
+      sidebarView.animation = 'expand';
+      sidebarView.tabList.data[sidebarView.tabIndex].routerName = routerName;
+    },
+    closeRouter: (state) => {
+      const sidebarView = state.sidebarData;
+      sidebarView.animation = 'zoom-out';
+      sidebarView.tabList.data[sidebarView.tabIndex].routerName = null;
     },
   }
 }
