@@ -26,7 +26,6 @@
     data() {
       return {
         placeholder: 'Поиск по диалогам',
-        searchFake: '',
         dialogs: [
           {
             title: 'Корпоративный Движ',

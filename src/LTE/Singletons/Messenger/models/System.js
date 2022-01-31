@@ -31,6 +31,7 @@ export default {
 
     switchTab: (state, newTabIndex) => {
       if(state.sidebarData.tabList.data[newTabIndex])
+        state.sidebarData.animation = null
         state.sidebarData.tabIndex = newTabIndex;
     },
     setRouterName: (state, routerName) => {

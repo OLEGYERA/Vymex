@@ -15,10 +15,10 @@
   import {mapGetters, mapMutations} from 'vuex'
   /*eslint-disable*/
   import ChatsTab from './views/sidebar/Chats.tab'
+  import ContactsTab from './views/sidebar/Contacts.tab'
   import SearchRouter from './views/sidebar/Search.router'
 
   /**/
-  import TabContacts from './sidebar/TabContacts.atom'
   import TabVolumes from './sidebar/TabVolumes.atom'
 
 
@@ -28,7 +28,7 @@
   export default {
     name: 'Singleton.Messenger.SidebarView',
     components: {
-      ChatsTab, /**/ TabContacts, TabVolumes,
+      ChatsTab, ContactsTab, /**/ TabVolumes,
       SearchRouter,  /**/ RouterPersonal
     },
     computed: {
