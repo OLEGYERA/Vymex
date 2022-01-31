@@ -12,7 +12,6 @@ export default {
         group: [0, 1, null, 2]
       },
       animation: null
-    }
     },
     disableNotifications: false,
     disableTime: 0,

@@ -60,10 +60,7 @@
             cursor: text;
           }
         }
-
-
       }
-
       .container-vx-contacts {
         position: sticky;
         margin-bottom: 4px;

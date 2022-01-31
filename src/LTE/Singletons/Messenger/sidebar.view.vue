@@ -19,17 +19,17 @@
   import SearchRouter from './views/sidebar/Search.router'
 
   /**/
-  import TabVolumes from './sidebar/TabVolumes.atom'
+  import VolumesTab from './sidebar/TabVolumes.atom'
 
 
-  import RouterPersonal from './sidebar/RouterPersonal.atom'
+  import PersonalRouter from './sidebar/RouterPersonal.atom'
 
 
   export default {
     name: 'Singleton.Messenger.SidebarView',
     components: {
-      ChatsTab, ContactsTab, /**/ TabVolumes,
-      SearchRouter,  /**/ RouterPersonal
+      ChatsTab, ContactsTab, /**/ VolumesTab,
+      SearchRouter,  /**/ PersonalRouter
     },
     computed: {
       ...mapGetters({sidebarView: 'Messenger/sidebarView'}),
@@ -54,7 +54,7 @@
   .sidebarViewController{
     width: 100%;
     height: 100%;
-    display: flex;
+    //display: flex;
     justify-content: center;
     .sidebarViewComponent{
       width: 100%;

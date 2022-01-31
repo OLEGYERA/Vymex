@@ -83,7 +83,6 @@
     position: relative;
     width: 100%;
     height: 42px;
-    //outline: none;
     cursor: pointer;
     box-sizing: border-box;
     overflow: hidden;

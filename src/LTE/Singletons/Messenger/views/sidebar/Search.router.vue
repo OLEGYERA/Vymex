@@ -1,6 +1,6 @@
 <template>
   <div class="router-view search-router-view">
-    <tab-view :search-model="search" :search-placeholder="'Поиск по диалогам'" search-exit
+    <tab-view :search-model="search" :search-placeholder="'Поиск по контактам'" search-exit
               @onSearchMounted="searchHooks = $event"
               @onSearchExit="$emit('closeRouter')">
       <template #header-title>Поиск</template>
@@ -33,7 +33,9 @@
       search: '',
       searchHooks: {}
     }),
-
+    updated() {
+      console.log(this.search)
+    }
   }
 </script>
 

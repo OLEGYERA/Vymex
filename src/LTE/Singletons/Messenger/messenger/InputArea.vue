@@ -34,9 +34,9 @@ export default {
       actionListStatus: false,
     }
   },
-  updated() {
-    console.log(this.messageInput)
-  },
+  // updated() {
+  //   console.log(this.messageInput)
+  // },
   methods: {
     handleInputModel(data) {
       this.messageInput = data

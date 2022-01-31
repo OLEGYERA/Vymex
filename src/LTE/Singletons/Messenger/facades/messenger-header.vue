@@ -48,6 +48,9 @@
       }
     },
     methods: {
+      handlePressOk() {
+        console.log(this.actionListStatus)
+      }
     }
   }
 </script>

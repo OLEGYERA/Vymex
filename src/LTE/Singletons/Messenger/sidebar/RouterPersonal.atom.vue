@@ -1,6 +1,6 @@
 <template>
   <div class="sidebar-router-personal">
-    <name :name="user.name" @updateRouter="updateRouter"/>
+    <name :name="fullName" @updateRouter="updateRouter"/>
     <div class="photo">
       <avatar :logo="avatar.logo" :colorCode="avatar.colorCode"/>
     </div>
