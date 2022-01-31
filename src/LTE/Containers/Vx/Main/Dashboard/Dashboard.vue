@@ -1,16 +1,27 @@
 <template>
   <div class="dashboard">
-    <structure v-bind:data="structureData"/>
-    <resources v-bind:data="resourcesData"/>
-    <result v-bind:data="resultData"/>
-    <costs v-bind:data="coastsData"/>
-    <resources-c-e v-bind:data="resourcesCEData"/>
-    <calendar v-bind:data="calendarData"/>
-    <processes v-bind:data="processesData"/>
-    <tasks v-bind:data="tasksData"/>
-    <co-queues v-bind:data="coQueuesData"/>
-    <team v-bind:data="teamData"/>
-    <control-center v-bind:data="controlCenterData"/>
+    <structure v-bind:data="structureData"
+               v-bind:items="items"/>
+    <resources v-bind:data="resourcesData"
+               v-bind:items="items"/>
+    <result v-bind:data="resultData"
+            v-bind:items="items"/>
+    <costs v-bind:data="coastsData"
+           v-bind:items="items"/>
+    <resources-c-e v-bind:data="resourcesCEData"
+                   v-bind:items="items"/>
+    <calendar v-bind:data="calendarData"
+              v-bind:items="items"/>
+    <processes v-bind:data="processesData"
+               v-bind:items="items"/>
+    <tasks v-bind:data="tasksData"
+           v-bind:items="items"/>
+    <co-queues v-bind:data="coQueuesData"
+               v-bind:items="items"/>
+    <team v-bind:data="teamData"
+          v-bind:items="items"/>
+    <control-center v-bind:data="controlCenterData"
+                    v-bind:items="items"/>
   </div>
 </template>
 
@@ -44,6 +55,7 @@ export default {
   },
   data() {
     return {
+      items: ['Выдать доступ', 'Скрыть виджет'],
       coQueuesData: {forSale: "54", activeVoting: "0", coQueues: "1"},
       coastsData: {
         salaryFund: {UAH: "134 002", dollar: "5200"},

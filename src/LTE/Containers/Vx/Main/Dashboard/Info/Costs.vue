@@ -3,7 +3,12 @@
     <div class="costs-header">
       <img :src="icon"/>
       <span class="header-title">Расходы С.Е.</span>
-      <img :src="context"/>
+      <div class="costs-header-menu-button" @click="actionListStatus = !actionListStatus">
+        <img :src="context" :class="{active: actionListStatus}"/>
+        <transition name="fade">
+          <action-list :items="items" v-if="actionListStatus"/>
+        </transition>
+      </div>
     </div>
     <div class="costs-body">
       <span class="body-title">Зарплатный фонд на месяц</span>
@@ -30,15 +35,20 @@
 </template>
 
 <script>
+import ActionList from "@/LTE/Singletons/Messenger/facades/ActionList";
 export default {
   name: "Costs",
   data() {
     return {
       icon: require('@/assets/img/my/costs.svg'),
       context: require('@/assets/img/icons/context.svg'),
+      actionListStatus: false,
     }
   },
-  props: ['data']
+  components: {
+    ActionList,
+  },
+  props: ['data', 'items']
 }
 </script>
 
@@ -63,6 +73,16 @@ export default {
       line-height: 22px;
       color: #FFF;
       margin: 1% 50% 0% 2%;
+    }
+    .costs-header-menu-button {
+      position: relative;
+      .singleton-messenger-action-list {
+        position: absolute;
+        bottom: -1px;
+        z-index: 1;
+        right: -1px;
+        transform: translateY(100%);
+      }
     }
   }
 

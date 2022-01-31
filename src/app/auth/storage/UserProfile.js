@@ -62,6 +62,8 @@ export default {
     getUserAbout: (state) => state.About,
     getUserKEY: (state) => state.KEY,
     getUserPK: (state) => state.PK,
+    getUserEmail: (state) => state.Email,
+    getUserTelephone: (state) => state.Telephone,
   },
   mutations: {
     setPhoneLthNumber: (state, payload) => state.PhoneLthNumber = payload,
@@ -71,6 +73,7 @@ export default {
     setUserAliasError: (state, payload) => state.Alias.error = payload,
     setUserPassword: (state, payload) => state.Password = payload,
     setUserJumpReg: (state, payload) => state.IsJumpReg = payload,
+    setUserEmail: (state, payload) => state.Email = payload,
     setUserProfileData: (state, payload) => {
       state.Telephone = payload.telephone
       state.ID = payload.id

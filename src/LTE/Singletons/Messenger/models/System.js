@@ -12,7 +12,9 @@ export default {
         group: [0, 1, null, 2]
       },
       animation: null
-    }
+    },
+    disableNotifications: false,
+    disableTime: 0,
   },
   getters: {
     status: (state) => state.status,
@@ -24,6 +26,8 @@ export default {
         animation: sidebarView.animation
       }
     },
+    disableNotifications: (state) => state.disableNotifications,
+    disableTime: (state) => state.disableTime
   },
   mutations: {
     show: (state) => state.status = true,
@@ -44,5 +48,15 @@ export default {
       sidebarView.animation = 'zoom-out';
       sidebarView.tabList.data[sidebarView.tabIndex].routerName = null;
     },
+    switchNotifications: (state) => {
+      if (state.disableNotifications === false) {
+        state.sidebarData.tabList.data[2].iconName = 'icon-volume-off';
+      } else {
+        state.disableTime = 0;
+        state.sidebarData.tabList.data[2].iconName = 'icon-volume';
+      }
+      state.disableNotifications = !state.disableNotifications;
+    },
+    changeTime: (state, newTime) => state.disableTime = newTime,
   }
 }

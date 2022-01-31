@@ -3,7 +3,12 @@
     <div class="resourcesCE-header">
       <img :src="icon"/>
       <span class="header-title">Ресурсы С.Е.</span>
-      <img :src="context"/>
+      <div class="resourcesCE-header-menu-button" @click="actionListStatus = !actionListStatus">
+        <img :src="context" :class="{active: actionListStatus}"/>
+        <transition name="fade">
+          <action-list :items="items" v-if="actionListStatus"/>
+        </transition>
+      </div>
     </div>
     <div class="resourcesCE-body">
       <span class="body-title">Последние</span>
@@ -21,15 +26,20 @@
 </template>
 
 <script>
+import ActionList from "@/LTE/Singletons/Messenger/facades/ActionList";
 export default {
   name: "ResourcesCE",
   data() {
     return {
       icon: require('@/assets/img/my/resource.svg'),
       context: require('@/assets/img/icons/context.svg'),
+      actionListStatus: false,
     }
   },
-  props: ['data']
+  components: {
+    ActionList,
+  },
+  props: ['data', 'items']
 }
 </script>
 
@@ -54,6 +64,16 @@ export default {
       line-height: 22px;
       color: #FFF;
       margin: 1% 52% 0% 2%;
+    }
+    .resourcesCE-header-menu-button {
+      position: relative;
+      .singleton-messenger-action-list {
+        position: absolute;
+        bottom: -1px;
+        z-index: 1;
+        right: -1px;
+        transform: translateY(100%);
+      }
     }
   }
 
