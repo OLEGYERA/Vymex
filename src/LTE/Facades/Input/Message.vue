@@ -4,8 +4,10 @@
         rows="1"
         v-model="baseModel"
         :placeholder="placeholder"
-        @input="resize($event)">
-    </textarea>
+        @input="resize($event)"
+        @focus="onFocus($event)"
+        @focusout="onFocusOut($event)"
+    ></textarea>
   </div>
 </template>
 
@@ -33,10 +35,16 @@ export default {
         area.style.borderRadius = '16px'
       } else {
         area.style.borderRadius = '51px'
-        // area.style.padding  = '0 21px'
+        area.style.padding  = '0 21px'
         area.style.height = '36px'
       }
     },
+    onFocus(e) {
+      e.target.style.margin = '-1px'
+    },
+    onFocusOut(e) {
+      e.target.style.margin = '0'
+    }
   },
 }
 </script>
@@ -52,7 +60,6 @@ export default {
   align-items: center;
   border: $grey-scale-300 solid 1px;
   &:focus-within{
-    padding: 0 20px;
     transition: border-color .2s ease-out;
     border: $blue solid 2px;
   }

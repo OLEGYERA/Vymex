@@ -2,7 +2,7 @@
   <div class="messenger-input-area">
     <div class="messenger-attach-button" @click="actionListStatus = !actionListStatus;">
       <icon-attach :class="{'attach-button-active': actionListStatus}"/>
-      <transition name="fadeFull">
+      <transition name="fade">
         <action-list :items="items" v-if="actionListStatus"/>
       </transition>
     </div>

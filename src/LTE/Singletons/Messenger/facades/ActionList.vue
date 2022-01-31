@@ -20,9 +20,6 @@ export default {
   props: {
     items: Array,
   },
-  // mounted() {
-  //   console.log()
-  // }
 }
 </script>
 

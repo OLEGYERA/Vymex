@@ -8,7 +8,7 @@
       </div>
       <div class="menu-button" @click="actionListStatus = !actionListStatus">
         <points-vertical :class="{active: actionListStatus}"/>
-        <transition name="fadeFull">
+        <transition name="fade">
           <action-list :items="items" v-if="actionListStatus"/>
         </transition>
       </div>
@@ -42,7 +42,7 @@
     },
     data() {
       return {
-        items: ['Профиль', 'Отлючить уведомления', 'Удалить диалог'],
+        items: ['Профиль', 'Отлючить уведомления', 'Удалить чат'],
         actionListStatus: false,
         modalStatus: false,
       }

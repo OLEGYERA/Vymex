@@ -1,26 +1,24 @@
 <template>
-  <transition name="fade">
-    <div class="singleton-messenger-app" v-if="status">
-      <main class="messenger-app-main">
-        <messenger-main/>
-      </main>
-      <sidebar
-          class="messenger-app-sidebar" @onClose="close()"
-          :tab-list="sidebarView.tabList" :tab-active="sidebarView.tabActive"
-          @onChangeTab="switchTab($event)">
-        <template #main-header>
-          <sidebar-header
-              @click.native="setRouterName('personal')"
-              :avatar="avatar"
-              :full-name="fullName"
-              unread-messages="1"/>
-        </template>
-        <template #main-content>
-          <sidebar-view/>
-        </template>
-      </sidebar>
-    </div>
-  </transition>
+  <div class="singleton-messenger-app" v-if="status">
+    <main class="messenger-app-main">
+      <messenger-main/>
+    </main>
+    <sidebar
+        class="messenger-app-sidebar" @onClose="close()"
+        :tab-list="sidebarView.tabList" :tab-active="sidebarView.tabActive"
+        @onChangeTab="switchTab($event)">
+      <template #main-header>
+        <sidebar-header
+            @click.native="setRouterName('personal')"
+            :avatar="avatar"
+            :full-name="fullName"
+            unread-messages="1"/>
+      </template>
+      <template #main-content>
+        <sidebar-view/>
+      </template>
+    </sidebar>
+  </div>
 </template>
 
 <script>
