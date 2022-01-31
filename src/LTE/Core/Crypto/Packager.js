@@ -15,7 +15,6 @@ export default class Packager extends Binder{
   constructor(Components, priorityComponents = []){
     super();
     this.Components = Components;
-    console.log(Components, 'Components')
     this.priorityComponents = priorityComponents;
   }
 
@@ -47,7 +46,6 @@ export default class Packager extends Binder{
     return this._delegateByResponseCode(decPac) ?? null;
   }
   _delegateByResponseCode(pacRes){
-    console.log(pacRes.data.code)
     switch (pacRes.data.code){
       case 200:
       case 201:

@@ -1,7 +1,8 @@
 <template>
   <aside class="facade-navigation-sidebar-right">
     <main class="sidebar-main">
-      <slot name="main-header"/><slot name="main-content"/>
+      <div class="main-header"><slot name="main-header"/></div>
+      <div class="main-content"><slot name="main-content"/></div>
     </main>
     <aside class="sidebar-aside">
       <panel-button class="panel-button-close"
@@ -40,6 +41,19 @@
 
 <style lang="scss" scoped>
   .facade-navigation-sidebar-right {
+    main.sidebar-main{
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      .main-header{
+        flex-shrink: 0;
+      }
+      .main-content{
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+    }
     .sidebar-aside{
       height: 100%;
       background-color: $grey-scale-500;

@@ -13,7 +13,6 @@ export default {
   mounted() {
     if(this.selectedDate) {
       this.calendar = this.calendar.createReplica(this.selectedDate);
-      console.log('Render', new Date(this.selectedDate), this.calendar)
       this.calendar.selectedPoint = new Date(this.selectedDate);
     }
   },

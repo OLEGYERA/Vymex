@@ -1,7 +1,7 @@
 <template>
   <div class="singleton-messenger-name">
     <div class="name-part">
-      <div @click="$emit('onNewRoute', null)"><arrow-left/></div>
+      <div @click="$emit('updateRouter', null)"><arrow-left/></div>
       <div class="block">{{name}}</div>
     </div>
     <points-vertical v-if="type==='user'"/>

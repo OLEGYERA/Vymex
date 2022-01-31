@@ -8,10 +8,11 @@ export default {
           {name: 'chats', iconName: 'icon-chat', routerName: null},
           {name: 'contacts', iconName: 'icon-profile', routerName: null},
           {name: 'volumes', iconName: 'icon-volume', routerName: null},
-          // {name: 'volumes', iconName: 'icon-volume-off', routerName: null},
         ],
         group: [0, 1, null, 2]
       },
+      animation: null
+    }
     },
     disableNotifications: false,
     disableTime: 0,
@@ -23,6 +24,7 @@ export default {
       return {
         tabList: sidebarView.tabList,
         tabActive: sidebarView.tabList.data[sidebarView.tabIndex],
+        animation: sidebarView.animation
       }
     },
     disableNotifications: (state) => state.disableNotifications,
@@ -34,11 +36,18 @@ export default {
 
     switchTab: (state, newTabIndex) => {
       if(state.sidebarData.tabList.data[newTabIndex])
+        state.sidebarData.animation = null
         state.sidebarData.tabIndex = newTabIndex;
     },
     setRouterName: (state, routerName) => {
       const sidebarView = state.sidebarData;
-      sidebarView.tabList.data[sidebarView.tabIndex].routerName = routerName
+      sidebarView.animation = 'expand';
+      sidebarView.tabList.data[sidebarView.tabIndex].routerName = routerName;
+    },
+    closeRouter: (state) => {
+      const sidebarView = state.sidebarData;
+      sidebarView.animation = 'zoom-out';
+      sidebarView.tabList.data[sidebarView.tabIndex].routerName = null;
     },
     switchNotifications: (state) => {
       if (state.disableNotifications === false) {

@@ -1,6 +1,6 @@
 <template>
   <div class="sidebar-router-personal">
-    <name :name="fullName" @onNewRoute="onNewRoute"/>
+    <name :name="user.name" @updateRouter="updateRouter"/>
     <div class="photo">
       <avatar :logo="avatar.logo" :colorCode="avatar.colorCode"/>
     </div>
@@ -57,7 +57,7 @@
  import IconCalendar from "@Icon/Calendar";
  import IconCopy from "@Icon/Copy";
  import TextArea from "@Facade/Input/TextArea";
-import {mapGetters, mapMutations} from "vuex";
+import {mapGetters} from "vuex";
 
 export default {
   name: 'Singleton.Messenger.Sidebar.RouterPersonal',
@@ -94,15 +94,10 @@ export default {
     }),
   },
   methods: {
-    onNewRoute(value) {
-      this.$emit('onNewRoute', value)
-    },
-    ...mapMutations({
-      setRouterName: 'Messenger/setRouterName',
-      setUserProfileData: 'setUserProfileData',
-      setUserAvatar: 'setUserAvatar'
-    }),
-  },
+    updateRouter(value) {
+      this.$emit('updateRouter', value)
+    }
+  }
 }
 </script>
 
@@ -121,11 +116,9 @@ export default {
       height: 120px;
       width: 120px;
     }
-    .facade-image-avatar{
-      &::v-deep {
-        .color {
-          font-size: 24px;
-        }
+    .facade-image-avatar ::v-deep {
+      .color {
+        font-size: 24px;
       }
     }
     .info-block {

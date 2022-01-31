@@ -26,7 +26,7 @@
 
   //for sidebar
   import Sidebar from "@Facade/Navigation/SidebarRight"
-  import SidebarHeader from './facades/sidebar-header'
+  import SidebarHeader from './facades/SidebarHeader'
   import SidebarView from './sidebar.view'
   import MessengerMain from "@/LTE/Singletons/Messenger/messenger/MessengerMain";
 
@@ -37,7 +37,6 @@
       MessengerMain
     },
     created() {
-      console.log(this.$store, this.test)
     },
     computed: {
       ...mapGetters({
@@ -60,7 +59,7 @@
 </script>
 
 <style lang="scss" scoped>
-  .singleton-messenger-app{
+  .singleton-messenger-app {
     top: 0;
     left: 0;
     width: 100%;
@@ -75,22 +74,12 @@
       width: 100%;
     }
 
-    .messenger-app-sidebar {
-      height: 100%;
+    .messenger-app-sidebar ::v-deep{
       display: flex;
+      height: 100%;
       background-color: $grey;
-      ::v-deep{
-        .sidebar-main{
-          height: 100%;
-          width: 372px;
-          .messenger-app-info {
-            padding: rem(24) rem(20);
-            width: 100%;
-            box-sizing: border-box;
-            height: 100%;
-            overflow-y: scroll;
-          }
-        }
+      .sidebar-main{
+        width: 372px;
       }
     }
   }
