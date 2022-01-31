@@ -96,15 +96,4 @@
       }
     }
   }
-  .fade {
-    &-enter, &-leave-to {
-      opacity: 0;
-    }
-    &-enter-to, &-leave {
-      opacity: .8;
-    }
-    &-enter-active, &-leave-active {
-      transition: opacity .2s;
-    }
-  }
 </style>

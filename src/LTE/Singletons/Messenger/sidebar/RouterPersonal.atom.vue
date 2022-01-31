@@ -79,6 +79,9 @@ export default {
       about: this.about || 'Короткий но емкий текст о том насколько я хорош, профессионален, и самое главное — скромен до глубины души.',
     }
   },
+  updated() {
+    console.log(this.textarea)
+  },
   computed: {
     ...mapGetters({
       fullName: 'getUserFullName',

@@ -52,6 +52,9 @@
         changeTime: 'Messenger/changeTime',
       }),
     },
+    // updated() {
+    //   console.log(key)
+    // }
   }
 </script>
 
