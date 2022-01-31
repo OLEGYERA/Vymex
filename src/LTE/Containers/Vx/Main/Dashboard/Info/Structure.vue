@@ -6,13 +6,13 @@
       <img :src="context"/>
     </div>
     <div class="structure-body">
-      <div v-for="(men, i) of data"
+      <div v-for="(man, i) of data"
            :key="i"
            class="body-part"
-           :style="{ backgroundColor: men.color }">
-        <span class="part-level">{{ men.level }} УР.</span>
+           :style="{ backgroundColor: man.color }">
+        <span class="part-level">{{ man.level }} УР.</span>
         <div class="part-mens">
-          <span class="part-num">{{ men.numMens }}</span>
+          <span class="part-num">{{ man.numMens }}</span>
           <img :src="human"/>
         </div>
       </div>
