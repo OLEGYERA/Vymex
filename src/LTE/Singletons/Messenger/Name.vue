@@ -27,34 +27,34 @@ export default {
 
 <style lang="scss" scoped>
   .singleton-messenger-name {
-  width: 100%;
-  padding: 8px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: #fff;
-    box-sizing: border-box;
-  background-color: $grey;
-    margin-bottom: 36px;
-  .icon-arrow-left-bold {
-    margin-right: 12px;
-    height: 18px;
-    padding: 5px 8px;
-    cursor: pointer;
-  }
-  .name-part {
-    display: inherit;
+    width: 100%;
+    padding: 8px 20px;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
+    color: #fff;
+    background-color: transparent;
+    box-sizing: border-box;
+    margin-bottom: 36px;
+    .icon-arrow-left-bold {
+      margin-right: 12px;
+      height: 18px;
+      padding: 5px 8px;
+      cursor: pointer;
+    }
+    .name-part {
+      display: inherit;
+      align-items: center;
+    }
+    .block {
+      font-weight: 600;
+      font-size: rem(17);
+      line-height: rem(22);
+    }
+    .icon-points {
+      height: 16px;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
   }
-  .block {
-    font-weight: 600;
-    font-size: rem(17);
-    line-height: rem(22);
-  }
-  .icon-points {
-    height: 16px;
-    padding: 5px 10px;
-    cursor: pointer;
-  }
-}
 </style>

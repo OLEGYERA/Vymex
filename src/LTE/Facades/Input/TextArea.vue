@@ -1,16 +1,19 @@
 <template>
   <div class="facade-text-area">
     <title-caption class="textarea-title"><slot name="title"/></title-caption>
-    <textarea
-        class="textarea"
-        :type="'text'"
-        v-model="currentValue"
-        :style="inputStyle"
-        maxlength="1000"
-        :placeholder="placeholder">
-    </textarea>
-    <textarea class="shadow" v-model="currentValue" ref="shadow" tabindex="0"></textarea>
-    <title-caption class="textarea-length"><slot name="count"/></title-caption>
+    <div class="textarea-container">
+      <textarea
+          class="textarea"
+          v-model="currentValue"
+          :maxlength="maxLength"
+          rows="1"
+          @input="resize($event)"
+          :placeholder="placeholder">
+      </textarea>
+    </div>
+    <title-caption v-if="count" class="textarea-text-length">
+      <span class="textarea-count">{{currentValue.length}}</span>/{{maxLength}}
+    </title-caption>
   </div>
 </template>
 
@@ -23,78 +26,65 @@ export default {
     TitleCaption
   },
   props: {
-    type: String,
-    placeholder: String
+    textAreaValue: String,
+    placeholder: String,
+    count: Boolean,
+    maxLength: Number,
   },
   data () {
     return {
-      currentValue: this.type,
-      inputHeight: '0'
+      currentValue: this.textAreaValue || '',
     }
-  },
-  watch: {
-    currentValue () {
-      this.resize()
-      this.$emit('input', this.currentValue)
-    }
-  },
-  computed: {
-    inputStyle () {
-      return {
-        'min-height': this.inputHeight
-      }
-    }
-  },
-  mounted () {
-    this.resize()
   },
   methods: {
-    resize () {
-      this.inputHeight = `${this.$refs.shadow.scrollHeight - 8}px`
+    resize(e) {
+      e.target.style.height = 'auto';
+      e.target.style.height = `${e.target.scrollHeight}px`
     }
+  },
+  mounted() {
+    const textarea = document.querySelector('.textarea')
+    textarea.style.height = `${textarea.scrollHeight}px`
   }
 }
 </script>
 
 <style scoped lang="scss">
   .facade-text-area {
-    width: 100%;
-    box-sizing: border-box;
-    position: relative;
+    padding: 8px 0 0;
     .textarea-title {
       margin-bottom: 4px;
     }
-    textarea {
+    .textarea-container {
       width: 100%;
-      resize: none;
-      border: none;
-      outline: none;
-      overflow: hidden;
-      margin-bottom: 8px;
-      background-color: transparent;
-      color: #fff;
-      font-weight: 400;
-      font-family: Inter;
-      font-size: 15px;
-      line-height: 20px;
+      box-sizing: border-box;
+      padding: 0 0 4px;
       border-bottom: 1px solid $grey-scale-300;
-      padding: 4px 0;
-      height: 0;
-      &:focus{
+      &:focus-within{
         transition: all .2s ease-out;
         border-color: $blue;
-        padding-bottom: 20px;
       }
-      &.shadow {
-        height: 0;
-        pointer-events: none;
-        opacity: 0;
+      textarea {
+        width: 100%;
+        resize: none;
         border: none;
-        position: absolute;
+        outline: none;
+        background-color: transparent;
+        color: #fff;
+        font-weight: 400;
+        font-family: Inter, sans-serif;
+        font-size: 15px;
+        line-height: 20px;
+        box-sizing: border-box;
+        padding: 0;
       }
     }
-    .textarea-length {
+    .textarea-text-length {
       text-align: right;
+      margin-top: 8px;
+      .textarea-count {
+        color: #fff;
+      }
     }
   }
 </style>

@@ -3,18 +3,18 @@
     <div class="notifications-title">
       <title-semi>Отключить оповещения</title-semi>
       <div class="button-switch"
-           :class="{on: this.switch}"
-           @click="$emit('changeSwitch')">
+           :class="{'on': switchNotify}"
+           @click="changeSwitch()">
         <div class="button-round"></div>
       </div>
     </div>
     <transition name="slide">
-      <div v-if="this.switch">
+      <div v-if="switchNotify">
         <div class="disable-time"
              :key="timeKey"
-             :class="{active: timeKey === chooseTime}"
+             :class="{active: timeKey === newTime}"
              v-for="(timeItem, timeKey) in times"
-             @click="$emit('changeTime', timeKey)">
+             @click="changeTime(timeKey)">
           <text-base>{{ timeItem }}</text-base>
           <div class="radiobutton"></div>
         </div>
@@ -27,6 +27,8 @@
   import TitleSemi from "@Facade/Title/Semi";
   import TextBase from "@Facade/Text/Base";
 
+  import {mapGetters, mapMutations} from "vuex";
+
   export default {
     name: 'Singleton.Messenger.Sidebar.TabVolumes',
     components: {
@@ -35,9 +37,24 @@
     },
     data() {
       return {
-        times: ['Через 1 час', 'Через 4 час', 'Через 24 часа', 'Отключить'],
+        times: ['Отключить на 1 час', 'Отключить на 8 часов', 'Отключить на 2 дня', 'Отключить'],
       };
     },
+    computed: {
+      ...mapGetters({
+        switchNotify: 'Messenger/disableNotifications',
+        newTime: 'Messenger/disableTime',
+      })
+    },
+    methods: {
+      ...mapMutations({
+        changeSwitch: 'Messenger/switchNotifications',
+        changeTime: 'Messenger/changeTime',
+      }),
+    },
+    // updated() {
+    //   console.log(key)
+    // }
   }
 </script>
 
@@ -102,6 +119,19 @@
           background-color: #fff;
         }
       }
+    }
+  }
+  .slide {
+    &-enter-active, &-leave-active {
+      transition: all .2s linear;
+    }
+    &-enter-to, &-leave {
+      max-height: 200px;
+      overflow: hidden;
+    }
+    &-enter, &-leave-to {
+      overflow: hidden;
+      max-height: 0;
     }
   }
 </style>
