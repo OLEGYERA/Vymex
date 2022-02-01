@@ -18,7 +18,9 @@
       <title-caption class="name">{{dialog.name}}</title-caption>
       <title-caption>{{dialog.message}}</title-caption>
     </div>
-    <div v-if="dialog.unread" class="message-count">{{dialog.unread}}</div>
+    <template v-if="dialog.unread">
+      <info-amount>{{dialog.unread}}</info-amount>
+    </template>
   </div>
 </template>
 
@@ -29,7 +31,7 @@ import DoubleCheck from "@Icon/DoubleCheck"
 import IconGroup from "@Icon/Group"
 import Avatar from '@Facade/Image/Avatar'
 import SingleCheck from '@Icon/SingleCheck'
-
+import InfoAmount from "@/LTE/Singletons/Messenger/facades/info-amount";
 
 export default {
   name: 'Singleton.Messenger.Chat',
@@ -39,7 +41,8 @@ export default {
     DoubleCheck,
     IconGroup,
     Avatar,
-    SingleCheck
+    SingleCheck,
+    InfoAmount
   },
   data() {
     return {
@@ -126,19 +129,10 @@ export default {
         color: $gray-scale-100;
       }
     }
-    .message-count {
+    .facade-info-amount {
       position: absolute;
       right: 12px;
       bottom: 16px;
-      height: 24px;
-      width: 24px;
-      border-radius: 8px;
-      background-color: $blue;
-      color: #fff;
-      font-weight: 600;
-      font-size: rem(12);
-      line-height: rem(24);
-      text-align: center;
     }
   }
 </style>

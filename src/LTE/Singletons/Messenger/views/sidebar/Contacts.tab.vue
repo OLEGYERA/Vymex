@@ -28,60 +28,60 @@ export default {
       placeholder: 'Поиск по диалогам',
       contacts: [
         {
-          name: 'Татьяна Булатова',
-          nickname: '@lable_kers'
+          title: 'Татьяна Булатова',
+          alias: '@lable_kers'
         },
         {
-          name: 'Дария Шевченко',
-          nickname: '@lable_kers'
+          title: 'Дария Шевченко',
+          alias: '@lable_kers'
         },
         {
-          name: 'Анастасия Куликова',
-          nickname: '@lable_kers'
+          title: 'Анастасия Куликова',
+          alias: '@lable_kers'
         },
         {
-          name: 'Андрей Вашуленко',
-          nickname: '@lable_kers'
+          title: 'Андрей Вашуленко',
+          alias: '@lable_kers'
         },
         {
-          name: 'Дмитрий Погодин',
-          nickname: '@lable_kers'
+          title: 'Дмитрий Погодин',
+          alias: '@lable_kers'
         },
         {
-          name: 'Андрей Вашуленко',
-          nickname: '@lable_kers'
+          title: 'Андрей Вашуленко',
+          alias: '@lable_kers'
         },
         {
-          name: 'Дария Шевченко',
-          nickname: '@lable_kers'
+          title: 'Дария Шевченко',
+          alias: '@lable_kers'
         },
         {
-          name: 'Дмитрий Погодин',
-          nickname: '@lable_kers'
+          title: 'Дмитрий Погодин',
+          alias: '@lable_kers'
         },
         {
-          name: 'Андрей Вашуленко',
-          nickname: '@lable_kers'
+          title: 'Андрей Вашуленко',
+          alias: '@lable_kers'
         },
         {
-          name: 'Дмитрий Погодин',
-          nickname: '@lable_kers'
+          title: 'Дмитрий Погодин',
+          alias: '@lable_kers'
         },
         {
-          name: 'Андрей Вашуленко',
-          nickname: '@lable_kers'
+          title: 'Андрей Вашуленко',
+          alias: '@lable_kers'
         },
         {
-          name: 'Дария Шевченко',
-          nickname: '@lable_kers'
+          title: 'Дария Шевченко',
+          alias: '@lable_kers'
         },
         {
-          name: 'Дмитрий Погодин',
-          nickname: '@lable_kers'
+          title: 'Дмитрий Погодин',
+          alias: '@lable_kers'
         },
         {
-          name: 'Андрей Вашуленко',
-          nickname: '@lable_kers'
+          title: 'Андрей Вашуленко',
+          alias: '@lable_kers'
         },
       ],
     }

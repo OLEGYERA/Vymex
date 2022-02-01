@@ -3,9 +3,7 @@
     <div class="message-header">
       <div class="message-name" v-if="message.type==='response'">{{message.name}}</div>
       <div class="message-time">{{message.time}}</div>
-      <double-check
-          v-if="message.status === 'delivered' || message.status === 'read'"
-      />
+      <double-check v-if="message.status === 'delivered'"/>
       <single-check v-if="message.status === 'sent'"/>
     </div>
     <text-base>{{message.text}}</text-base>

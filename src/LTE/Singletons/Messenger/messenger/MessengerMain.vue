@@ -41,13 +41,13 @@ export default {
         {
         type: 'owner',
         time : '04:20',
-        status: 'read',
+        status: 'delivered',
         text: 'Да всё нормас, давайте сразу подумаем, как будем покупать акваланг, я в этом нуб...'
         },
         {
           type: 'owner',
           time : '04:20',
-          status: 'read',
+          status: 'delivered',
           text: 'да и в целом всё гуд'
         },
         {
@@ -101,7 +101,7 @@ export default {
         {
           type: 'owner',
           time : '04:20',
-          status: 'delivered',
+          status: 'sent',
           text: 'Да всё нормас, давайте сразу подумаем, как будем покупать акваланг, я в этом нуб...'
         },
         {

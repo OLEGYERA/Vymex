@@ -5,8 +5,8 @@
         <avatar :logo="logo" :colorCode="color"/>
       </div>
       <div class="info-text">
-        <div class="name">{{contact.name}}</div>
-        <title-caption>{{contact.nickname}}</title-caption>
+        <div class="name">{{contact.title}}</div>
+        <title-caption>{{contact.alias}}</title-caption>
       </div>
     </div>
     <points-vertical/>
@@ -34,7 +34,7 @@ export default {
   computed: {
     logo: function () {
       let initials = ''
-      for (const char of this.contact.name) {
+      for (const char of this.contact.title) {
         if (char === char.toUpperCase() && char !== ' ') {
           initials += char
         }

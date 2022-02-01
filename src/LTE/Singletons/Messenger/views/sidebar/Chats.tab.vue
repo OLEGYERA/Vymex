@@ -3,8 +3,7 @@
     <tab-view :search-placeholder="'Поиск по диалогам'" search-disable
               @onSearchClick="$emit('updateRouter', 'search')">
       <template #header-title>Диалоги</template>
-      <template #header-amount>5</template>
-
+      <template #header-amount>{{dialogs.length}}</template>
       <template #content>
         <div class="chats-table">
           <chat v-for="(dialog, key) in dialogs" :dialog="dialog" :key="key"></chat>

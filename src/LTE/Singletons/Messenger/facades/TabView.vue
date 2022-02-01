@@ -4,6 +4,7 @@
       <input-search :model="searchModel" :placeholder="searchPlaceholder" :disable="searchDisable" :exit="searchExit"
                     @onMounted="$emit('onSearchMounted', $event)"
                     @onExit="$emit('onSearchExit')"
+                    @onSearch="sendData"
                     @click.native="$emit('onSearchClick')"/>
       <contacts>
         <template #title><slot name="header-title"/></template>
@@ -36,8 +37,13 @@
 
     },
     data: () => ({
-      search: ''
-    })
+      search: '',
+    }),
+    methods: {
+      sendData(data) {
+        this.$emit('onSearch', data)
+      }
+    }
   }
 </script>
 
