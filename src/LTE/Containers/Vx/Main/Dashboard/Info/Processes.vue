@@ -9,8 +9,8 @@
           <action-list
               :items="items"
               v-if="actionListStatus"
-              v-bind:id="id"
-              v-on:hide-item="hideItem"
+              :id="id"
+              @hide-item="hideItem"
           />
         </transition>
       </div>
@@ -41,7 +41,6 @@ export default {
       context: require('@/assets/img/icons/context.svg'),
       calendarIcon: require('@/assets/img/icons/calendar-grey.svg'),
       changeIcon: require('@/assets/img/icons/change.svg'),
-      actionListStatus: false,
     }
   },
   methods:{
@@ -53,6 +52,7 @@ export default {
     ActionList,
   },
   props: {
+    actionListStatus: Boolean,
     data: Array,
     items: Array,
     id: Number

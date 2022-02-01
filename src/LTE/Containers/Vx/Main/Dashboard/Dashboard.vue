@@ -1,13 +1,21 @@
 <template>
   <div class="dashboard">
     <component v-for="component in components"
-               v-bind:is="component.name"
-               v-bind:items="items"
-               v-bind:data="component.data"
-               v-bind:id="component.id"
+               :is="component.name"
+               :items="items"
+               :data="component.data"
+               :id="component.id"
                :key="component.id"
-               v-on:hide-item="hideItem"
+               @hide-item="hideItem"
     ></component>
+    <modal :status="showModal"
+           @onClose="onClose"
+           @onOk="onOk"
+    >
+      <template #title>Скрыть виджет?</template>
+      <template #description>Вернуть виджет на дашборд можно в нвстройках С.Е.</template>
+      <template #button-accept>Скрыть</template>
+    </modal>
   </div>
 </template>
 
@@ -23,6 +31,7 @@ import Tasks from "@/LTE/Containers/Vx/Main/Dashboard/Info/Tasks";
 import CoQueues from "@/LTE/Containers/Vx/Main/Dashboard/Info/CoQueues";
 import Team from "@/LTE/Containers/Vx/Main/Dashboard/Info/Team";
 import ControlCenter from "@/LTE/Containers/Vx/Main/Dashboard/Info/ControlCenter";
+import Modal from "@/LTE/Facades/Modal/Base";
 
 export default {
   name: "Dashboard",
@@ -38,6 +47,7 @@ export default {
     CoQueues,
     Team,
     ControlCenter,
+    Modal
   },
   data() {
     return {
@@ -188,11 +198,22 @@ export default {
         }
       ],
       items: ['Выдать доступ', 'Скрыть виджет'],
+      showModal: false,
+      widgetId: null,
+      actionListStatus: false,
     }
   },
   methods: {
     hideItem(id) {
-      this.components = this.components.filter(el => el.id !== id)
+      this.widgetId = id
+      this.showModal = true
+    },
+    onClose() {
+      this.showModal = false
+    },
+    onOk() {
+      this.showModal = false
+      this.components = this.components.filter(el => el.id !== this.widgetId)
     }
   }
 }
@@ -205,5 +226,17 @@ export default {
   margin: 12px auto;
   grid-gap: 24px;
   display: grid;
+}
+.facade-modal-base {
+  &::v-deep {
+    .modal-base-body {
+      width: 632px;
+      height: 244px;
+      justify-content: space-between;
+    }
+    .modal-base-content {
+      display: none;
+    }
+  }
 }
 </style>

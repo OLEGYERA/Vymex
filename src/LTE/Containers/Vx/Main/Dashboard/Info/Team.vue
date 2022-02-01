@@ -9,8 +9,8 @@
           <action-list
               :items="items"
               v-if="actionListStatus"
-              v-bind:id="id"
-              v-on:hide-item="hideItem"
+              :id="id"
+              @hide-item="hideItem"
           />
         </transition>
       </div>
@@ -30,11 +30,11 @@
     <div class="team-footer">
       <span class="footer-title">Последняя активность:</span>
       <div class="footer-positions">
-        <div v-for="(men, i) in data.people"
+        <div v-for="(man, i) in data.people"
              :key="i">
           <div class="footer-unit">
-            <img :src="men.avatar" class="positions-avatar"/>
-            <span class="positions-title">{{ men.position }}</span>
+            <img :src="man.avatar" class="positions-avatar"/>
+            <span class="positions-title">{{ man.position }}</span>
           </div>
         </div>
       </div>
@@ -51,7 +51,6 @@ export default {
     return {
       icon: require('@/assets/img/my/team.svg'),
       context: require('@/assets/img/icons/context.svg'),
-      actionListStatus: false,
     }
   },
   methods: {
@@ -63,6 +62,7 @@ export default {
     ActionList,
   },
   props: {
+    actionListStatus: Boolean,
     data: Object,
     items: Array,
     id: Number
