@@ -6,7 +6,12 @@
       <div class="result-header-menu-button" @click="actionListStatus = !actionListStatus">
         <img :src="context" :class="{active: actionListStatus}"/>
         <transition name="fade">
-          <action-list :items="items" v-if="actionListStatus"/>
+          <action-list
+              :items="items"
+              v-if="actionListStatus"
+              v-bind:id="id"
+              v-on:hide-item="hideItem"
+          />
         </transition>
       </div>
     </div>
@@ -14,16 +19,16 @@
       <div class="body-bill"
            :style="{ marginRight: '8px' }">
         <span class="bill-coast">Всего на счету</span>
-        <span class="bill-sum">{{data.allBill}}₴</span>
+        <span class="bill-sum">{{ data.allBill }}₴</span>
       </div>
       <div class="body-bill"
            :style="{ marginLeft: '8px' }">
         <span class="bill-coast">Сумма на конец мес.</span>
         <div class="bill-res">
-          <div class="bill-sum">{{data.endOfMonth}}₴</div>
+          <div class="bill-sum">{{ data.endOfMonth }}₴</div>
           <div class="bill-proc">
             <div class="proc-triangle"></div>
-            <div class="proc-development">{{data.development}}%</div>
+            <div class="proc-development">{{ data.development }}%</div>
           </div>
         </div>
       </div>
@@ -63,6 +68,7 @@
 
 <script>
 import ActionList from "@/LTE/Singletons/Messenger/facades/ActionList";
+
 export default {
   name: "Result",
   data() {
@@ -72,10 +78,19 @@ export default {
       actionListStatus: false,
     }
   },
+  methods: {
+    hideItem(id) {
+      this.$emit('hide-item', id)
+    }
+  },
   components: {
     ActionList,
   },
-  props: ['data', 'items']
+  props: {
+    data: Object,
+    items: Array,
+    id: Number
+  }
 }
 </script>
 
@@ -102,8 +117,10 @@ export default {
       color: #FFF;
       margin: 1% 32% 0% 2%;
     }
+
     .result-header-menu-button {
       position: relative;
+
       .singleton-messenger-action-list {
         position: absolute;
         bottom: -1px;

@@ -6,7 +6,12 @@
       <div class="resources-header-menu-button" @click="actionListStatus = !actionListStatus">
         <img :src="context" :class="{active: actionListStatus}"/>
         <transition name="fade">
-          <action-list :items="items" v-if="actionListStatus"/>
+          <action-list
+              :items="items"
+              v-if="actionListStatus"
+              v-bind:id="id"
+              v-on:hide-item="hideItem"
+          />
         </transition>
       </div>
     </div>
@@ -14,23 +19,24 @@
       <div class="body-coast"
            :style="{ marginRight: '8px' }">
         <span class="coast-total">Общая стоимость ресурсов</span>
-        <span class="coast-sum">{{data.coastSum}}₴</span>
+        <span class="coast-sum">{{ data.coastSum }}₴</span>
       </div>
       <div class="body-coast"
            :style="{ marginLeft: '8px' }">
         <span class="coast-total">Количество свободных ресурсов</span>
-        <span class="coast-sum">{{data.resourcesSum}}</span>
+        <span class="coast-sum">{{ data.resourcesSum }}</span>
       </div>
     </div>
     <div class="resources-footer">
       <span>Запросы на ресурс</span>
-      <span class="footer-num">{{data.requests}}</span>
+      <span class="footer-num">{{ data.requests }}</span>
     </div>
   </div>
 </template>
 
 <script>
 import ActionList from "@/LTE/Singletons/Messenger/facades/ActionList";
+
 export default {
   name: "Resources",
   data() {
@@ -40,10 +46,19 @@ export default {
       actionListStatus: false,
     }
   },
+  methods: {
+    hideItem(id) {
+      this.$emit('hide-item', id)
+    }
+  },
   components: {
     ActionList,
   },
-  props: ['data', 'items']
+  props: {
+    data: Object,
+    items: Array,
+    id: Number
+  }
 }
 </script>
 
@@ -69,8 +84,10 @@ export default {
       color: #FFF;
       margin: 1% 43% 0% 2%;
     }
+
     .resources-header-menu-button {
       position: relative;
+
       .singleton-messenger-action-list {
         position: absolute;
         bottom: -1px;

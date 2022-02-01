@@ -6,7 +6,11 @@
       <div class="structure-header-menu-button" @click="actionListStatus = !actionListStatus">
         <img :src="context" :class="{active: actionListStatus}"/>
         <transition name="fade">
-          <action-list :items="items" v-if="actionListStatus"/>
+          <action-list :items="items"
+                       v-if="actionListStatus"
+                       v-bind:id="id"
+                       v-on:hide-item="hideItem"
+          />
         </transition>
       </div>
     </div>
@@ -37,10 +41,19 @@ export default {
       actionListStatus: false,
     }
   },
+  methods:{
+    hideItem(id){
+      this.$emit('hide-item', id)
+    }
+  },
   components: {
     ActionList,
   },
-  props: ['data', 'items']
+  props: {
+    data: Array,
+    items: Array,
+    id: Number
+  }
 }
 </script>
 

@@ -6,7 +6,12 @@
       <div class="team-header-menu-button" @click="actionListStatus = !actionListStatus">
         <img :src="context" :class="{active: actionListStatus}"/>
         <transition name="fade">
-          <action-list :items="items" v-if="actionListStatus"/>
+          <action-list
+              :items="items"
+              v-if="actionListStatus"
+              v-bind:id="id"
+              v-on:hide-item="hideItem"
+          />
         </transition>
       </div>
     </div>
@@ -14,12 +19,12 @@
       <div class="body-people"
            :style="{ marginRight: '8px' }">
         <span class="people-total">Людей в компании</span>
-        <span class="people-sum">{{data.humans}}</span>
+        <span class="people-sum">{{ data.humans }}</span>
       </div>
       <div class="body-people"
            :style="{ marginLeft: '8px' }">
         <span class="people-total">Вакансии</span>
-        <span class="people-sum">{{data.vacancies}}</span>
+        <span class="people-sum">{{ data.vacancies }}</span>
       </div>
     </div>
     <div class="team-footer">
@@ -39,6 +44,7 @@
 
 <script>
 import ActionList from "@/LTE/Singletons/Messenger/facades/ActionList";
+
 export default {
   name: "Team",
   data() {
@@ -48,10 +54,19 @@ export default {
       actionListStatus: false,
     }
   },
+  methods: {
+    hideItem(id) {
+      this.$emit('hide-item', id)
+    }
+  },
   components: {
     ActionList,
   },
-  props: ['data', 'items']
+  props: {
+    data: Object,
+    items: Array,
+    id: Number
+  }
 }
 </script>
 
@@ -77,8 +92,10 @@ export default {
       color: #FFF;
       margin: 1% 62% 0% 2%;
     }
+
     .team-header-menu-button {
       position: relative;
+
       .singleton-messenger-action-list {
         position: absolute;
         bottom: -1px;
