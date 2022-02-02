@@ -1,50 +1,38 @@
 <template>
-  <div class="container-dashboard-controlCenter">
-    <div class="controlCenter-header">
-      <img :src="icon"/>
-      <span class="controlCenter-header-title">Центр управления</span>
-      <div class="controlCenter-header-menu-button" @click="actionListStatus = !actionListStatus">
-        <img :src="context" :class="{active: actionListStatus}"/>
-        <transition name="fade">
-          <action-list
-              :items="items"
-              v-if="actionListStatus"
-              :id="id"
-              @hide-item="hideItem"
-          />
-        </transition>
-      </div>
-    </div>
-    <div class="controlCenter-body">
+  <div class="container-control-center">
+    <widgets-header @hide-item="hideItem"
+                    :title="data.title"
+                    :icon="data.icon"/>
+    <div class="control-center-body">
       <span class="body-title">Дисковое хранилище</span>
       <div class="body-memory">
         <div class="memory-string">
-          <span class="memory-string-reserved">{{ data.memoryReserved }}</span>
-          <span class="memory-string-all">{{ data.memoryAll }}</span>
+          <span class="memory-string-reserved">{{ data.data.memoryReserved }}</span>
+          <span class="memory-string-all">{{ data.data.memoryAll }}</span>
         </div>
         <div class="memory-plot">
-          <div class="plot" :style="{background: `conic-gradient(#4A5A6A 0% ${freeMemoryPercent}%, #73D13D ${freeMemoryPercent}% 100%)`}"></div>
+          <div class="plot"
+               :style="{background: `conic-gradient(#4A5A6A 0% ${freeMemoryPercent}%, #73D13D ${freeMemoryPercent}% 100%)`}"></div>
         </div>
       </div>
     </div>
-    <div class="controlCenter-footer">
-      <div class="footer-el"
-           :style="{ marginRight: '8px' }">
+    <div class="control-center-footer">
+      <div class="footer-el">
         <span class="el-title">Структурные единицы</span>
         <div class="el-indicators">
-          <div class="indicators-sum">{{ data.structuralUnits }}</div>
+          <div class="indicators-sum">{{ data.data.structuralUnits }}</div>
           <div class="indicators-box">
-            <div class="indicator-item" v-for="(item, i) in data.items" :key="i">
+            <div class="indicator-item" v-for="(item, i) in data.data.items" :key="i">
               <div class="item-num">{{ i + 1 }}</div>
               <div class="item-indicator" :style="{backgroundColor: item}"></div>
             </div>
           </div>
         </div>
       </div>
-      <div class="footer-el" :style="{ marginLeft: '8px' }">
+      <div class="footer-el">
         <span class="el-title">Файлы в корзине</span>
         <div class="el-indicators">
-          <div class="indicators-sum">{{ data.files }}</div>
+          <div class="indicators-sum">{{ data.data.files }}</div>
         </div>
       </div>
     </div>
@@ -52,77 +40,44 @@
 </template>
 
 <script>
-import ActionList from "@/LTE/Singletons/Messenger/facades/ActionList";
+import WidgetsHeader from "@Container/Vx/Main/Dashboard/facades/WidgetsHeader";
+
 export default {
   name: "ControlCenter",
-  data() {
-    return {
-      icon: require('@/assets/img/my/control-center.svg'),
-      context: require('@/assets/img/icons/context.svg'),
-    }
-  },
   computed: {
     freeMemoryPercent() {
-      let memoryAll = this.data.memoryAll.split(' ')[0]
-      let memoryReserved = this.data.memoryReserved.split(' ')[0]
+      let memoryAll = this.data.data.memoryAll.split(' ')[0]
+      let memoryReserved = this.data.data.memoryReserved.split(' ')[0]
       let difference = memoryAll - memoryReserved
       let result = difference / (memoryAll / 100)
       return result
     }
   },
-  methods:{
-    hideItem(id){
-      this.$emit('hide-item', id)
-    }
+  methods: {
+    hideItem() {
+      this.$emit('hide-item', this.data.name)
+    },
   },
   components: {
-    ActionList,
+    WidgetsHeader
   },
   props: {
-    actionListStatus: Boolean,
     data: Object,
-    items: Array,
-    id: Number
   }
 }
 </script>
 
 <style lang="scss" scoped>
 
-.container-dashboard-controlCenter {
+.container-control-center {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
   border-radius: 16px;
   background-color: $grey-scale-500;
   padding: 16px;
   height: 224px;
 
-  .controlCenter-header {
-    display: flex;
-    justify-content: flex-start;
-    margin-bottom: 8%;
-
-    .controlCenter-header-title {
-      font-weight: 600;
-      font-size: 17px;
-      line-height: 22px;
-      color: #FFF;
-      margin: 1% 37.5% 0% 2%;
-    }
-    .controlCenter-header-menu-button {
-      position: relative;
-      .singleton-messenger-action-list {
-        position: absolute;
-        bottom: -1px;
-        z-index: 1;
-        right: -1px;
-        transform: translateY(100%);
-      }
-    }
-  }
-
-  .controlCenter-body {
+  .control-center-body {
     padding: 8px;
     background: $grey-scale-400;
     border-radius: 12px;
@@ -130,12 +85,12 @@ export default {
     justify-content: space-between;
 
     .body-title {
-      font-size: 12px;
-      line-height: 16px;
+      font-size: rem(12);
+      line-height: rem(16);
       color: $grey-scale-200;
       width: 67px;
       height: 32px;
-      left: 0px;
+      left: 0;
       top: 4px;
     }
 
@@ -154,22 +109,22 @@ export default {
           width: 60px;
           height: 24px;
           font-weight: 600;
-          font-size: 20px;
-          line-height: 24px;
+          font-size: rem(20);
+          line-height: rem(24);
           color: #FFF;
         }
 
         .memory-string-all {
           width: 35px;
           height: 16px;
-          font-size: 12px;
-          line-height: 16px;
+          font-size: rem(12);
+          line-height: rem(16);
           color: $grey-scale-200;
         }
       }
 
       .memory-plot {
-        display: flex;
+        display: inherit;
         align-items: center;
 
         .plot {
@@ -181,8 +136,8 @@ export default {
     }
   }
 
-  .controlCenter-footer {
-    display: flex;
+  .control-center-footer {
+    display: inherit;
     margin-top: 7%;
 
     .footer-el {
@@ -194,10 +149,12 @@ export default {
       background: $grey-scale-400;
       border-radius: 12px;
       width: 100%;
+      margin-right: 0;
+      margin-left: 8px;
 
       .el-title {
-        font-size: 12px;
-        line-height: 16px;
+        font-size: rem(12);
+        line-height: rem(16);
         color: $grey-scale-200;
       }
 
@@ -213,7 +170,7 @@ export default {
           width: 35%;
           flex-shrink: 0;
           font-weight: 600;
-          font-size: 20px;
+          font-size: rem(20);
           color: #FFF;
         }
 
@@ -235,8 +192,8 @@ export default {
               width: 6px;
               height: rem(12);
               font-weight: 600;
-              font-size: 12px;
-              line-height: 12px;
+              font-size: rem(12);
+              line-height: rem(12);
               margin-right: 6px;
               text-align: center;
               color: #C1CFDB;
@@ -254,6 +211,11 @@ export default {
             }
           }
         }
+      }
+
+      &:first-child {
+        margin-right: 8px;
+        margin-left: 0;
       }
     }
   }

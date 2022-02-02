@@ -1,67 +1,45 @@
 <template>
   <div class="container-dashboard-costs">
-    <div class="costs-header">
-      <img :src="icon"/>
-      <span class="header-title">Расходы С.Е.</span>
-      <div class="costs-header-menu-button" @click="actionListStatus = !actionListStatus">
-        <img :src="context" :class="{active: actionListStatus}"/>
-        <transition name="fade">
-          <action-list
-              :items="items"
-              v-if="actionListStatus"
-              :id="id"
-              @hide-item="hideItem"
-          />
-        </transition>
-      </div>
-    </div>
+    <widgets-header @hide-item="hideItem"
+                    :title="data.title"
+                    :icon="data.icon"/>
     <div class="costs-body">
       <span class="body-title">Зарплатный фонд на месяц</span>
       <div class="body-resources">
-        <span class="resources-free">{{data.salaryFund.UAH}}₴</span>
-        <span class="body-title">/${{data.salaryFund.dollar}}</span>
+        <span class="resources-free">{{ data.data.salaryFund.UAH }}₴</span>
+        <span class="body-title">/${{ data.data.salaryFund.dollar }}</span>
       </div>
     </div>
     <div class="costs-footer">
-      <div class="footer-wage"
-           :style="{ marginRight: '8px' }">
-        <span class="wage-mediumWage">Средняя ЗП</span>
-        <span class="wage-wageUAH">{{data.averageSalary.UAH}}₴</span>
-        <span class="wage-mediumWage">${{data.averageSalary.dollar}}</span>
+      <div class="footer-wage">
+        <span class="wage-medium-wage">Средняя ЗП</span>
+        <span class="wage-wage-UAH">{{ data.data.averageSalary.UAH }}₴</span>
+        <span class="wage-medium-wage">${{ data.data.averageSalary.dollar }}</span>
       </div>
-      <div class="footer-wage"
-           :style="{ marginLeft: '8px' }">
-        <span class="wage-mediumWage">Остаток выплат по ЗП</span>
-        <span class="wage-wageUAH">{{data.remainderSalary.UAH}}₴</span>
-        <span class="wage-mediumWage">${{data.remainderSalary.UAH}}</span>
+      <div class="footer-wage">
+        <span class="wage-medium-wage">Остаток выплат по ЗП</span>
+        <span class="wage-wage-UAH">{{ data.data.remainderSalary.UAH }}₴</span>
+        <span class="wage-medium-wage">${{ data.data.remainderSalary.UAH }}</span>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import ActionList from "@/LTE/Singletons/Messenger/facades/ActionList";
+import WidgetsHeader from "@Container/Vx/Main/Dashboard/facades/WidgetsHeader";
+
 export default {
   name: "Costs",
-  data() {
-    return {
-      icon: require('@/assets/img/my/costs.svg'),
-      context: require('@/assets/img/icons/context.svg'),
-    }
-  },
-  methods:{
-    hideItem(id){
-      this.$emit('hide-item', id)
-    }
+  methods: {
+    hideItem() {
+      this.$emit('hide-item', this.data.name)
+    },
   },
   components: {
-    ActionList,
+    WidgetsHeader
   },
   props: {
-    actionListStatus: Boolean,
     data: Object,
-    items: Array,
-    id: Number
   }
 }
 </script>
@@ -70,38 +48,13 @@ export default {
 .container-dashboard-costs {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
   border-radius: 16px;
   background-color: $grey-scale-500;
   padding: 16px;
   height: 224px;
 
-  .costs-header {
-    display: flex;
-    justify-content: flex-start;
-    margin-bottom: 8%;
-
-    .header-title {
-      font-weight: 600;
-      font-size: 17px;
-      line-height: 22px;
-      color: #FFF;
-      margin: 1% 50% 0% 2%;
-    }
-    .costs-header-menu-button {
-      position: relative;
-      .singleton-messenger-action-list {
-        position: absolute;
-        bottom: -1px;
-        z-index: 1;
-        right: -1px;
-        transform: translateY(100%);
-      }
-    }
-  }
-
   .costs-body {
-    display: flex;
+    display: inherit;
     flex-direction: column;
     align-items: flex-start;
     padding: 8px;
@@ -110,8 +63,8 @@ export default {
     height: 21.4%;
 
     .body-title {
-      font-size: 12px;
-      line-height: 16px;
+      font-size: rem(12);
+      line-height: rem(16);
       color: $grey-scale-200;
 
     }
@@ -122,18 +75,18 @@ export default {
 
     .resources-free {
       font-weight: 600;
-      font-size: 20px;
+      font-size: rem(20);
       color: #FFF;
     }
   }
 
   .costs-footer {
-    display: flex;
+    display: inherit;
     margin-top: 5%;
     height: 35.7%;
 
     .footer-wage {
-      display: flex;
+      display: inherit;
       flex-direction: column;
       align-items: flex-start;
       justify-content: space-between;
@@ -141,17 +94,24 @@ export default {
       background: $grey-scale-400;
       border-radius: 12px;
       width: 100%;
+      margin-right: 0;
+      margin-left: 8px;
+
+      &:first-child {
+        margin-right: 8px;
+        margin-left: 0;
+      }
     }
 
-    .wage-mediumWage {
-      font-size: 12px;
-      line-height: 16px;
+    .wage-medium-wage {
+      font-size: rem(12);
+      line-height: rem(16);
       color: $grey-scale-200;
     }
 
-    .wage-wageUAH {
+    .wage-wage-UAH {
       font-weight: 600;
-      font-size: 20px;
+      font-size: rem(20);
       color: #FFF;
       margin-top: 7%;
     }

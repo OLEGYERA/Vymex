@@ -1,28 +1,16 @@
 <template>
   <div class="container-dashboard-processes">
-    <div class="processes-header">
-      <img :src="icon"/>
-      <span class="header-title">Процессы С.Е.</span>
-      <div class="processes-header-menu-button" @click="actionListStatus = !actionListStatus">
-        <img :src="context" :class="{active: actionListStatus}"/>
-        <transition name="fade">
-          <action-list
-              :items="items"
-              v-if="actionListStatus"
-              :id="id"
-              @hide-item="hideItem"
-          />
-        </transition>
-      </div>
-    </div>
+    <widgets-header @hide-item="hideItem"
+                    :title="data.title"
+                    :icon="data.icon"/>
     <div class="processes-body"
-         v-for="(process, i) in data"
+         v-for="(process, i) in data.data"
          :key="i">
-      <div class="body-titleProcess">{{ process.titleProcess }}</div>
+      <div class="body-title-process">{{ process.titleProcess }}</div>
       <div class="body-date">
-        <img :src="calendarIcon"/>
-        <div class="date-titleDate">{{ process.titleDate }}</div>
-        <img :src="changeIcon"/>
+        <img :src="require('@/assets/img/icons/calendar-grey.svg')"/>
+        <div class="date-title-date">{{ process.titleDate }}</div>
+        <img :src="require('@/assets/img/icons/change.svg')"/>
       </div>
       <div class="body-border"></div>
     </div>
@@ -31,31 +19,20 @@
 </template>
 
 <script>
-import ActionList from "@/LTE/Singletons/Messenger/facades/ActionList";
+import WidgetsHeader from "@Container/Vx/Main/Dashboard/facades/WidgetsHeader";
 
 export default {
   name: "Processes",
-  data() {
-    return {
-      icon: require('@/assets/img/my/process.svg'),
-      context: require('@/assets/img/icons/context.svg'),
-      calendarIcon: require('@/assets/img/icons/calendar-grey.svg'),
-      changeIcon: require('@/assets/img/icons/change.svg'),
-    }
-  },
-  methods:{
-    hideItem(id){
-      this.$emit('hide-item', id)
-    }
+  methods: {
+    hideItem() {
+      this.$emit('hide-item', this.data.name)
+    },
   },
   components: {
-    ActionList,
+    WidgetsHeader
   },
   props: {
-    actionListStatus: Boolean,
-    data: Array,
-    items: Array,
-    id: Number
+    data: Object,
   }
 }
 </script>
@@ -64,61 +41,32 @@ export default {
 .container-dashboard-processes {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
   border-radius: 16px;
   background-color: $grey-scale-500;
   padding: 16px;
   height: 224px;
 
-  .processes-header {
-    display: flex;
-    justify-content: flex-start;
-    margin-bottom: 7%;
-
-    .header-title {
-      font-weight: 600;
-      font-size: 17px;
-      line-height: 22px;
-      color: #FFF;
-      margin: 1% 48% 0% 2%;
-    }
-
-    .processes-header-menu-button {
-      position: relative;
-
-      .singleton-messenger-action-list {
-        position: absolute;
-        bottom: -1px;
-        z-index: 1;
-        right: -1px;
-        transform: translateY(100%);
-      }
-    }
-  }
-
   .processes-body {
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
     margin-bottom: 4%;
 
-    .body-titleProcess {
+    .body-title-process {
       height: auto;
-      font-size: 15px;
-      line-height: 20px;
+      font-size: rem(15);
+      line-height: rem(20);
       color: #FFF;
       margin-bottom: 2%;
     }
 
     .body-date {
       display: flex;
-      justify-content: flex-start;
 
-      .date-titleDate {
-        font-size: 12px;
-        line-height: 16px;
+      .date-title-date {
+        font-size: rem(12);
+        line-height: rem(16);
         color: $grey-scale-200;
-        margin: 0% 2%;
+        margin: 0 2%;
       }
     }
 
@@ -131,8 +79,8 @@ export default {
   .processes-footer {
     height: 20px;
     font-weight: 600;
-    font-size: 15px;
-    line-height: 20px;
+    font-size: rem(15);
+    line-height: rem(20);
     color: $blue;
     margin-top: 1%;
   }

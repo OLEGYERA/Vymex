@@ -1,22 +1,10 @@
 <template>
   <div class="container-calendar">
-    <div class="calendar-header">
-      <img :src="icon"/>
-      <span class="header-title">Календарь С.Е.</span>
-      <div class="calendar-header-menu-button" @click="actionListStatus = !actionListStatus">
-        <img :src="context" :class="{active: actionListStatus}"/>
-        <transition name="fade">
-          <action-list
-              :items="items"
-              v-if="actionListStatus"
-              :id="id"
-              @hide-item="hideItem"
-          />
-        </transition>
-      </div>
-    </div>
+    <widgets-header @hide-item="hideItem"
+                    :title="data.title"
+                    :icon="data.icon"/>
     <div class="calendar-body">
-      <div v-for="(day, i) in data.calendar"
+      <div v-for="(day, i) in data.data.calendar"
            :key="i"
            class="body-dates"
            :style="{
@@ -37,43 +25,36 @@
     </div>
     <div class="calendar-footer">
       <div class="footer-meeting"
-           v-for="(event, i) in data.events"
+           v-for="(event, i) in data.data.events"
            :key="i">
         <div class="meeting-dot"></div>
         <div class="meeting-data">
-          <span class="data-text">{{event.title}}</span>
-          <span class="data-time">{{event.time}}</span>
+          <span class="data-text">{{ event.title }}</span>
+          <span class="data-time">{{ event.time }}</span>
         </div>
       </div>
-      <span class="footer-events">{{data.otherEvents}}</span>
+      <span class="footer-events">{{ data.data.otherEvents }}</span>
     </div>
   </div>
 </template>
 
 <script>
-import ActionList from "@/LTE/Singletons/Messenger/facades/ActionList";
+import WidgetsHeader from "@Container/Vx/Main/Dashboard/facades/WidgetsHeader";
+
 export default {
   name: "Calendar",
-  data() {
-    return {
-      icon: require('@/assets/img/my/calendar.svg'),
-      context: require('@/assets/img/icons/context.svg'),
-    }
-  },
-  methods:{
-    hideItem(id){
-      this.$emit('hide-item', id)
-    }
+  methods: {
+    hideItem() {
+      this.$emit('hide-item', this.data.name)
+    },
   },
   components: {
-    ActionList,
+    WidgetsHeader
   },
   props: {
-    actionListStatus: Boolean,
     data: Object,
-    items: Array,
-    id: Number
   }
+
 }
 </script>
 
@@ -81,43 +62,16 @@ export default {
 .container-calendar {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
   border-radius: 16px;
   background-color: $grey-scale-500;
   padding: 16px;
   height: 224px;
-
-  .calendar-header {
-    display: flex;
-    justify-content: flex-start;
-    margin-bottom: 7%;
-
-    .header-title {
-      font-weight: 600;
-      font-size: 17px;
-      line-height: 22px;
-      color: #FFF;
-      margin: 1% 46% 0% 2%;
-    }
-    .calendar-header-menu-button {
-      position: relative;
-      .singleton-messenger-action-list {
-        position: absolute;
-        bottom: -1px;
-        z-index: 1;
-        right: -1px;
-        transform: translateY(100%);
-      }
-    }
-  }
-
   .calendar-body {
     display: flex;
     align-items: center;
     background: $grey-scale-400;
     border-radius: 12px;
-    padding: 0% 2%;
-
+    padding: 0 2%;
     .body-dates {
       display: flex;
       flex-direction: column;
@@ -125,22 +79,20 @@ export default {
       justify-content: space-around;
       width: 100%;
       margin: 2% 1%;
-
       .dates-day {
         width: 20px;
         height: 16px;
-        font-size: 12px;
-        line-height: 16px;
+        font-size: rem(12);
+        line-height: rem(16);
         text-align: center;
         color: $grey-scale-200;
       }
-
       .dates-date {
         width: 20px;
         height: 18px;
         font-weight: 600;
-        font-size: 12px;
-        line-height: 16px;
+        font-size: rem(12);
+        line-height: rem(16);
         text-align: center;
         letter-spacing: 0.05em;
         text-transform: uppercase;
@@ -148,7 +100,6 @@ export default {
         border-radius: 4px;
         margin-bottom: 2px;
       }
-
       .dates-rectangle {
         height: 2px;
         width: 100%;
@@ -156,18 +107,13 @@ export default {
       }
     }
   }
-
   .calendar-footer {
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
     margin-top: 5%;
-
     .footer-meeting {
       display: flex;
-      justify-content: flex-start;
       border-bottom: $grey-scale-400 1px solid;
-
       .meeting-dot {
         width: 6px;
         height: 6px;
@@ -176,39 +122,32 @@ export default {
         margin-top: 5%;
         margin-right: 4%;
       }
-
       .meeting-data {
         display: flex;
         flex-direction: column;
-        justify-content: flex-start;
         margin-bottom: 3%;
-
         .data-text {
           height: 20px;
-          font-size: 15px;
-          line-height: 20px;
+          font-size: rem(15);
+          line-height: rem(20);
           color: #FFF;
         }
-
         .data-time {
           height: 16px;
-          font-size: 12px;
-          line-height: 16px;
+          font-size: rem(12);
+          line-height: rem(16);
           color: $grey-scale-200;
         }
       }
     }
-
     .footer-events {
       height: 20px;
       font-weight: 600;
-      font-size: 15px;
-      line-height: 20px;
+      font-size: rem(15);
+      line-height: rem(20);
       color: $blue;
-      margin: 2% 0% 4% 0%;
+      margin: 2% 0 4% 0;
     }
   }
 }
-
 </style>
-

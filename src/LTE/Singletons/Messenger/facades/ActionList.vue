@@ -19,12 +19,11 @@ export default {
   components: {},
   methods: {
     hideItem(value) {
-      value === 'Скрыть виджет' && this.$emit('hide-item', this.id)
+      value === 'Скрыть виджет' && this.$emit('hide-item')
     }
   },
   props: {
     items: Array,
-    id: Number
   },
 }
 </script>

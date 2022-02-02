@@ -1,25 +1,13 @@
 <template>
   <div class="container-dashboard-tasks">
-    <div class="tasks-header">
-      <img :src="icon"/>
-      <span class="header-title">Задачи С.Е.</span>
-      <div class="tasks-header-menu-button" @click="actionListStatus = !actionListStatus">
-        <img :src="context" :class="{active: actionListStatus}"/>
-        <transition name="fade">
-          <action-list
-              :items="items"
-              v-if="actionListStatus"
-              :id="id"
-              @hide-item="hideItem"
-          />
-        </transition>
-      </div>
-    </div>
+    <widgets-header @hide-item="hideItem"
+                    :title="data.title"
+                    :icon="data.icon"/>
     <div class="tasks-body"
-         v-for="(task, i) in data"
+         v-for="(task, i) in data.data"
          :key="i">
       <div class="body-task">
-        <img :src="bell" class="task-bell"/>
+        <img :src="require('@/assets/img/icons/bell.svg')" class="task-bell"/>
         <span class="task-event">{{ task.event }}</span>
       </div>
       <span class="body-title">{{ task.title }}</span>
@@ -31,11 +19,11 @@
           <img :src="task.calendarIcon"/>
           <span>{{ task.date }}</span>
         </div>
-        <img :src="messageIcon" class="panel-alerts-icon"/>
+        <img :src="require('@/assets/img/icons/message.svg')" class="panel-alerts-icon"/>
         <div class="panel-alerts">{{ task.messages }}</div>
-        <img :src="attach" class="panel-alerts-icon"/>
+        <img :src="require('@/assets/img/icons/attach.svg')" class="panel-alerts-icon"/>
         <div class="panel-alerts">{{ task.files }}</div>
-        <img :src="completedIcon" class="panel-alerts-icon"/>
+        <img :src="require('@/assets/img/icons/completed.svg')" class="panel-alerts-icon"/>
         <div class="panel-alerts">{{ task.completed }}</div>
       </div>
       <div class="body-border"></div>
@@ -44,33 +32,20 @@
 </template>
 
 <script>
-import ActionList from "@/LTE/Singletons/Messenger/facades/ActionList";
+import WidgetsHeader from "@Container/Vx/Main/Dashboard/facades/WidgetsHeader";
 
 export default {
   name: "Tasks",
-  data() {
-    return {
-      icon: require('@/assets/img/my/task.svg'),
-      context: require('@/assets/img/icons/context.svg'),
-      bell: require('@/assets/img/icons/bell.svg'),
-      messageIcon: require('@/assets/img/icons/message.svg'),
-      attach: require('@/assets/img/icons/attach.svg'),
-      completedIcon: require('@/assets/img/icons/completed.svg'),
-    }
-  },
   methods: {
-    hideItem(id) {
-      this.$emit('hide-item', id)
-    }
+    hideItem() {
+      this.$emit('hide-item', this.data.name)
+    },
   },
   components: {
-    ActionList,
+    WidgetsHeader
   },
   props: {
-    actionListStatus: Boolean,
-    data: Array,
-    items: Array,
-    id: Number
+    data: Object,
   }
 }
 </script>
@@ -79,46 +54,16 @@ export default {
 .container-dashboard-tasks {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
   border-radius: 16px;
   background-color: $grey-scale-500;
   padding: 16px;
 
-  .tasks-header {
-    display: flex;
-    justify-content: flex-start;
-    margin-bottom: 3%;
-
-    .header-title {
-      font-weight: 600;
-      font-size: 17px;
-      line-height: 22px;
-      color: #FFF;
-      margin: 1% 55% 0% 2%;
-    }
-
-    .tasks-header-menu-button {
-      position: relative;
-
-      .singleton-messenger-action-list {
-        position: absolute;
-        bottom: -1px;
-        z-index: 1;
-        right: -1px;
-        transform: translateY(100%);
-      }
-    }
-  }
-
   .tasks-body {
-    display: flex;
+    display: inherit;
     flex-direction: column;
-    justify-content: flex-start;
-    margin-top: 3%;
 
     .body-task {
-      display: flex;
-      justify-content: flex-start;
+      display: inherit;
 
       .task-bell {
         height: 11px;
@@ -127,38 +72,35 @@ export default {
       }
 
       .task-event {
-        display: flex;
-        justify-content: flex-start;
+        display: inherit;
         height: 16px;
         left: 16px;
-        font-size: 12px;
-        line-height: 16px;
+        font-size: rem(12);
+        line-height: rem(16);
         color: $grey-scale-200;
         margin-left: 2%;
       }
     }
 
     .body-title {
-      height: auto;
-      font-size: 15px;
-      line-height: 20px;
+      font-size: rem(15);
+      line-height: rem(20);
       color: #FFF;
-      margin: 2% 0px 2% 0%;
+      margin: 2% 0 2% 0;
     }
 
     .body-panel {
-      display: flex;
-      justify-content: flex-start;
-      font-size: 12px;
-      line-height: 16px;
+      display: inherit;
+      font-size: rem(12);
+      line-height: rem(16);
       color: $grey-scale-200;
 
       .panel-date {
         display: flex;
         align-items: center;
         justify-content: space-around;
-        font-size: 12px;
-        line-height: 16px;
+        font-size: rem(12);
+        line-height: rem(16);
         border-radius: 14px;
         padding: 0.5% 1.5%;
         width: 30%;

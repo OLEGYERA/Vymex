@@ -1,63 +1,40 @@
 <template>
   <div class="container-dashboard-resources">
-    <div class="resources-header">
-      <img :src="icon"/>
-      <span class="header-title">Склад ресурсов</span>
-      <div class="resources-header-menu-button" @click="actionListStatus = !actionListStatus">
-        <img :src="context" :class="{active: actionListStatus}"/>
-        <transition name="fade">
-          <action-list
-              :items="items"
-              v-if="actionListStatus"
-              :id="id"
-              @hide-item="hideItem"
-          />
-        </transition>
-      </div>
-    </div>
+    <widgets-header @hide-item="hideItem"
+                    :title="data.title"
+                    :icon="data.icon"/>
     <div class="resources-body">
-      <div class="body-coast"
-           :style="{ marginRight: '8px' }">
+      <div class="body-coast">
         <span class="coast-total">Общая стоимость ресурсов</span>
-        <span class="coast-sum">{{ data.coastSum }}₴</span>
+        <span class="coast-sum">{{ data.data.coastSum }}₴</span>
       </div>
-      <div class="body-coast"
-           :style="{ marginLeft: '8px' }">
+      <div class="body-coast">
         <span class="coast-total">Количество свободных ресурсов</span>
-        <span class="coast-sum">{{ data.resourcesSum }}</span>
+        <span class="coast-sum">{{ data.data.resourcesSum }}</span>
       </div>
     </div>
     <div class="resources-footer">
       <span>Запросы на ресурс</span>
-      <span class="footer-num">{{ data.requests }}</span>
+      <span class="footer-num">{{ data.data.requests }}</span>
     </div>
   </div>
 </template>
 
 <script>
-import ActionList from "@/LTE/Singletons/Messenger/facades/ActionList";
+import WidgetsHeader from "@Container/Vx/Main/Dashboard/facades/WidgetsHeader";
 
 export default {
   name: "Resources",
-  data() {
-    return {
-      icon: require('@/assets/img/my/storage.svg'),
-      context: require('@/assets/img/icons/context.svg'),
-    }
-  },
   methods: {
-    hideItem(id) {
-      this.$emit('hide-item', id)
-    }
+    hideItem() {
+      this.$emit('hide-item', this.data.name)
+    },
   },
   components: {
-    ActionList,
+    WidgetsHeader
   },
   props: {
-    actionListStatus: Boolean,
     data: Object,
-    items: Array,
-    id: Number
   }
 }
 </script>
@@ -66,43 +43,16 @@ export default {
 .container-dashboard-resources {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
   border-radius: 16px;
   background-color: $grey-scale-500;
   padding: 16px;
   height: 224px;
 
-  .resources-header {
-    display: flex;
-    justify-content: flex-start;
-    margin-bottom: 8%;
-
-    .header-title {
-      font-weight: 600;
-      font-size: 17px;
-      line-height: 22px;
-      color: #FFF;
-      margin: 1% 43% 0% 2%;
-    }
-
-    .resources-header-menu-button {
-      position: relative;
-
-      .singleton-messenger-action-list {
-        position: absolute;
-        bottom: -1px;
-        z-index: 1;
-        right: -1px;
-        transform: translateY(100%);
-      }
-    }
-  }
-
   .resources-body {
-    display: flex;
+    display: inherit;
 
     .body-coast {
-      display: flex;
+      display: inherit;
       flex-direction: column;
       align-items: flex-start;
       justify-content: space-between;
@@ -110,18 +60,25 @@ export default {
       background: $grey-scale-400;
       border-radius: 12px;
       width: 100%;
+      margin-right: 0;
+      margin-left: 8px;
 
       .coast-total {
-        font-size: 12px;
-        line-height: 16px;
+        font-size: rem(12);
+        line-height: rem(16);
         color: $grey-scale-200;
       }
 
       .coast-sum {
         font-weight: 600;
-        font-size: 20px;
+        font-size: rem(20);
         color: #FFF;
         margin-top: 5%;
+      }
+
+      &:first-child {
+        margin-right: 8px;
+        margin-left: 0;
       }
     }
   }
@@ -144,7 +101,7 @@ export default {
       width: 24px;
       height: 16px;
       font-weight: 600;
-      font-size: 12px;
+      font-size: rem(12);
       margin-left: 2%;
     }
   }

@@ -1,41 +1,27 @@
 <template>
   <div class="container-dashboard-result">
-    <div class="result-header">
-      <img :src="icon"/>
-      <span class="header-title">Результат компании</span>
-      <div class="result-header-menu-button" @click="actionListStatus = !actionListStatus">
-        <img :src="context" :class="{active: actionListStatus}"/>
-        <transition name="fade">
-          <action-list
-              :items="items"
-              v-if="actionListStatus"
-              :id="id"
-              @hide-item="hideItem"
-          />
-        </transition>
-      </div>
-    </div>
+    <widgets-header @hide-item="hideItem"
+                    :title="data.title"
+                    :icon="data.icon"/>
     <div class="result-body">
-      <div class="body-bill"
-           :style="{ marginRight: '8px' }">
+      <div class="body-bill">
         <span class="bill-coast">Всего на счету</span>
-        <span class="bill-sum">{{ data.allBill }}₴</span>
+        <span class="bill-sum">{{ data.data.allBill }}₴</span>
       </div>
-      <div class="body-bill"
-           :style="{ marginLeft: '8px' }">
+      <div class="body-bill">
         <span class="bill-coast">Сумма на конец мес.</span>
         <div class="bill-res">
-          <div class="bill-sum">{{ data.endOfMonth }}₴</div>
+          <div class="bill-sum">{{ data.data.endOfMonth }}₴</div>
           <div class="bill-proc">
             <div class="proc-triangle"></div>
-            <div class="proc-development">{{ data.development }}%</div>
+            <div class="proc-development">{{ data.data.development }}%</div>
           </div>
         </div>
       </div>
     </div>
     <div class="result-footer">
       <div
-          v-for="(date, i) in data.dates"
+          v-for="(date, i) in data.data.dates"
           :key="i">
         <div class="footer-plot"
              v-if="(typeof date.height !== 'object') && (typeof date.color !== 'object')"
@@ -44,14 +30,14 @@
           background: date.color,
         }"></div>
         <div v-else>
-          <div class="footer-absolutePlot"
+          <div class="footer-absolute-plot"
                :style="{
           height: date.height.frontHeight,
           background: date.color.frontColor,
           bottom: '19px',
           zIndex: +date.height.frontHeight.split('px')[0] < +date.height.backHeight.split('px')[0] ? 2 : 0
           }"></div>
-          <div class="footer-absolutePlot"
+          <div class="footer-absolute-plot"
                :style="{
           height: date.height.backHeight,
           background: date.color.backColor,
@@ -67,29 +53,20 @@
 </template>
 
 <script>
-import ActionList from "@/LTE/Singletons/Messenger/facades/ActionList";
+import WidgetsHeader from "@Container/Vx/Main/Dashboard/facades/WidgetsHeader";
 
 export default {
   name: "Result",
-  data() {
-    return {
-      icon: require('@/assets/img/my/result.svg'),
-      context: require('@/assets/img/icons/context.svg'),
-    }
-  },
   methods: {
-    hideItem(id) {
-      this.$emit('hide-item', id)
-    }
+    hideItem() {
+      this.$emit('hide-item', this.data.name)
+    },
   },
   components: {
-    ActionList,
+    WidgetsHeader
   },
   props: {
-    actionListStatus: Boolean,
     data: Object,
-    items: Array,
-    id: Number
   }
 }
 </script>
@@ -98,41 +75,14 @@ export default {
 .container-dashboard-result {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   box-sizing: border-box;
   border-radius: 16px;
   background-color: $grey-scale-500;
   padding: 16px;
   height: 98.3%;
 
-  .result-header {
-    display: flex;
-    justify-content: flex-start;
-    margin-bottom: 8%;
-
-    .header-title {
-      font-weight: 600;
-      font-size: 17px;
-      line-height: 22px;
-      color: #FFF;
-      margin: 1% 32% 0% 2%;
-    }
-
-    .result-header-menu-button {
-      position: relative;
-
-      .singleton-messenger-action-list {
-        position: absolute;
-        bottom: -1px;
-        z-index: 1;
-        right: -1px;
-        transform: translateY(100%);
-      }
-    }
-  }
-
   .result-body {
-    display: flex;
+    display: inherit;
     margin-bottom: 5%;
 
     .body-bill {
@@ -145,45 +95,50 @@ export default {
       border-radius: 12px;
       width: 100%;
       height: 76%;
+      margin-right: 0;
+      margin-left: 8px;
 
       .bill-coast {
-        font-size: 12px;
-        line-height: 16px;
+        font-size: rem(12);
+        line-height: rem(16);
         color: $grey-scale-200;
         margin-bottom: 7%;
       }
 
       .bill-sum {
         font-weight: 600;
-        font-size: 20px;
+        font-size: rem(20);
         color: #FFF;
+      }
+
+      &:first-child {
+        margin-right: 8px;
+        margin-left: 0;
       }
     }
 
     .bill-res {
-      display: flex;
-      justify-content: space-around;
+      display: inherit;
       flex-wrap: wrap;
 
       .bill-proc {
         display: flex;
-        justify-content: flex-start;
         margin-top: 3%;
 
         .proc-development {
           width: 18px;
           height: 16px;
-          font-size: 12px;
-          line-height: 16px;
+          font-size: rem(12);
+          line-height: rem(16);
           color: $green;
         }
 
         .proc-triangle {
-          width: 0px;
-          height: 0px;
+          width: 0;
+          height: 0;
           background: $grey-scale-400;
           border-radius: 0.5px;
-          margin: 15% 15% 0% 30%;
+          margin: 15% 15% 0 30%;
           border-left: 5px solid transparent;
           border-right: 5px solid transparent;
           border-bottom: 8px solid $green;
@@ -193,7 +148,7 @@ export default {
   }
 
   .result-footer {
-    display: flex;
+    display: inherit;
     justify-content: space-around;
     align-items: flex-end;
     position: relative;
@@ -203,7 +158,7 @@ export default {
       border-radius: 4px;
     }
 
-    .footer-absolutePlot {
+    .footer-absolute-plot {
       width: 12px;
       border-radius: 4px;
       position: absolute;
@@ -211,7 +166,7 @@ export default {
 
     .footer-date {
       height: 10px;
-      font-size: 10px;
+      font-size: rem(10);
       line-height: 100%;
       color: $grey-scale-200;
     }

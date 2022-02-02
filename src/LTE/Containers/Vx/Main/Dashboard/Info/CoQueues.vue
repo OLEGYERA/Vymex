@@ -1,105 +1,56 @@
 <template>
-  <div class="container-dashboard-coQueues">
-    <div class="coQueues-header">
-      <img :src="icon"/>
-      <span class="coQueues-header-title">Соучредители</span>
-      <div class="coQueues-header-menu-button" @click="actionListStatus = !actionListStatus">
-        <img :src="context" :class="{active: actionListStatus}"/>
-        <transition name="fade">
-          <action-list
-              :items="items"
-              v-if="actionListStatus"
-              :id="id"
-              @hide-item="hideItem"
-          />
-        </transition>
+  <div class="container-dashboard-co-queues">
+    <widgets-header @hide-item="hideItem"
+                    :title="data.title"
+                    :icon="data.icon"/>
+    <div class="co-queues-body">
+      <div class="body-for-sale">
+        <span class="for-sale-title">Доля компании на продажу:</span>
+        <span class="for-sale-percent">{{data.data.forSale}} %</span>
+      </div>
+      <div class="body-for-sale">
+        <span class="for-sale-title">Активные голосования:</span>
+        <span class="for-sale-percent">{{data.data.activeVoting}}</span>
       </div>
     </div>
-    <div class="coQueues-body">
-      <div class="body-forSale"
-           :style="{ marginRight: '8px' }">
-        <span class="forSale-title">Доля компании на продажу:</span>
-        <span class="forSale-percent">{{data.forSale}} %</span>
-      </div>
-      <div class="body-forSale"
-           :style="{ marginLeft: '8px' }">
-        <span class="forSale-title">Активные голосования:</span>
-        <span class="forSale-percent">{{data.activeVoting}}</span>
-      </div>
-    </div>
-    <div class="coQueues-footer">
+    <div class="co-queues-footer">
       <span>Количество соучредителей</span>
-      <span class="footer-num">{{data.coQueues}}</span>
+      <span class="footer-num">{{data.data.coQueues}}</span>
     </div>
   </div>
 </template>
 
 <script>
-import ActionList from "@/LTE/Singletons/Messenger/facades/ActionList";
+import WidgetsHeader from "@Container/Vx/Main/Dashboard/facades/WidgetsHeader";
 export default {
   name: "CoQueues",
-  data(){
-    return{
-      icon: require('@/assets/img/my/co-queues.svg'),
-      context: require('@/assets/img/icons/context.svg'),
-    }
-  },
-  methods:{
-    hideItem(id){
-      this.$emit('hide-item', id)
-    }
+  methods: {
+    hideItem() {
+      this.$emit('hide-item', this.data.name)
+    },
   },
   components: {
-    ActionList,
+    WidgetsHeader
   },
   props: {
-    actionListStatus: Boolean,
     data: Object,
-    items: Array,
-    id: Number
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.container-dashboard-coQueues {
+.container-dashboard-co-queues {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
   border-radius: 16px;
   background-color: $grey-scale-500;
   padding: 16px;
   height: 224px;
 
-  .coQueues-header {
-    display: flex;
-    justify-content: flex-start;
-    margin-bottom: 7%;
-
-    .coQueues-header-title {
-      font-weight: 600;
-      font-size: 17px;
-      line-height: 22px;
-      color: #FFF;
-      margin: 1% 48% 0% 2%;
-    }
-    .coQueues-header-menu-button {
-      position: relative;
-      .singleton-messenger-action-list {
-        position: absolute;
-        bottom: -1px;
-        z-index: 1;
-        right: -1px;
-        transform: translateY(100%);
-      }
-    }
-
-  }
-
-  .coQueues-body {
+  .co-queues-body {
     display: flex;
 
-    .body-forSale {
+    .body-for-sale {
       display: flex;
       flex-direction: column;
       align-items: flex-start;
@@ -108,24 +59,30 @@ export default {
       background: $grey-scale-400;
       border-radius: 12px;
       width: 100%;
+      margin-right: 0;
+      margin-left: 8px;
 
-      .forSale-title {
-        font-size: 12px;
-        line-height: 16px;
+      .for-sale-title {
+        font-size: rem(12);
+        line-height: rem(16);
         color: $grey-scale-200;
         margin-right: 15%;
       }
 
-      .forSale-percent {
+      .for-sale-percent {
         font-weight: 600;
-        font-size: 20px;
+        font-size: rem(20);
         color: #FFF;
         margin-top: 5%;
+      }
+      &:first-child {
+        margin-right: 8px;
+        margin-left: 0;
       }
     }
   }
 
-  .coQueues-footer {
+  .co-queues-footer {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -143,7 +100,7 @@ export default {
       width: 24px;
       height: 16px;
       font-weight: 600;
-      font-size: 12px;
+      font-size: rem(12);
       margin-left: 2%;
     }
   }
