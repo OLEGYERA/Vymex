@@ -25,7 +25,6 @@
   </aside>
 </template>
 
-
 <script>
   export default {
     name: 'Facades.Navigation.SidebarRight',

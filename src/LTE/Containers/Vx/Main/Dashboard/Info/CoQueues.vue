@@ -1,32 +1,33 @@
 <template>
   <div class="container-dashboard-co-queues">
-    <widgets-header @hide-item="hideItem"
+    <widgets-header @show-context="showContext"
                     :title="data.title"
                     :icon="data.icon"/>
     <div class="co-queues-body">
       <div class="body-for-sale">
         <span class="for-sale-title">Доля компании на продажу:</span>
-        <span class="for-sale-percent">{{data.data.forSale}} %</span>
+        <span class="for-sale-percent">{{ data.data.forSale }} %</span>
       </div>
       <div class="body-for-sale">
         <span class="for-sale-title">Активные голосования:</span>
-        <span class="for-sale-percent">{{data.data.activeVoting}}</span>
+        <span class="for-sale-percent">{{ data.data.activeVoting }}</span>
       </div>
     </div>
     <div class="co-queues-footer">
       <span>Количество соучредителей</span>
-      <span class="footer-num">{{data.data.coQueues}}</span>
+      <span class="footer-num">{{ data.data.coQueues }}</span>
     </div>
   </div>
 </template>
 
 <script>
 import WidgetsHeader from "@Container/Vx/Main/Dashboard/facades/WidgetsHeader";
+
 export default {
   name: "CoQueues",
   methods: {
-    hideItem() {
-      this.$emit('hide-item', this.data.name)
+    showContext(value) {
+      this.$emit('show-context', value, this.data.name)
     },
   },
   components: {
@@ -75,6 +76,7 @@ export default {
         color: #FFF;
         margin-top: 5%;
       }
+
       &:first-child {
         margin-right: 8px;
         margin-left: 0;

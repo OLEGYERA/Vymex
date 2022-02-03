@@ -1,6 +1,6 @@
 <template>
   <div class="container-calendar">
-    <widgets-header @hide-item="hideItem"
+    <widgets-header @show-context="showContext"
                     :title="data.title"
                     :icon="data.icon"/>
     <div class="calendar-body">
@@ -44,8 +44,8 @@ import WidgetsHeader from "@Container/Vx/Main/Dashboard/facades/WidgetsHeader";
 export default {
   name: "Calendar",
   methods: {
-    hideItem() {
-      this.$emit('hide-item', this.data.name)
+    showContext(value) {
+      this.$emit('show-context', value, this.data.name)
     },
   },
   components: {
@@ -66,19 +66,22 @@ export default {
   background-color: $grey-scale-500;
   padding: 16px;
   height: 224px;
+
   .calendar-body {
-    display: flex;
+    display: inherit;
     align-items: center;
     background: $grey-scale-400;
     border-radius: 12px;
     padding: 0 2%;
+
     .body-dates {
-      display: flex;
+      display: inherit;
       flex-direction: column;
       align-self: flex-start;
       justify-content: space-around;
       width: 100%;
       margin: 2% 1%;
+
       .dates-day {
         width: 20px;
         height: 16px;
@@ -87,6 +90,7 @@ export default {
         text-align: center;
         color: $grey-scale-200;
       }
+
       .dates-date {
         width: 20px;
         height: 18px;
@@ -100,6 +104,7 @@ export default {
         border-radius: 4px;
         margin-bottom: 2px;
       }
+
       .dates-rectangle {
         height: 2px;
         width: 100%;
@@ -107,13 +112,16 @@ export default {
       }
     }
   }
+
   .calendar-footer {
     display: flex;
     flex-direction: column;
     margin-top: 5%;
+
     .footer-meeting {
       display: flex;
       border-bottom: $grey-scale-400 1px solid;
+
       .meeting-dot {
         width: 6px;
         height: 6px;
@@ -122,16 +130,19 @@ export default {
         margin-top: 5%;
         margin-right: 4%;
       }
+
       .meeting-data {
         display: flex;
         flex-direction: column;
         margin-bottom: 3%;
+
         .data-text {
           height: 20px;
           font-size: rem(15);
           line-height: rem(20);
           color: #FFF;
         }
+
         .data-time {
           height: 16px;
           font-size: rem(12);
@@ -140,6 +151,7 @@ export default {
         }
       }
     }
+
     .footer-events {
       height: 20px;
       font-weight: 600;

@@ -1,6 +1,6 @@
 <template>
   <div class="container-control-center">
-    <widgets-header @hide-item="hideItem"
+    <widgets-header @show-context="showContext"
                     :title="data.title"
                     :icon="data.icon"/>
     <div class="control-center-body">
@@ -54,8 +54,8 @@ export default {
     }
   },
   methods: {
-    hideItem() {
-      this.$emit('hide-item', this.data.name)
+    showContext(value) {
+      this.$emit('show-context', value, this.data.name)
     },
   },
   components: {

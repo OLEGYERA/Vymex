@@ -5,7 +5,7 @@
         class="action-item"
         :key="itemKey"
         :class="{delete: item.includes('Удалить')}"
-        @click="hideItem(item)"
+        @click="showContext(item)"
     >
       {{ item }}
     </div>
@@ -18,8 +18,10 @@ export default {
   name: 'Singleton.Messenger.ActionList',
   components: {},
   methods: {
-    hideItem(value) {
-      value === 'Скрыть виджет' && this.$emit('hide-item')
+    showContext(value) {
+     // if(value === 'Скрыть виджет')
+        this.$emit('show-context', value)
+   //   if(value === 'Выдать доступ') this.$emit('grant-access')
     }
   },
   props: {

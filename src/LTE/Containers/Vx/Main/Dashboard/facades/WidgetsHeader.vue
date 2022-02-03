@@ -10,7 +10,7 @@
         <action-list
             :items="items"
             v-if="actionListStatus"
-            @hide-item="hideItem"
+            @show-context="showContext"
         />
       </transition>
     </div>
@@ -29,8 +29,8 @@ export default {
     }
   },
   methods: {
-    hideItem() {
-      this.$emit('hide-item')
+    showContext(value) {
+      this.$emit('show-context', value)
       this.actionListStatus = !this.actionListStatus
     },
 

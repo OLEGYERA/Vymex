@@ -1,6 +1,6 @@
 <template>
   <div class="container-dashboard-resources-c-e">
-    <widgets-header @hide-item="hideItem"
+    <widgets-header @show-context="showContext"
                     :title="data.title"
                     :icon="data.icon"/>
     <div class="resources-c-e-body">
@@ -20,11 +20,12 @@
 
 <script>
 import WidgetsHeader from "@Container/Vx/Main/Dashboard/facades/WidgetsHeader";
+
 export default {
   name: "ResourcesCE",
   methods: {
-    hideItem() {
-      this.$emit('hide-item', this.data.name)
+    showContext(value) {
+      this.$emit('show-context', value, this.data.name)
     },
   },
   components: {
