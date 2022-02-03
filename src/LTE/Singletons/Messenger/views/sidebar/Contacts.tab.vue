@@ -1,5 +1,5 @@
 <template>
-  <div class="chats-tab-view">
+  <div class="contacts-tab-view">
     <tab-view :search-placeholder="'Поиск по контактам'" search-disable
               @onSearchClick="$emit('updateRouter', 'search')">
       <template #header-title>Контакты</template>
@@ -16,10 +16,10 @@
 
 <script>
 import TabView from "../../facades/TabView"
-import Person from "@/LTE/Singletons/Messenger/Person";
+import Person from "@/LTE/Singletons/Messenger/facades/Person";
 
 export default {
-  name: 'Singleton.Messenger.Views.Sidebar.Chats.Tab',
+  name: 'Singleton.Messenger.Views.Sidebar.Contacts.Tab',
   components: {
     TabView, Person,
   },
@@ -90,7 +90,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.chats-tab-view{
+.contacts-tab-view{
   .facade-tab-view{
     min-width: 372px;
   }

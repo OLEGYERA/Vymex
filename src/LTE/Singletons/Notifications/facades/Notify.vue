@@ -1,8 +1,8 @@
 <template>
-  <div class="singleton-notifications-notify">
-    <div class="message-head">
-      <div class="message-part">
-        <div class="message-icon">
+  <div class="facade-notify">
+    <div class="notify-header">
+      <div class="notify-left-part">
+        <div class="notify-icon">
           <img v-if="info.icon" :src="info.icon"/>
           <icon-info
             v-else
@@ -12,21 +12,24 @@
             }"
           />
         </div>
-        <title-sub>{{ info.title }}</title-sub>
+        <div>
+          <title-sub>{{ info.title }}</title-sub>
+          <div class="notify-name">{{ fullName }}</div>
+        </div>
       </div>
       <title-caption>{{ info.time }}</title-caption>
     </div>
-    <div class="message-main">
+    <div class="notify-main">
       <text-base>
         <slot name="text"></slot>
-        <a class="message-link" href="info.link" v-if="link">
+        <a class="notify-link" href="info.link" v-if="link">
           тут
         </a>
       </text-base>
       <button-base v-if="info.manage">Перейти</button-base>
-      <div class="message-buttons" v-if="response">
-        <button-base class="message-button-reject">Отклонить</button-base>
-        <button-base class="message-button-accept"> Принять</button-base>
+      <div class="notify-buttons" v-if="response">
+        <button-base class="notify-button-reject">Отклонить</button-base>
+        <button-base class="notify-button-accept"> Принять</button-base>
       </div>
     </div>
   </div>
@@ -38,9 +41,10 @@
   import TitleSub from '@Facade/Title/Sub'
   import TitleCaption from '@Facade/Title/Caption'
   import TextBase from '@Facade/Text/Base'
+  import {mapGetters} from 'vuex';
 
   export default {
-    name: 'Singleton.Notifications.Notify',
+    name: 'Singleton.Facades.Notify',
     components: {
       IconInfo,
       ButtonBase,
@@ -57,14 +61,19 @@
       link: String,
       success: Boolean,
       reject: Boolean
+    },
+    computed: {
+      ...mapGetters({
+        fullName: 'getUserFullName'
+      })
     }
   } 
 </script>
 
 <style lang="scss" scoped>
-  .singleton-notifications-notify{
+  .facade-notify{
     margin-bottom: 12px;
-    .message-head {
+    .notify-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -72,33 +81,42 @@
       background-color: $grey-scale-300;
       color: #fff;
       border-radius: 12px 12px 0 0;
-      .message-part {
+      .notify-left-part {
         display: inherit;
         align-items: center;
-      }
-      .message-icon {
-        margin-right: 8px;
-        height: 28px;
-      }
-      .icon-success {
-        background-color: $green;
-      }
-      .icon-reject {
-        background-color: $red;
+        .notify-icon {
+          margin-right: 8px;
+          height: 28px;
+        }
+        .icon-success {
+          background-color: $green;
+        }
+        .icon-reject {
+          background-color: $red;
+        }
+        .facade-title-sub {
+          margin-bottom: 2px;
+        }
+        .notify-name {
+          font-weight: 500;
+          font-size: 13px;
+          line-height: 13px;
+          color: $grey-scale-200;
+        }
       }
       .facade-title-caption{
         margin-right: 12px;
         color: #fff;
       }
     }
-    .message-main {
+    .notify-main {
       padding: 16px;
       background-color: $grey-scale-400;
       border-radius: 0 0 12px 12px;
       .facade-text-base {
         color: #fff;
       }
-      .message-link {
+      .notify-link {
         color: $blue;
         text-decoration: none;
       }

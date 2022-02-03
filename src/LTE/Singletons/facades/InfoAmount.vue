@@ -5,7 +5,7 @@
 <script>
 import TitleCaps from '@Facade/Title/Caps'
 export default {
-  name: 'Singleton.Messenger.Facades.InfoAmount',
+  name: 'Singleton.Facades.InfoAmount',
   components: {
     TitleCaps
   }

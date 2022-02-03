@@ -42,7 +42,7 @@
     }
   }
 </script>
-
+@onBlur
 <style lang="scss" scoped>
   .facade-modal-base{
     display: flex;

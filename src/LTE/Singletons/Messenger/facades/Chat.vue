@@ -1,7 +1,7 @@
 <template>
-  <div class="singleton-messenger-chat">
+  <div class="facade-messenger-chat" @click="openMessenger()">
     <div class="dialog-image">
-      <avatar :logo="logo" :colorCode="color"/>
+      <image-avatar :logo="logo" :colorCode="color"/>
       <span v-if="dialog.name"><icon-group/></span>
     </div>
     <div class="info-text">
@@ -9,8 +9,8 @@
         <text-base>{{dialog.title}}</text-base>
         <div class="message-info">
           <div class="message-check">
-            <double-check v-if="dialog.status==='delivered'"/>
-            <single-check v-if="dialog.status==='sent'"/>
+            <icon-double-check v-if="dialog.status==='delivered'"/>
+            <icon-single-check v-if="dialog.status==='sent'"/>
           </div>
           <title-caption>{{dialog.time}}</title-caption>
         </div>
@@ -27,21 +27,22 @@
 <script>
 import TitleCaption from '@Facade/Title/Caption'
 import TextBase from '@Facade/Text/Base'
-import DoubleCheck from "@Icon/DoubleCheck"
+import IconDoubleCheck from "@Icon/DoubleCheck"
 import IconGroup from "@Icon/Group"
-import Avatar from '@Facade/Image/Avatar'
-import SingleCheck from '@Icon/SingleCheck'
-import InfoAmount from "@/LTE/Singletons/Messenger/facades/info-amount";
+import ImageAvatar from '@Facade/Image/Avatar'
+import IconSingleCheck from '@Icon/SingleCheck'
+import InfoAmount from "@/LTE/Singletons/facades/InfoAmount";
+import {mapMutations} from "vuex";
 
 export default {
-  name: 'Singleton.Messenger.Chat',
+  name: 'Singleton.Messenger.Facades.Chat',
   components: {
     TitleCaption,
     TextBase,
-    DoubleCheck,
+    IconDoubleCheck,
     IconGroup,
-    Avatar,
-    SingleCheck,
+    ImageAvatar,
+    IconSingleCheck,
     InfoAmount
   },
   data() {
@@ -65,12 +66,17 @@ export default {
       }
       return initials.slice(0, 2);
     },
+  },
+  methods: {
+    ...mapMutations({
+      openMessenger: 'Messenger/openMessenger'
+    }),
   }
 }
 </script>
 
 <style lang="scss" scoped>
-  .singleton-messenger-chat {
+  .facade-messenger-chat {
     position: relative;
     width: 100%;
     box-sizing: border-box;

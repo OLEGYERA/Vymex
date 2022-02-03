@@ -1,7 +1,9 @@
 <template>
   <div class="singleton-messenger-app" v-if="status">
     <main class="messenger-app-main">
-      <messenger-main/>
+      <transition name="fade">
+        <messenger-main/>
+      </transition>
     </main>
     <sidebar
         class="messenger-app-sidebar" @onClose="close()"
@@ -28,7 +30,7 @@
   import Sidebar from "@Facade/Navigation/SidebarRight"
   import SidebarHeader from './facades/SidebarHeader'
   import SidebarView from './sidebar.view'
-  import MessengerMain from "@/LTE/Singletons/Messenger/messenger/MessengerMain";
+  import MessengerMain from "@/LTE/Singletons/Messenger/views/messenger/MessengerMain";
 
   export default {
     name: 'Singleton.Messenger.app',
@@ -36,7 +38,9 @@
       Sidebar, SidebarHeader, SidebarView,
       MessengerMain
     },
-    created() {
+    data() {
+      return {
+      }
     },
     computed: {
       ...mapGetters({
@@ -45,7 +49,8 @@
         sidebarView: 'Messenger/sidebarView',
         //user
         avatar: 'getUserAvatarData',
-        fullName: 'getUserFullName'
+        fullName: 'getUserFullName',
+        messengerStatus: 'Messenger/messengerStatus'
       })
     },
     methods: {
@@ -55,6 +60,9 @@
         setRouterName: 'Messenger/setRouterName',
       }),
     },
+    updated() {
+      console.log(this.status)
+    }
   }
 </script>
 

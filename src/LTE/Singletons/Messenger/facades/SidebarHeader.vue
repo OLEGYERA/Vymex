@@ -19,7 +19,7 @@
   import ImageAvatar from '@Facade/Image/Avatar'
   import TitleCaption from '@Facade/Title/Caption'
   import TextBase from '@Facade/Text/Base'
-  import InfoAmount from "@/LTE/Singletons/Messenger/facades/info-amount";
+  import InfoAmount from "@/LTE/Singletons/facades/InfoAmount";
 
   export default {
     name: 'Singleton.Messenger.Facades.SidebarHeader',
@@ -73,14 +73,6 @@
             color: #fff;
           }
 
-        }
-      }
-      .unread-msg-counter{
-        padding: 4px 8px;
-        border-radius: 8px;
-        background-color: $blue;
-        .facade-title-caps{
-          color: #fff;
         }
       }
     }

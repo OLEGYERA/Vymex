@@ -12,13 +12,8 @@
       </div>
     </main>
     <section class="vx-other-apps">
+      <notifications-app/>
       <messenger-app/>
-<!--      <notifications-app-->
-<!--          @change-time="changeTime"-->
-<!--          @change-switch="changeSwitch"-->
-<!--          :switch="this.switch"-->
-<!--          :chooseTime="chooseTime"-->
-<!--      />-->
     </section>
   </div>
 </template>
@@ -32,14 +27,13 @@
   import {mapGetters} from 'vuex'
   const exceptionalRoutes = ['vx.msg'];
 
-  // import NotificationsApp from "@/LTE/Singletons/Notifications/app";
-
   export default {
     name: 'app.vx',
     components: {
       VxNavigation,
       VxHeader,
       MessengerApp: async () => (await import('@Singletons')).MessengerApp,
+      NotificationsApp: async () => (await import('@Singletons')).NotificationsApp,
     },
     data() {
       return {
@@ -47,20 +41,6 @@
         switch: false,
         chooseTime: 0,
       }
-    },
-    methods: {
-      changeMessenger(type) {
-        this.open = type;
-      },
-      changeSwitch() {
-        if (this.switch) {
-          this.chooseTime = 0;
-        }
-        this.switch = !this.switch;
-      },
-      changeTime(timeKey) {
-        this.chooseTime = timeKey;
-      },
     },
     created() {
       this.$core.execViaComponent('Auth', 'user')

@@ -30,8 +30,8 @@
 <script>
   /*eslint-disable*/
   import TabView from "../../facades/TabView"
-  import Chat from "@/LTE/Singletons/Messenger/Chat";
-  import Person from "@/LTE/Singletons/Messenger/Person";
+  import Chat from "@/LTE/Singletons/Messenger/facades/Chat";
+  import Person from "@/LTE/Singletons/Messenger/facades/Person";
   import {mapGetters} from "vuex";
 
   export default {
@@ -248,7 +248,7 @@
     }
   }
 </script>
-<!--|| data.title.toLowerCase().startsWith(this.search.trim().toLowerCase())-->
+
 <style lang="scss" scoped>
   .search-router-view{
 

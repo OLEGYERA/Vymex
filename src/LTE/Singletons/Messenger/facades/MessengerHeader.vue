@@ -1,5 +1,5 @@
 <template>
-  <div class="singleton-messenger-header">
+  <div class="facade-messenger-header">
     <div class="private-info">
       <div class="dialog-image"></div>
       <div class="info-text">
@@ -9,11 +9,11 @@
       <div class="menu-button" @click="actionListStatus = !actionListStatus">
         <points-vertical :class="{active: actionListStatus}"/>
         <transition name="fade">
-          <action-list :items="items" v-if="actionListStatus"/>
+          <action-list :items="items" :actionListStatus="actionListStatus"/>
         </transition>
       </div>
     </div>
-    <icon-error/>
+    <div @click="closeMessenger()"><icon-error/></div>
     <modal-base :status="modalStatus" @onClose="modalStatus = false" @onOk="handlePressOk">
       <template #title>Удалить диалог?</template>
       <template #description>Данные будут удалены вместе со всеми медиа данными без возможности восстановления</template>
@@ -28,10 +28,11 @@
   import TextBase from '@Facade/Text/Base'
   import PointsVertical from '@Icon/PointsVertical'
   import IconError from '@Icon/Error'
-  import ActionList from "@/LTE/Singletons/Messenger/facades/ActionList";
+  import ActionList from "@Facade/Modal/ActionList";
   import ModalBase from '@Facade/Modal/Base'
+  import {mapMutations} from "vuex";
   export default {
-    name: 'Singleton.Messenger.GroupHeader',
+    name: 'Singleton.Messenger.Facades.MessengerHeader',
     components: {
       TitleCaption,
       TextBase,
@@ -42,7 +43,7 @@
     },
     data() {
       return {
-        items: ['Профиль', 'Отлючить уведомления', 'Удалить чат'],
+        items: ['Профиль', 'Отключить уведомления', 'Удалить чат'],
         actionListStatus: false,
         modalStatus: false,
       }
@@ -50,13 +51,16 @@
     methods: {
       handlePressOk() {
         console.log(this.actionListStatus)
-      }
+      },
+      ...mapMutations({
+        closeMessenger: 'Messenger/closeMessenger'
+      }),
     }
   }
 </script>
 
 <style lang="scss" scoped>
-  .singleton-messenger-header {
+  .facade-messenger-header {
     width: 100%;
     padding: 12px 10px 12px 20px;
     display: flex;
@@ -98,7 +102,7 @@
   }
   .menu-button {
     position: relative;
-    .singleton-messenger-action-list {
+    .facade-modal-action-list {
       position: absolute;
       bottom: -10px;
       z-index: 1;

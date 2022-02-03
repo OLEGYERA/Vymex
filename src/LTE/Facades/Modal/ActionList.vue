@@ -1,11 +1,11 @@
 <template>
-  <div class="singleton-messenger-action-list" @click.stop>
+  <div class="facade-modal-action-list" v-if="actionListStatus">
     <div
         v-for="(item, itemKey) in items"
         class="action-item"
         :key="itemKey"
         :class="{delete: item.includes('Удалить')}"
-    >
+        @click="$emit('changeStatus')">
       {{item}}
     </div>
   </div>
@@ -14,20 +14,22 @@
 <script>
 
 export default {
-  name: 'Singleton.Messenger.ActionList',
+  name: 'Facade.Modal.ActionList',
   components: {
   },
   props: {
     items: Array,
+    actionListStatus: Boolean,
   },
 }
 </script>
 
 <style lang="scss" scoped>
-  .singleton-messenger-action-list {
+  .facade-modal-action-list {
     padding: 4px;
     background-color: $grey-scale-700;
     border-radius: 8px;
+    box-sizing: border-box;
     width: max-content;
     .action-item {
       padding: 12px;

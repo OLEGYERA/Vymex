@@ -125,20 +125,20 @@
   }
 }
 
-//.blocks {
-//  &-enter{
-//    transform: translateX(5%);
-//  }
-//  &-leave-to{
-//    opacity: 0;
-//  }
-//  &-enter-active{
-//    transition: $vx-tab-time all ease;
-//  }
-//  &-enter-to{
-//    transform: translateX(0);
-//  }
-//}
+.blocks {
+  &-enter{
+    transform: translateY(-15%);
+  }
+  &-leave-to{
+    opacity: 0;
+  }
+  &-enter-active{
+    transition: .2s all ease;
+  }
+  &-enter-to{
+    transform: translateY(0);
+  }
+}
 
 .fade {
   &-enter, &-leave-to {

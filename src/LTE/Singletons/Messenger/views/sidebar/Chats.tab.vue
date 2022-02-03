@@ -15,7 +15,7 @@
 
 <script>
   import TabView from "../../facades/TabView"
-  import Chat from "@/LTE/Singletons/Messenger/Chat";
+  import Chat from "@/LTE/Singletons/Messenger/facades/Chat";
 
   export default {
     name: 'Singleton.Messenger.Views.Sidebar.Chats.Tab',

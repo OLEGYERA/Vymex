@@ -1,8 +1,8 @@
 <template>
-  <div class="singleton-notifications-head">
+  <div class="facade-notifications-header">
     <div class="info">
       <title-sub>Уведомления</title-sub>
-      <div class="info-amount">24</div>
+      <info-amount><slot>24</slot></info-amount>
     </div>
     <icon-points-vertical/>
   </div>
@@ -11,19 +11,21 @@
 <script>
 import IconPointsVertical from '@Icon/PointsVertical'
 import TitleSub from '@Facade/Title/Sub'
+import InfoAmount from "@/LTE/Singletons/facades/InfoAmount";
 
 export default {
-  name: 'Singleton.Notifications.NotificationsHead',
+  name: 'Singleton.Facades.NotificationsHeader',
   components: {
     IconPointsVertical,
     TitleSub,
+    InfoAmount
   },
 }
 </script>
 
 <style lang="scss" scoped>
-  .singleton-notifications-head {
-    padding: 20px;
+  .facade-notifications-header {
+    padding: rem(20);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -31,25 +33,18 @@ export default {
     background-color: $grey-scale-500;
     border-bottom: $grey-scale-700 solid 1px;
     .info {
-      display: flex;
+      display: inherit;
+      align-items: center;
       .facade-title-sub {
         margin-right: 16px;
-        padding: 2px 0;
       }
-      .info-amount {
-        height: 24px;
-        width: 32px;
-        line-height: rem(24);
-        font-size: rem(12);
-        font-weight: bold;
-        text-align: center;
+      .facade-info-amount {
         background-color: $grey-scale-300;
-        border-radius: 8px;
-        letter-spacing: 0.05em;
       }
     }
     .icon-points {
-      padding: 0 10px;
+      padding: 0 rem(10);
+      height: 16px;
       cursor: pointer;
     }
   }

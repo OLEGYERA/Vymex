@@ -5,7 +5,7 @@
         <img src="@/assets/img/vymex/base-reverse.svg" alt="">
       </div>
       <div class="header-icons">
-        <div @click="openPanel('notify')">
+        <div @click="notificationsShow()">
           <icon-alarm/>
         </div>
         <div @click="messengerShow()">
@@ -29,9 +29,10 @@
     },
     methods: {
       ...mapMutations({
-        messengerShow: 'Messenger/show'
+        messengerShow: 'Messenger/show',
+        notificationsShow: 'Notifications/showNotifications'
       })
-    }
+    },
   }
 </script>
 

@@ -1,13 +1,7 @@
 <template>
-  <div class="singleton-notifications-messages-block">
+  <div class="notifications-main-view">
     <div class="day-block">
-      <div class="date-box">
-        <title-caps>
-          сегодня, 16 янв.
-          <span class="messages-count">4</span>
-        </title-caps>
-        <button-close/>
-      </div>
+      <notifications-date></notifications-date>
       <notify :info="cats.entrance" :link="link" :reject="reject">
         <template v-slot:text>
           Неудачная попытка возобновления сеанса с [имя устройста, модель устройства, ОС, IP], если это были не вы — завершите этот сеанс
@@ -32,13 +26,7 @@
       </notify>
     </div>
     <div class="day-block">
-      <div class="date-box">
-        <title-caps>
-          15 янв.
-          <span class="messages-count">4</span>
-        </title-caps>
-        <button-close/>
-      </div>
+      <notifications-date></notifications-date>
         <notify :info="cats.structure" :response="response">
           <template #text>
             Компания [Название_компании] отправила вам оффер на позицию [название_се]
@@ -69,16 +57,14 @@
 </template>
 
 <script>
-  import ButtonClose from '@Facade/Button/Close'
-  import Notify from '@/LTE/Singletons/Notifications/Notify'
-  import TitleCaps from '@Facade/Title/Caps'
+  import Notify from '@/LTE/Singletons/Notifications/facades/Notify'
+  import NotificationsDate from "@/LTE/Singletons/Notifications/facades/NotificationsDate";
 
   export default {
-    name: 'Singleton.Notifications.MessagesBlock',
+    name: 'Singleton.Notifications.Notifications',
     components: {
-      ButtonClose,
       Notify,
-      TitleCaps
+      NotificationsDate
     },
     data() {
       return {
@@ -110,23 +96,28 @@
           structure: {
             title: "Структура",
             icon: require('@/assets/img/my/structure.svg'),
-            time: "05:45"
+            time: "05:45",
+            manage: false
           },
           auth: {
             title: "Авторизация",
-            time: "05:45"
+            time: "05:45",
+            manage: false
           },
           entrance: {
             title: "Вход после таймаута",
-            time: "05:45"
+            time: "05:45",
+            manage: false
           },
           number: {
             title: "Изменение тел. номера",
-            time: "05:45"
+            time: "05:45",
+            manage: false
           },
           password: {
             title: "Изменение пароля",
-            time: "05:45"
+            time: "05:45",
+            manage: false
           }
         },
         response: true,
@@ -139,24 +130,15 @@
 </script>
 
 <style lang="scss" scoped>
-  .singleton-notifications-messages-block {
+  .notifications-main-view {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    padding: rem(24) rem(20);
     .day-block {
       margin-bottom: 24px;
-      .date-box {
-        padding: 4px 0;
+      .facade-date-box {
         margin-bottom: 4px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        .messages-count {
-          color: $blue;
-        }
-        .facade-button-close {
-          height: 24px;
-          width: 24px;
-          margin-right: 4px;
-          background-color: $grey-scale-400;
-        }
       }
     }
   }

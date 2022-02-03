@@ -16,7 +16,7 @@ import DoubleCheck from '@Icon/DoubleCheck'
 import SingleCheck from '@Icon/SingleCheck'
 
 export default {
-  name: 'Singleton.Messenger.Facades.OwnerMessage',
+  name: 'Singleton.Messenger.Facades.Message',
   components: {
     TextBase,
     DoubleCheck,
