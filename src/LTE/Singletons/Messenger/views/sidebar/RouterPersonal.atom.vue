@@ -40,6 +40,7 @@
       <text-area v-model="textarea" :textAreaValue="about" :max-length="1000">
         <template #title>О себе</template>
       </text-area>
+      <title-sub><button-base>Написать</button-base></title-sub>
     </div>
   </div>
 </template>
@@ -57,6 +58,8 @@
  import IconCalendar from "@Icon/Calendar";
  import IconCopy from "@Icon/Copy";
  import TextArea from "@Facade/Input/TextArea";
+ import ButtonBase from '@Facade/Button/Base'
+ import TitleSub from '@Facade/Title/Sub'
 import {mapGetters} from "vuex";
 
 export default {
@@ -71,7 +74,9 @@ export default {
     IconLetter,
     IconCalendar,
     IconCopy,
-    TextArea
+    TextArea,
+    ButtonBase,
+    TitleSub
   },
   data() {
     return {
@@ -169,7 +174,7 @@ export default {
       margin-bottom: 4px;
     }
     .facade-text-area {
-      margin-top: 12px;
+      margin: 12px 0 44px;
       ::v-deep {
         .textarea-container{
           padding-bottom: 24px;

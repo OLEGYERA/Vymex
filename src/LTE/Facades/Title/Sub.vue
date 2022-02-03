@@ -4,7 +4,7 @@
 
 <script>
   export default {
-    name: 'Facades.Title.Caps'
+    name: 'Facades.Title.Sub'
   }
 </script>
 

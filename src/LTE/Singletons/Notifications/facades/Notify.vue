@@ -127,15 +127,15 @@
         align-items: center;
         border-radius: 18px;
       }
-      .message-buttons {
+      .notify-buttons {
         display: flex;
       }
-      .message-button-reject {
+      .notify-button-reject {
         margin-right: 12px;
         width: 113px;
         background-color: $red;
       }
-      .message-button-accept {
+      .notify-button-accept {
         background-color: $green;
       }
     }

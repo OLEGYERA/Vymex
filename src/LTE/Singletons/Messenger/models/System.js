@@ -58,7 +58,6 @@ export default {
         state.sidebarData.tabList.data[2].iconName = 'icon-volume';
       }
       state.notificationsStatus = !state.notificationsStatus;
-      console.log(state.notificationsStatus)
     },
     changeTime: (state, newTime) => {
       state.disableTime = newTime

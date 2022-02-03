@@ -64,7 +64,7 @@ export default {
     height: 100%;
     display: inherit;
     justify-content: inherit;
-    //overflow: hidden;
+    overflow: hidden;
 
     &.component-expand{
       &-enter-active{

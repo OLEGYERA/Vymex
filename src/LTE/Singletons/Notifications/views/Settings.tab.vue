@@ -13,6 +13,7 @@ export default {
 <style lang="scss" scoped>
   .setting-tab-view {
     height: 100%;
+    object-fit: contain;
     .monkey {
       height: 100%;
     }
