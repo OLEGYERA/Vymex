@@ -1,12 +1,12 @@
 <template>
-  <div class="singleton-messenger-person">
+  <div class="facade-messenger-person" @click="openMessenger()">
     <div class="private-info">
       <div class="dialog-image">
         <avatar :logo="logo" :colorCode="color"/>
       </div>
       <div class="info-text">
-        <div class="name">{{contact.name}}</div>
-        <title-caption>{{contact.nickname}}</title-caption>
+        <div class="name">{{contact.title}}</div>
+        <title-caption>{{contact.alias}}</title-caption>
       </div>
     </div>
     <points-vertical/>
@@ -17,9 +17,10 @@
 import TitleCaption from '@Facade/Title/Caption'
 import PointsVertical from '@Icon/PointsVertical'
 import Avatar from '@Facade/Image/Avatar'
+import {mapMutations} from "vuex";
 
 export default {
-  name: 'Singleton.Messenger.Person',
+  name: 'Singleton.Messenger.Facades.Person',
   components: {
     TitleCaption,
     PointsVertical,
@@ -34,19 +35,24 @@ export default {
   computed: {
     logo: function () {
       let initials = ''
-      for (const char of this.contact.name) {
+      for (const char of this.contact.title) {
         if (char === char.toUpperCase() && char !== ' ') {
           initials += char
         }
       }
       return initials.slice(0, 2);
     },
+  },
+  methods: {
+    ...mapMutations({
+      openMessenger: 'Messenger/openMessenger'
+    }),
   }
 }
 </script>
 
 <style lang="scss" scoped>
-  .singleton-messenger-person {
+  .facade-messenger-person {
     margin-bottom: 4px;
     padding: rem(16) rem(12);
     display: flex;

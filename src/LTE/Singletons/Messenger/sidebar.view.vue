@@ -5,12 +5,16 @@
         <component :is="renderViewName" class="sidebarViewComponent"
                    @updateRouter="setRouterName($event)"
                    @closeRouter="closeRouter()"
+                   :switchNotify="disableNotifications"
+                   :newTime="newTime"
+                   @change-switch="changeSwitch()"
+                   @change-time="changeTime"
         />
       </keep-alive>
     </transition>
   </div>
 </template>
-
+// внутренносити sidebar messenger
 <script>
   import {mapGetters, mapMutations} from 'vuex'
   /*eslint-disable*/
@@ -19,32 +23,41 @@
   import SearchRouter from './views/sidebar/Search.router'
 
   /**/
-  import TabVolumes from './sidebar/TabVolumes.atom'
+  import VolumesTab from '../facades/TabVolumes.atom'
 
 
-  import RouterPersonal from './sidebar/RouterPersonal.atom'
+  import PersonalRouter from './views/sidebar/RouterPersonal.atom'
 
 
   export default {
     name: 'Singleton.Messenger.SidebarView',
     components: {
-      ChatsTab, ContactsTab, /**/ TabVolumes,
-      SearchRouter,  /**/ RouterPersonal
+      ChatsTab, ContactsTab, /**/ VolumesTab,
+      SearchRouter,  /**/ PersonalRouter
     },
     computed: {
-      ...mapGetters({sidebarView: 'Messenger/sidebarView'}),
+      ...mapGetters({
+        // какая хрень активна и будет рендериться
+        sidebarView: 'Messenger/sidebarView',
+        // отключение оповещений
+        disableNotifications: 'Messenger/notificationsStatus',
+        newTime: 'Messenger/disableTime',
+      }),
       renderViewName(){
         const tabActive = this.sidebarView.tabActive;
         return tabActive.routerName ? tabActive.routerName + '-router' : tabActive.name + '-tab';
       },
       renderAnimationName(){
         return this.sidebarView.animation;
-      }
+      },
     },
     methods: {
       ...mapMutations({
         setRouterName: 'Messenger/setRouterName',
         closeRouter: 'Messenger/closeRouter',
+        // отключение оповещений
+        changeSwitch: 'Messenger/switchNotifications',
+        changeTime: 'Messenger/changeTime',
       }), //setRouteByrName
     }
   }
@@ -54,7 +67,7 @@
   .sidebarViewController{
     width: 100%;
     height: 100%;
-    display: flex;
+    //display: flex;
     justify-content: center;
     .sidebarViewComponent{
       width: 100%;
@@ -105,7 +118,4 @@
       }
     }
   }
-
-
-
 </style>

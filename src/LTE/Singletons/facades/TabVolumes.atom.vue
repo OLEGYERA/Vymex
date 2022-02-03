@@ -1,10 +1,10 @@
 <template>
-  <div class="sidebar-tab-volumes">
+  <div class="facade-volumes-tab-view">
     <div class="notifications-title">
       <title-semi>Отключить оповещения</title-semi>
       <div class="button-switch"
            :class="{'on': switchNotify}"
-           @click="changeSwitch()">
+           @click="$emit('change-switch')">
         <div class="button-round"></div>
       </div>
     </div>
@@ -14,7 +14,7 @@
              :key="timeKey"
              :class="{active: timeKey === newTime}"
              v-for="(timeItem, timeKey) in times"
-             @click="changeTime(timeKey)">
+             @click="setTime(timeKey)">
           <text-base>{{ timeItem }}</text-base>
           <div class="radiobutton"></div>
         </div>
@@ -27,10 +27,8 @@
   import TitleSemi from "@Facade/Title/Semi";
   import TextBase from "@Facade/Text/Base";
 
-  import {mapGetters, mapMutations} from "vuex";
-
   export default {
-    name: 'Singleton.Messenger.Sidebar.TabVolumes',
+    name: 'Singleton.Facades.TabVolumes',
     components: {
       TitleSemi,
       TextBase
@@ -40,26 +38,23 @@
         times: ['Отключить на 1 час', 'Отключить на 8 часов', 'Отключить на 2 дня', 'Отключить'],
       };
     },
-    computed: {
-      ...mapGetters({
-        switchNotify: 'Messenger/disableNotifications',
-        newTime: 'Messenger/disableTime',
-      })
+    props: {
+      switchNotify: Boolean,
+      newTime: Number,
     },
     methods: {
-      ...mapMutations({
-        changeSwitch: 'Messenger/switchNotifications',
-        changeTime: 'Messenger/changeTime',
-      }),
+      setTime(timeKey) {
+        this.$emit('change-time', timeKey)
+      }
     },
-    // updated() {
-    //   console.log(key)
-    // }
+    mounted() {
+      console.log('hohoho', this.switchNotify)
+    }
   }
 </script>
 
 <style lang="scss" scoped>
-  .sidebar-tab-volumes{
+  .facade-volumes-tab-view{
     width: 100%;
     height: 100%;
     padding: 20px;

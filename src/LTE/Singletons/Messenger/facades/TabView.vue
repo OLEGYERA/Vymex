@@ -4,11 +4,18 @@
       <input-search :model="searchModel" :placeholder="searchPlaceholder" :disable="searchDisable" :exit="searchExit"
                     @onMounted="$emit('onSearchMounted', $event)"
                     @onExit="$emit('onSearchExit')"
+                    @onSearch="sendData"
                     @click.native="$emit('onSearchClick')"/>
-      <contacts>
-        <template #title><slot name="header-title"/></template>
-        <template #amount><slot name="header-amount"/></template>
-      </contacts>
+      <div class="facade-messenger-contacts">
+        <title-caps>
+          <slot name="header-title"/>
+          <span class="contacts-amount"><slot name="header-amount"/></span>
+        </title-caps>
+        <div class="add-item" @click="actionListStatus = !actionListStatus">
+          <icon-add/>
+<!--          <action-list :items="items" :actionListStatus="actionListStatus"/>-->
+        </div>
+      </div>
     </div>
     <div class="tab-view-content">
       <slot name="content"/>
@@ -18,11 +25,13 @@
 
 <script>
   import InputSearch from "@Facade/Input/Search";
-  import Contacts from "@/LTE/Singletons/Messenger/Contacts";
+  import TitleCaps from "@Facade/Title/Caps";
+  import IconAdd from "@Icon/Add";
+  // import ActionList from "@Facade/Modal/ActionList";
 
   export default {
     name: 'Singleton.Messenger.Facades.TabView',
-    components: {InputSearch, Contacts},
+    components: {InputSearch, TitleCaps, IconAdd},
     props: {
       searchModel: [String, Number],
       searchPlaceholder: {
@@ -36,8 +45,15 @@
 
     },
     data: () => ({
-      search: ''
-    })
+      search: '',
+      items: ['Найти контакт', 'Пригласить в VYMEX'],
+      actionListStatus: false,
+    }),
+    methods: {
+      sendData(data) {
+        this.$emit('onSearch', data)
+      }
+    }
   }
 </script>
 
@@ -60,10 +76,7 @@
             cursor: text;
           }
         }
-
-
       }
-
       .container-vx-contacts {
         position: sticky;
         margin-bottom: 4px;
@@ -75,6 +88,38 @@
     .tab-view-content{
       height: 100%;
       overflow-y: scroll;
+    }
+  }
+  .facade-messenger-contacts{
+    width: 100%;
+    padding: 4px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: $grey;
+    .contacts-amount{
+      padding: 0 rem(3);
+      color: $blue;
+    }
+    .add-item {
+      position: relative;
+      .icon-add{
+        height: 24px;
+        width: 24px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #fff;
+        background-color: $grey-scale-400;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+      .facade-modal-action-list {
+        position: absolute;
+        right: 0;
+        bottom: -4px;
+        transform: translateY(100%);
+      }
     }
   }
 </style>

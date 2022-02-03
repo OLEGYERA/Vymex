@@ -1,5 +1,5 @@
 <template>
-  <div class="singleton-messenger-name">
+  <div class="facade-messenger-name">
     <div class="name-part">
       <div @click="$emit('updateRouter', null)"><arrow-left/></div>
       <div class="block">{{name}}</div>
@@ -13,7 +13,7 @@ import ArrowLeft from '@Icon/ArrowLeftBold'
 import PointsVertical from '@Icon/PointsVertical'
 
 export default {
-  name: 'Singleton.Messenger.Name',
+  name: 'Singleton.Messenger.Facades.Name',
   components: {
     ArrowLeft,
     PointsVertical
@@ -26,7 +26,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .singleton-messenger-name {
+  .facade-messenger-name {
     width: 100%;
     padding: 8px 20px;
     display: flex;

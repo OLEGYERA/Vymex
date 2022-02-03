@@ -1,5 +1,5 @@
 <template>
-  <div class="chats-tab-view">
+  <div class="contacts-tab-view">
     <tab-view :search-placeholder="'Поиск по контактам'" search-disable
               @onSearchClick="$emit('updateRouter', 'search')">
       <template #header-title>Контакты</template>
@@ -16,10 +16,10 @@
 
 <script>
 import TabView from "../../facades/TabView"
-import Person from "@/LTE/Singletons/Messenger/Person";
+import Person from "@/LTE/Singletons/Messenger/facades/Person";
 
 export default {
-  name: 'Singleton.Messenger.Views.Sidebar.Chats.Tab',
+  name: 'Singleton.Messenger.Views.Sidebar.Contacts.Tab',
   components: {
     TabView, Person,
   },
@@ -28,60 +28,60 @@ export default {
       placeholder: 'Поиск по диалогам',
       contacts: [
         {
-          name: 'Татьяна Булатова',
-          nickname: '@lable_kers'
+          title: 'Татьяна Булатова',
+          alias: '@lable_kers'
         },
         {
-          name: 'Дария Шевченко',
-          nickname: '@lable_kers'
+          title: 'Дария Шевченко',
+          alias: '@lable_kers'
         },
         {
-          name: 'Анастасия Куликова',
-          nickname: '@lable_kers'
+          title: 'Анастасия Куликова',
+          alias: '@lable_kers'
         },
         {
-          name: 'Андрей Вашуленко',
-          nickname: '@lable_kers'
+          title: 'Андрей Вашуленко',
+          alias: '@lable_kers'
         },
         {
-          name: 'Дмитрий Погодин',
-          nickname: '@lable_kers'
+          title: 'Дмитрий Погодин',
+          alias: '@lable_kers'
         },
         {
-          name: 'Андрей Вашуленко',
-          nickname: '@lable_kers'
+          title: 'Андрей Вашуленко',
+          alias: '@lable_kers'
         },
         {
-          name: 'Дария Шевченко',
-          nickname: '@lable_kers'
+          title: 'Дария Шевченко',
+          alias: '@lable_kers'
         },
         {
-          name: 'Дмитрий Погодин',
-          nickname: '@lable_kers'
+          title: 'Дмитрий Погодин',
+          alias: '@lable_kers'
         },
         {
-          name: 'Андрей Вашуленко',
-          nickname: '@lable_kers'
+          title: 'Андрей Вашуленко',
+          alias: '@lable_kers'
         },
         {
-          name: 'Дмитрий Погодин',
-          nickname: '@lable_kers'
+          title: 'Дмитрий Погодин',
+          alias: '@lable_kers'
         },
         {
-          name: 'Андрей Вашуленко',
-          nickname: '@lable_kers'
+          title: 'Андрей Вашуленко',
+          alias: '@lable_kers'
         },
         {
-          name: 'Дария Шевченко',
-          nickname: '@lable_kers'
+          title: 'Дария Шевченко',
+          alias: '@lable_kers'
         },
         {
-          name: 'Дмитрий Погодин',
-          nickname: '@lable_kers'
+          title: 'Дмитрий Погодин',
+          alias: '@lable_kers'
         },
         {
-          name: 'Андрей Вашуленко',
-          nickname: '@lable_kers'
+          title: 'Андрей Вашуленко',
+          alias: '@lable_kers'
         },
       ],
     }
@@ -90,7 +90,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.chats-tab-view{
+.contacts-tab-view{
   .facade-tab-view{
     min-width: 372px;
   }

@@ -1,6 +1,6 @@
 <template>
-  <div class="sidebar-router-personal">
-    <name :name="user.name" @updateRouter="updateRouter"/>
+  <div class="router-personal-view">
+    <name :name="fullName" @updateRouter="updateRouter"/>
     <div class="photo">
       <avatar :logo="avatar.logo" :colorCode="avatar.colorCode"/>
     </div>
@@ -47,7 +47,7 @@
 <script>
 /*eslint-disable*/
 
- import Name from "@/LTE/Singletons/Messenger/Name";
+ import Name from "@/LTE/Singletons/Messenger/facades/Name";
  import Avatar from "@Facade/Image/Avatar";
  import TextBase from "@Facade/Text/Base";
  import TitleCaption from "@Facade/Title/Caption";
@@ -60,7 +60,7 @@
 import {mapGetters} from "vuex";
 
 export default {
-  name: 'Singleton.Messenger.Sidebar.RouterPersonal',
+  name: 'Singleton.Messenger.Views.Sidebar.RouterPersonal',
   components: {
     Name,
     Avatar,
@@ -102,7 +102,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .sidebar-router-personal{
+  .router-personal-view{
     width: 100%;
     height: 100%;
     padding: 8px 0;

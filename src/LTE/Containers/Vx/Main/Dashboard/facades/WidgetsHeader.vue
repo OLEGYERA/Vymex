@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import ActionList from "@/LTE/Singletons/Messenger/facades/ActionList";
+import ActionList from "@Facade/Modal/ActionList";
 
 export default {
   name: "WidgetsHeader",

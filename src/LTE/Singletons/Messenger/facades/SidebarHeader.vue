@@ -8,9 +8,9 @@
           <text-base>{{fullName}}</text-base>
         </div>
       </div>
-      <div class="unread-msg-counter" v-if="unreadMessages">
-        <title-caps>{{unreadMessages}}</title-caps>
-      </div>
+      <template v-if="unreadMessages">
+        <info-amount>{{unreadMessages}}</info-amount>
+      </template>
     </div>
   </div>
 </template>
@@ -19,11 +19,11 @@
   import ImageAvatar from '@Facade/Image/Avatar'
   import TitleCaption from '@Facade/Title/Caption'
   import TextBase from '@Facade/Text/Base'
-  import TitleCaps from '@Facade/Title/Caps'
+  import InfoAmount from "@/LTE/Singletons/facades/InfoAmount";
 
   export default {
     name: 'Singleton.Messenger.Facades.SidebarHeader',
-    components: {ImageAvatar, TitleCaption, TextBase, TitleCaps},
+    components: {ImageAvatar, TitleCaption, TextBase, InfoAmount},
     props: {
       avatar: {
         type: Object,
@@ -73,14 +73,6 @@
             color: #fff;
           }
 
-        }
-      }
-      .unread-msg-counter{
-        padding: 4px 8px;
-        border-radius: 8px;
-        background-color: $blue;
-        .facade-title-caps{
-          color: #fff;
         }
       }
     }

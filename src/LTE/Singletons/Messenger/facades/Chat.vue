@@ -1,7 +1,7 @@
 <template>
-  <div class="singleton-messenger-chat">
+  <div class="facade-messenger-chat" @click="openMessenger()">
     <div class="dialog-image">
-      <avatar :logo="logo" :colorCode="color"/>
+      <image-avatar :logo="logo" :colorCode="color"/>
       <span v-if="dialog.name"><icon-group/></span>
     </div>
     <div class="info-text">
@@ -9,8 +9,8 @@
         <text-base>{{dialog.title}}</text-base>
         <div class="message-info">
           <div class="message-check">
-            <double-check v-if="dialog.status==='delivered'"/>
-            <single-check v-if="dialog.status==='sent'"/>
+            <icon-double-check v-if="dialog.status==='delivered'"/>
+            <icon-single-check v-if="dialog.status==='sent'"/>
           </div>
           <title-caption>{{dialog.time}}</title-caption>
         </div>
@@ -18,28 +18,32 @@
       <title-caption class="name">{{dialog.name}}</title-caption>
       <title-caption>{{dialog.message}}</title-caption>
     </div>
-    <div v-if="dialog.unread" class="message-count">{{dialog.unread}}</div>
+    <template v-if="dialog.unread">
+      <info-amount>{{dialog.unread}}</info-amount>
+    </template>
   </div>
 </template>
 
 <script>
 import TitleCaption from '@Facade/Title/Caption'
 import TextBase from '@Facade/Text/Base'
-import DoubleCheck from "@Icon/DoubleCheck"
+import IconDoubleCheck from "@Icon/DoubleCheck"
 import IconGroup from "@Icon/Group"
-import Avatar from '@Facade/Image/Avatar'
-import SingleCheck from '@Icon/SingleCheck'
-
+import ImageAvatar from '@Facade/Image/Avatar'
+import IconSingleCheck from '@Icon/SingleCheck'
+import InfoAmount from "@/LTE/Singletons/facades/InfoAmount";
+import {mapMutations} from "vuex";
 
 export default {
-  name: 'Singleton.Messenger.Chat',
+  name: 'Singleton.Messenger.Facades.Chat',
   components: {
     TitleCaption,
     TextBase,
-    DoubleCheck,
+    IconDoubleCheck,
     IconGroup,
-    Avatar,
-    SingleCheck
+    ImageAvatar,
+    IconSingleCheck,
+    InfoAmount
   },
   data() {
     return {
@@ -62,12 +66,17 @@ export default {
       }
       return initials.slice(0, 2);
     },
+  },
+  methods: {
+    ...mapMutations({
+      openMessenger: 'Messenger/openMessenger'
+    }),
   }
 }
 </script>
 
 <style lang="scss" scoped>
-  .singleton-messenger-chat {
+  .facade-messenger-chat {
     position: relative;
     width: 100%;
     box-sizing: border-box;
@@ -126,19 +135,10 @@ export default {
         color: $gray-scale-100;
       }
     }
-    .message-count {
+    .facade-info-amount {
       position: absolute;
       right: 12px;
       bottom: 16px;
-      height: 24px;
-      width: 24px;
-      border-radius: 8px;
-      background-color: $blue;
-      color: #fff;
-      font-weight: 600;
-      font-size: rem(12);
-      line-height: rem(24);
-      text-align: center;
     }
   }
 </style>

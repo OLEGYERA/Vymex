@@ -13,8 +13,9 @@ export default {
       },
       animation: null
     },
-    disableNotifications: false,
+    notificationsStatus: false,
     disableTime: 0,
+    messengerStatus: false,
   },
   getters: {
     status: (state) => state.status,
@@ -26,8 +27,9 @@ export default {
         animation: sidebarView.animation
       }
     },
-    disableNotifications: (state) => state.disableNotifications,
-    disableTime: (state) => state.disableTime
+    notificationsStatus: (state) => state.notificationsStatus,
+    disableTime: (state) => state.disableTime,
+    messengerStatus: (state) => state.messengerStatus,
   },
   mutations: {
     show: (state) => state.status = true,
@@ -49,14 +51,19 @@ export default {
       sidebarView.tabList.data[sidebarView.tabIndex].routerName = null;
     },
     switchNotifications: (state) => {
-      if (state.disableNotifications === false) {
+      if (state.notificationsStatus === false) {
         state.sidebarData.tabList.data[2].iconName = 'icon-volume-off';
       } else {
         state.disableTime = 0;
         state.sidebarData.tabList.data[2].iconName = 'icon-volume';
       }
-      state.disableNotifications = !state.disableNotifications;
+      state.notificationsStatus = !state.notificationsStatus;
+      console.log(state.notificationsStatus)
     },
-    changeTime: (state, newTime) => state.disableTime = newTime,
+    changeTime: (state, newTime) => {
+      state.disableTime = newTime
+    },
+    openMessenger: (state) => state.messengerStatus = true,
+    closeMessenger: (state) => state.messengerStatus = false,
   }
 }

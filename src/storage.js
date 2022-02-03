@@ -29,8 +29,9 @@ import UserProfile from '@/app/auth/storage/UserProfile'
 import VxInfo from "@/app/vx/storage/VxInfo"
 import File from "@/app/vx/storage/File"
 import Crypto from '@/models/CryptoStorage'
-// import Messenger from '@/app/vx/app/messenger/storage/Messenger'
+
 import {MessengerStore as Messenger} from '@Singletons'
+import {NotificationsStore as Notifications} from '@Singletons'
 
 
 export default new Vuex.Store({
@@ -44,7 +45,8 @@ export default new Vuex.Store({
     Crypto,
     VxInfo,
     File,
-    Messenger
+    Messenger,
+    Notifications
   },
   plugins: [
     createPersistedState({
@@ -61,6 +63,15 @@ export default new Vuex.Store({
     createPersistedState({
       key: 'vymex_msg_session',
       paths: ['Messenger'],
+      storage: {
+        getItem: (key) => Secure.get(key),
+        setItem: (key, value) => Secure.set(key, value),
+        removeItem: (key) => Secure.remove(key),
+      },
+    }),
+    createPersistedState({
+      key: 'vymex_notif_session',
+      paths: ['Notifications'],
       storage: {
         getItem: (key) => Secure.get(key),
         setItem: (key, value) => Secure.set(key, value),

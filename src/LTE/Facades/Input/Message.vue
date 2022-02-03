@@ -29,7 +29,7 @@ export default {
       const area = document.querySelector('.facade-input-message')
       e.target.style.height = 'auto';
       e.target.style.height = `${e.target.scrollHeight}px`
-      if(e.target.scrollHeight > 36) {
+      if(e.target.scrollHeight > 22) {
         area.style.height = 'auto'
         area.style.padding = '11px 21px'
         area.style.borderRadius = '16px'
