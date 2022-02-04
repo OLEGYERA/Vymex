@@ -11,7 +11,7 @@
         @onChangeTab="switchTab($event)">
       <template #main-header>
         <sidebar-header
-            @click.native="setRouterName('personal')"
+            @click.native="changeRouterInfo"
             :avatar="avatar"
             :full-name="fullName"
             unread-messages="1"/>
@@ -58,11 +58,13 @@
         close: 'Messenger/close',
         switchTab: 'Messenger/switchTab',
         setRouterName: 'Messenger/setRouterName',
+        changePersonalRouterType: 'Messenger/changePersonalRouterType'
       }),
+      changeRouterInfo() {
+        this.setRouterName('personal');
+        this.changePersonalRouterType('personal');
+      }
     },
-    updated() {
-      console.log(this.status)
-    }
   }
 </script>
 

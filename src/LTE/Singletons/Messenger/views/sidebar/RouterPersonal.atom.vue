@@ -1,6 +1,6 @@
 <template>
   <div class="router-personal-view">
-    <name :name="fullName" @updateRouter="updateRouter"/>
+    <name :name="fullName" @updateRouter="updateRouter" :type="type"/>
     <div class="photo">
       <avatar :logo="avatar.logo" :colorCode="avatar.colorCode"/>
     </div>
@@ -40,7 +40,7 @@
       <text-area v-model="textarea" :textAreaValue="about" :max-length="1000">
         <template #title>О себе</template>
       </text-area>
-      <title-sub><button-base>Написать</button-base></title-sub>
+      <title-sub v-if="type==='user'"><button-base>Написать</button-base></title-sub>
     </div>
   </div>
 </template>
@@ -96,6 +96,7 @@ export default {
       email: 'getUserEmail',
       about: 'getUserAbout',
       avatar: 'getUserAvatarData',
+      type: 'Messenger/personalRouterType'
     }),
   },
   methods: {

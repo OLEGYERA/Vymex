@@ -6,8 +6,8 @@
         <action-list :items="items" :actionListStatus="actionListStatus" @changeStatus="changeStatus"/>
       </transition>
     </div>
-    <input-message v-model="messageInput" @onInput="handleInputModel"/>
-    <div class="messenger-send-button">
+    <input-message @onInput="handleInputModel" :model="messageInput"/>
+    <div class="messenger-send-button" @click="sendMessage">
       <icon-send-message :class="{active: messageInput}"/>
     </div>
   </div>
@@ -18,7 +18,6 @@ import InputMessage from "@Facade/Input/Message";
 import IconAttach from '@Icon/Attach'
 import IconSendMessage from '@Icon/SendMessage'
 import ActionList from "@Facade/Modal/ActionList";
-// import {mapGetters, mapMutations} from "vuex";
 
 export default {
   name: 'Singleton.Messenger.Views.Messenger.InputArea',
@@ -41,8 +40,17 @@ export default {
     },
     changeStatus() {
       this.actionListStatus = !this.actionListStatus
+    },
+    sendMessage() {
+      if(this.messageInput) {
+        this.$emit('sendMessage', this.messageInput)
+      }
+      this.messageInput = '';
     }
   },
+  updated() {
+    console.log(this.messageInput)
+  }
 }
 </script>
 

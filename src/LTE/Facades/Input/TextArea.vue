@@ -7,6 +7,7 @@
           v-model="currentValue"
           :maxlength="maxLength"
           rows="1"
+          ref="textarea"
           @input="resize($event)"
           :placeholder="placeholder">
       </textarea>
@@ -43,8 +44,8 @@ export default {
     }
   },
   mounted() {
-    const textarea = document.querySelector('.textarea')
-    textarea.style.height = `${textarea.scrollHeight}px`
+    setTimeout(() => this.$refs['textarea'].style.height = `${this.$refs['textarea'].scrollHeight}px`, 200)
+    console.log(this.$refs['textarea'].scrollHeight)
   }
 }
 </script>

@@ -10,6 +10,7 @@
 
 <style lang="scss" scoped>
   .facade-title-base{
+    margin: 0;
     font-weight: 600;
     font-size: rem(28);
     line-height: rem(34);

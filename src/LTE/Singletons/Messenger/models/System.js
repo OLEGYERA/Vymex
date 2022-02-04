@@ -16,6 +16,7 @@ export default {
     notificationsStatus: false,
     disableTime: 0,
     messengerStatus: false,
+    personalRouterType: '',
   },
   getters: {
     status: (state) => state.status,
@@ -30,6 +31,7 @@ export default {
     notificationsStatus: (state) => state.notificationsStatus,
     disableTime: (state) => state.disableTime,
     messengerStatus: (state) => state.messengerStatus,
+    personalRouterType: (state) => state.personalRouterType
   },
   mutations: {
     show: (state) => state.status = true,
@@ -64,5 +66,8 @@ export default {
     },
     openMessenger: (state) => state.messengerStatus = true,
     closeMessenger: (state) => state.messengerStatus = false,
+    changePersonalRouterType: (state, type) => {
+      state.personalRouterType = type;
+    }
   }
 }
