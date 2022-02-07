@@ -8,7 +8,6 @@
 <script>
   import ProfileFaq from "@/LTE/Containers/Vx/Main/Faq";
 
-
   export default {
     name: 'vx.profile',
     components: {
