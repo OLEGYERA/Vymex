@@ -63,7 +63,8 @@
       },
     },
     created() {
-      this.$core.execViaComponent('Auth', 'user')
+      this.$core.execViaComponent('Auth', 'user');
+      this.$core.execViaComponent('Company', 'getUserCompanies');
     },
     computed: {
       ...mapGetters(['getPage']),

@@ -16,7 +16,7 @@
       <label class="textarea-label" v-if="labeled">{{ placeholder }}</label>
     </div>
     <div class="textarea-counter">
-      <span class="current-area-counter">{{ areaModel.length }}</span>/{{ areaModelBound }}
+      <span class="current-area-counter">{{ areaModel.length }}</span>/{{ bound }}
     </div>
   </div>
 </template>
@@ -32,6 +32,10 @@
         validator: function (value) {
           return value === null || typeof value === "string" || typeof value === "number";
         }
+      },
+      bound: {
+        type: Number,
+        default: () => 300
       },
       placeholder: String,
       mask: [String, Array],
@@ -50,7 +54,6 @@
     data: () => ({
       areaModel: '',
       rows: 2,
-      areaModelBound: 300
     }),
     computed: {
       bindInputMask(){
@@ -73,7 +76,7 @@
         if (_m !== this.areaModel) this.areaModel = _m;
       },
       areaModel(_am, _amp) {
-        if(_am.length <= this.areaModelBound) this.modelDebounceFunction()
+        if(_am.length <= this.bound) this.modelDebounceFunction()
         else this.areaModel = _amp
       },
     }

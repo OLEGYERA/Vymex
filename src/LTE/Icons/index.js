@@ -12,3 +12,6 @@ Vue.component('icon-profile', () => import('./Profile'));
 Vue.component('icon-chat', () => import('./Comments')); //Should be refactor
 Vue.component('icon-setting', () => import('./Setting'));
 Vue.component('icon-search', () => import('./Search'));
+Vue.component('icon-success', () => import('./Success'));
+Vue.component('icon-dropdown-arrow', () => import('./DropdownArrow'));
+

@@ -31,8 +31,11 @@
     justify-content: center;
     align-content: center;
     background-color: $blue-scale-700;
+    box-sizing: border-box;
     cursor: pointer;
     .facade-title-sub{
+      display: inherit;
+      align-items: center;
       color: $blue;
     }
 

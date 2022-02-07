@@ -1,4 +1,5 @@
 import ConsoleNotifier from "@/LTE/Core/Helpers/ConsoleNotifier";
+import Traits from "@/LTE/Core/Helpers/Traits";
 import StoragePad from "@/LTE/Core/Helpers/StoragePad";
 import Socket from "@/LTE/Core/Helpers/Socket";
 import Crypto from "@/LTE/Core/Crypto"
@@ -10,6 +11,7 @@ export default class Core{
     this.log = new ConsoleNotifier('Core');
     this.store = new StoragePad();
     this.socket = new Socket(otps.socket);
+    this.traits = Traits;
   }
 
   install(){
