@@ -6,17 +6,8 @@
                     @onExit="$emit('onSearchExit')"
                     @onSearch="sendData"
                     @click.native="$emit('onSearchClick')"/>
-      <div class="facade-messenger-contacts">
-        <title-caps>
-          <slot name="header-title"/>
-          <span class="contacts-amount"><slot name="header-amount"/></span>
-        </title-caps>
-        <div class="add-item" @click="actionListStatus = !actionListStatus">
-          <icon-add/>
-<!--          <action-list :items="items" :actionListStatus="actionListStatus"/>-->
-        </div>
-      </div>
     </div>
+    <slot name="header-add"/>
     <div class="tab-view-content">
       <slot name="content"/>
     </div>
@@ -113,12 +104,6 @@
         background-color: $grey-scale-400;
         border-radius: 8px;
         cursor: pointer;
-      }
-      .facade-modal-action-list {
-        position: absolute;
-        right: 0;
-        bottom: -4px;
-        transform: translateY(100%);
       }
     }
   }

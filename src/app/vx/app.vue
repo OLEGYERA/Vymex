@@ -36,13 +36,6 @@
       NotificationsApp: async () => (await import('@Singletons')).NotificationsApp,
       // ResourcesApp: async  () => (await import('@Singletons')).ResourcesApp
     },
-    data() {
-      return {
-        open: 'contacts',
-        switch: false,
-        chooseTime: 0,
-      }
-    },
     created() {
       this.$core.execViaComponent('Auth', 'user')
     },

@@ -3,22 +3,22 @@
     <div class="day-block">
       <notifications-date></notifications-date>
       <notify :info="cats.entrance" :link="link" :reject="reject">
-        <template v-slot:text>
+        <template #text>
           Неудачная попытка возобновления сеанса с [имя устройста, модель устройства, ОС, IP], если это были не вы — завершите этот сеанс
         </template>
       </notify>
       <notify :info="cats.task">
-        <template v-slot:text>
+        <template #text>
           [Имя_пользователя] назначил вас ответственным [название_задачи]
         </template>
       </notify>
       <notify :info="cats.process">
-        <template v-slot:text>
+        <template #text>
           [Имя_пользователя] обновил процесс [название_процесса]
         </template>
       </notify>
       <notify :info="cats.auth" :link="link">
-        <template v-slot:text>
+        <template #text>
           Код подтверждения ХХХХХХ. Никому не давайте код, даже если этого требуют от имени Vymex. Этот код используется для входа в ваш аккаунт, он никогда не нужен для чего-то еще.
             <br>
           Если вы не запрашивали код для входа, проигнорируйте это сообщение.

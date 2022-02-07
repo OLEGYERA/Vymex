@@ -52,6 +52,7 @@ export default {
   width: 246px;
   .facade-title-caption {
     margin-bottom: 12px;
+    height: 12px;
   }
   .storage-memory {
     height: 8px;

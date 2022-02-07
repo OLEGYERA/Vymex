@@ -13,12 +13,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.facade-info-amount{
-  padding: rem(4) rem(8);
-  border-radius: 8px;
-  background-color: $blue;
-  .facade-title-caps{
-    color: #fff;
+  .facade-info-amount{
+    padding: rem(4) rem(8);
+    border-radius: 8px;
+    background-color: $blue;
+    .facade-title-caps{
+      color: #fff;
+    }
   }
-}
 </style>

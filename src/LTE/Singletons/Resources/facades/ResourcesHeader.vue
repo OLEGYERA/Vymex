@@ -1,7 +1,7 @@
 <template>
   <div class="facade-resource-header">
     <div class="top-part">
-      <title-base><slot>Рабочие файлы</slot></title-base>
+      <title-base><slot/></title-base>
       <icon-points-vertical/>
     </div>
     <input-search :placeholder="'Поиск'"/>

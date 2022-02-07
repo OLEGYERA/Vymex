@@ -1,13 +1,13 @@
 <template>
   <div class="facade-resource-folder">
     <div class="folder-image">
-      <img v-if="folder.type === 'trash'" src="@/assets/img/my/trash.svg">
+      <img v-if="trash" src="@/assets/img/my/trash.svg">
       <img v-else src="@/assets/img/my/folder.svg">
-      <icon-group v-if="folder.type === 'group'"/>
+      <icon-group v-if="group"/>
     </div>
     <div class="folder-info">
-      <text-base><slot name="title">{{folder.title}}.</slot></text-base>
-      <title-caption><slot name="folder-content">{{folder.content}}</slot></title-caption>
+      <text-base><slot name="title"/></text-base>
+      <title-caption><slot name="folder-content"/></title-caption>
     </div>
   </div>
 </template>
@@ -24,7 +24,8 @@ export default {
     IconGroup
   },
   props: {
-    folder: Object,
+    group: Boolean,
+    trash: Boolean,
   }
 }
 </script>
