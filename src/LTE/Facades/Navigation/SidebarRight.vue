@@ -9,7 +9,7 @@
                     @click.native="$emit('onClose')">
         <icon-error/>
       </panel-button>
-      <template v-for="(tabIndex, tabKey) in tabList.group">
+      <template v-for="(tabIndex, tabKey) in tabList ? tabList.group : []">
         <template v-if="tabIndex !== null">
           <panel-button :key="tabKey"
                         :class="{active: tabList.data.indexOf(tabActive) === tabIndex}"
@@ -34,10 +34,9 @@
     },
     props: {
       tabList: Object,
-      tabActive: Object || null,
-      tabIndex: Number || null,
+      tabActive: Object,
+      tabIndex: Number,
     },
-    // tabActive: Object,
   }
 </script>
 

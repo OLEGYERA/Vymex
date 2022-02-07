@@ -8,9 +8,10 @@
       <img :src="require('@/assets/img/icons/context.svg')" :class="{active: actionListStatus}"/>
       <transition>
         <action-list
+            :actionListStatus="actionListStatus"
             :items="items"
             v-if="actionListStatus"
-            @show-context="showContext"
+            @changeStatus="showContext"
         />
       </transition>
     </div>
@@ -31,9 +32,7 @@ export default {
   methods: {
     showContext(value) {
       this.$emit('show-context', value)
-      this.actionListStatus = !this.actionListStatus
     },
-
   },
   components: {
     ActionList,
@@ -68,7 +67,7 @@ export default {
   .header-menu-button {
     position: relative;
 
-    .singleton-messenger-action-list {
+    .facade-modal-action-list {
       position: absolute;
       bottom: -1px;
       z-index: 1;

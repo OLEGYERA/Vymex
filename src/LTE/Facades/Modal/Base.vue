@@ -80,7 +80,7 @@
         }
       }
       .modal-base-content{
-        margin: 36px 0;
+        margin: 16px 0;
         height: 100%;
         overflow: hidden;
         box-sizing: border-box;
