@@ -18,12 +18,9 @@
             <template>{{ level.level }} уровень</template>
           </title-caps>
         </div>
-        <checkbox-round v-if="round" :model="level.checkedLevel"
-                        class="checkbox"
-                        @onClick="changeStatusLevel(index)"/>
-        <checkbox v-else :model="level.checkedLevel"
-                  class="checkbox"
-                  @onClick="changeStatusLevel(index)"/>
+        <checkbox :model="level.checkedLevel"
+             class="checkbox"
+             @onClick="changeStatusLevel(index)"/>
       </div>
       <div v-if="level.showContext">
         <div v-for="(men, i) in level.data"
@@ -38,10 +35,8 @@
             </div>
           </div>
           <div>
-            <checkbox-round v-if="round" :model="men.checkedPosition"
-                            @onClick="changeStatusPosition(index, i)"/>
-            <checkbox v-else :model="men.checkedPosition"
-                      @onClick="changeStatusPosition(index, i)"></checkbox>
+            <checkbox :model="men.checkedPosition"
+                 @onClick="changeStatusPosition(index, i)"></checkbox>
           </div>
         </div>
       </div>
@@ -52,23 +47,71 @@
 <script>
 import TitleCaps from "@Facade/Title/Caps";
 import Checkbox from '@Facade/Input/Checkbox';
-import CheckboxRound from "@Facade/Input/CheckboxRound";
-
 
 export default {
   name: "SidebarStructure",
   components: {
     TitleCaps,
-    Checkbox,
-    CheckboxRound
+    Checkbox
   },
   data() {
     return {
+      levels: [
+        {
+          level: 1, showContext: true, checkedLevel: false, data: [
+            {
+              avatar: require('@/assets/img/icons/avatar.svg'),
+              name: "Александр Ким", position: "Должность", color: "#D5F1C5",
+              checkedPosition: true
+            },
+          ]
+        },
+        {
+          level: 2, showContext: false, checkedLevel: false, data: [
+            {
+              avatar: require('@/assets/img/icons/avatar.svg'),
+              name: "Александр Ким", position: "Должность", color: "#FEF0BD",
+              checkedPosition: true
+            },
+          ]
+        },
+        {
+          level: 3, showContext: false, checkedLevel: false, data: [
+            {
+              avatar: require('@/assets/img/icons/avatar.svg'),
+              name: "Александр Ким", position: "Должность", color: "#BAE7FF",
+              checkedPosition: true
+            },
+          ]
+        },
+        {
+          level: 4, showContext: false, checkedLevel: false, data: [
+            {
+              avatar: require('@/assets/img/icons/avatar.svg'),
+              name: "Александр Ким", position: "Должность", color: "#F2CBF8",
+              checkedPosition: true
+            },
+            {
+              avatar: require('@/assets/img/icons/avatar.svg'),
+              name: "Александр Ким", position: "Должность", color: "#F2CBF8",
+              checkedPosition: true
+            },            {
+              avatar: require('@/assets/img/icons/avatar.svg'),
+              name: "Александр Ким", position: "Должность", color: "#F2CBF8",
+              checkedPosition: true
+            },            {
+              avatar: require('@/assets/img/icons/avatar.svg'),
+              name: "Александр Ким", position: "Должность", color: "#F2CBF8",
+              checkedPosition: true
+            },            {
+              avatar: require('@/assets/img/icons/avatar.svg'),
+              name: "Александр Ким", position: "Должность", color: "#F2CBF8",
+              checkedPosition: true
+            },
+          ]
+        },
+      ],
     }
-  },
-  props: {
-    round: Boolean,
-    levels: Array,
   },
   methods: {
     changeStatus(index) {
@@ -91,16 +134,20 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 .sidebar-structure-level {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-top: 12px;
+
   .sidebar-structure-level-main {
     display: inherit;
     flex-wrap: wrap;
+
     .level-main-items {
       display: inherit;
+
       .level-main-border {
         width: 1px;
         height: 16px;
@@ -111,6 +158,7 @@ export default {
     }
   }
 }
+
 .sidebar-structure-level-context {
   display: flex;
   align-items: center;
@@ -120,12 +168,15 @@ export default {
   border-radius: 8px;
   margin-top: 8px;
   padding: 8px;
+
   .level-context-main {
     display: inherit;
+
     .level-context-main-description {
       display: inherit;
       flex-direction: column;
       margin-left: 12px;
+
       .main-description-name {
         font-weight: 600;
         font-size: rem(15);
@@ -133,6 +184,7 @@ export default {
         color: #212A33;
         flex: none;
       }
+
       .main-description-position {
         font-weight: normal;
         font-size: rem(12);
@@ -143,7 +195,12 @@ export default {
     }
   }
 }
+
 .checkbox {
   margin-right: 8px;
+  border: 2px solid #4A5A6A;
+  box-sizing: border-box;
+  border-radius: 8px;
 }
+
 </style>

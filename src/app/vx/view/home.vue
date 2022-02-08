@@ -27,7 +27,6 @@
             </div>
           </template>
         </div>
-<!--        <resources-app/>-->
       </template>
 
       <template #tab-content-1>
