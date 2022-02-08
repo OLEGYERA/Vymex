@@ -7,30 +7,25 @@
     </div>
     <div class="modal-data-browse">
       <span class="browse-title">Просматривать</span>
-      <img v-if="!onOffBrowse"
-           @click="onOffBrowse = !onOffBrowse"
-           :src="require('@/assets/img/icons/checkbox-true.svg')"/>
-      <div v-else
-           @click="onOffBrowse = !onOffBrowse"
-           class="level-checkbox-false"></div>
+      <checkbox :model="onOffBrowse"
+           @onClick="onOffBrowse = !onOffBrowse"/>
     </div>
     <div class="modal-data-edit">
       <span class="edit-title">Редактировать</span>
-      <div v-if="!onOffEdit"
-           @click="onOffEdit = !onOffEdit"
-           class="level-checkbox-false"></div>
-      <img v-else
-           @click="onOffEdit = !onOffEdit"
-           :src="require('@/assets/img/icons/checkbox-true.svg')"/>
+      <checkbox :model="onOffEdit"
+           @onClick="onOffEdit = !onOffEdit"/>
     </div>
   </div>
 </template>
 
 <script>
-
+import Checkbox from '@Facade/Input/Checkbox';
 
 export default {
   name: 'ModalData',
+  components: {
+    Checkbox
+  },
   data() {
     return {
       onOffBrowse: true,
@@ -135,13 +130,6 @@ export default {
       color: $grey-scale-200;
       flex: none;
     }
-  }
-  .level-checkbox-false {
-    width: 24px;
-    height: 24px;
-    border: 2px solid $grey-scale-300;
-    box-sizing: border-box;
-    border-radius: 8px;
   }
 }
 </style>

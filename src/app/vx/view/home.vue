@@ -26,6 +26,7 @@
               </div>
             </div>
           </template>
+          <dashboard/>
         </div>
 
       </template>
@@ -54,13 +55,14 @@
   import ButtonBase from '@Facade/Button/Base'
 
   import {mapGetters} from 'vuex'
+  import Dashboard from "@Container/Vx/Main/Dashboard/Dashboard";
 
   export default {
     name: 'vx.home',
     components: {
       TitleSemi, TextBase, ImageAvatar, TitleCaps, TitleCaption,
       ProfileFaq, NavigationTabs,
-      StubTriple, ButtonBase
+      StubTriple, ButtonBase, Dashboard
     },
     data: () => ({
       currentNavigationTab: 0

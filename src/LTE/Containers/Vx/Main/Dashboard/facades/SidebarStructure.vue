@@ -18,13 +18,9 @@
             <template>{{ level.level }} уровень</template>
           </title-caps>
         </div>
-        <div v-if="!level.checkedLevel"
-             class="checkbox-false"
-             @click="changeStatusLevel(index)"></div>
-        <img v-else
-             @click="changeStatusLevel(index)"
-             :style="{marginRight: '8px'}"
-             :src="require('@/assets/img/icons/checkbox-true.svg')"/>
+        <checkbox :model="level.checkedLevel"
+             class="checkbox"
+             @onClick="changeStatusLevel(index)"/>
       </div>
       <div v-if="level.showContext">
         <div v-for="(men, i) in level.data"
@@ -39,12 +35,8 @@
             </div>
           </div>
           <div>
-            <div v-if="!men.checkedPosition"
-                 :style="{marginRight: 0}"
-                 class="checkbox-false"
-                 @click="changeStatusPosition(index, i)"></div>
-            <img v-else @click="changeStatusPosition(index, i)"
-                 :src="require('@/assets/img/icons/checkbox-true.svg')"/>
+            <checkbox :model="men.checkedPosition"
+                 @onClick="changeStatusPosition(index, i)"></checkbox>
           </div>
         </div>
       </div>
@@ -54,11 +46,13 @@
 
 <script>
 import TitleCaps from "@Facade/Title/Caps";
+import Checkbox from '@Facade/Input/Checkbox';
 
 export default {
   name: "SidebarStructure",
   components: {
     TitleCaps,
+    Checkbox
   },
   data() {
     return {
@@ -202,13 +196,8 @@ export default {
   }
 }
 
-.checkbox-false {
-  width: 24px;
-  height: 24px;
+.checkbox {
   margin-right: 8px;
-  border: 2px solid #4A5A6A;
-  box-sizing: border-box;
-  border-radius: 8px;
 }
 
 </style>
