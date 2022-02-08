@@ -13,3 +13,7 @@ Vue.component('icon-chat', () => import('./Comments')); //Should be refactor
 Vue.component('icon-setting', () => import('./Setting'));
 Vue.component('icon-search', () => import('./Search'));
 Vue.component('icon-volume-off', () => import('./VolumeOff'));
+
+Vue.component('icon-success', () => import('./Success'));
+Vue.component('icon-dropdown-arrow', () => import('./DropdownArrow'));
+

@@ -31,9 +31,10 @@
     line-height: 20px;
     font-weight: 600;
     cursor: pointer;
-    transition: .2s all ease;
+    //transition: .2s all ease;
+
     &:hover{
-      background-color: $blue-scale-200;
+      background-color: $blue-scale-300;
     }
   
     &[disable]{

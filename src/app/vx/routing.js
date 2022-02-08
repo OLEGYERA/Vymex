@@ -1,9 +1,10 @@
 import Vx from './app'
-import Profile from './view/profile'
+import Home from './view/home'
 import Setting from './app/setting/routing'
 import Api from './app/api/routing'
 import Messenger from './app/messenger/routing'
 import Resources from "@/LTE/Singletons/Resources/routing";
+import Company from './app/company/routing'
 
 export default [
   {
@@ -13,12 +14,13 @@ export default [
       {
         path: '/', //start /vx/
         name: 'vx',
-        component: Profile,
+        component: Home,
       },
       ...Setting,
       ...Api,
       ...Messenger,
-      ...Resources
+      ...Resources,
+      ...Company
     ]
   }
 ]

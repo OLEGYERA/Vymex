@@ -52,7 +52,7 @@
 </template>
 
 <script>
-/* eslint-disable */
+ /* eslint-disable */
 
   import InputBase from '@/LTE/Facades/Input/Base'
   import IconDropdownArrow from '@Icon/DropdownArrow'

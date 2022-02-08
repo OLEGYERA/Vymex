@@ -11,6 +11,7 @@ class Auth extends Binder{
 
   async sendPhoneData() {
     this.$store.set('UT', Math.floor(Date.now() / 1000));
+    console.log(String(this.$store.get('ChooseCountry').phoneIdent), '1111')
     let data = serialize(
       utf8ToArray(String(this.$store.get('ChooseCountry').phoneIdent)),
       utf8ToArray(String(this.$store.get('ChooseCountry').phoneIdent + this.$store.get('PhoneLthNumber').withoutMask)),

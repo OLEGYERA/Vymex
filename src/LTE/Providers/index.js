@@ -1,2 +1,2 @@
 export {CalendarUi, CalendarModalUi} from './Calendar'
-export {UploadAvatarUi} from './Setting'
+export {UploadAvatarUi, PhoneNumberUi} from './Setting'

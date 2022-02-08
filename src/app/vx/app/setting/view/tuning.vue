@@ -48,15 +48,6 @@
       background-color: $grey-scale-500;
       border-radius: 16px;
       overflow: hidden;
-      ::v-deep{
-        .navigation-tabs-header{
-          padding: 24px 20px 12px;
-        }
-        .navigation-tabs-content{
-          padding: 12px 0 24px;
-        }
-      }
-
     }
   }
 </style>
