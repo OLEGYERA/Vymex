@@ -3,9 +3,10 @@ import Setting from "./Setting";
 import Api from "./Api";
 import FAQ from "./Faq";
 import Uploader from "./Uploader";
+import Company from "./Company";
 
 import {MessengerControllers} from '@Singletons';
 
 export default Object.assign({
-  Auth, Setting, Api, FAQ, Uploader
+  Auth, Setting, Api, FAQ, Uploader, Company
 }, MessengerControllers)

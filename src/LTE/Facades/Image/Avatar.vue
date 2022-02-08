@@ -50,7 +50,7 @@
         line-height: 12px;
         color: #fff;
         &-id-{
-          &.0{
+          &0{
             background: linear-gradient(135deg, #6083FF 0%, #76FFF7 100%);
           }
           &1{

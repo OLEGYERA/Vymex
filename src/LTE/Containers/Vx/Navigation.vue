@@ -20,7 +20,7 @@
               <template #title>Мои компании</template>
               <template #icon><icon-company/></template>
             </sketch-title>
-            <sketch-plate-account :tiny="!isFull" category="company" :data="{name: 'Vintage', id: 2}"/>
+            <sketch-plate-account :tiny="!isFull" category="company" v-for="(company, companyIndex) in companies" :data="{name: company.name, id: company.id}" :key="companyIndex"/>
             <sketch-plate-account :tiny="!isFull"/>
           </div>
         </div>
@@ -77,7 +77,8 @@
         userLastname: 'getUserLastname',
         userAvatar: 'getUserAvatar',
         userAvatarColor: 'getUserAvatarColor',
-        isFull: 'getNavigationFull'
+        isFull: 'getNavigationFull',
+        companies: 'Company/getAll'
       }),
     },
     methods: {

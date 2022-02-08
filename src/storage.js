@@ -22,6 +22,7 @@ import Secure from './Secure'
 
 
 Vue.use(Vuex);
+import History from '@/models/History'
 
 import Countries from '@/app/auth/storage/Countries'
 import Categories from '@/app/faq/storage/Categories'
@@ -29,7 +30,8 @@ import UserProfile from '@/app/auth/storage/UserProfile'
 import VxInfo from "@/app/vx/storage/VxInfo"
 import File from "@/app/vx/storage/File"
 import Crypto from '@/models/CryptoStorage'
-
+import Company from '@/models/Company'
+// import Messenger from '@/app/vx/app/messenger/storage/Messenger'
 import {MessengerStore as Messenger} from '@Singletons'
 import {NotificationsStore as Notifications} from '@Singletons'
 
@@ -40,18 +42,20 @@ export default new Vuex.Store({
   getters: {},
   modules: {
     Countries,
+    History,
     Categories,
     UserProfile,
     Crypto,
     VxInfo,
     File,
     Messenger,
-    Notifications
+    Notifications,
+    Company
   },
   plugins: [
     createPersistedState({
       key: 'vymex_session',
-      paths: ['Countries', 'Crypto', 'UserProfile', 'VxInfo'],
+      paths: ['Countries', 'Crypto', 'UserProfile', 'VxInfo', 'History', 'Company'],
       storage: {
         getItem: (key) => {
           return Secure.get(key)

@@ -35,7 +35,6 @@
       },
       title: {
         type: String,
-        required: true
       },
       description: String,
       sizeWarning: {
