@@ -9,7 +9,7 @@
                     @click.native="$emit('onClose')">
         <icon-error/>
       </panel-button>
-      <template v-for="(tabIndex, tabKey) in tabList.group">
+      <template v-for="(tabIndex, tabKey) in tabList ? tabList.group : []">
         <template v-if="tabIndex !== null">
           <panel-button :key="tabKey"
                         :class="{active: tabList.data.indexOf(tabActive) === tabIndex}"
@@ -34,8 +34,8 @@
     },
     props: {
       tabList: Object,
-      tabActive: Object || null,
-      tabIndex: Number || null,
+      tabActive: Object,
+      tabIndex: Number,
     },
   }
 </script>
@@ -52,8 +52,7 @@
       .main-content{
         width: 100%;
         height: 100%;
-
-        //overflow: hidden;
+        overflow: hidden;
       }
     }
     .sidebar-aside{
@@ -71,6 +70,7 @@
         color: $grey-scale-200;
         cursor: pointer;
       }
+
       .panel-button-close {
         border-bottom: $grey-scale-700 solid 1px;
       }

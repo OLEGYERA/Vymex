@@ -1,19 +1,17 @@
 <template>
   <div class="container-dashboard-structure">
-    <div class="structure-header">
-      <img :src="icon"/>
-      <span class="structure-header-title">Структура компании</span>
-      <img :src="context"/>
-    </div>
+    <widgets-header @show-context="showContext"
+                    :title="data.title"
+                    :icon="data.icon"/>
     <div class="structure-body">
-      <div v-for="(men, i) of data"
+      <div v-for="(man, i) of data.data"
            :key="i"
            class="body-part"
-           :style="{ backgroundColor: men.color }">
-        <span class="part-level">{{ men.level }} УР.</span>
+           :style="{ backgroundColor: man.color }">
+        <span class="part-level">{{ man.level }} УР.</span>
         <div class="part-mens">
-          <span class="part-num">{{ men.numMens }}</span>
-          <img :src="human"/>
+          <span class="part-num">{{ man.numMens }}</span>
+          <img :src="require('@/assets/img/icons/human.svg')"/>
         </div>
       </div>
     </div>
@@ -21,16 +19,21 @@
 </template>
 
 <script>
+import WidgetsHeader from "@Container/Vx/Main/Dashboard/facades/WidgetsHeader";
+
 export default {
   name: "Structure",
-  data() {
-    return {
-      icon: require('@/assets/img/my/structure.svg'),
-      context: require('@/assets/img/icons/context.svg'),
-      human: require('@/assets/img/icons/human.svg'),
-    }
+  methods: {
+    showContext(value) {
+      this.$emit('show-context', value, this.data.name)
+    },
   },
-  props: ['data']
+  components: {
+    WidgetsHeader
+  },
+  props: {
+    data: Object,
+  }
 }
 </script>
 
@@ -44,23 +47,10 @@ export default {
   padding: 16px;
   height: 224px;
 
-  .structure-header {
-    display: flex;
-    justify-content: flex-start;
-    margin-bottom: 8%;
-    .structure-header-title{
-      font-weight: 600;
-      font-size: 17px;
-      line-height: 22px;
-      color: #FFF;
-      margin: 1% 32% 0% 2%;
-    }
-  }
 
   .structure-body {
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
     align-items: center;
     margin-bottom: 2%;
 
@@ -73,8 +63,8 @@ export default {
 
       .part-level {
         font-weight: 600;
-        font-size: 12px;
-        line-height: 16px;
+        font-size: rem(12);
+        line-height: rem(16);
         letter-spacing: 0.05em;
         color: $grey-scale-700;
         height: 16px;
@@ -85,7 +75,7 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
-        padding: 0px 8px;
+        padding: 0 8px;
         height: 16px;
         top: 10px;
         background: rgba($grey-scale-700, 0.2);
@@ -95,8 +85,8 @@ export default {
         .part-num {
           color: #FFFFFF;
           font-weight: 600;
-          font-size: 12px;
-          line-height: 16px;
+          font-size: rem(12);
+          line-height: rem(16);
           margin-right: 15%;
         }
       }

@@ -1,11 +1,19 @@
 <template>
   <div class="facade-header-add">
-    <title-caps>
-      <slot name="header-title"/>
-      <span class="contacts-amount"><slot name="header-amount"/></span>
-    </title-caps>
-    <div class="add-item">
-      <icon-add/>
+    <div class="left-part">
+      <title-caps>
+        <slot name="header-title"/>
+        <span class="contacts-amount"><slot name="header-amount"/></span>
+      </title-caps>
+      <div class="slider" v-if="settingSlider" @click="$emit('onClick')">
+        <icon-setting-slider/>
+        <slot name="numb" class="numb"/>
+      </div>
+      <slot name="text" class="text"/>
+    </div>
+    <div class="right-part">
+      <icon-sort v-if="sort"/>
+      <icon-add @click.native="$emit('create')"/>
     </div>
   </div>
 </template>
@@ -13,10 +21,16 @@
 <script>
 import TitleCaps from "@Facade/Title/Caps";
 import IconAdd from "@Icon/Add";
+import IconSort from "@Icon/Sort"
+import IconSettingSlider from "@Icon/SettingSlider"
 
 export default {
   name: 'Singleton.Facades.HeaderAdd',
-  components: {TitleCaps, IconAdd},
+  components: {TitleCaps, IconAdd, IconSort, IconSettingSlider},
+  props: {
+    sort: Boolean,
+    settingSlider: Boolean,
+  }
 }
 </script>
 
@@ -27,13 +41,47 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: $grey;
-    .contacts-amount{
-      padding: 0 rem(3);
-      color: $blue;
+    background-color: transparent;
+    .left-part {
+      display: inherit;
+      align-items: inherit;
+      .facade-title-caps {
+        margin-right: rem(22);
+        .contacts-amount{
+          padding: 0 rem(3);
+          color: $blue;
+        }
+      }
+      .slider{
+        margin-right: rem(12);
+        box-sizing: border-box;
+        height: 24px;
+        padding: 0 rem(12);
+        display: inherit;
+        justify-content: center;
+        align-items: inherit;
+        border-radius: 20px;
+        color: #fff;
+        background-color: $grey-scale-400;
+        cursor: pointer;
+        .icon-setting-slider {
+          //height: 10px;
+        }
+        .numb {
+          margin-right: 7px;
+        }
+        .text {
+          color: $blue;
+        }
+      }
     }
-    .add-item {
-      position: relative;
+    .right-part {
+      display: inherit;
+      align-items: inherit;
+      .icon-sort {
+        height: 16px;
+        margin-right: rem(28);
+      }
       .icon-add{
         height: 24px;
         width: 24px;

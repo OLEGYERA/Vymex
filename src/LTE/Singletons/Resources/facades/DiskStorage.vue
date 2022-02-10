@@ -8,7 +8,7 @@
       <text-base>
         <span class="free-memory" :class="{middle: memoryPercent > 40, full: memoryPercent > 80}">{{fullMemoryStorage}}</span> / 15 GB
       </text-base>
-      <icon-info :class="{middle: memoryPercent > 40, full: memoryPercent > 80}"/>
+      <icon-info @click.native="$emit('changeStatus')" :class="{middle: memoryPercent > 40, full: memoryPercent > 80}"/>
     </div>
   </div>
 </template>
@@ -23,7 +23,7 @@ export default {
   components: {
     TextBase,
     TitleCaption,
-    IconInfo
+    IconInfo,
   },
   props: {
     memoryPercent: Number,
@@ -56,7 +56,6 @@ export default {
   }
   .storage-memory {
     height: 8px;
-    //width: 222px;
     border-radius: 4px;
     margin-bottom: 8px;
     background-color: $grey-scale-400;
@@ -79,6 +78,7 @@ export default {
     .icon-info {
       height: 16px;
       color: transparent;
+      cursor: pointer;
     }
     .free-memory {
       color: #fff;

@@ -1,16 +1,14 @@
 <template>
-  <div class="facade-modal-action-list" v-if="actionListStatus">
-    <div
-        v-for="(item, itemKey) in items"
+  <div id="menu" class="facade-modal-action-list" v-if="actionListStatus">
+    <div v-for="(item, itemKey) in items"
         class="action-item"
         :key="itemKey"
         :class="{delete: item.includes('Удалить')}"
-        @click="$emit('changeStatus')">
+         @click="$emit('changeStatus', item)">
       {{item}}
     </div>
   </div>
 </template>
-
 <script>
 
 export default {

@@ -27,7 +27,7 @@
             </div>
           </template>
         </div>
-
+        <resources-app/>
       </template>
 
       <template #tab-content-1>
@@ -60,7 +60,8 @@
     components: {
       TitleSemi, TextBase, ImageAvatar, TitleCaps, TitleCaption,
       ProfileFaq, NavigationTabs,
-      StubTriple, ButtonBase
+      StubTriple, ButtonBase,
+      ResourcesApp: async  () => (await import('@Singletons')).ResourcesApp
     },
     data: () => ({
       currentNavigationTab: 0

@@ -6,7 +6,7 @@
         <title-base>Ресурсы</title-base>
         <text-base>Тут храняться все ваши и доступные вам файлы</text-base>
       </div>
-      <disk-storage :memory-percent="45"/>
+      <disk-storage :memory-percent="memoryPercent" @changeStatus="modalStatus=!modalStatus"/>
     </div>
     <folder @click.native="$router.push({name: 'resources.structural.units'})">
       <template #title>Ресурсы C.Е.</template>
@@ -25,6 +25,7 @@
       <template #folder-content>Пусто</template>
     </folder>
     <router-view/>
+    <modal-storage :status="modalStatus" :percent="100-memoryPercent"/>
   </div>
 </template>
 
@@ -34,6 +35,7 @@ import DiskStorage from "@/LTE/Singletons/Resources/facades/DiskStorage";
 import TitleBase from "@Facade/Title/Base"
 import TextBase from '@Facade/Text/Base'
 import NavigationClose from '@Facade/Navigation/Close'
+import ModalStorage from "@/LTE/Singletons/Resources/facades/ModalStorage";
 
 export default {
   name: 'Singleton.Resources.App',
@@ -43,12 +45,20 @@ export default {
     TitleBase,
     TextBase,
     NavigationClose,
+    ModalStorage
   },
+  data() {
+    return{
+      memoryPercent: 45,
+      modalStatus: false
+    }
+  }
 }
 </script>
 
 <style lang="scss" scoped>
   .singleton-resources-app {
+    position: relative;
     height: 100%;
     width: 100%;
     padding: 50px 0;
@@ -68,6 +78,11 @@ export default {
   }
   .facade-resource-file {
     margin-bottom: 8px;
+  }
+  .facade-modal-base {
+    top: 188px;
+    right: 0;
+    transform: translateX(45px);
   }
 
 </style>

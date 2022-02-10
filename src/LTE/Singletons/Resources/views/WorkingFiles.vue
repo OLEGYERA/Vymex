@@ -10,7 +10,7 @@
       <template #title>Новая папка</template>
       <template #folder-content>3 папки, 2 файла</template>
     </folder>
-    <header-add>
+    <header-add sort="true">
       <template #header-title>Файлы</template>
       <template #header-amount>{{files.length}}</template>
     </header-add>

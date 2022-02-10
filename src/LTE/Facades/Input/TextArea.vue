@@ -13,7 +13,7 @@
       </textarea>
     </div>
     <title-caption v-if="count" class="textarea-text-length">
-      <span class="textarea-count">{{currentValue.length}}</span>/{{maxLength}}
+      <span :class="{'textarea-count': currentValue}">{{currentValue.length}}</span>/{{maxLength}}
     </title-caption>
   </div>
 </template>
@@ -78,6 +78,10 @@ export default {
         line-height: 20px;
         box-sizing: border-box;
         padding: 0;
+
+        &::placeholder {
+          color: $grey-scale-200;
+        }
       }
     }
     .textarea-text-length {

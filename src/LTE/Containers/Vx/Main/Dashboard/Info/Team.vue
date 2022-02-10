@@ -1,30 +1,26 @@
 <template>
   <div class="container-dashboard-team">
-    <div class="team-header">
-      <img :src="icon"/>
-      <span class="header-title">Команда</span>
-      <img :src="context"/>
-    </div>
+    <widgets-header @show-context="showContext"
+                    :title="data.title"
+                    :icon="data.icon"/>
     <div class="team-body">
-      <div class="body-people"
-           :style="{ marginRight: '8px' }">
+      <div class="body-people">
         <span class="people-total">Людей в компании</span>
-        <span class="people-sum">{{data.humans}}</span>
+        <span class="people-sum">{{ data.data.humans }}</span>
       </div>
-      <div class="body-people"
-           :style="{ marginLeft: '8px' }">
+      <div class="body-people">
         <span class="people-total">Вакансии</span>
-        <span class="people-sum">{{data.vacancies}}</span>
+        <span class="people-sum">{{ data.data.vacancies }}</span>
       </div>
     </div>
     <div class="team-footer">
       <span class="footer-title">Последняя активность:</span>
       <div class="footer-positions">
-        <div v-for="(men, i) in data.people"
+        <div v-for="(man, i) in data.data.people"
              :key="i">
           <div class="footer-unit">
-            <img :src="men.avatar" class="positions-avatar"/>
-            <span class="positions-title">{{ men.position }}</span>
+            <img :src="man.avatar" class="positions-avatar"/>
+            <span class="positions-title">{{ man.position }}</span>
           </div>
         </div>
       </div>
@@ -33,15 +29,21 @@
 </template>
 
 <script>
+import WidgetsHeader from "@Container/Vx/Main/Dashboard/facades/WidgetsHeader";
+
 export default {
   name: "Team",
-  data() {
-    return {
-      icon: require('@/assets/img/my/team.svg'),
-      context: require('@/assets/img/icons/context.svg'),
-    }
+  methods: {
+    showContext(value) {
+      this.$emit('show-context', value, this.data.name)
+    },
   },
-  props: ['data']
+  components: {
+    WidgetsHeader
+  },
+  props: {
+    data: Object,
+  }
 }
 </script>
 
@@ -49,32 +51,17 @@ export default {
 .container-dashboard-team {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
   border-radius: 16px;
   background-color: $grey-scale-500;
   padding: 16px;
   height: 224px;
 
-  .team-header {
-    display: flex;
-    justify-content: flex-start;
-    margin-bottom: 7%;
-
-    .header-title {
-      font-weight: 600;
-      font-size: 17px;
-      line-height: 22px;
-      color: #FFF;
-      margin: 1% 62% 0% 2%;
-    }
-  }
-
   .team-body {
-    display: flex;
+    display: inherit;
     padding-bottom: 4%;
 
     .body-people {
-      display: flex;
+      display: inherit;
       flex-direction: column;
       align-items: flex-start;
       justify-content: space-between;
@@ -82,18 +69,25 @@ export default {
       background: $grey-scale-400;
       border-radius: 12px;
       width: 100%;
+      margin-right: 0;
+      margin-left: 8px;
 
       .people-total {
-        font-size: 12px;
-        line-height: 16px;
+        font-size: rem(12);
+        line-height: rem(16);
         color: $grey-scale-200;
       }
 
       .people-sum {
         font-weight: 600;
-        font-size: 20px;
+        font-size: rem(20);
         color: #FFF;
         margin-top: 5%;
+      }
+
+      &:first-child {
+        margin-right: 8px;
+        margin-left: 0;
       }
     }
   }
@@ -105,8 +99,8 @@ export default {
 
     .footer-title {
       font-weight: 600;
-      font-size: 12px;
-      line-height: 16px;
+      font-size: rem(12);
+      line-height: rem(16);
       letter-spacing: 0.05em;
       text-transform: uppercase;
       color: $grey-scale-200;
@@ -114,7 +108,7 @@ export default {
     }
 
     .footer-positions {
-      display: flex;
+      display: inherit;
       justify-content: space-around;
       width: 100%;
       margin-top: 3%;
@@ -133,8 +127,8 @@ export default {
         }
 
         .positions-title {
-          font-size: 10px;
-          line-height: 16px;
+          font-size: rem(10);
+          line-height: rem(16);
           color: #FFF;
           margin-top: 6%;
         }

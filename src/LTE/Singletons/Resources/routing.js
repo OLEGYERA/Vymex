@@ -4,6 +4,8 @@ import StructuralUnits from "@/LTE/Singletons/Resources/views/StructuralUnits";
 import MaterialResources from "@/LTE/Singletons/Resources/views/MaterialResources";
 import NewFolder from "@/LTE/Singletons/Resources/views/NewFolder";
 import EmptyFolder from "@/LTE/Singletons/Resources/views/EmptyFolder";
+import CreateResource from "@/LTE/Singletons/Resources/views/CreateResource";
+import ResourceInfo from "@/LTE/Singletons/Resources/views/ResourceInfo";
 
 export default [
     {
@@ -36,5 +38,15 @@ export default [
         path: 'empty-folder',
         component: EmptyFolder,
         name: 'resources.empty.folder'
+    },
+    {
+        path: 'create-resource',
+        component: CreateResource,
+        name: 'resources.create.resource'
+    },
+    {
+        path: 'resource-info',
+        component: ResourceInfo,
+        name: 'resources.resource.info'
     },
 ]

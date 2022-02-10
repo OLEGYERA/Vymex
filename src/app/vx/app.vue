@@ -14,7 +14,6 @@
     <section class="vx-other-apps">
       <notifications-app/>
       <messenger-app/>
-      <resources-app/>
     </section>
   </div>
 </template>
@@ -34,7 +33,6 @@
       VxHeader,
       MessengerApp: async () => (await import('@Singletons')).MessengerApp,
       NotificationsApp: async () => (await import('@Singletons')).NotificationsApp,
-      // ResourcesApp: async  () => (await import('@Singletons')).ResourcesApp
     },
     created() {
       this.$core.execViaComponent('Auth', 'user');

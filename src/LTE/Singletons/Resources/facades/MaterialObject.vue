@@ -5,9 +5,12 @@
         <text-base><slot name="title">{{object.name}}.</slot></text-base>
         <title-caption><slot name="folder-content">{{object.number}}</slot></title-caption>
       </div>
-      <div class="object-user">{{object.user}}</div>
+      <div class="object-user"
+           :class="{level1: object.userLevel===1, level2: object.userLevel===2, level3: object.userLevel===3, level4: object.userLevel===4}">
+        {{object.user}}
+      </div>
     </div>
-    <icon-points-vertical/>
+    <icon-points-vertical @click.native.stop="cons"/>
   </div>
 </template>
 
@@ -25,10 +28,14 @@ export default {
   },
   props: {
     object: Object,
+  },
+  methods: {
+    cons() {
+      console.log(111)
+    }
   }
 }
 </script>
-
 <style lang="scss" scoped>
 .facade-resource-material-object {
   padding: 12px 6px 12px 16px;
@@ -36,6 +43,11 @@ export default {
   justify-content: space-between;
   border-radius: 12px;
   background-color: $grey-scale-400;
+  transition: background-color .3s;
+  cursor: pointer;
+  &:hover{
+    background-color: $grey-scale-500;
+  }
   .object-main {
     display: inherit;
     .object-info{
@@ -53,7 +65,6 @@ export default {
       color: $grey;
       padding: 2px 8px;
       border-radius: 8px;
-      background-color: #F2CBF8;
     }
   }
   .icon-points {
