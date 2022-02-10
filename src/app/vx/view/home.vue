@@ -1,5 +1,6 @@
 <template>
   <div class="profile-view">
+    <dashboard/>
     <profile-faq/>
 
     <navigation-tabs class="profile-career-navigation"
@@ -26,7 +27,6 @@
               </div>
             </div>
           </template>
-          <dashboard/>
         </div>
 
       </template>

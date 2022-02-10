@@ -46,8 +46,6 @@ export default {
   background-color: $grey-scale-500;
   padding: 16px;
   height: 224px;
-
-
   .structure-body {
     display: flex;
     flex-direction: column;

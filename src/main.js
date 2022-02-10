@@ -14,8 +14,8 @@ import '@Icon/index'
 
 
 // Vue.prototype.$engine = new Engine({socketClient: {connection: 'wss://ponchik.app:7777'}});
-// Vue.prototype.$core = new Core({socket: {connection: 'wss://dev.vymex.com:7777'}});
-Vue.prototype.$core = new Core({socket: {connection: 'wss://ponchik.app:7777'}});
+Vue.prototype.$core = new Core({socket: {connection: 'wss://dev.vymex.com:7777'}});
+// Vue.prototype.$core = new Core({socket: {connection: 'wss://ponchik.app:7777'}});
 
 Vue.config.productionTip = true;
 Vue.config.devtools = true;

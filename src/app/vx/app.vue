@@ -2,6 +2,7 @@
   <div class="app-vx">
     <main class="app-vx-main">
       <vx-navigation/>
+      <navigation-panel/>
       <div class="vx-body-space">
         <vx-header/>
         <div class="body-space-router-view" :class="{'not-adapt-styles': exceptionalStyle}">
@@ -25,6 +26,7 @@
   import VxHeader from '@Container/Vx/Header'
 
   import {mapGetters} from 'vuex'
+import NavigationPanel from "@Container/PanelNavigation/app";
   const exceptionalRoutes = ['vx.msg'];
 
   export default {
@@ -34,6 +36,7 @@
       VxHeader,
       MessengerApp: async () => (await import('@Singletons')).MessengerApp,
       NotificationsApp: async () => (await import('@Singletons')).NotificationsApp,
+      NavigationPanel
     },
     data() {
       return {
