@@ -7,9 +7,13 @@
         <sidebar-header>Выдать доступ</sidebar-header>
       </template>
       <template #main-content>
-        <sidebar-view @handle-access="$emit('handle-access')"/>
+        <sidebar-view
+            :levels="levels"
+        />
       </template>
     </sidebar-right>
+    <button-base class="button"
+                 @onClick="$emit('handle-access')">Выдать доступ</button-base>
   </div>
 </template>
 
@@ -17,16 +21,19 @@
 import SidebarRight from "@Facade/Navigation/SidebarRight";
 import SidebarHeader from "./SidebarHeader";
 import SidebarView from "../Components/SidebarView";
+import ButtonBase from "@Facade/Button/Base";
 
 export default {
   name: "Dashboard",
   props: {
     status: Boolean,
+    levels: Array
   },
   components: {
     SidebarRight,
     SidebarHeader,
-    SidebarView
+    SidebarView,
+    ButtonBase
   },
 }
 </script>
@@ -43,7 +50,6 @@ export default {
   background-color: rgba($grey-scale-700, .8);
   z-index: 3;
   overflow: hidden;
-
   .notifications-dashboard-sidebar ::v-deep {
     display: inherit;
     height: 100%;
@@ -55,4 +61,13 @@ export default {
   }
 }
 
+.button{
+  display: flex;
+  align-items: center;
+  position: fixed;
+  width: 332px;
+  height: 52px;
+  bottom: 20px;
+  right: 93px;
+}
 </style>

@@ -35,15 +35,15 @@ export default {
   props: {
     data: Object
   },
-  computed: {
+   computed: {
     // eslint-disable-next-line vue/return-in-computed-property
     backgroundLevel() {
       if (this.data.level === 1) return '#D5F1C5'
-      if (this.data.level === 2) return '#BAE7FF'
-      if (this.data.level === 3) return '#FEF0BD'
+      if (this.data.level === 2) return '#FEF0BD'
+      if (this.data.level === 3) return '#BAE7FF'
       if (this.data.level === 4) return '#F2CBF8'
     }
-  }
+   }
 }
 </script>
 
