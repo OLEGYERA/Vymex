@@ -90,11 +90,53 @@ export default {
               name: "Александр Ким", position: "Должность", color: "#BAE7FF",
               checkedPosition: false
             },
+            {
+              avatar: require('@/assets/img/icons/avatar.svg'),
+              name: "Александр Ким", position: "Должность", color: "#BAE7FF",
+              checkedPosition: false
+            },
+            {
+              avatar: require('@/assets/img/icons/avatar.svg'),
+              name: "Александр Ким", position: "Должность", color: "#BAE7FF",
+              checkedPosition: false
+            },
+            {
+              avatar: require('@/assets/img/icons/avatar.svg'),
+              name: "Александр Ким", position: "Должность", color: "#BAE7FF",
+              checkedPosition: false
+            },
+            {
+              avatar: require('@/assets/img/icons/avatar.svg'),
+              name: "Александр Ким", position: "Должность", color: "#BAE7FF",
+              checkedPosition: false
+            },
+            {
+              avatar: require('@/assets/img/icons/avatar.svg'),
+              name: "Александр Ким", position: "Должность", color: "#BAE7FF",
+              checkedPosition: false
+            },
           ]
         },
         {
           level: 4, showContext: false, checkedLevel: false, data: [
             {
+              avatar: require('@/assets/img/icons/avatar.svg'),
+              name: "Александр Ким", position: "Должность", color: "#F2CBF8",
+              checkedPosition: false
+            },
+            {
+              avatar: require('@/assets/img/icons/avatar.svg'),
+              name: "Александр Ким", position: "Должность", color: "#F2CBF8",
+              checkedPosition: false
+            },            {
+              avatar: require('@/assets/img/icons/avatar.svg'),
+              name: "Александр Ким", position: "Должность", color: "#F2CBF8",
+              checkedPosition: false
+            },            {
+              avatar: require('@/assets/img/icons/avatar.svg'),
+              name: "Александр Ким", position: "Должность", color: "#F2CBF8",
+              checkedPosition: false
+            },            {
               avatar: require('@/assets/img/icons/avatar.svg'),
               name: "Александр Ким", position: "Должность", color: "#F2CBF8",
               checkedPosition: false

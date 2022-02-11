@@ -37,11 +37,5 @@ export default {
     width: 36px;
     border-radius: 50%;
   }
-  .company-info{
-    .facade-title-sub {
-      margin-bottom: rem(4);
-      line-height: 16px;
-    }
-  }
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="resources-working-files-view">
-    <comeback @click.native="$router.push({name: 'resources'})"/>
+    <comeback @onClick="$router.push({name: 'resources'})"/>
     <resources-header>Рабочие файлы</resources-header>
     <header-add>
       <template #header-title>папки</template>

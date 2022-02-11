@@ -87,7 +87,7 @@ export default {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 20px;
+      padding: 20px 20px 0;
       height: 100%;
       box-sizing: border-box;
       .top-part{
@@ -95,6 +95,7 @@ export default {
         overflow-y: scroll;
       }
       .facade-button-base {
+        transform: translateY(-20px);
       }
     }
     .facade-title-caps {

@@ -1,6 +1,6 @@
 <template>
   <div class="resources-empty-folder-view">
-    <comeback @click.native="$router.push({name: 'resources.new.folder'})"/>
+    <comeback @onClick="$router.push({name: 'resources.new.folder'})"/>
     <resources-header>Новая папка</resources-header>
     <header-add>
       <template #header-title>папки</template>

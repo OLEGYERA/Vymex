@@ -1,10 +1,10 @@
 <template>
   <div class="resources-create-resource-view">
-    <comeback @click.native="$router.push({name: 'resources.material.resources'})"/>
+    <comeback @onClick="$router.push({name: 'resources.material.resources'})"/>
     <title-base>Создать ресурс</title-base>
     <div class="main-plate">
-      <input-base :placeholder="'Название'"/>
-      <input-base :placeholder="'Серийный номер'"/>
+      <input-base labeled :placeholder="'Название'"/>
+      <input-base labeled :placeholder="'Серийный номер'"/>
       <text-area :placeholder="'Описание'" :max-length="1000" :count="true"/>
       <title-caps>Стоимость ресурса</title-caps>
       <input-price/>

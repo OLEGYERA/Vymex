@@ -6,6 +6,7 @@ import NewFolder from "@/LTE/Singletons/Resources/views/NewFolder";
 import EmptyFolder from "@/LTE/Singletons/Resources/views/EmptyFolder";
 import CreateResource from "@/LTE/Singletons/Resources/views/CreateResource";
 import ResourceInfo from "@/LTE/Singletons/Resources/views/ResourceInfo";
+import ResourceEditing from "@/LTE/Singletons/Resources/views/ResourceEditing";
 
 export default [
     {
@@ -48,5 +49,10 @@ export default [
         path: 'resource-info',
         component: ResourceInfo,
         name: 'resources.resource.info'
+    },
+    {
+        path: 'resource-editing',
+        component: ResourceEditing,
+        name: 'resources.resource.editing'
     },
 ]

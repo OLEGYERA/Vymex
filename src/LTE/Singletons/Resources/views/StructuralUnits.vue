@@ -1,6 +1,6 @@
 <template>
   <div class="resources-structural-units-view">
-    <comeback @click.native="$router.push({name: 'resources'})"/>
+    <comeback @onClick="$router.push({name: 'resources'})"/>
     <resources-header>Ресурсы С.Е.</resources-header>
     <header-add>
       <template #header-title>папки</template>

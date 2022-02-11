@@ -6,8 +6,8 @@
         <title-caption><slot name="folder-content">{{object.number}}</slot></title-caption>
       </div>
       <div class="object-user"
-           :class="{level1: object.userLevel===1, level2: object.userLevel===2, level3: object.userLevel===3, level4: object.userLevel===4}">
-        {{object.user}}
+           :class="{level1: object.user.level===1, level2: object.user.level===2, level3: object.user.level===3, level4: object.user.level===4}">
+        {{object.user.name}}
       </div>
     </div>
     <icon-points-vertical @click.native.stop="cons"/>

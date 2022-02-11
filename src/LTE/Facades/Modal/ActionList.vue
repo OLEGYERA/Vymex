@@ -4,7 +4,7 @@
         class="action-item"
         :key="itemKey"
         :class="{delete: item.includes('Удалить')}"
-         @click="$emit('changeStatus', item)">
+         @click="sendKey(itemKey)">
       {{item}}
     </div>
   </div>
@@ -19,16 +19,23 @@ export default {
     items: Array,
     actionListStatus: Boolean,
   },
+  methods: {
+    sendKey(key) {
+      this.$emit('onClick', key)
+    }
+  }
 }
 </script>
 
 <style lang="scss" scoped>
   .facade-modal-action-list {
+    position: absolute;
     padding: 4px;
     background-color: $grey-scale-700;
     border-radius: 8px;
     box-sizing: border-box;
     width: max-content;
+    box-shadow: 0px 0px 65px 5px rgba(0, 0, 0, 0.5);
     .action-item {
       padding: 12px;
       background-color: transparent;
