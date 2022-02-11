@@ -41,6 +41,10 @@
       VxHeader,
       MessengerApp: async () => (await import('@Singletons')).MessengerApp,
     },
+    beforeCreate() {
+      this.$core.execViaComponent('Auth', 'user');
+      this.$core.execViaComponent('Company', 'getUserCompanies');
+    },
     data() {
       return {
         open: 'contacts',
@@ -61,10 +65,6 @@
       changeTime(timeKey) {
         this.chooseTime = timeKey;
       },
-    },
-    created() {
-      this.$core.execViaComponent('Auth', 'user');
-      this.$core.execViaComponent('Company', 'getUserCompanies');
     },
     computed: {
       ...mapGetters(['getPage']),

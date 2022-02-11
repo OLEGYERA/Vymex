@@ -15,7 +15,7 @@
             <div class="career-company-plate" v-if="company" :key="companyID" @click="$router.push({name: 'vx.career', params: {companyID: company.id}})">
               <div class="company-plate-logo">
                 <image-avatar :logo="$core.traits.ImageLogo(company.avatar, company.name)" :color-code="$core.traits.ImageColorCode(company.id)"/>
-                <span class="my-workers-counter">{{company.workers.length}}</span>
+                <span class="my-workers-counter">{{company.workers.length + company.cofounder.length}}</span>
               </div>
               <div class="company-plate-info">
                 <title-semi class="company-title">{{company.name}}</title-semi>

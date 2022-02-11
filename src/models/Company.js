@@ -5,16 +5,20 @@ export default {
     all: [],
 
     //for career
-    currentCompanyInfo: null
+    currentCompany: {
+      base: null,
+      workers: null,
+    }
   },
   getters: {
     getAll: (state) => state.all,
-    getCurrentCompanyInfo: (state) => state.currentCompanyInfo,
+    getCurrentCompany: (state) => state.currentCompany,
   },
   mutations: {
     setNew: (state, payload) => state.all.push(payload),
     setAll: (state, payload) => state.all = payload,
-    setCurrentCompanyInfo: (state, payload) => state.currentCompanyInfo = payload,
+    setCurrentCompanyBase: (state, payload) => state.currentCompany.base = payload,
+    setCurrentCompanyWorkers: (state, payload) => state.currentCompany.workers = payload,
   },
   modules: {
     CompanyCreate
