@@ -27,6 +27,13 @@ $red-opacity-2: rgba(255, 77, 79, .2);
 
 $green: #73D13D;
 
+$su-level-1: #D5F1C5;
+$su-level-2: red;
+$su-level-3: red;
+$su-level-4: #F2CBF8;
+
+
+
 @function rem($value) {
   @return #{($value / 16)}rem;
 }

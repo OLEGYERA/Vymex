@@ -3,7 +3,7 @@
     <profile-faq/>
 
     <navigation-tabs class="profile-career-navigation"
-                     :tabs="[{title: 'Основные', count: companies.length}, {title: 'Оплата'}]" :current-tab="currentNavigationTab" @onTab="currentNavigationTab = $event">
+                     :tabs="[{title: 'Карьера', count: companies.length}, {title: 'Оплата'}]" :current-tab="currentNavigationTab" @onTab="currentNavigationTab = $event">
 
       <template #tab-content-0>
         <div class="career-space" v-if="companies.length === 0">
@@ -12,10 +12,10 @@
         </div>
         <div class="career-full-space" v-if="companies.length !== 0">
           <template v-for="(company, companyID) in companies">
-            <div class="career-company-plate" v-if="company" :key="companyID">
+            <div class="career-company-plate" v-if="company" :key="companyID" @click="$router.push({name: 'vx.career', params: {companyID: company.id}})">
               <div class="company-plate-logo">
-                <image-avatar :logo="$core.traits.ImageLogo(company.logo, company.name)" :color-code="$core.traits.ImageColorCode(company.id)"/>
-                <span class="my-workers-counter">{{company.workers.length}}</span>
+                <image-avatar :logo="$core.traits.ImageLogo(company.avatar, company.name)" :color-code="$core.traits.ImageColorCode(company.id)"/>
+                <span class="my-workers-counter">{{company.workers.length + company.cofounder.length}}</span>
               </div>
               <div class="company-plate-info">
                 <title-semi class="company-title">{{company.name}}</title-semi>
@@ -93,7 +93,9 @@
         background-color: $grey-scale-400;
         border-radius: 12px;
         margin-bottom: 16px;
+        transition: .2s all linear;
         display: flex;
+        cursor: pointer;
         .company-plate-logo{
           width: 40px;
           height: 40px;
@@ -133,6 +135,10 @@
               color: #fff;
             }
           }
+        }
+
+        &:hover{
+          background-color: $grey-scale-500;
         }
 
         &:last-child{

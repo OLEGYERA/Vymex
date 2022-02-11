@@ -21,5 +21,11 @@ Vue.component('icon-dropdown-arrow', () => import('./DropdownArrow'));
 
 Vue.component('icon-success', () => import('./Success'));
 Vue.component('icon-dropdown-arrow', () => import('./DropdownArrow'));
+Vue.component('icon-notebook', () => import('./Notebook'));
+Vue.component('icon-language', () => import('./Language'));
+Vue.component('icon-location', () => import('./Location'));
+Vue.component('icon-home', () => import('./Home'));
+Vue.component('icon-phone', () => import('./Phone'));
+Vue.component('icon-info', () => import('./Info'));
 
 Vue.component('icon-points-vertical', () => import('./PointsVertical'));

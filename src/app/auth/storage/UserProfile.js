@@ -30,6 +30,14 @@ export default {
     Password: null,
   },
   getters: {
+    getUser: (state) => {
+      return {
+        id: state.ID,
+        name: state.Name,
+        lastname: state.Lastname,
+        avatar: state.Avatar
+      }
+    },
     getPhoneLthNumber: (state) => state.PhoneLthNumber,
     getUserID: (state) => state.ID,
     getUserAvatar: (state) => {

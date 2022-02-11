@@ -24,7 +24,7 @@
     </div>
     <div class="button-row">
       <button-secondary @onClick="$emit('onPrev')">Назад</button-secondary>
-      <button-base :disable="isPhoneNumberReady" @onClick="createCo()">Создать компанию</button-base>
+      <button-base :disable="isPhoneNumberReady || !avatarReady" @onClick="createCo()">Создать компанию</button-base>
     </div>
   </div>
 </template>
@@ -46,7 +46,8 @@
     name: 'Singleton.Company.Create.Views.Finish.Router',
     components: {UploadAvatarUi, PhoneNumberUi, InputBase, InputArea,  ButtonBase, ButtonSecondary},
     data: () => ({
-      isPhoneNumberReady: false
+      isPhoneNumberReady: false,
+      avatarReady: true
     }),
     computed: {
       ...mapGetters({companyLogo: 'Company/getCreatorLogo', creator: 'Company/getCreator'})
@@ -58,6 +59,7 @@
       }),
       async handleNewAvatarFile(avatarFile){
         const avatarNewFile = new File([avatarFile.result], `${avatarFile.name}.png`, {type:"image/png", lastModified:new Date()});
+        this.avatarReady = false;
         this.$core.execViaComponent('Uploader', 'init',[
           avatarNewFile,
           this.handleUploadOnprogress, null,
@@ -68,7 +70,8 @@
         console.log(progress)
       },
       handleUploaderOnload(fileId){
-        // this.$core.execViaComponent('Setting', 'editAvatar', fileId)
+        this.setCreator(['logo', fileId])
+        this.avatarReady = true;
       },
       createCo(){
         this.$core.execViaComponent('Company', 'create');
