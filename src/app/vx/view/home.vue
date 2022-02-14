@@ -1,6 +1,6 @@
 <template>
   <div class="profile-view">
-    <dashboard/>
+<!--    <dashboard/>-->
     <profile-faq/>
 
     <navigation-tabs class="profile-career-navigation"
@@ -55,14 +55,15 @@
   import ButtonBase from '@Facade/Button/Base'
 
   import {mapGetters} from 'vuex'
-  import Dashboard from "@/LTE/Singletons/Dashboard/app";
+  //import Dashboard from "@/LTE/Singletons/Dashboard/app";
 
   export default {
     name: 'vx.home',
     components: {
       TitleSemi, TextBase, ImageAvatar, TitleCaps, TitleCaption,
       ProfileFaq, NavigationTabs,
-      StubTriple, ButtonBase, Dashboard,
+      StubTriple, ButtonBase,
+      Dashboard,
       // ResourcesApp: async  () => (await import('@Singletons')).ResourcesApp
     },
     data: () => ({
