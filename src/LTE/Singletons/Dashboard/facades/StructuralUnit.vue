@@ -40,6 +40,7 @@ export default {
 
 <style lang="scss" scoped>
 .container-sidebar-structure-unit {
+  width: 100%;
   .structure-unit-level-context {
     display: flex;
     align-items: center;

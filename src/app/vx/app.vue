@@ -2,10 +2,10 @@
   <div class="app-vx">
     <main class="app-vx-main">
       <vx-navigation/>
-      <navigation-panel/>
       <div class="vx-body-space">
         <vx-header/>
         <div class="body-space-router-view" :class="{'not-adapt-styles': exceptionalStyle}">
+          <navigation-panel/>
           <div class="router-view-body">
             <router-view/>
           </div>
@@ -26,7 +26,7 @@
   import VxHeader from '@Container/Vx/Header'
 
   import {mapGetters} from 'vuex'
-import NavigationPanel from "@Container/PanelNavigation/app";
+  import NavigationPanel from "@Container/PanelNavigation/app";
   const exceptionalRoutes = ['vx.msg'];
 
   export default {
@@ -80,11 +80,12 @@ import NavigationPanel from "@Container/PanelNavigation/app";
         flex-direction: column;
         width: 100%;
         .body-space-router-view{
+          display: flex;
           height: 100%;
           box-sizing: border-box;
-          padding: 24px 0;
           overflow-y: scroll;
           .router-view-body{
+            width: 83.1%;
             max-width: 796px;
             margin: 0 auto;
           }

@@ -7,9 +7,7 @@
         <sidebar-header/>
       </template>
       <template #main-content>
-        <sidebar-view
-            :levels="levels"
-        />
+        <sidebar-view/>
       </template>
     </sidebar-right>
     <button-base class="button"
@@ -20,7 +18,7 @@
 <script>
 import SidebarRight from "@Facade/Navigation/SidebarRight";
 import SidebarHeader from "./SidebarHeader";
-import SidebarView from "../Components/SidebarView";
+import SidebarView from "./SidebarView";
 import ButtonBase from "@Facade/Button/Base";
 
 export default {

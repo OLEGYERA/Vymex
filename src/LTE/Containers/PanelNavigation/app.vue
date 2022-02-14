@@ -38,31 +38,30 @@ export default {
     }
   },
   methods: {
-    changeStatus(i){
+    changeStatus(i) {
       this.sections.map(el => el.isActive = false)
       this.sections[i].isActive = !this.sections[i].isActive
-    }
-  }
+    },
+  },
 }
 </script>
 
 <style lang="scss" scoped>
 .container-navigation-panel {
-  top: 64px;
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 60px;
-  height: 100%;
   background: $grey-scale-500;
+  padding-top: 4px;
+  height: 1772px;
   overflow-y: scroll;
-
   .navigation-panel-body {
     margin: 12px 14px;
   }
 
   .active-class {
-    display: flex;
+    display: inherit;
     align-items: center;
     justify-content: center;
     padding: 7px;

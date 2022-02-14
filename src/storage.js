@@ -34,6 +34,7 @@ import Company from '@/models/Company'
 // import Messenger from '@/app/vx/app/messenger/storage/Messenger'
 import {MessengerStore as Messenger} from '@Singletons'
 import {NotificationsStore as Notifications} from '@Singletons'
+import Dashboard from '@/models/Dashboard'
 
 
 export default new Vuex.Store({
@@ -50,7 +51,8 @@ export default new Vuex.Store({
     File,
     Messenger,
     Notifications,
-    Company
+    Company,
+    Dashboard
   },
   plugins: [
     createPersistedState({
