@@ -45,7 +45,7 @@
   import ButtonBase from "@Facade/Button/Base"
   import InputPrice from "@Facade/Input/Price"
   import AssignUser from "@/app/vx/app/resource/view/AssignUser";
-  import StructuralUnit from "@Container/Vx/Main/Dashboard/facades/StructuralUnit";
+  import StructuralUnit from "@/LTE/Singletons/Dashboard/facades/StructuralUnit";
   import File from "@/LTE/Singletons/Resources/facades/File";
 
   import {mapMutations} from "vuex";

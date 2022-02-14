@@ -52,7 +52,7 @@ export default new Vuex.Store({
     File,
     Messenger,
     Notifications,
-    Resources
+    Resources,
     Company,
     Dashboard
   },

@@ -33,11 +33,11 @@
 </template>
 
 <script>
-import SidebarHeader from "@Container/Vx/Main/Dashboard/Components/SidebarHeader";
+import SidebarHeader from "@/LTE/Singletons/Dashboard/views/sidebar/SidebarHeader";
 import SidebarRight from "@Facade/Navigation/SidebarRight";
 import Search from "@Facade/Input/Search";
 import ButtonBase from "@Facade/Button/Base";
-import SidebarStructure from "@Container/Vx/Main/Dashboard/facades/SidebarStructure";
+import SidebarStructure from "@/LTE/Singletons/Dashboard/facades/SidebarStructure";
 import {mapMutations} from "vuex";
 import TitleCaps from "@Facade/Title/Caps";
 

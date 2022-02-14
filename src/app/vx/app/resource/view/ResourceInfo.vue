@@ -44,7 +44,7 @@
   import TitleSemi from "@Facade/Title/Semi"
   import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd";
   import Company from "@/LTE/Singletons/Resources/facades/Company";
-  import StructuralUnit from "@Container/Vx/Main/Dashboard/facades/StructuralUnit";
+  import StructuralUnit from "@/LTE/Singletons/Dashboard/facades/StructuralUnit";
   import IconPointsVertical from "@Icon/PointsVertical"
   import ActionList from "@Facade/Modal/ActionList";
   import File from "@/LTE/Singletons/Resources/facades/File";

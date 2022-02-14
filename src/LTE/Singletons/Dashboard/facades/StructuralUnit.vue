@@ -23,7 +23,7 @@
 import Checkbox from '@Facade/Input/Checkbox';
 
 export default {
-  name: "StructureUnit",
+  name: "StructuralUnit",
   props: {
     data: Array
   },
