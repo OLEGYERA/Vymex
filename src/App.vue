@@ -53,6 +53,7 @@
           :before {
             content: url('./assets/img/icons/step-done.svg');
             margin-right: 12px;
+            vertical-align: middle;
            }
           }
           &.success{

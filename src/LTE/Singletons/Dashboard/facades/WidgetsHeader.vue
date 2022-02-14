@@ -12,7 +12,7 @@
             :actionListStatus="actionListStatus"
             :items="items"
             v-if="actionListStatus"
-            @changeStatus="showContext"
+            @onClick="showContext"
         />
       </transition>
     </div>
