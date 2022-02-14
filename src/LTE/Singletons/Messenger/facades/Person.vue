@@ -1,5 +1,5 @@
 <template>
-  <div class="facade-messenger-person" @click="openMessenger()">
+  <div class="facade-messenger-person" @click="onClick">
     <div class="private-info">
       <div class="dialog-image">
         <avatar :logo="logo" :colorCode="color"/>
@@ -45,9 +45,14 @@ export default {
   },
   methods: {
     ...mapMutations({
-      openMessenger: 'Messenger/openMessenger'
+      setRouterName: 'Messenger/setRouterName',
+      changePersonalRouterType: 'Messenger/changePersonalRouterType'
     }),
-  }
+    onClick() {
+      this.setRouterName('personal')
+      this.changePersonalRouterType('user')
+    }
+  },
 }
 </script>
 

@@ -2,8 +2,12 @@
   <div class="chats-tab-view">
     <tab-view :search-placeholder="'Поиск по диалогам'" search-disable
               @onSearchClick="$emit('updateRouter', 'search')">
-      <template #header-title>Диалоги</template>
-      <template #header-amount>{{dialogs.length}}</template>
+      <template #header-add>
+        <header-add>
+          <template #header-title>Диалоги</template>
+          <template #header-amount>{{dialogs.length}}</template>
+        </header-add>
+      </template>
       <template #content>
         <div class="chats-table">
           <chat v-for="(dialog, key) in dialogs" :dialog="dialog" :key="key"></chat>
@@ -16,11 +20,12 @@
 <script>
   import TabView from "../../facades/TabView"
   import Chat from "@/LTE/Singletons/Messenger/facades/Chat";
+  import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd";
 
   export default {
     name: 'Singleton.Messenger.Views.Sidebar.Chats.Tab',
     components: {
-      TabView, Chat,
+      TabView, Chat, HeaderAdd
     },
     data() {
       return {

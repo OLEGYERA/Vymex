@@ -3,7 +3,7 @@ export default {
     activities: [],
     creatorStage: 0,
     creator: {
-      checkedActivities: [],
+      checkedActivities: [], logo: null,
       name: '', link: '', country: {},
       phone: {withMask: '', withoutMask: ''}, city: '',
       street: '', house: '', apartment: '', office: '', about: ''

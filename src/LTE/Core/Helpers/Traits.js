@@ -1,6 +1,6 @@
 export default class Traits{
-  static ImageLogo(logo, lastname, name = null){
-    return logo ? logo : (lastname.substr(0, 1) + (name ? name.substr(0, 1) : ''));
+  static ImageLogo(logo, name, lastname = null){
+    return logo ? logo : (name.substr(0, 1) + (lastname ? lastname.substr(0, 1) : ''));
   }
 
   static ImageColorCode(id = null){

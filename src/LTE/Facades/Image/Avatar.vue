@@ -17,7 +17,7 @@
     },
     computed: {
       getColor(){
-        return this.colorCode ? `color color-id-${this.colorCode}` : '';
+        return this.logo.length <= 2 && this.colorCode ? `color color-id-${this.colorCode}` : '';
       }
     }
   }

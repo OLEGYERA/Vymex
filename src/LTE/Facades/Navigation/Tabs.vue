@@ -108,6 +108,7 @@
       height: 100%;
       padding: 12px 0 24px;
       overflow: hidden;
+      box-sizing: border-box;
       &.tab-slot-right{
         &-enter-active{
           transform: translateX(-30%);

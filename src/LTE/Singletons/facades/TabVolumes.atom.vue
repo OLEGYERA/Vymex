@@ -47,9 +47,6 @@
         this.$emit('change-time', timeKey)
       }
     },
-    mounted() {
-      console.log('hohoho', this.switchNotify)
-    }
   }
 </script>
 
@@ -114,19 +111,6 @@
           background-color: #fff;
         }
       }
-    }
-  }
-  .slide {
-    &-enter-active, &-leave-active {
-      transition: all .2s linear;
-    }
-    &-enter-to, &-leave {
-      max-height: 200px;
-      overflow: hidden;
-    }
-    &-enter, &-leave-to {
-      overflow: hidden;
-      max-height: 0;
     }
   }
 </style>

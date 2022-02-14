@@ -30,11 +30,12 @@ import UserProfile from '@/app/auth/storage/UserProfile'
 import VxInfo from "@/app/vx/storage/VxInfo"
 import File from "@/app/vx/storage/File"
 import Crypto from '@/models/CryptoStorage'
+
 import Company from '@/models/Company'
-// import Messenger from '@/app/vx/app/messenger/storage/Messenger'
 import {MessengerStore as Messenger} from '@Singletons'
 import {NotificationsStore as Notifications} from '@Singletons'
 import Dashboard from '@/models/Dashboard'
+import Resources from "@/LTE/Singletons/Resources/models/Resources";
 
 
 export default new Vuex.Store({
@@ -52,7 +53,8 @@ export default new Vuex.Store({
     Messenger,
     Notifications,
     Company,
-    Dashboard
+    Dashboard,
+    Resources
   },
   plugins: [
     createPersistedState({

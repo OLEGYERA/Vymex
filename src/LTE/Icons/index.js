@@ -11,8 +11,28 @@ Vue.component('icon-volume', () => import('./Volume'));
 Vue.component('icon-profile', () => import('./Profile'));
 Vue.component('icon-chat', () => import('./Comments')); //Should be refactor
 Vue.component('icon-setting', () => import('./Setting'));
-
-//Vue.component('icon-volume-off', () => import('./VolumeOff'));
+Vue.component('icon-search', () => import('./Search'));
+Vue.component('icon-volume-off', () => import('./VolumeOff'));
 
 Vue.component('icon-success', () => import('./Success'));
 Vue.component('icon-dropdown-arrow', () => import('./DropdownArrow'));
+
+
+
+Vue.component('icon-success', () => import('./Success'));
+Vue.component('icon-dropdown-arrow', () => import('./DropdownArrow'));
+Vue.component('icon-notebook', () => import('./Notebook'));
+Vue.component('icon-language', () => import('./Language'));
+Vue.component('icon-location', () => import('./Location'));
+Vue.component('icon-home', () => import('./Home'));
+Vue.component('icon-phone', () => import('./Phone'));
+Vue.component('icon-info', () => import('./Info'));
+Vue.component('icon-points-vertical', () => import('./PointsVertical'));
+Vue.component('icon-points-horizontal', () => import('./PointsHorizontal'));
+Vue.component('icon-calendar-error', () => import('./CalendarError'));
+Vue.component('icon-calendar', () => import('./Calendar'));
+Vue.component('icon-attach', () => import('./Attach'));
+Vue.component('icon-checkbox', () => import('./Checkbox'));
+Vue.component('icon-comments', () => import('./Comments'));
+
+Vue.component('icon-points-vertical', () => import('./PointsVertical'));

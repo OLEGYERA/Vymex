@@ -1,7 +1,7 @@
 <template>
   <div class="container-sidebar-view">
     <title-caps class="sidebar-view-header-title">
-      <template>пользователь</template>
+      пользователь
     </title-caps>
     <search :placeholder="'Поиск'"/>
     <sidebar-structure />

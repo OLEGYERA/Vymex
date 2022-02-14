@@ -1,32 +1,33 @@
 <template>
   <div class="notifications-main-view">
-    <div class="day-block">
-      <notifications-date></notifications-date>
-      <notify :info="cats.entrance" :link="link" :reject="reject">
-        <template v-slot:text>
-          Неудачная попытка возобновления сеанса с [имя устройста, модель устройства, ОС, IP], если это были не вы — завершите этот сеанс
-        </template>
-      </notify>
-      <notify :info="cats.task">
-        <template v-slot:text>
-          [Имя_пользователя] назначил вас ответственным [название_задачи]
-        </template>
-      </notify>
-      <notify :info="cats.process">
-        <template v-slot:text>
-          [Имя_пользователя] обновил процесс [название_процесса]
-        </template>
-      </notify>
-      <notify :info="cats.auth" :link="link">
-        <template v-slot:text>
-          Код подтверждения ХХХХХХ. Никому не давайте код, даже если этого требуют от имени Vymex. Этот код используется для входа в ваш аккаунт, он никогда не нужен для чего-то еще.
+    <div class="main-info">
+      <div class="day-block">
+        <notifications-date></notifications-date>
+        <notify :info="cats.entrance" :link="link" :reject="reject">
+          <template #text>
+            Неудачная попытка возобновления сеанса с [имя устройста, модель устройства, ОС, IP], если это были не вы — завершите этот сеанс
+          </template>
+        </notify>
+        <notify :info="cats.task">
+          <template #text>
+            [Имя_пользователя] назначил вас ответственным [название_задачи]
+          </template>
+        </notify>
+        <notify :info="cats.process">
+          <template #text>
+            [Имя_пользователя] обновил процесс [название_процесса]
+          </template>
+        </notify>
+        <notify :info="cats.auth" :link="link">
+          <template #text>
+            Код подтверждения ХХХХХХ. Никому не давайте код, даже если этого требуют от имени Vymex. Этот код используется для входа в ваш аккаунт, он никогда не нужен для чего-то еще.
             <br>
-          Если вы не запрашивали код для входа, проигнорируйте это сообщение.
-        </template>
-      </notify>
-    </div>
-    <div class="day-block">
-      <notifications-date></notifications-date>
+            Если вы не запрашивали код для входа, проигнорируйте это сообщение.
+          </template>
+        </notify>
+      </div>
+      <div class="day-block">
+        <notifications-date></notifications-date>
         <notify :info="cats.structure" :response="response">
           <template #text>
             Компания [Название_компании] отправила вам оффер на позицию [название_се]
@@ -52,6 +53,7 @@
             Неудачная попытка ввода кода подтверждения [имя устройста, модель устройства, ОС, IP], если это были не вы - смените пароль
           </template>
         </notify>
+      </div>
     </div>
   </div>
 </template>
@@ -134,11 +136,16 @@
     width: 100%;
     height: 100%;
     box-sizing: border-box;
+    overflow: hidden;
     padding: rem(24) rem(20);
-    .day-block {
-      margin-bottom: 24px;
-      .facade-date-box {
-        margin-bottom: 4px;
+    .main-info {
+      height: 100%;
+      overflow-y: scroll;
+      .day-block {
+        margin-bottom: 24px;
+        .facade-date-box {
+          margin-bottom: 4px;
+        }
       }
     }
   }

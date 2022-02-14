@@ -1,5 +1,8 @@
-import CoCreate from "./view/create";
-// import Tuning from './view/tuning'
+import CoCreate from "./create.app";
+import Co from "./app";
+import Dashboard from "./app/dashboard/app";
+
+import Task from './app/task/routing'
 // import Profile from './view/profile'
 
 export default [
@@ -8,20 +11,16 @@ export default [
     name: 'vx.co.create',
     component: CoCreate,
   },
-  // {
-  //   path: 'co',
-  //   component: Setting,
-  //   children: [
-  //     {
-  //       path: '/create',
-  //       name: 'vx.setting',
-  //       component: Tuning,
-  //     },
-  //     {
-  //       path: 'profile',
-  //       name: 'vx.setting.profile',
-  //       component: Profile,
-  //     }
-  //   ]
-  // }
+  {
+    path: 'co-:companyID',
+    component: Co,
+    children: [
+      {
+        path: '/',
+        name: 'vx.co',
+        component: Dashboard
+      },
+      ...Task
+    ]
+  },
 ]

@@ -1,45 +1,48 @@
 <template>
   <div class="router-personal-view">
-    <name :name="fullName" @updateRouter="updateRouter"/>
-    <div class="photo">
-      <avatar :logo="avatar.logo" :colorCode="avatar.colorCode"/>
-    </div>
-    <div class="info-block">
-      <div class="user-info">
-        <div class="icon-info"><icon-mail/></div>
-        <div>
-          <text-base>{{alias}}</text-base>
-          <title-caption>Имя пользователя VYMEX</title-caption>
-        </div>
-        <icon-copy/>
+    <div class="main-info">
+      <name :name="fullName" @updateRouter="updateRouter" :type="type"/>
+      <div class="photo">
+        <avatar :logo="avatar.logo" :colorCode="avatar.colorCode"/>
       </div>
-      <div class="user-info">
-        <div class="icon-info"><icon-phone/></div>
-        <div>
-          <text-base>{{phone}}</text-base>
-          <title-caption>Телефон</title-caption>
+      <div class="info-block">
+        <div class="user-info">
+          <div class="icon-info"><icon-mail/></div>
+          <div class="info-text-group">
+            <text-base>{{alias}}</text-base>
+            <title-caption>Имя пользователя VYMEX</title-caption>
+          </div>
+          <icon-copy/>
         </div>
-        <icon-copy/>
-      </div>
-      <div class="user-info">
-        <div class="icon-info"><icon-letter/></div>
-        <div>
-          <text-base>{{email}}</text-base>
-          <title-caption>Электронная почта</title-caption>
+        <div class="user-info">
+          <div class="icon-info"><icon-phone/></div>
+          <div class="info-text-group">
+            <text-base>{{phone}}</text-base>
+            <title-caption>Телефон</title-caption>
+          </div>
+          <icon-copy/>
         </div>
-        <icon-copy/>
-      </div>
-      <div class="user-info">
-        <div class="icon-info"><icon-calendar/></div>
-        <div>
-          <text-base>{{birthday}}</text-base>
-          <title-caption>День рождения</title-caption>
+        <div class="user-info">
+          <div class="icon-info"><icon-letter/></div>
+          <div class="info-text-group">
+            <text-base>{{email}}</text-base>
+            <title-caption>Электронная почта</title-caption>
+          </div>
+          <icon-copy/>
         </div>
-        <icon-copy/>
+        <div class="user-info">
+          <div class="icon-info"><icon-calendar/></div>
+          <div class="info-text-group">
+            <text-base>{{birthday}}</text-base>
+            <title-caption>День рождения</title-caption>
+          </div>
+          <icon-copy/>
+        </div>
+        <text-area v-model="textarea" :textAreaValue="about" :max-length="1000">
+          <template #title>О себе</template>
+        </text-area>
+        <title-sub v-if="type==='user'"><button-base>Написать</button-base></title-sub>
       </div>
-      <text-area v-model="textarea" :textAreaValue="about" :max-length="1000">
-        <template #title>О себе</template>
-      </text-area>
     </div>
   </div>
 </template>
@@ -57,6 +60,8 @@
  import IconCalendar from "@Icon/Calendar";
  import IconCopy from "@Icon/Copy";
  import TextArea from "@Facade/Input/TextArea";
+ import ButtonBase from '@Facade/Button/Base'
+ import TitleSub from '@Facade/Title/Sub'
 import {mapGetters} from "vuex";
 
 export default {
@@ -71,7 +76,9 @@ export default {
     IconLetter,
     IconCalendar,
     IconCopy,
-    TextArea
+    TextArea,
+    ButtonBase,
+    TitleSub
   },
   data() {
     return {
@@ -91,6 +98,7 @@ export default {
       email: 'getUserEmail',
       about: 'getUserAbout',
       avatar: 'getUserAvatarData',
+      type: 'Messenger/personalRouterType'
     }),
   },
   methods: {
@@ -107,72 +115,77 @@ export default {
     height: 100%;
     padding: 8px 0;
     box-sizing: border-box;
-    overflow-y: scroll;
-    .container-vx-name {
-      margin-bottom: 36px;
-    }
-    .photo {
-      margin: 0 auto 32px;
-      height: 120px;
-      width: 120px;
-    }
-    .facade-image-avatar ::v-deep {
-      .color {
-        font-size: 24px;
+    overflow: hidden;
+    .main-info {
+      height: 100%;
+      overflow-y: scroll;
+      .container-vx-name {
+        margin-bottom: 36px;
       }
-    }
-    .info-block {
-      padding: 0 20px;
-    }
-    .user-info {
-      display: flex;
-      position: relative;
-      padding: 12px 0;
-      border-bottom: $grey-scale-400 solid 1px;
-      cursor: pointer;
-      .icon-info {
-        margin-right: 12px;
-        height: 40px;
-        width: 40px;
-        border-radius: 50%;
-        display: inherit;
-        justify-content: center;
-        align-items: center;
-        background-color: rgba(24, 144, 255, 0.2);
+      .photo {
+        margin: 0 auto 32px;
+        height: 120px;
+        width: 120px;
       }
-      .icon-copy {
-        position: absolute;
-        right: 18px;
-        top: 50%;
-        transform: translateY(-50%);
-        display: none;
+      .facade-image-avatar ::v-deep {
+        .color {
+          font-size: 24px;
+        }
       }
-      .icon {
-        height: 16px;
-        width: 16px;
+      .info-block {
+        padding: 0 20px;
       }
-    }
-    .user-info:hover {
-      .icon-copy {
+      .user-info {
+        display: flex;
+        position: relative;
+        padding: 12px 0;
+        border-bottom: $grey-scale-400 solid 1px;
+        cursor: pointer;
+        .icon-info {
+          margin-right: 12px;
+          height: 40px;
+          width: 40px;
+          border-radius: 50%;
+          display: inherit;
+          justify-content: center;
+          align-items: center;
+          background-color: rgba(24, 144, 255, 0.2);
+        }
+        .icon-copy {
+          position: absolute;
+          right: 18px;
+          top: 50%;
+          transform: translateY(-50%);
+          display: none;
+        }
+        .icon {
+          height: 16px;
+          width: 16px;
+          color: $blue;
+        }
+      }
+      .user-info:hover {
+        .icon-copy {
+          display: block;
+        }
+      }
+      .user-info-about {
+        padding: 20px 0;
         display: block;
+        .about {
+          margin-bottom: 4px;
+        }
       }
-    }
-    .user-info-about {
-      padding: 20px 0;
-      display: block;
-      .about {
+      .facade-text-base {
+        color: #fff;
         margin-bottom: 4px;
       }
-    }
-    .facade-text-base {
-      color: #fff;
-      margin-bottom: 4px;
-    }
-    .facade-text-area {
-      margin-top: 12px;
-      ::v-deep {
-        .textarea-container{
-          padding-bottom: 24px;
+      .facade-text-area {
+        margin: 12px 0 44px;
+        ::v-deep {
+          .textarea-container{
+            padding-bottom: 24px;
+          }
         }
       }
     }

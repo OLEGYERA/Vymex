@@ -12,20 +12,20 @@
 </template>
 
 <script>
-
+import debounce from "lodash/debounce";
 export default {
   name: 'Facade.Input.Message',
   components: {
   },
   data(){
     return {
-      baseModel: '',
+      baseModel: this.model,
       placeholder: 'Введите сообщение'
     }
   },
+  props: ['model'],
   methods: {
     resize(e) {
-      this.$emit('onInput', this.baseModel)
       const area = document.querySelector('.facade-input-message')
       e.target.style.height = 'auto';
       e.target.style.height = `${e.target.scrollHeight}px`
@@ -44,46 +44,58 @@ export default {
     },
     onFocusOut(e) {
       e.target.style.margin = '0'
+    },
+    applicableCopyOfEmit(){
+      this.$emit('onInput', this.baseModel)
     }
   },
+  created() {
+    this.modelDebounceFunction = debounce(() => this.applicableCopyOfEmit(), this.disableDebounce ? 0 : 200)
+  },
+  watch: {
+    model(_model) {
+      if (_model !== this.baseModel) this.baseModel = _model;
+    },
+    baseModel() {
+      this.modelDebounceFunction()
+    }
+  }
 }
 </script>
 
 <style lang="scss" scoped>
-.facade-input-message {
-  width: 100%;
-  padding: 0 21px;
-  height: 36px;
-  border-radius: 51px;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  border: $grey-scale-300 solid 1px;
-  &:focus-within{
-    transition: border-color .2s ease-out;
-    border: $blue solid 2px;
-  }
-  textarea {
+  .facade-input-message {
     width: 100%;
-    color: #fff;
-    resize: none;
-    max-height: 116px;
-    background-color: $grey;
+    padding: 0 21px;
+    height: 36px;
+    border-radius: 51px;
     box-sizing: border-box;
-    font-family: Inter, sans-serif;
-    outline: none;
-    font-size: 14px;
-    line-height: 20px;
-    border: none;
-    padding: 0;
-    &::placeholder {
-      color: $grey-scale-200;
+    display: flex;
+    align-items: center;
+    border: $grey-scale-300 solid 1px;
+    &:focus-within{
+      transition: border-color .2s ease-out;
+      border: $blue solid 2px;
     }
-
-    &::-webkit-scrollbar {
-      width: 0;
+    textarea {
+      width: 100%;
+      color: #fff;
+      resize: none;
+      max-height: 116px;
+      background-color: $grey;
+      box-sizing: border-box;
+      font-family: Inter, sans-serif;
+      outline: none;
+      font-size: 14px;
+      line-height: 20px;
+      border: none;
+      padding: 0;
+      &::placeholder {
+        color: $grey-scale-200;
+      }
+      &::-webkit-scrollbar {
+        width: 0;
+      }
     }
   }
-}
-
 </style>

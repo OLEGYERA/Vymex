@@ -5,7 +5,7 @@
       <messenger-date/>
       <message v-for="(message, key) in messages" :message="message" :key="key"/>
     </main>
-    <input-area/>
+    <input-area @sendMessage="sendMessage"/>
   </div>
 </template>
 
@@ -115,6 +115,15 @@ export default {
     }
   },
   methods: {
+    sendMessage(text) {
+      const newMessage = {
+        type: 'owner',
+        time : '04:20',
+        status: 'sent',
+        text: text,
+      }
+      this.messages.push(newMessage)
+    }
   },
   computed: {
     ...mapGetters({

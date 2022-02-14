@@ -1,7 +1,7 @@
 <template>
   <div class="container-sidebar-header">
     <div class="info">
-      <title-sub>Выдать доступ</title-sub>
+      <title-sub><slot/></title-sub>
     </div>
   </div>
 </template>

@@ -105,6 +105,7 @@ export default {
         right: 0;
         bottom: 0;
         height: 17px;
+        color: $grey-scale-400;
       }
     }
     .info-text {

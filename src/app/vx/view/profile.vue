@@ -1,7 +1,11 @@
 <template>
   <div class="profile-view">
     <profile-faq/>
+<<<<<<< HEAD
+    <resources-app/>
+=======
     <dashboard />
+>>>>>>> origin/IY
   </div>
 </template>
 
@@ -13,7 +17,11 @@
     name: 'vx.profile',
     components: {
       ProfileFaq,
+<<<<<<< HEAD
+      ResourcesApp: async  () => (await import('@Singletons')).ResourcesApp
+=======
       Dashboard
+>>>>>>> origin/IY
     }
   }
 </script>

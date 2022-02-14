@@ -27,6 +27,25 @@ $red-opacity-2: rgba(255, 77, 79, .2);
 
 $green: #73D13D;
 
+$su-level-1: #D5F1C5;
+$su-level-2: red;
+$su-level-3: red;
+$su-level-4: #F2CBF8;
+
+
+
 @function rem($value) {
   @return #{($value / 16)}rem;
+}
+
+$colors:
+  'level1' #D5F1C5,
+  'level2' #FEF0BD,
+  'level3' #BAE7FF,
+  'level4' #F2CBF8;
+
+@each $name, $color in $colors{
+  .#{$name} {
+    background-color: $color;
+  }
 }

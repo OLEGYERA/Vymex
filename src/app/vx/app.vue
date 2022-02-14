@@ -19,7 +19,6 @@
   </div>
 </template>
 
-
 <script>
 /*eslint-disable*/
   import VxNavigation from '@Container/Vx/Navigation'
@@ -37,13 +36,6 @@
       MessengerApp: async () => (await import('@Singletons')).MessengerApp,
       NotificationsApp: async () => (await import('@Singletons')).NotificationsApp,
       NavigationPanel
-    },
-    data() {
-      return {
-        open: 'contacts',
-        switch: false,
-        chooseTime: 0,
-      }
     },
     created() {
       this.$core.execViaComponent('Auth', 'user');

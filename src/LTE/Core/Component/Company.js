@@ -26,8 +26,9 @@ class Company extends Binder{
       utf8ToArray(CreatorData.apartment),
       utf8ToArray(CreatorData.office),
       utf8ToArray(String(CreatorData.country.phoneIdent) + String(CreatorData.phone.withoutMask)),
-      utf8ToArray(CreatorData.about),
+      utf8ToArray(CreatorData.about), //не работает about
       utf8ToArray('UAH'),
+      numberToArray(CreatorData.logo),
       objectToArray(CreatorData.checkedActivities),
     );
     this.$socket.emit('listener', await encrypt(...arguments[1], data));
@@ -39,10 +40,19 @@ class Company extends Binder{
 
 
   async get(id){
+    this.$store.name('Company').set('CurrentCompanyBase', null);
     this.$socket.emit('listener', await encrypt(...arguments[1], numberToArray(id)));
   }
   getRes(company){
-    this.$store.name('Company').set('New', company)
+    this.$store.name('Company').set('CurrentCompanyBase', company);
+  }
+
+  async getUserWorkers(companyId){
+    this.$store.name('Company').set('CurrentCompanyWorkers', null);
+    this.$socket.emit('listener', await encrypt(...arguments[1], numberToArray(companyId)));
+  }
+  getUserWorkersRes(workers){
+    this.$store.name('Company').set('CurrentCompanyWorkers', workers);
   }
 
   async getUserCompanies() {

@@ -21,13 +21,18 @@ class Third extends Binder{
   }
 
   async bypass(){
-    const foundRoute = this.$router.match(this.$router.history._startLocation).name,
+    const foundRoute = this.$router.match(this.$router.history._startLocation),
           lastPage = this.$store.get('Page');
 
     if(!foundRoute && !lastPage){
       await this.$router.push({name: 'vx'})
     } else if(foundRoute && !lastPage){
-      this.routeMiddleware(foundRoute) ? await this.$router.push({name: foundRoute}) : await this.$router.push({name: 'vx'})
+      console.log(foundRoute)
+      if(this.routeMiddleware(foundRoute.name)){
+        await this.$router.push({name: foundRoute.name, params: foundRoute.params})
+      } else{
+        await this.$router.push({name: 'vx'})
+      }
     } else if(!foundRoute && lastPage){
       console.log('go by lastPage')
     } else {

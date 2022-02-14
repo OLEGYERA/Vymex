@@ -4,7 +4,7 @@
         class="notifications-dashboard-sidebar"
         @onClose="$emit('on-close')">
       <template #main-header>
-        <sidebar-header/>
+        <sidebar-header>Выдать доступ</sidebar-header>
       </template>
       <template #main-content>
         <sidebar-view/>

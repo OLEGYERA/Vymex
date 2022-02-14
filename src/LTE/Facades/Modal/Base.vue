@@ -39,6 +39,8 @@
     },
     computed: {
 
+    },
+    methods: {
     }
   }
 </script>

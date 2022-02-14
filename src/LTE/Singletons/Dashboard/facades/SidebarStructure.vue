@@ -23,7 +23,7 @@
                   @onClick="changeStatusLevel(index)"/>
       </div>
       <div v-if="level.showContext">
-        <structure-unit :data="level.data"/>
+        <structural-unit :data="level.data"/>
       </div>
     </div>
   </div>
@@ -32,7 +32,7 @@
 <script>
 import TitleCaps from "@Facade/Title/Caps";
 import Checkbox from '@Facade/Input/Checkbox';
-import StructureUnit from './StructuralUnit'
+import StructuralUnit from './StructuralUnit'
 import {mapGetters, mapMutations} from 'vuex';
 
 export default {
@@ -40,7 +40,7 @@ export default {
   components: {
     TitleCaps,
     Checkbox,
-    StructureUnit
+    StructuralUnit
   },
   computed: {
     ...mapGetters({

@@ -4,7 +4,7 @@
 
 <script>
   export default {
-    name: 'Facades.Title.Caps'
+    name: 'Facades.Title.Sub'
   }
 </script>
 
@@ -12,7 +12,7 @@
   .facade-title-sub{
     font-weight: 600;
     font-size: rem(15);
-    line-height: rem(20);
+    //line-height: rem(20);
     color: #fff;
     margin: 0;
   }

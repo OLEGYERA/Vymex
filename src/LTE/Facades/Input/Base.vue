@@ -31,60 +31,60 @@
 
 <script>
 
-import '@/directives/mask'
-import debounce from "lodash/debounce";
+  import '@/directives/mask'
+  import debounce from "lodash/debounce";
 
-export default {
-  name: 'Facade.Input.Base',
-  props: {
-    model: {
-      validator: function (value) {
-        return value === null || typeof value === "string" || typeof value === "number";
+  export default {
+    name: 'Facade.Input.Base',
+    props: {
+      model: {
+        validator: function (value) {
+          return value === null || typeof value === "string" || typeof value === "number";
+        }
+      },
+      placeholder: String,
+      mask: [String, Array],
+      img: String,
+      type: String,
+      labeled: Boolean,
+      position: String,
+      disable: Boolean,
+      disableDebounce: Boolean,
+      hide: Boolean
+    },
+    created() {
+      this.modelDebounceFunction = debounce(() => this.applicableCopyOfEmit(), this.disableDebounce ? 0 : 200)
+    },
+    data(){
+      return {
+        baseModel: this.model
       }
     },
-    placeholder: String,
-    mask: [String, Array],
-    img: String,
-    type: String,
-    labeled: Boolean,
-    position: String,
-    disable: Boolean,
-    disableDebounce: Boolean,
-    hide: Boolean
-  },
-  created() {
-    this.modelDebounceFunction = debounce(() => this.applicableCopyOfEmit(), this.disableDebounce ? 0 : 200)
-  },
-  data(){
-    return {
-      baseModel: this.model
-    }
-  },
-  computed: {
-    bindInputMask(){
-      return this.mask ? this.mask : ''
-    }
-  },
-  methods: {
-    handleBlur(e){
-      if (!(e.relatedTarget && e.relatedTarget.contains(e.target))) this.$emit('onBlur');
+    computed: {
+      bindInputMask(){
+        return this.mask ? this.mask : ''
+      }
     },
-    focusInput(){
-      if(!this.disable) this.$refs['facade-input-base-ref'].focus()
+    methods: {
+      handleBlur(e){
+        if (!(e.relatedTarget && e.relatedTarget.contains(e.target))) this.$emit('onBlur');
+      },
+      focusInput(){
+        if(!this.disable) this.$refs['facade-input-base-ref'].focus()
+      },
+      applicableCopyOfEmit(){
+        this.$emit('onInput', this.baseModel)
+      }
     },
-    applicableCopyOfEmit(){
-      this.$emit('onInput', this.baseModel)
-    }
-  },
-  watch: {
-    model(_model) {
-      if (_model !== this.baseModel) this.baseModel = _model;
-    },
-    baseModel() {
-      this.modelDebounceFunction()
+    watch: {
+      model(_model) {
+        if (_model !== this.baseModel) this.baseModel = _model;
+      },
+      baseModel() {
+        this.modelDebounceFunction()
+      }
     }
   }
-}
 
 </script>
 
@@ -178,7 +178,7 @@ export default {
       }
       input{
         color: $grey-scale-200;
-        cursor: not-allowed;;
+        cursor: not-allowed;
       }
     }
   }
