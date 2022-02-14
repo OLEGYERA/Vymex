@@ -8,13 +8,35 @@
       <text-area :max-length="1000">
         <template #title>Описание</template>
       </text-area>
-      <title-caps>Стоимость ресурса</title-caps>
+      <title-caps class="resource-price">Стоимость ресурса</title-caps>
       <input-price/>
       <header-add class="user" @create="showSidebar()">
         <template #header-title>Пользователь</template>
       </header-add>
-      <assign-user/>
-<!--      <modal-base status="true"/>-->
+      <assign-user :levels="levels"/>
+      <modal-base :status="modalStatus" @onClose="modalStatus=false">
+        <template #title>
+          Назначить пользователя
+        </template>
+        <template #description>
+          Вы собираетесь передать ресурс:
+        </template>
+        <template #content>
+          <title-caps class="modal-subtitle">Ресурс</title-caps>
+          <div class="resource-plate">
+            <title-sub>ddd</title-sub>
+            <title-caps>ddd</title-caps>
+          </div>
+          <title-caps class="modal-subtitle">Пользователь</title-caps>
+          <div class="user-plate">
+            <title-sub></title-sub>
+            <title-caps></title-caps>
+          </div>
+        </template>
+        <template #button-accept>
+          Подтвердить
+        </template>
+      </modal-base>
       <header-add class="owner">
         <template #header-title>Владелец</template>
         <template #header-amount>1</template>
@@ -43,7 +65,8 @@
   import ButtonBase from "@Facade/Button/Base"
   import InputPrice from "@Facade/Input/Price"
   import AssignUser from "@/app/vx/app/resource/view/AssignUser";
-  // import ModalBase from "@Facade/Modal/Base"
+  import ModalBase from "@Facade/Modal/Base"
+  import TitleSub from "@Facade/Title/Sub"
 
   import {mapMutations} from "vuex";
 
@@ -61,7 +84,8 @@
       ButtonBase,
       InputPrice,
       AssignUser,
-      // ModalBase
+      ModalBase,
+      TitleSub
     },
     data() {
       return{
@@ -70,6 +94,104 @@
           name: 'Arxel'
         },
         buttonDisable: true,
+        modalStatus: true,
+        levels: [
+          {
+            level: 1, showContext: true, checkedLevel: false, data: [
+              {
+                avatar: require('@/assets/img/icons/avatar.svg'),
+                name: "Александр Ким", position: "Должность", color: "#D5F1C5",
+                checkedPosition: false
+              },
+            ]
+          },
+          {
+            level: 2, showContext: false, checkedLevel: false, data: [
+              {
+                avatar: require('@/assets/img/icons/avatar.svg'),
+                name: "Александр Ким", position: "Должность", color: "#FEF0BD",
+                checkedPosition: false
+              },
+            ]
+          },
+          {
+            level: 3, showContext: false, checkedLevel: false, data: [
+              {
+                avatar: require('@/assets/img/icons/avatar.svg'),
+                name: "Александр Ким", position: "Должность", color: "#BAE7FF",
+                checkedPosition: false
+              },
+              {
+                avatar: require('@/assets/img/icons/avatar.svg'),
+                name: "Александр Ким", position: "Должность", color: "#BAE7FF",
+                checkedPosition: false
+              },
+              {
+                avatar: require('@/assets/img/icons/avatar.svg'),
+                name: "Александр Ким", position: "Должность", color: "#BAE7FF",
+                checkedPosition: false
+              },
+              {
+                avatar: require('@/assets/img/icons/avatar.svg'),
+                name: "Александр Ким", position: "Должность", color: "#BAE7FF",
+                checkedPosition: false
+              },
+              {
+                avatar: require('@/assets/img/icons/avatar.svg'),
+                name: "Александр Ким", position: "Должность", color: "#BAE7FF",
+                checkedPosition: false
+              },
+              {
+                avatar: require('@/assets/img/icons/avatar.svg'),
+                name: "Александр Ким", position: "Должность", color: "#BAE7FF",
+                checkedPosition: false
+              },
+            ]
+          },
+          {
+            level: 4, showContext: false, checkedLevel: false, data: [
+              {
+                avatar: require('@/assets/img/icons/avatar.svg'),
+                name: "Александр Ким", position: "Должность", color: "#F2CBF8",
+                checkedPosition: false
+              },
+              {
+                avatar: require('@/assets/img/icons/avatar.svg'),
+                name: "Александр Ким", position: "Должность", color: "#F2CBF8",
+                checkedPosition: false
+              },            {
+                avatar: require('@/assets/img/icons/avatar.svg'),
+                name: "Александр Ким", position: "Должность", color: "#F2CBF8",
+                checkedPosition: false
+              },            {
+                avatar: require('@/assets/img/icons/avatar.svg'),
+                name: "Александр Ким", position: "Должность", color: "#F2CBF8",
+                checkedPosition: false
+              },            {
+                avatar: require('@/assets/img/icons/avatar.svg'),
+                name: "Александр Ким", position: "Должность", color: "#F2CBF8",
+                checkedPosition: false
+              },
+              {
+                avatar: require('@/assets/img/icons/avatar.svg'),
+                name: "Александр Ким", position: "Должность", color: "#F2CBF8",
+                checkedPosition: false
+              },            {
+                avatar: require('@/assets/img/icons/avatar.svg'),
+                name: "Александр Ким", position: "Должность", color: "#F2CBF8",
+                checkedPosition: false
+              },            {
+                avatar: require('@/assets/img/icons/avatar.svg'),
+                name: "Александр Ким", position: "Должность", color: "#F2CBF8",
+                checkedPosition: false
+              },            {
+                avatar: require('@/assets/img/icons/avatar.svg'),
+                name: "Александр Ким", position: "Должность", color: "#F2CBF8",
+                checkedPosition: false
+              },
+            ]
+          },
+        ],
       }
     },
     methods: {
@@ -110,11 +232,42 @@
           min-height: 96px;
         }
       }
-      .facade-title-caps {
+      .resource-price {
         margin-bottom: rem(16);
       }
       .facade-input-price {
         margin-bottom: rem(24);
+      }
+      .facade-modal-base::v-deep{
+        .modal-base-body{
+          height: max-content;
+        }
+        .modal-subtitle{
+          padding: rem(8) 0;
+          margin-bottom: rem(4);
+        }
+        .resource-plate{
+          padding: rem(8) rem(16);
+          margin-bottom: rem(12);
+          border-radius: 8px;
+          background-color: $grey-scale-400;
+          .facade-title-sub{
+            margin-bottom: rem(4);
+          }
+          .facade-title-caps{
+            font-weight: 400;
+          }
+        }
+        .user-plate{
+          padding: rem(8) rem(16);
+          border-radius: 8px;
+          .facade-title-sub{
+            margin-bottom: rem(4);
+          }
+          .facade-title-caps{
+            font-weight: 400;
+          }
+        }
       }
       .user {
         margin-bottom: 24px;
