@@ -4,7 +4,7 @@
 
 <script>
   export default {
-    name: 'vx.co.create.view',
+    name: 'vx.co.create.app',
     components: {
       CoCreateApp: async () => (await import('@Singletons')).CoCreateApp,
     }

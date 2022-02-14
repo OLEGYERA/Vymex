@@ -5,10 +5,8 @@
     <div class="resource-main-plate">
       <input-base labeled :placeholder="'Название'"/>
       <input-base labeled :placeholder="'Серийный номер'"/>
-      <text-area :max-length="1000">
-        <template #title>Описание</template>
-      </text-area>
-      <title-caps class="resource-price">Стоимость ресурса</title-caps>
+      <text-area :max-length="1000" placeholder="Описание" labeled/>
+      <title-caps>Стоимость ресурса</title-caps>
       <input-price/>
       <header-add class="user" @create="showSidebar()">
         <template #header-title>Пользователь</template>

@@ -10,6 +10,7 @@
               <template #icon><icon-profile/></template>
             </sketch-title>
             <sketch-plate-account :tiny="!isFull"
+                                  :router="{name: 'vx'}"
                                   category="profile"
                                   :data="{name: userName, lastname: userLastname, logo: userAvatar, colorCode: userAvatarColor}"
                                   active
