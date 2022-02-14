@@ -15,6 +15,7 @@
 </template>
 
 <script>
+  /*eslint-disable*/
   import InputSearch from "@Facade/Input/Search";
   import TitleCaps from "@Facade/Title/Caps";
   import IconAdd from "@Icon/Add";
