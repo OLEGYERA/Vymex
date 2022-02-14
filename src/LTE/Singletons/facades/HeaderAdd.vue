@@ -12,7 +12,7 @@
       <slot name="text" class="text"/>
     </div>
     <div class="right-part">
-      <icon-sort v-if="sort"/>
+      <icon-sort v-if="sort" @click.native="$emit('sortFiles')"/>
       <icon-add @click.native="$emit('create')"/>
     </div>
   </div>
@@ -81,6 +81,7 @@ export default {
       .icon-sort {
         height: 16px;
         margin-right: rem(28);
+        cursor: pointer;
       }
       .icon-add{
         height: 24px;

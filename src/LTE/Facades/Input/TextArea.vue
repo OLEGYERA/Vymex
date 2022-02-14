@@ -31,6 +31,7 @@ export default {
     placeholder: String,
     count: Boolean,
     maxLength: Number,
+    labeled: Boolean
   },
   data () {
     return {

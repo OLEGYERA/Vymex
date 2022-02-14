@@ -41,9 +41,7 @@ export default {
   mounted() {
     this.setSliderWidth()
   },
-  updated() {
-    this.setSliderWidth()
-  }
+
 }
 </script>
 

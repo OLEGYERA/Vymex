@@ -8,7 +8,7 @@
       <div class="info-block">
         <div class="user-info">
           <div class="icon-info"><icon-mail/></div>
-          <div>
+          <div class="info-text-group">
             <text-base>{{alias}}</text-base>
             <title-caption>Имя пользователя VYMEX</title-caption>
           </div>
@@ -16,7 +16,7 @@
         </div>
         <div class="user-info">
           <div class="icon-info"><icon-phone/></div>
-          <div>
+          <div class="info-text-group">
             <text-base>{{phone}}</text-base>
             <title-caption>Телефон</title-caption>
           </div>
@@ -24,7 +24,7 @@
         </div>
         <div class="user-info">
           <div class="icon-info"><icon-letter/></div>
-          <div>
+          <div class="info-text-group">
             <text-base>{{email}}</text-base>
             <title-caption>Электронная почта</title-caption>
           </div>
@@ -32,7 +32,7 @@
         </div>
         <div class="user-info">
           <div class="icon-info"><icon-calendar/></div>
-          <div>
+          <div class="info-text-group">
             <text-base>{{birthday}}</text-base>
             <title-caption>День рождения</title-caption>
           </div>
@@ -161,6 +161,7 @@ export default {
         .icon {
           height: 16px;
           width: 16px;
+          color: $blue;
         }
       }
       .user-info:hover {

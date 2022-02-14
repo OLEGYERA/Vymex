@@ -1,13 +1,13 @@
 <template>
-  <div class="singleton-resources-sidebar-filter" v-if="status">
+  <div class="resource-sidebar-folder-access" v-if="status">
     <sidebar-right
-        class="messenger-app-sidebar" @onClose="closeSidebar()">
+        class="sidebar-filter-container" @onClose="closeSidebar()">
       <template #main-header>
-        <sidebar-header>Фильтры</sidebar-header>
+        <sidebar-header>Доступ к папке</sidebar-header>
       </template>
       <template #main-content>
-        <div class="sidebar-main">
-          <div class="top-part">
+        <div class="sidebar-main-plate">
+          <div class="header-text-group">
             <title-caps>Расположение</title-caps>
             <div class="buttons">
               <div
@@ -25,7 +25,7 @@
             <search :placeholder="'Поиск'"/>
             <sidebar-structure />
           </div>
-          <button-base>Применить</button-base>
+          <button-base>Сохранить</button-base>
         </div>
       </template>
     </sidebar-right>
@@ -33,38 +33,38 @@
 </template>
 
 <script>
-import SidebarHeader from "@Container/Vx/Main/Dashboard/Components/SidebarHeader";
-import SidebarRight from "@Facade/Navigation/SidebarRight";
-import Search from "@Facade/Input/Search";
-import ButtonBase from "@Facade/Button/Base";
-import SidebarStructure from "@Container/Vx/Main/Dashboard/facades/SidebarStructure";
-import {mapMutations} from "vuex";
-import TitleCaps from "@Facade/Title/Caps";
+  import SidebarHeader from "@Container/Vx/Main/Dashboard/Components/SidebarHeader";
+  import SidebarRight from "@Facade/Navigation/SidebarRight";
+  import Search from "@Facade/Input/Search";
+  import ButtonBase from "@Facade/Button/Base";
+  import SidebarStructure from "@Container/Vx/Main/Dashboard/facades/SidebarStructure";
+  import {mapMutations} from "vuex";
+  import TitleCaps from "@Facade/Title/Caps";
 
-export default {
-  name: 'Singleton.Resources.Views.Sidebar.Filter',
-  components: {
-    SidebarHeader, SidebarRight, TitleCaps, Search, ButtonBase, SidebarStructure
-  },
-  data() {
-    return{
-      buttons: ['Все', 'Локальные', 'Глобальные'],
-      activeButton: 0
-    }
-  },
-  props: {
-    status: Boolean
-  },
-  methods: {
-    ...mapMutations({
-      closeSidebar: 'Resources/closeSidebar',
-    }),
-  },
-}
+  export default {
+    name: 'vx.sidebar.folder.access',
+    components: {
+      SidebarHeader, SidebarRight, TitleCaps, Search, ButtonBase, SidebarStructure
+    },
+    data() {
+      return{
+        buttons: ['Доступно', 'Структура  56'],
+        activeButton: 0
+      }
+    },
+    props: {
+      status: Boolean
+    },
+    methods: {
+      ...mapMutations({
+        closeSidebar: 'Resources/closeSidebarFolderAccess',
+      }),
+    },
+  }
 </script>
 
 <style lang="scss" scoped>
-  .singleton-resources-sidebar-filter {
+  .resource-sidebar-folder-access {
     top: 0;
     left: 0;
     width: 100%;
@@ -73,9 +73,9 @@ export default {
     justify-content: flex-end;
     position: fixed;
     background-color: rgba($grey-scale-700, .8);
-    z-index: 9;
+    z-index: 4;
 
-    .messenger-app-sidebar ::v-deep{
+    .sidebar-filter-container ::v-deep{
       display: flex;
       height: 100%;
       background-color: $grey;
@@ -83,15 +83,16 @@ export default {
         width: 372px;
       }
     }
-    .sidebar-main {
+    .sidebar-main-plate {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       padding: 20px 20px 0;
       height: 100%;
       box-sizing: border-box;
-      .top-part{
+      .header-text-group{
         height: 100%;
+        padding: 0 0 30px;
         overflow-y: scroll;
       }
       .facade-button-base {

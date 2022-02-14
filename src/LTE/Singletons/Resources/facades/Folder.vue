@@ -1,13 +1,13 @@
 <template>
-  <div class="facade-resource-folder">
+  <div class="facade-resource-folder" @click="$emit('getId', {id: folder.id})">
     <div class="folder-image">
-      <img v-if="trash" src="@/assets/img/my/trash.svg">
+      <img v-if="folder.trash" src="@/assets/img/my/trash.svg">
       <img v-else src="@/assets/img/my/folder.svg">
-      <icon-group v-if="group"/>
+      <icon-group v-if="folder.group"/>
     </div>
     <div class="folder-info">
-      <text-base><slot name="title"/></text-base>
-      <title-caption><slot name="folder-content"/></title-caption>
+      <text-base>{{folder.title}}</text-base>
+      <title-caption>{{content}}</title-caption>
     </div>
   </div>
 </template>
@@ -24,8 +24,47 @@ export default {
     IconGroup
   },
   props: {
-    group: Boolean,
-    trash: Boolean,
+    folder: {
+      type: Object,
+      required: true
+    }
+  },
+  computed: {
+    content() {
+      let folders = '';
+      let files = '';
+      if(!this.folder.content.folders && !this.folder.content.files && !this.folder.content.objects){
+        return 'Пусто'
+      }
+      if(this.folder.content.objects) {
+        if (Number(String(this.folder.content.objects).slice(-1)) === 1) {
+          return `${this.folder.content.objects} объект`
+        } else if (Number(String(this.folder.content.objects).slice(-1)) < 5){
+          return `${this.folder.content.objects} объекта`
+        } else {
+          return `${this.folder.content.objects} объектов`
+        }
+      }
+      if (this.folder.content.folders){
+        if (Number(String(this.folder.content.folders).slice(-1)) === 1) {
+          folders = `${this.folder.content.folders} папка`
+        } else if (Number(String(this.folder.content.folders).slice(-1)) < 5){
+          folders = `${this.folder.content.folders} папки`
+        } else {
+          folders = `${this.folder.content.folders} папок`
+        }
+      }
+      if(this.folder.content.files) {
+        if (Number(String(this.folder.content.files).slice(-1)) === 1) {
+          files = `${this.folder.content.files} файл`
+        } else if (Number(String(this.folder.content.files).slice(-1)) < 5){
+          files = `${this.folder.content.files} файла`
+        } else {
+          files = `${this.folder.content.files} файлов`
+        }
+      }
+      return folders && files ? `${folders}, ${files}` : `${folders} ${files}`
+    }
   }
 }
 </script>

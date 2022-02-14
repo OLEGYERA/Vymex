@@ -178,7 +178,7 @@ export default {
       }
       input{
         color: $grey-scale-200;
-        cursor: not-allowed;;
+        cursor: not-allowed;
       }
     }
   }

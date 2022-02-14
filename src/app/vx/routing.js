@@ -5,8 +5,9 @@ import Career from './view/career'
 import Setting from './app/setting/routing'
 import Api from './app/api/routing'
 import Messenger from './app/messenger/routing'
-import Resources from "@/LTE/Singletons/Resources/routing";
 import Company from './app/company/routing'
+import Resources from './app/resource/routing'
+
 
 export default [
   {
@@ -23,11 +24,12 @@ export default [
         name: 'vx.career',
         component: Career,
       },
+
       ...Setting,
       ...Api,
       ...Messenger,
-      ...Resources,
-      ...Company
+      ...Company,
+      ...Resources
     ]
   }
 ]

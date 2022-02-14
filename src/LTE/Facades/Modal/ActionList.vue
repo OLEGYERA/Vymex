@@ -4,7 +4,7 @@
         class="action-item"
         :key="itemKey"
         :class="{delete: item.includes('Удалить')}"
-         @click="sendKey(itemKey)">
+         @click="$emit('onClick', {key: itemKey})">
       {{item}}
     </div>
   </div>
@@ -20,9 +20,9 @@ export default {
     actionListStatus: Boolean,
   },
   methods: {
-    sendKey(key) {
-      this.$emit('onClick', key)
-    }
+    // sendKey(key) {
+    //   this.$emit('onClick', key)
+    // }
   }
 }
 </script>
@@ -35,7 +35,8 @@ export default {
     border-radius: 8px;
     box-sizing: border-box;
     width: max-content;
-    box-shadow: 0px 0px 65px 5px rgba(0, 0, 0, 0.5);
+    box-shadow: 0px 0px 65px 3px rgba(0, 0, 0, 0.5);
+    z-index: 2;
     .action-item {
       padding: 12px;
       background-color: transparent;

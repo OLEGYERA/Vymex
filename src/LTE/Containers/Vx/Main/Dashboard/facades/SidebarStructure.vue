@@ -64,107 +64,11 @@ export default {
   },
   data() {
     return {
-      levels: [
-        {
-          level: 1, showContext: true, checkedLevel: false, data: [
-            {
-              avatar: require('@/assets/img/icons/avatar.svg'),
-              name: "Александр Ким", position: "Должность", color: "#D5F1C5",
-              checkedPosition: false
-            },
-          ]
-        },
-        {
-          level: 2, showContext: false, checkedLevel: false, data: [
-            {
-              avatar: require('@/assets/img/icons/avatar.svg'),
-              name: "Александр Ким", position: "Должность", color: "#FEF0BD",
-              checkedPosition: false
-            },
-          ]
-        },
-        {
-          level: 3, showContext: false, checkedLevel: false, data: [
-            {
-              avatar: require('@/assets/img/icons/avatar.svg'),
-              name: "Александр Ким", position: "Должность", color: "#BAE7FF",
-              checkedPosition: false
-            },
-            {
-              avatar: require('@/assets/img/icons/avatar.svg'),
-              name: "Александр Ким", position: "Должность", color: "#BAE7FF",
-              checkedPosition: false
-            },
-            {
-              avatar: require('@/assets/img/icons/avatar.svg'),
-              name: "Александр Ким", position: "Должность", color: "#BAE7FF",
-              checkedPosition: false
-            },
-            {
-              avatar: require('@/assets/img/icons/avatar.svg'),
-              name: "Александр Ким", position: "Должность", color: "#BAE7FF",
-              checkedPosition: false
-            },
-            {
-              avatar: require('@/assets/img/icons/avatar.svg'),
-              name: "Александр Ким", position: "Должность", color: "#BAE7FF",
-              checkedPosition: false
-            },
-            {
-              avatar: require('@/assets/img/icons/avatar.svg'),
-              name: "Александр Ким", position: "Должность", color: "#BAE7FF",
-              checkedPosition: false
-            },
-          ]
-        },
-        {
-          level: 4, showContext: false, checkedLevel: false, data: [
-            {
-              avatar: require('@/assets/img/icons/avatar.svg'),
-              name: "Александр Ким", position: "Должность", color: "#F2CBF8",
-              checkedPosition: false
-            },
-            {
-              avatar: require('@/assets/img/icons/avatar.svg'),
-              name: "Александр Ким", position: "Должность", color: "#F2CBF8",
-              checkedPosition: false
-            },            {
-              avatar: require('@/assets/img/icons/avatar.svg'),
-              name: "Александр Ким", position: "Должность", color: "#F2CBF8",
-              checkedPosition: false
-            },            {
-              avatar: require('@/assets/img/icons/avatar.svg'),
-              name: "Александр Ким", position: "Должность", color: "#F2CBF8",
-              checkedPosition: false
-            },            {
-              avatar: require('@/assets/img/icons/avatar.svg'),
-              name: "Александр Ким", position: "Должность", color: "#F2CBF8",
-              checkedPosition: false
-            },
-            {
-              avatar: require('@/assets/img/icons/avatar.svg'),
-              name: "Александр Ким", position: "Должность", color: "#F2CBF8",
-              checkedPosition: false
-            },            {
-              avatar: require('@/assets/img/icons/avatar.svg'),
-              name: "Александр Ким", position: "Должность", color: "#F2CBF8",
-              checkedPosition: false
-            },            {
-              avatar: require('@/assets/img/icons/avatar.svg'),
-              name: "Александр Ким", position: "Должность", color: "#F2CBF8",
-              checkedPosition: false
-            },            {
-              avatar: require('@/assets/img/icons/avatar.svg'),
-              name: "Александр Ким", position: "Должность", color: "#F2CBF8",
-              checkedPosition: false
-            },
-          ]
-        },
-      ],
     }
   },
   props: {
     round: Boolean,
+    levels: Array,
   },
   methods: {
     changeStatus(index) {

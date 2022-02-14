@@ -1,25 +1,13 @@
 <template>
-  <div class="resources-create-resource-view">
-    <comeback @onClick="$router.push({name: 'resources.material.resources'})"/>
+  <div class="resource-create-resource-view">
+    <comeback @onClick="$router.push({name: 'vx.resource.intangible.resources'})"/>
     <title-base>Создать ресурс</title-base>
-    <div class="main-plate">
+    <div class="resource-main-plate">
       <input-base labeled :placeholder="'Название'"/>
-      <input-base labeled :placeholder="'Серийный номер'"/>
-      <text-area :placeholder="'Описание'" :max-length="1000" :count="true"/>
-      <title-caps>Стоимость ресурса</title-caps>
-      <input-price/>
-      <header-add class="user" @create="showSidebar()">
-        <template #header-title>Пользователь</template>
-      </header-add>
-      <assign-user/>
-      <header-add class="owner">
-        <template #header-title>Владелец</template>
-        <template #header-amount>1</template>
-      </header-add>
-      <company :company="company"/>
-      <header-add class="">
-        <template #header-title>изображения</template>
-      </header-add>
+      <input-base labeled :placeholder="'URL'"/>
+      <input-base labeled :placeholder="'Логин'"/>
+      <input-password labeled :placeholder="'Пароль'" password-text="'dldldl"/>
+      <text-area labeled :placeholder="'Описание (не обязательно)'" :max-length="1000" />
     </div>
     <div class="create-resource-buttons">
       <button-secondary class="create-resource-button">Отмена</button-secondary>
@@ -33,62 +21,37 @@ import Comeback from "@Facade/Navigation/Comeback";
 import TitleBase from "@Facade/Title/Base";
 import InputBase from "@Facade/Input/Base"
 import TextArea from "@Facade/Input/TextArea"
-import TitleCaps from "@Facade/Title/Caps"
-import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd";
-import Company from "@/LTE/Singletons/Resources/facades/Company";
 import ButtonSecondary from "@Facade/Button/Secondary"
 import ButtonBase from "@Facade/Button/Base"
-import InputPrice from "@Facade/Input/Price"
-import AssignUser from "@/LTE/Singletons/Resources/views/sidebar/AssignUser";
-
-import {mapMutations} from "vuex";
+import InputPassword from "@Facade/Input/Password"
 
 export default {
-  name: 'resources.material.resources',
+  name: 'vx.resource.create',
   components: {
     Comeback,
     TitleBase,
     InputBase,
     TextArea,
-    TitleCaps,
-    HeaderAdd,
-    Company,
     ButtonSecondary,
     ButtonBase,
-    InputPrice,
-    AssignUser
+    InputPassword
   },
   data() {
     return{
-      company: {
-        img: require('@/assets/img/my/process.svg'),
-        name: 'Arxel'
-      },
       buttonDisable: true,
     }
-  },
-  methods: {
-    ...mapMutations({
-      showSidebar: 'Resources/showSidebarAssign',
-    }),
   },
 }
 </script>
 
 <style lang="scss" scoped>
-.resources-create-resource-view {
-  height: 100%;
+.resource-create-resource-view {
   width: 100%;
-  padding: 24px 0;
-  box-sizing: border-box;
-  .facade-navigation-comeback {
-    margin-bottom: rem(28);
-  }
   .facade-title-base {
     text-align: center;
     margin-bottom: rem(36);
   }
-  .main-plate {
+  .resource-main-plate {
     width: 100%;
     margin-bottom: rem(36);
     padding: 48px 164px 52px;
@@ -101,8 +64,14 @@ export default {
     }
     .facade-text-area::v-deep {
       margin-bottom: rem(16);
-      textarea{
-        min-height: 104px;
+
+      //.textarea-title{
+      //  font-weight: 400;
+      //  font-size: 14px;
+      //  line-height: 16px;
+      //}
+      .textarea-container{
+        min-height: 96px;
       }
     }
     .facade-title-caps {
