@@ -34,6 +34,7 @@ import Crypto from '@/models/CryptoStorage'
 import Company from '@/models/Company'
 import {MessengerStore as Messenger} from '@Singletons'
 import {NotificationsStore as Notifications} from '@Singletons'
+import Dashboard from '@/models/Dashboard'
 import Resources from "@/LTE/Singletons/Resources/models/Resources";
 
 
@@ -51,8 +52,9 @@ export default new Vuex.Store({
     File,
     Messenger,
     Notifications,
-    Company,
     Resources
+    Company,
+    Dashboard
   },
   plugins: [
     createPersistedState({

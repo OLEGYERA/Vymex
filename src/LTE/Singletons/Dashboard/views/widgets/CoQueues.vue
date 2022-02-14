@@ -1,30 +1,35 @@
 <template>
-  <div class="container-dashboard-resources">
+  <div  :class="[hideWidget === 'CoQueues'
+  ? (index + 1) % 2 === 0
+  ? 'hide-right-widget'
+  : 'hide-left-widget' : '',
+  'container-dashboard-co-queues']">
     <widgets-header @show-context="showContext"
                     :title="data.title"
                     :icon="data.icon"/>
-    <div class="resources-body">
-      <div class="body-coast">
-        <span class="coast-total">Общая стоимость ресурсов</span>
-        <span class="coast-sum">{{ data.data.coastSum }}₴</span>
+    <div class="co-queues-body">
+      <div class="body-for-sale">
+        <span class="for-sale-title">Доля компании на продажу:</span>
+        <span class="for-sale-percent">{{ data.data.forSale }} %</span>
       </div>
-      <div class="body-coast">
-        <span class="coast-total">Количество свободных ресурсов</span>
-        <span class="coast-sum">{{ data.data.resourcesSum }}</span>
+      <div class="body-for-sale">
+        <span class="for-sale-title">Активные голосования:</span>
+        <span class="for-sale-percent">{{ data.data.activeVoting }}</span>
       </div>
     </div>
-    <div class="resources-footer">
-      <span>Запросы на ресурс</span>
-      <span class="footer-num">{{ data.data.requests }}</span>
+    <div class="co-queues-footer">
+      <span>Количество соучредителей</span>
+      <span class="footer-num">{{ data.data.coQueues }}</span>
     </div>
   </div>
 </template>
 
 <script>
-import WidgetsHeader from "@Container/Vx/Main/Dashboard/facades/WidgetsHeader";
+import WidgetsHeader from "../../facades/WidgetsHeader";
+import {mapGetters} from "vuex";
 
 export default {
-  name: "Resources",
+  name: "CoQueues",
   methods: {
     showContext(value) {
       this.$emit('show-context', value, this.data.name)
@@ -35,12 +40,19 @@ export default {
   },
   props: {
     data: Object,
-  }
+    index: Number
+  },
+  computed: {
+    ...mapGetters({
+      hideWidget: 'getHideWidget'
+    }),
+  },
 }
 </script>
 
 <style lang="scss" scoped>
-.container-dashboard-resources {
+@import '../../assets/animations.module';
+.container-dashboard-co-queues {
   display: flex;
   flex-direction: column;
   border-radius: 16px;
@@ -48,11 +60,11 @@ export default {
   padding: 16px;
   height: 224px;
 
-  .resources-body {
-    display: inherit;
+  .co-queues-body {
+    display: flex;
 
-    .body-coast {
-      display: inherit;
+    .body-for-sale {
+      display: flex;
       flex-direction: column;
       align-items: flex-start;
       justify-content: space-between;
@@ -63,13 +75,14 @@ export default {
       margin-right: 0;
       margin-left: 8px;
 
-      .coast-total {
+      .for-sale-title {
         font-size: rem(12);
         line-height: rem(16);
         color: $grey-scale-200;
+        margin-right: 15%;
       }
 
-      .coast-sum {
+      .for-sale-percent {
         font-weight: 600;
         font-size: rem(20);
         color: #FFF;
@@ -83,20 +96,20 @@ export default {
     }
   }
 
-  .resources-footer {
+  .co-queues-footer {
     display: flex;
     align-items: center;
     justify-content: center;
     color: #FFF;
     padding: 12px;
-    height: 40px;
+    height: 200%;
     background: $grey-scale-400;
     border-radius: 12px;
-    margin-top: 6.4%;
+    margin-top: 6.8%;
 
     .footer-num {
       text-align: center;
-      background: $red;
+      background: $grey-scale-300;
       border-radius: 10px;
       width: 24px;
       height: 16px;

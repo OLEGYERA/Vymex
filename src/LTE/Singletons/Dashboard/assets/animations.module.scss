@@ -1,0 +1,27 @@
+.hide-left-widget {
+  animation: to-hide-left;
+  animation-duration: $vx-nav-time;
+}
+
+@keyframes to-hide-left {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateX(-300%);
+  }
+}
+
+.hide-right-widget {
+  animation: to-hide-right;
+  animation-duration: $vx-nav-time;
+}
+
+@keyframes to-hide-right {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateX(300%);
+  }
+}

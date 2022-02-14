@@ -4,14 +4,14 @@
       пользователь
     </title-caps>
     <search :placeholder="'Поиск'"/>
-    <sidebar-structure :levels="levels"/>
+    <sidebar-structure />
   </div>
 </template>
 
 <script>
 import TitleCaps from "@Facade/Title/Caps";
 import Search from "@Facade/Input/Search";
-import SidebarStructure from "../facades/SidebarStructure";
+import SidebarStructure from "../../facades/SidebarStructure";
 
 export default {
   name: 'SidebarView',

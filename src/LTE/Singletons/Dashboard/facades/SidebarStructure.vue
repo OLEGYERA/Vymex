@@ -32,21 +32,30 @@
 <script>
 import TitleCaps from "@Facade/Title/Caps";
 import Checkbox from '@Facade/Input/Checkbox';
-import StructureUnit from './StructureUnit'
+import StructureUnit from './StructuralUnit'
+import {mapGetters, mapMutations} from 'vuex';
 
 export default {
   name: "SidebarStructure",
-  props: {
-    levels: Array
-  },
   components: {
     TitleCaps,
     Checkbox,
     StructureUnit
   },
+  computed: {
+    ...mapGetters({
+      levels: 'getLevels',
+    })
+  },
   methods: {
+    ...mapMutations({
+      setLevels: 'setWidgetLevels',
+    }),
     changeStatus(index) {
-      this.levels = this.levels.map((el, i) => i === index ? {...el, showContext: !el.showContext} : el)
+      const newLevels = this.levels.map((el, i) => i === index
+          ? {...el, showContext: !el.showContext}
+          : el)
+      this.setLevels(newLevels)
     },
     changeStatusLevel(index) {
       this.levels[index].checkedLevel = !this.levels[index].checkedLevel
@@ -57,7 +66,7 @@ export default {
 
 <style lang="scss" scoped>
 .container-sidebar-structure {
-   width: 100%;
+  margin-bottom: 148px;
 
   .sidebar-structure-level {
     display: flex;
