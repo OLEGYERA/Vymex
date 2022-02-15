@@ -21,10 +21,10 @@
 </template>
 
 <script>
-  import SidebarHeader from "@Container/Vx/Main/Dashboard/Components/SidebarHeader";
+  import SidebarHeader from "../sidebar-header.facade"; //// костыль
   import SidebarRight from "@Facade/Navigation/SidebarRight";
   import Search from "@Facade/Input/Search";
-  import SidebarStructure from "@Container/Vx/Main/Dashboard/facades/SidebarStructure";
+  import SidebarStructure from "../sidebar-structure.facade"; //// костыль
   import {mapGetters, mapMutations} from "vuex";
   import TitleCaps from "@Facade/Title/Caps";
 

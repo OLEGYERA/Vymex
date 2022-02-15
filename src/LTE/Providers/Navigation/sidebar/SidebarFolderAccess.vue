@@ -33,11 +33,11 @@
 </template>
 
 <script>
-import SidebarHeader from "@/LTE/Singletons/Dashboard/views/sidebar/SidebarHeader";
+import SidebarHeader from "../sidebar-header.facade"; //// костыль
   import SidebarRight from "@Facade/Navigation/SidebarRight";
   import Search from "@Facade/Input/Search";
   import ButtonBase from "@Facade/Button/Base";
-import SidebarStructure from "@/LTE/Singletons/Dashboard/facades/SidebarStructure";
+import SidebarStructure from "../sidebar-structure.facade"; //// костыль
   import {mapMutations} from "vuex";
   import TitleCaps from "@Facade/Title/Caps";
 
