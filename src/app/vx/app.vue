@@ -5,6 +5,7 @@
       <div class="vx-body-space">
         <vx-header/>
         <div class="body-space-router-view" :class="{'not-adapt-styles': exceptionalStyle}">
+          <navigation-panel/>
           <div class="router-view-body">
             <router-view/>
           </div>
@@ -24,6 +25,7 @@
   import VxHeader from '@Container/Vx/Header'
 
   import {mapGetters} from 'vuex'
+  import NavigationPanel from "@Container/PanelNavigation/app";
   const exceptionalRoutes = ['vx.msg'];
 
   export default {
@@ -33,6 +35,7 @@
       VxHeader,
       MessengerApp: async () => (await import('@Singletons')).MessengerApp,
       NotificationsApp: async () => (await import('@Singletons')).NotificationsApp,
+      NavigationPanel
     },
     created() {
       // for (let i=0; i<5000; i++) {
@@ -73,11 +76,12 @@
         flex-direction: column;
         width: 100%;
         .body-space-router-view{
+          display: flex;
           height: 100%;
           box-sizing: border-box;
-          padding: 24px 0;
           overflow-y: scroll;
           .router-view-body{
+            width: 83.1%;
             max-width: 796px;
             margin: 0 auto;
           }

@@ -5,24 +5,23 @@
     </title-caps>
     <search :placeholder="'Поиск'"/>
     <sidebar-structure />
-    <button-base class="button"
-                 @onClick="$emit('handle-access')">Выдать доступ</button-base>
   </div>
 </template>
 
 <script>
 import TitleCaps from "@Facade/Title/Caps";
 import Search from "@Facade/Input/Search";
-import ButtonBase from "@Facade/Button/Base";
-import SidebarStructure from "../facades/SidebarStructure";
+import SidebarStructure from "../../facades/SidebarStructure";
 
 export default {
   name: 'SidebarView',
+  props: {
+    levels: Array
+  },
   components: {
     TitleCaps,
     Search,
     SidebarStructure,
-    ButtonBase
   },
 }
 </script>
@@ -35,9 +34,6 @@ export default {
   .sidebar-view-header-title {
     margin-bottom: 4.8%;
   }
-  .button{
-    margin-top: 18.95%;
-    margin-bottom: 12%;
-  }
 }
+
 </style>

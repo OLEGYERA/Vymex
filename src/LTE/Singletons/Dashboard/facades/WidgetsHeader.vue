@@ -8,10 +8,11 @@
       <img :src="require('@/assets/img/icons/context.svg')" :class="{active: actionListStatus}"/>
       <transition>
         <action-list
+            class="show-context-animation"
             :actionListStatus="actionListStatus"
             :items="items"
             v-if="actionListStatus"
-            @changeStatus="showContext"
+            @onClick="showContext"
         />
       </transition>
     </div>
@@ -76,5 +77,30 @@ export default {
     }
   }
 }
-
+.show-context-animation{
+  animation: show-context;
+  animation-duration: $vx-nav-time;
+}
+@keyframes show-context{
+  0%{
+    font-size: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+  }
+  50%{
+    font-size: 0;
+  }
+  90%{
+    font-size: 0;
+  }
+  99%{
+    font-size: 0;
+  }
+  100%{
+    bottom: 0;
+    width: 155px;
+    height: 96px;
+  }
+}
 </style>

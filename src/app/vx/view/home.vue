@@ -1,5 +1,6 @@
 <template>
   <div class="profile-view">
+<!--    <dashboard/>-->
     <profile-faq/>
 
     <navigation-tabs class="profile-career-navigation"
@@ -27,7 +28,6 @@
             </div>
           </template>
         </div>
-<!--        <resources-app/>-->
       </template>
 
       <template #tab-content-1>
@@ -54,6 +54,7 @@
   import ButtonBase from '@Facade/Button/Base'
 
   import {mapGetters} from 'vuex'
+  //import Dashboard from "@/LTE/Singletons/Dashboard/app";
 
   export default {
     name: 'vx.home',

@@ -1,5 +1,9 @@
 <template>
-  <div class="container-control-center">
+  <div  :class="[hideWidget === 'ControlCenter'
+  ? (index + 1) % 2 === 0
+  ? 'hide-right-widget'
+  : 'hide-left-widget' : '',
+  'container-control-center']">
     <widgets-header @show-context="showContext"
                     :title="data.title"
                     :icon="data.icon"/>
@@ -40,7 +44,8 @@
 </template>
 
 <script>
-import WidgetsHeader from "@Container/Vx/Main/Dashboard/facades/WidgetsHeader";
+import WidgetsHeader from "../../facades/WidgetsHeader";
+import {mapGetters} from "vuex";
 
 export default {
   name: "ControlCenter",
@@ -51,7 +56,10 @@ export default {
       let difference = memoryAll - memoryReserved
       let result = difference / (memoryAll / 100)
       return result
-    }
+    },
+    ...mapGetters({
+      hideWidget: 'getHideWidget'
+    }),
   },
   methods: {
     showContext(value) {
@@ -63,12 +71,13 @@ export default {
   },
   props: {
     data: Object,
-  }
+    index: Number
+  },
 }
 </script>
 
 <style lang="scss" scoped>
-
+@import '../../assets/animations.module';
 .container-control-center {
   display: flex;
   flex-direction: column;

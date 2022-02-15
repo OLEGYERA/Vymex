@@ -1,5 +1,9 @@
 <template>
-  <div class="container-dashboard-structure">
+    <div :class="[hideWidget === 'Structure'
+  ? (index + 1) % 2 === 0
+  ? 'hide-right-widget'
+  : 'hide-left-widget' : '',
+  'container-dashboard-structure']">
     <widgets-header @show-context="showContext"
                     :title="data.title"
                     :icon="data.icon"/>
@@ -19,7 +23,8 @@
 </template>
 
 <script>
-import WidgetsHeader from "@Container/Vx/Main/Dashboard/facades/WidgetsHeader";
+import WidgetsHeader from "../../facades/WidgetsHeader";
+import {mapGetters} from "vuex";
 
 export default {
   name: "Structure",
@@ -31,13 +36,21 @@ export default {
   components: {
     WidgetsHeader
   },
+  computed: {
+    ...mapGetters({
+      hideWidget: 'getHideWidget'
+    }),
+  },
   props: {
     data: Object,
+    index: Number
   }
 }
 </script>
 
 <style lang="scss" scoped>
+@import '../../assets/animations.module';
+
 .container-dashboard-structure {
   display: flex;
   flex-direction: column;
@@ -46,8 +59,6 @@ export default {
   background-color: $grey-scale-500;
   padding: 16px;
   height: 224px;
-
-
   .structure-body {
     display: flex;
     flex-direction: column;

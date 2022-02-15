@@ -1,28 +1,31 @@
 <template>
   <div class="container-sidebar-structure-unit">
-    <div class="structure-unit-level-context" :class="{level1: user.level===1, level2: user.level===2, level3: user.level===3, level4: user.level===4}">
-      <div class="level-context-main">
-        <img class="user-image" :src="user.img"/>
-        <div class="level-context-main-description">
-          <span class="main-description-name">{{ user.name }}</span>
-          <span class="main-description-position">{{ user.position }}</span>
+        <div v-for="(men, i) in data"
+             :key="i"
+             class="structure-unit-level-context"
+             :style="{background: men.color}">
+          <div class="level-context-main">
+            <img :src="men.avatar"/>
+            <div class="level-context-main-description">
+              <span class="main-description-name">{{ men.name }}</span>
+              <span class="main-description-position">{{ men.position }}</span>
+            </div>
+          </div>
+          <div>
+            <checkbox :model="men.checkedPosition"
+                      @onClick="changeStatusPosition(i)"></checkbox>
+          </div>
         </div>
-      </div>
-      <div class="right-side">
-        <slot><checkbox/></slot>
-      </div>
     </div>
-  </div>
 </template>
 
 <script>
 import Checkbox from '@Facade/Input/Checkbox';
 
-
 export default {
-  name: "StructureUnit",
+  name: "StructuralUnit",
   props: {
-    user: Object
+    data: Array
   },
   components: {
     Checkbox
@@ -42,17 +45,14 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    width: 95.2%;
     height: 36px;
     border-radius: 8px;
+    margin-top: 8px;
     padding: 8px;
 
     .level-context-main {
       display: inherit;
-
-      .user-image {
-        height: 36px;
-        width: 36px;
-      }
 
       .level-context-main-description {
         display: inherit;
@@ -77,9 +77,7 @@ export default {
       }
     }
   }
-  .right-side {
-    cursor: pointer;
-  }
+
   .checkbox {
     margin-right: 8px;
   }

@@ -1,5 +1,9 @@
 <template>
-  <div class="container-dashboard-costs">
+  <div  :class="[hideWidget === 'Costs'
+  ? (index + 1) % 2 === 0
+  ? 'hide-right-widget'
+  : 'hide-left-widget' : '',
+  'container-dashboard-costs']">
     <widgets-header @show-context="showContext"
                     :title="data.title"
                     :icon="data.icon"/>
@@ -26,7 +30,8 @@
 </template>
 
 <script>
-import WidgetsHeader from "@Container/Vx/Main/Dashboard/facades/WidgetsHeader";
+import WidgetsHeader from "../../facades/WidgetsHeader";
+import {mapGetters} from "vuex";
 
 export default {
   name: "Costs",
@@ -40,11 +45,19 @@ export default {
   },
   props: {
     data: Object,
-  }
+    index: Number
+  },
+  computed: {
+    ...mapGetters({
+      hideWidget: 'getHideWidget'
+    }),
+  },
 }
 </script>
 
 <style lang="scss" scoped>
+@import '../../assets/animations.module';
+
 .container-dashboard-costs {
   display: flex;
   flex-direction: column;
@@ -117,6 +130,5 @@ export default {
     }
   }
 }
-
 </style>
 
