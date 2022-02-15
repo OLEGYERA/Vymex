@@ -1,9 +1,10 @@
 <template>
-  <div class="facade-input-date">
-    <div class="date-input" @click="calendarModalStatus = true">
+  <div class="facade-input-date" :disable="disable">
+    <div class="date-input" @click="openCalendarModalUi">
       <input-base
-        placeholder="День рождение"
+        :placeholder="placeholder"
         :model="dateModel"
+        :disable="disable"
         labeled
       />
       <icon-date/>
@@ -29,7 +30,9 @@
       CalendarModalUi
     },
     props: {
-      model: String
+      model: String,
+      placeholder: String,
+      disable: Boolean
     },
     mounted() {
       this.dateModel = this.model;
@@ -39,6 +42,9 @@
       dateModel: null
     }),
     methods: {
+      openCalendarModalUi(){
+        if(!this.disable) this.calendarModalStatus = true;
+      },
       pickNewDate(date){
         this.dateModel = date;
         this.calendarModalStatus = false;
@@ -54,26 +60,30 @@
 </script>
 
 <style lang="scss" scoped>
-  .facade-input-date{
+  .facade-input-date {
     width: 100%;
     position: relative;
-    .date-input{
+
+    .date-input {
       width: 100%;
       position: relative;
       display: flex;
       align-items: center;
       z-index: 0;
-      .icon-date{
+
+      .icon-date {
         height: min-content;
         position: absolute;
         right: 4px;
         color: #fff;
         z-index: -1;
       }
-      .facade-input-base{
+
+      .facade-input-base {
         padding-right: 22px;
       }
-      &:after{
+
+      &:after {
         content: '';
         position: absolute;
         top: 0;
@@ -81,6 +91,14 @@
         right: 0;
         bottom: 0;
         cursor: pointer;
+      }
+    }
+
+    &[disable] {
+      outline: none;
+      cursor: not-allowed;
+      .icon-date{
+        color: $grey-scale-300
       }
     }
   }

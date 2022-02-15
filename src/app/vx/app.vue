@@ -35,6 +35,10 @@
       NotificationsApp: async () => (await import('@Singletons')).NotificationsApp,
     },
     created() {
+      // for (let i=0; i<5000; i++) {
+      //   console.log('Тест получения: ' + i);
+      //   this.$core.execViaComponent('Auth', 'user');
+      // }
       this.$core.execViaComponent('Auth', 'user');
       this.$core.execViaComponent('Company', 'getUserCompanies');
     },

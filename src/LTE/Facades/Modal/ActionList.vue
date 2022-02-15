@@ -1,11 +1,13 @@
 <template>
-  <div id="menu" class="facade-modal-action-list" v-if="actionListStatus">
-    <div v-for="(item, itemKey) in items"
-        class="action-item"
-        :key="itemKey"
-        :class="{delete: item.includes('Удалить')}"
-         @click="$emit('onClick', {key: itemKey})">
-      {{item}}
+  <div class="facade-modal-action-list" v-if="status">
+    <div class="action-list-substrate" @click="handleClose"></div>
+    <div class="action-list-body">
+      <div v-for="(action, actionKey) in actions" :key="actionKey" class="action-item" @click="handleClickOnItem(actionKey)">
+        {{ action }}
+      </div>
+      <div class="action-item action-item-del" @click="handleClickOnDelete">
+        <slot name="del-title">Удалить</slot>
+      </div>
     </div>
   </div>
 </template>
@@ -16,39 +18,69 @@ export default {
   components: {
   },
   props: {
-    items: Array,
-    actionListStatus: Boolean,
+    actions: {
+      type: Array,
+      required: true
+    },
+    status: {
+      type: Boolean,
+      required: true
+    }
   },
   methods: {
-    // sendKey(key) {
-    //   this.$emit('onClick', key)
-    // }
+    handleClickOnItem(id){
+      this.$emit('onList', id);
+      this.handleClose();
+    },
+    handleClickOnDelete(){
+      this.$emit('onDelete');
+      this.handleClose();
+    },
+    handleClose(){
+      this.$emit('onClose');
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
   .facade-modal-action-list {
-    position: absolute;
-    padding: 4px;
-    background-color: $grey-scale-700;
-    border-radius: 8px;
-    box-sizing: border-box;
-    width: max-content;
-    box-shadow: 0px 0px 65px 3px rgba(0, 0, 0, 0.5);
-    z-index: 2;
-    .action-item {
-      padding: 12px;
-      background-color: transparent;
-      color: #fff;
-      cursor: pointer;
-      transition: color .2s;
-      &:hover {
-        color: $grey-scale-200;
+    .action-list-substrate{
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      position: fixed;
+    }
+    .action-list-body{
+      position: absolute;
+      width: max-content;
+      border-radius: 8px;
+      overflow: hidden;
+      box-sizing: border-box;
+      background-color: $grey-scale-700;
+      box-shadow: 0 0 65px 3px rgba(0, 0, 0, 0.5);
+      z-index: 2;
+      .action-item {
+        color: #fff;
+        padding: 12px;
+        font-size: rem(15);
+        line-height: rem(20);
+        cursor: pointer;
+        transition: .1s all ease;
+        background-color: transparent;
+        &.action-item-del{
+          color: $red;
+        }
+
+        &:hover {
+          background-color: $grey-scale-400;
+          &.action-item-del{
+            background-color: $grey-scale-500;
+          }
+        }
       }
     }
-    .delete {
-      color: $red;
-    }
+
   }
 </style>

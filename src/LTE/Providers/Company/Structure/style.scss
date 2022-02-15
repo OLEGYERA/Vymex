@@ -1,0 +1,99 @@
+.structure-unit-ui{
+  min-height: 56px;
+  padding: 8px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+
+  .structure-unit-info{
+    display: flex;
+    align-items: center;
+    .facade-image-avatar{
+      width: 36px;
+      height: 36px;
+      margin-right: 12px;
+    }
+    .info-title-group{
+      .facade-title-sub{
+        color: $grey-scale-500;
+      }
+      .facade-title-caption{
+        margin-top: 4px;
+        color: $grey-scale-300;
+      }
+    }
+  }
+
+  .structure-unit-setting{
+    position: relative;
+    .icon-points-vertical{
+      height: 20px;
+      width: 6px;
+      cursor: pointer;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      margin-right: 6px;
+      color: $grey-scale-500;
+      transition: .1s all ease;
+      &:hover{
+        color: $grey-scale-200;
+      }
+    }
+
+
+    .unit-setting-list{
+      ::v-deep .action-list-body{
+        top: 24px;
+        right: 0;
+      }
+    }
+  }
+
+  .structure-unit-checkbox{
+    margin-right: 8px;
+  }
+
+
+  &.su-level{
+    &-0{
+      .structure-unit-info{
+        .info-title-group{
+          .facade-title-sub{
+            color: #fff;
+          }
+        }
+      }
+      .structure-unit-setting{
+        .icon-points-vertical {
+          color: #fff;
+          &:hover {
+            .icon {
+              color: $grey-scale-200;
+            }
+          }
+        }
+      }
+
+      background-color: $grey-scale-400; //уточнить
+    }
+    &-1{
+      background-color: $su-level-1; //уточнить
+    }
+    &-2{
+      background-color: $su-level-2; //уточнить
+    }
+    &-3{
+      background-color: $su-level-3; //уточнить
+    }
+    &-4{
+      background-color: $su-level-4; //уточнить
+    }
+  }
+
+  &.su-checkbox{
+    cursor: pointer;
+  }
+}
