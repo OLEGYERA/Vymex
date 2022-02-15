@@ -38,7 +38,7 @@
           </div>
           <icon-copy/>
         </div>
-        <text-area v-model="textarea" :textAreaValue="about" :max-length="1000">
+        <text-area v-model="textarea" :model="about" :max-length="1000">
           <template #title>О себе</template>
         </text-area>
         <title-sub v-if="type==='user'"><button-base>Написать</button-base></title-sub>

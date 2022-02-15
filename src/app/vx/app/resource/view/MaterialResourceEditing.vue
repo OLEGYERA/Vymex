@@ -1,11 +1,11 @@
 <template>
-  <div class="resource-editing-view">
+  <div class="resource-editing-material-view">
     <comeback @onClick="$router.push({name: 'vx.resource.info'})"/>
     <title-base>Редактирование ресурса</title-base>
     <div class="main-plate">
       <input-base labeled :placeholder="'Название'" :model="object.name"></input-base>
       <input-base labeled :placeholder="'Серийный номер'" :model="object.number"/>
-      <text-area :placeholder="'Описание'" :max-length="1000" :count="true" :text-area-value="object.description"/>
+      <text-area labeled :placeholder="'Описание'" :max-length="1000" :text-area-value="object.description"/>
       <title-caps>Стоимость ресурса</title-caps>
       <input-price :model="object.price"/>
       <div class="user">
@@ -44,8 +44,8 @@
   import ButtonSecondary from "@Facade/Button/Secondary"
   import ButtonBase from "@Facade/Button/Base"
   import InputPrice from "@Facade/Input/Price"
-  import AssignUser from "@/app/vx/app/resource/view/AssignUser";
-  import StructuralUnit from "@/LTE/Singletons/Dashboard/facades/StructuralUnit";
+  import AssignUser from "@/LTE/Providers/Navigation/sidebar/AssignUser";
+  import StructuralUnit from "@Container/Vx/Main/Dashboard/facades/StructuralUnit";
   import File from "@/LTE/Singletons/Resources/facades/File";
 
   import {mapMutations} from "vuex";

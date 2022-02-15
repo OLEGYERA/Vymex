@@ -83,7 +83,7 @@
         margin-right: 24px;
         color: #fff;
       }
-      .icon-points {
+      .icon-points-vertical {
         padding: 10px;
         height: 16px;
         color: $grey-scale-200;

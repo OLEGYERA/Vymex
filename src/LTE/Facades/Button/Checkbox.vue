@@ -1,13 +1,7 @@
 <template>
-  <div>
-    <div class="disable-time"
-         v-for="(value, valueKey) in values"
-         :key="valueKey"
-         @click="$emit('getValue', {key: valueKey})"
-         :class="{active: valueKey === selectedOption}">
-      <text-base>{{ value }}</text-base>
-      <div class="radiobutton"></div>
-    </div>
+  <div class="facade-button-checkbox" @click="$emit('onCheckbox')" :class="{active: selected}">
+    <text-base>{{ title }}</text-base>
+    <div class="radiobutton"></div>
   </div>
 </template>
 
@@ -20,17 +14,19 @@
       TextBase
     },
     props: {
-      values: Array,
-      selectedOption: Number
+      title: {
+        type: String,
+        required: true
+      },
+      selected: Boolean
     },
     mounted() {
-      console.log(this.selectedOption)
     }
   }
 </script>
 
 <style lang="scss" scoped>
-  .disable-time {
+  .facade-button-checkbox {
     display: flex;
     justify-content: space-between;
     margin-bottom: 4px;

@@ -42,7 +42,7 @@ export default {
         background-color: $grey-scale-300;
       }
     }
-    .icon-points {
+    .icon-points-vertical {
       padding: 0 rem(10);
       height: 16px;
       cursor: pointer;

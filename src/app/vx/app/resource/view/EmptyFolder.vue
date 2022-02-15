@@ -48,7 +48,7 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
-    .icon-points {
+    .icon-points-vertical {
       height: 16px;
       color: #fff;
       padding: 8px 10px;
