@@ -18,10 +18,11 @@
             <template>{{ level.level }} уровень</template>
           </title-caps>
         </div>
-        <checkbox-round v-if="round" :model="level.checkedLevel"
-                        class="checkbox"
-                        @onClick="changeStatusLevel(index)"/>
-        <checkbox v-else :model="level.checkedLevel"
+<!--        <checkbox :model="level.checkedLevel"-->
+<!--                  class="checkbox"-->
+<!--                  @onClick="changeStatusLevel(index)"/>-->
+
+        <checkbox :model="level.checkedLevel" :view-type="viewType"
                   class="checkbox"
                   @onClick="changeStatusLevel(index)"/>
       </div>
@@ -38,10 +39,9 @@
             </div>
           </div>
           <div>
-            <checkbox-round v-if="round" :model="men.checkedPosition"
-                            @onClick="changeStatusPosition(index, i)"/>
-            <checkbox v-else :model="men.checkedPosition"
-                      @onClick="changeStatusPosition(index, i)"></checkbox>
+            <checkbox :model="men.checkedPosition"
+                      :view-type="viewType"
+                      @onClick="changeStatusPosition(index, i)"/>
           </div>
         </div>
       </div>
@@ -52,23 +52,20 @@
 <script>
 import TitleCaps from "@Facade/Title/Caps";
 import Checkbox from '@Facade/Input/Checkbox';
-import CheckboxRound from "@Facade/Input/CheckboxRound";
-
 
 export default {
   name: "SidebarStructure",
   components: {
     TitleCaps,
     Checkbox,
-    CheckboxRound
   },
   data() {
     return {
     }
   },
   props: {
-    round: Boolean,
     levels: Array,
+    viewType: Number,
   },
   methods: {
     changeStatus(index) {

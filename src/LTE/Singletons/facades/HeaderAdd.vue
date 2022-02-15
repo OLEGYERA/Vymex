@@ -80,12 +80,12 @@ export default {
       align-items: inherit;
       .icon-sort {
         height: 16px;
-        margin-right: rem(28);
         cursor: pointer;
       }
       .icon-add{
         height: 24px;
         width: 24px;
+        margin-left: rem(28);
         display: flex;
         justify-content: center;
         align-items: center;

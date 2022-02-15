@@ -5,11 +5,14 @@ import NewFolder from "./view/NewFolder";
 import EmptyFolder from "./view/EmptyFolder";
 import StructuralUnits from "./view/StructuralUnits";
 import MaterialResources from "./view/MaterialResources";
-import CreateResource from "./view/CreateResource";
-import ResourceEditing from "./view/ResourceEditing";
-import ResourceInfo from "./view/ResourceInfo";
+import CreateResource from "./view/CreateMaterialResource";
+import ResourceEditing from "./view/MaterialResourceEditing";
+import ResourceInfo from "./view/MaterialResourceInfo";
 import IntangibleResources from "./view/IntangibleResources";
 import CreateIntangibleResource from "./view/CreateIntangibleResource";
+import IntangibleResourceInfo from "./view/IntangibleResourceInfo";
+import IntangibleResourceEditing from "./view/IntangibleResourceEditing";
+import TrashFolder from "./view/TrashFolder";
 
 export default [
     {
@@ -70,6 +73,21 @@ export default [
             path: 'create-intangible-resource',
             component: CreateIntangibleResource,
             name: 'vx.resource.create.intangible.resource',
+        },
+        {
+            path: 'intangible-resource-info',
+            component: IntangibleResourceInfo,
+            name: 'vx.resource.intangible.resource.info',
+        },
+        {
+            path: 'intangible-resource-editing',
+            component: IntangibleResourceEditing,
+            name: 'vx.resource.intangible.resource.editing',
+        },
+        {
+            path: 'trash-folder',
+            component: TrashFolder,
+            name: 'vx.resource.trash.folder',
         },
         ]
     },

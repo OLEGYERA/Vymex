@@ -11,7 +11,7 @@
         <title-caption>{{content}}</title-caption>
       </div>
     </div>
-    <icon-points-vertical @click.native="actionListStatus=true"/>
+    <icon-points-vertical @click.native="onClick"/>
     <div class="action-list-outside" v-if="actionListStatus" @click="actionListStatus = false"></div>
     <action-list :action-list-status="actionListStatus" :items="items" @onClick="changePage"/>
     <sidebar-folder-access :status="sidebarStatus"/>
@@ -24,12 +24,12 @@
   import IconGroup from '@Icon/Group'
   import IconPointsVertical from "@Icon/PointsVertical"
   import ActionList from "@Facade/Modal/ActionList";
-  import SidebarFolderAccess from "@/app/vx/app/resource/view/SidebarFolderAccess";
+  import SidebarFolderAccess from "@/LTE/Providers/Navigation/sidebar/SidebarFolderAccess";
 
-  import {mapGetters, mapMutations} from "vuex";
+  import {mapGetters} from "vuex";
 
   export default {
-    name: 'Facade.Resource.Folder',
+    name: 'Facade.Resource.File',
     components: {
       TextBase,
       TitleCaption,
@@ -41,11 +41,11 @@
     data() {
       return{
         actionListStatus: false,
-        items: ['Редактировать', 'Открыть доступ', 'Переместить', 'Удалить ']
       }
     },
     props: {
       file: Object,
+      items: Array,
     },
     computed: {
       content() {
@@ -56,16 +56,15 @@
       })
     },
     methods: {
-      changePage({key}) {
+      changePage(key) {
+        // console.log(key)
         this.actionListStatus = false;
-        console.log(key)
-        if(key === 1){
-          this.showSidebar()
-        }
+        this.$emit('getActiveValue', key)
       },
-      ...mapMutations({
-        showSidebar: 'Resources/showSidebarFolderAccess',
-      }),
+      onClick() {
+        this.actionListStatus=true
+        this.$emit('getChosenFile')
+      }
     },
   }
 </script>
@@ -99,7 +98,7 @@
         color: #fff;
       }
     }
-    .icon-points {
+    .icon-points-vertical {
       padding: 0 10px;
       color: #fff;
       height: 16px;

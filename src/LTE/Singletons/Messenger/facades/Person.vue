@@ -81,7 +81,7 @@ export default {
         color: #fff;
       }
     }
-    .icon-points {
+    .icon-points-vertical {
       padding: 10px;
       color: #fff;
       cursor: pointer;

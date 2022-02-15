@@ -1,10 +1,10 @@
 <template>
-  <div id="menu" class="facade-modal-action-list" v-if="actionListStatus">
+  <div class="facade-modal-action-list" v-if="actionListStatus">
     <div v-for="(item, itemKey) in items"
         class="action-item"
         :key="itemKey"
         :class="{delete: item.includes('Удалить')}"
-         @click="$emit('onClick', {key: itemKey})">
+         @click="$emit('onClick', itemKey)">
       {{item}}
     </div>
   </div>
@@ -20,9 +20,6 @@ export default {
     actionListStatus: Boolean,
   },
   methods: {
-    // sendKey(key) {
-    //   this.$emit('onClick', key)
-    // }
   }
 }
 </script>

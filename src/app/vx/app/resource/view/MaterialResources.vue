@@ -6,7 +6,7 @@
       <icon-points-vertical/>
     </div>
     <input-search :placeholder="'Поиск'"/>
-    <header-add :setting-slider="true" @onClick="showSidebar()" @create="$router.push({name: 'vx.resource.create.resource'})">
+    <header-add setting-slider @onClick="showSidebar()" @create="$router.push({name: 'vx.resource.create.resource'})">
       <template #header-title>объекты</template>
       <template #header-amount>{{materialObjects.length}}</template>
     </header-add>
@@ -24,7 +24,7 @@
   import Comeback from "@Facade/Navigation/Comeback";
   import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd";
   import MaterialObject from "@/LTE/Singletons/Resources/facades/MaterialObject";
-  import SidebarFilter from "@/app/vx/app/resource/view/SidebarFilter";
+  import SidebarFilter from "@/LTE/Providers/Navigation/sidebar/SidebarFilter";
   import InputSearch from "@Facade/Input/Search";
   import TitleBase from "@Facade/Title/Base"
   import {mapGetters, mapMutations} from "vuex";
@@ -208,7 +208,7 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 20px;
-      .icon-points {
+      .icon-points-vertical {
         height: 16px;
         color: #fff;
         padding: 8px 10px;

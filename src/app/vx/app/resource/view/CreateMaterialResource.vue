@@ -1,13 +1,13 @@
 <template>
-  <div class="resource-create-resource-view">
+  <div class="resource-create-material-resource-view">
     <comeback @onClick="$router.push({name: 'vx.resource.material.resources'})"/>
     <title-base>Создать ресурс</title-base>
     <div class="resource-main-plate">
-      <input-base labeled :placeholder="'Название'"/>
-      <input-base labeled :placeholder="'Серийный номер'"/>
-      <text-area :max-length="1000" placeholder="Описание" labeled/>
+      <input-base :model="newResource.name" labeled :placeholder="'Название'"/>
+      <input-base :model="newResource.number" labeled :placeholder="'Серийный номер'"/>
+      <text-area :model="newResource.description" :max-length="1000" placeholder="Описание" labeled/>
       <title-caps>Стоимость ресурса</title-caps>
-      <input-price/>
+      <input-price :model="newResource.price"/>
       <header-add class="user" @create="showSidebar()">
         <template #header-title>Пользователь</template>
       </header-add>
@@ -26,7 +26,7 @@
             <title-caps>ddd</title-caps>
           </div>
           <title-caps class="modal-subtitle">Пользователь</title-caps>
-          <div class="user-plate">
+          <div class="user-plate" :class="{level1: levels.level===1, level2: levels.level===2, level3: levels.level===3, level4: levels.level===4}">
             <title-sub></title-sub>
             <title-caps></title-caps>
           </div>
@@ -39,7 +39,7 @@
         <template #header-title>Владелец</template>
         <template #header-amount>1</template>
       </header-add>
-      <company :company="company"/>
+      <company :company="newResource.owner"/>
       <header-add class="">
         <template #header-title>изображения</template>
       </header-add>
@@ -62,14 +62,14 @@
   import ButtonSecondary from "@Facade/Button/Secondary"
   import ButtonBase from "@Facade/Button/Base"
   import InputPrice from "@Facade/Input/Price"
-  import AssignUser from "@/app/vx/app/resource/view/AssignUser";
+  import AssignUser from "@/LTE/Providers/Navigation/sidebar/AssignUser";
   import ModalBase from "@Facade/Modal/Base"
   import TitleSub from "@Facade/Title/Sub"
 
   import {mapMutations} from "vuex";
 
   export default {
-    name: 'vx.resource.create',
+    name: 'vx.resource.material.create',
     components: {
       Comeback,
       TitleBase,
@@ -87,10 +87,6 @@
     },
     data() {
       return{
-        company: {
-          img: require('@/assets/img/my/process.svg'),
-          name: 'Arxel'
-        },
         buttonDisable: true,
         modalStatus: true,
         levels: [
@@ -190,6 +186,22 @@
             ]
           },
         ],
+        newResource: {
+          name: null,
+          number: null,
+          description: null,
+          user: {
+            name: null,
+            position: null,
+            level: null,
+            img: null
+          },
+          owner: {
+            name: 'Arxel',
+            img: require('@/assets/img/my/process.svg'),
+          },
+          price: null
+        }
       }
     },
     methods: {
@@ -201,7 +213,7 @@
 </script>
 
 <style lang="scss" scoped>
-  .resource-create-resource-view {
+  .resource-create-material-resource-view {
     width: 100%;
     .facade-title-base {
       text-align: center;

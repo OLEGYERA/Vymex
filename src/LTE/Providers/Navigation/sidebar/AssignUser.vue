@@ -12,7 +12,7 @@
               Пользователи
             </title-caps>
             <search :placeholder="'Поиск'"/>
-            <sidebar-structure :round="true" :levels="levels"/>
+            <sidebar-structure :view-type="2" :levels="levels"/>
           </div>
         </div>
       </template>

@@ -1,5 +1,5 @@
 <template>
-  <div class="resource-info-view">
+  <div class="resource-material-info-view">
     <comeback @onClick="$router.push({name: 'vx.resource.material.resources'})"/>
     <div class="info-header-group">
       <title-base>{{object.name}}</title-base>
@@ -50,7 +50,7 @@
   import File from "@/LTE/Singletons/Resources/facades/File";
 
   export default {
-    name: 'vx.resource.info',
+    name: 'vx.resource.material.info',
     components: {
       Comeback,
       TitleBase,
@@ -89,17 +89,30 @@
             files: [
               {
                 title : 'doc.vmx',
-                content: '2,1 MB 02.03.2020'
+                content: {
+                  size: '2,1',
+                  date: '02.03.2020'
+                },
+                type: null,
+                group: null,
               },
               {
                 title : 'doc.vmx',
-                content: '2,1 MB 02.03.2020',
+                content: {
+                  size: '2,1',
+                  date: '02.03.2020'
+                },
+                type: null,
                 group: true,
               },
               {
                 title : 'doc.zip',
-                content: '2,1 MB 02.03.2020',
-                type: 'zip'
+                content: {
+                  size: '2,1',
+                  date: '02.03.2020'
+                },
+                type: 'zip',
+                group: null,
               },
             ]
           },
@@ -122,17 +135,30 @@
             files: [
               {
                 title : 'doc.vmx',
-                content: '2,1 MB 02.03.2020'
+                content: {
+                  size: '2,1',
+                  date: '02.03.2020'
+                },
+                type: null,
+                group: null,
               },
               {
                 title : 'doc.vmx',
-                content: '2,1 MB 02.03.2020',
+                content: {
+                  size: '2,1',
+                  date: '02.03.2020'
+                },
+                type: null,
                 group: true,
               },
               {
                 title : 'doc.zip',
-                content: '2,1 MB 02.03.2020',
-                type: 'zip'
+                content: {
+                  size: '2,1',
+                  date: '02.03.2020'
+                },
+                type: 'zip',
+                group: null,
               },
             ]
           },
@@ -155,17 +181,30 @@
             files: [
               {
                 title : 'doc.vmx',
-                content: '2,1 MB 02.03.2020'
+                content: {
+                  size: '2,1',
+                  date: '02.03.2020'
+                },
+                type: null,
+                group: null,
               },
               {
                 title : 'doc.vmx',
-                content: '2,1 MB 02.03.2020',
+                content: {
+                  size: '2,1',
+                  date: '02.03.2020'
+                },
+                type: null,
                 group: true,
               },
               {
                 title : 'doc.zip',
-                content: '2,1 MB 02.03.2020',
-                type: 'zip'
+                content: {
+                  size: '2,1',
+                  date: '02.03.2020'
+                },
+                type: 'zip',
+                group: null,
               },
             ]
           },
@@ -188,17 +227,30 @@
             files: [
               {
                 title : 'doc.vmx',
-                content: '2,1 MB 02.03.2020'
+                content: {
+                  size: '2,1',
+                  date: '02.03.2020'
+                },
+                type: null,
+                group: null,
               },
               {
                 title : 'doc.vmx',
-                content: '2,1 MB 02.03.2020',
+                content: {
+                  size: '2,1',
+                  date: '02.03.2020'
+                },
+                type: null,
                 group: true,
               },
               {
                 title : 'doc.zip',
-                content: '2,1 MB 02.03.2020',
-                type: 'zip'
+                content: {
+                  size: '2,1',
+                  date: '02.03.2020'
+                },
+                type: 'zip',
+                group: null,
               },
             ]
           },
@@ -221,17 +273,30 @@
             files: [
               {
                 title : 'doc.vmx',
-                content: '2,1 MB 02.03.2020'
+                content: {
+                  size: '2,1',
+                  date: '02.03.2020'
+                },
+                type: null,
+                group: null,
               },
               {
                 title : 'doc.vmx',
-                content: '2,1 MB 02.03.2020',
+                content: {
+                  size: '2,1',
+                  date: '02.03.2020'
+                },
+                type: null,
                 group: true,
               },
               {
                 title : 'doc.zip',
-                content: '2,1 MB 02.03.2020',
-                type: 'zip'
+                content: {
+                  size: '2,1',
+                  date: '02.03.2020'
+                },
+                type: 'zip',
+                group: null,
               },
             ]
           },
@@ -254,17 +319,30 @@
             files: [
               {
                 title : 'doc.vmx',
-                content: '2,1 MB 02.03.2020'
+                content: {
+                  size: '2,1',
+                  date: '02.03.2020'
+                },
+                type: null,
+                group: null,
               },
               {
                 title : 'doc.vmx',
-                content: '2,1 MB 02.03.2020',
+                content: {
+                  size: '2,1',
+                  date: '02.03.2020'
+                },
+                type: null,
                 group: true,
               },
               {
                 title : 'doc.zip',
-                content: '2,1 MB 02.03.2020',
-                type: 'zip'
+                content: {
+                  size: '2,1',
+                  date: '02.03.2020'
+                },
+                type: 'zip',
+                group: null,
               },
             ]
           },
@@ -287,17 +365,30 @@
             files: [
               {
                 title : 'doc.vmx',
-                content: '2,1 MB 02.03.2020'
+                content: {
+                  size: '2,1',
+                  date: '02.03.2020'
+                },
+                type: null,
+                group: null,
               },
               {
                 title : 'doc.vmx',
-                content: '2,1 MB 02.03.2020',
+                content: {
+                  size: '2,1',
+                  date: '02.03.2020'
+                },
+                type: null,
                 group: true,
               },
               {
                 title : 'doc.zip',
-                content: '2,1 MB 02.03.2020',
-                type: 'zip'
+                content: {
+                  size: '2,1',
+                  date: '02.03.2020'
+                },
+                type: 'zip',
+                group: null,
               },
             ]
           },
@@ -320,17 +411,30 @@
             files: [
               {
                 title : 'doc.vmx',
-                content: '2,1 MB 02.03.2020'
+                content: {
+                  size: '2,1',
+                  date: '02.03.2020'
+                },
+                type: null,
+                group: null,
               },
               {
                 title : 'doc.vmx',
-                content: '2,1 MB 02.03.2020',
+                content: {
+                  size: '2,1',
+                  date: '02.03.2020'
+                },
+                type: null,
                 group: true,
               },
               {
                 title : 'doc.zip',
-                content: '2,1 MB 02.03.2020',
-                type: 'zip'
+                content: {
+                  size: '2,1',
+                  date: '02.03.2020'
+                },
+                type: 'zip',
+                group: null,
               },
             ]
           },
@@ -340,10 +444,6 @@
     created() {
       this.object = this.materialObjects.find(el => el.id === this.$route.params.id)
     },
-    // mounted() {
-    //   this.object = this.materialObjects[0]
-    //   console.log(this.actionListStatus, 'mounted')
-    // },
     methods: {
       performAction(key) {
         switch (key) {
@@ -359,7 +459,7 @@
 </script>
 
 <style lang="scss" scoped>
-  .resource-info-view {
+  .resource-material-info-view {
     width: 100%;
     .info-header-group {
       position: relative;
@@ -367,7 +467,7 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: rem(8);
-      .icon-points{
+      .icon-points-vertical{
         color: #fff;
         padding: 0 rem(10);
         height: 16px;

@@ -31,7 +31,7 @@
       TitleCaption
     },
     props: {
-      textAreaValue: String,
+      model: String,
       placeholder: String,
       count: Boolean,
       maxLength: Number,
@@ -40,7 +40,7 @@
     },
     data () {
       return {
-        currentValue: this.textAreaValue || '',
+        currentValue: this.model || '',
       }
     },
     methods: {
@@ -52,9 +52,8 @@
         if(!this.disable) this.$refs['facade-input-text-area-ref'].focus()
       },
     },
-    mounted() {
-      setTimeout(() => this.$refs['textarea'].style.height = `${this.$refs['textarea'].scrollHeight}px`, 200)
-      console.log(this.$refs['textarea'].scrollHeight)
+    created() {
+      setTimeout(() => this.$refs['facade-input-text-area-ref'].style.height = `${this.$refs['facade-input-text-area-ref'].scrollHeight}px`, 200)
     }
   }
 </script>
