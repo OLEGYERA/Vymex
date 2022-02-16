@@ -18,10 +18,15 @@
         <text-base @click.native="togglePerpetual">Безсрочная задача</text-base>
       </div>
 
-      <unit-setting-ui :unit-data="{id: 5, avatar: null, name: 'Олег', lastname: 'Герасименко'}"/>
-      <unit-checkbox-ui :model="unitCheckboxModel" @onClick="unitCheckboxModel = !unitCheckboxModel" :unit-level="2" :unit-data="{id: 5, avatar: null, name: 'Олег', lastname: 'Герасименко'}" unit-position="CTO"/>
-      <unit-ui :unit-level="3" :unit-data="{id: 5, avatar: null, name: 'Олег', lastname: 'Герасименко'}" unit-position="Head of Front-End"/>
-      <unit-ui :unit-level="4" :unit-data="{id: 5, avatar: null, name: 'Олег', lastname: 'Герасименко'}" unit-position="Front-End Executor"/>
+      <navigation-list-header title="Список" :title-count="countTest" @onAction="countTest++"/>
+
+
+
+<!--      <unit-setting-ui :unit-data="{id: 5, avatar: null, name: 'Олег', lastname: 'Герасименко'}"/>-->
+<!--      <unit-setting-ui :unit-level="3" :unit-data="{id: 5, avatar: null, name: 'Олег', lastname: 'Герасименко'}"/>-->
+<!--      <unit-checkbox-ui :model="unitCheckboxModel" @onClick="unitCheckboxModel = !unitCheckboxModel" :unit-level="2" :unit-data="{id: 5, avatar: null, name: 'Олег', lastname: 'Герасименко'}" unit-position="CTO"/>-->
+<!--      <unit-ui :unit-level="3" :unit-data="{id: 5, avatar: null, name: 'Олег', lastname: 'Герасименко'}" unit-position="Head of Front-End"/>-->
+<!--      <unit-ui :unit-level="4" :unit-data="{id: 5, avatar: null, name: 'Олег', lastname: 'Герасименко'}" unit-position="Front-End Executor"/>-->
 
 
     </div>
@@ -44,13 +49,14 @@
   import InputCheckbox from '@Facade/Input/Checkbox'
   import TextBase from '@Facade/Text/Base'
   import {UnitUi, UnitSettingUi, UnitCheckboxUi} from '@Providers'
-
+  import NavigationListHeader from '@Facade/Navigation/ListHeader'
 
   export default {
     name: 'vx.co.task.create.view',
     components: {
       NavigationComeback, TitleBase, InputBase, InputTextArea, TitleCaps, InputDate, InputCheckbox, TextBase,
-      UnitUi, UnitSettingUi, UnitCheckboxUi
+      UnitUi, UnitSettingUi, UnitCheckboxUi,
+      NavigationListHeader
     },
     data: () => ({
       currentNavigationCoTab: 0,
@@ -58,6 +64,7 @@
       dateStart: null,
       dateEnd: null,
       unitCheckboxModel: false,
+      countTest: 0
     }),
     methods: {
       togglePerpetual(){
