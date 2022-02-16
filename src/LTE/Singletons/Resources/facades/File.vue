@@ -16,6 +16,7 @@
         :status="actionListStatus"
         :actions="actions"
         @onList="changePage"
+        @onDelete="$emit('deleteFile')"
         @onClose="actionListStatus=false"
     >
       <template #del-title><slot/></template>

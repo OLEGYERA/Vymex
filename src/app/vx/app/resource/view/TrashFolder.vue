@@ -40,6 +40,7 @@
           :file="file" :key="fileKey"
           :actions="actions"
           @getActiveValue="actionListChange"
+          @deleteFile="modalStatusDeleteFile=true"
           @getChosenFile="activeFile = fileKey">
         <template>Удалить безвозвратно</template>
       </file>
@@ -209,9 +210,6 @@
         }
         if(key === 1){
           this.modalStatusRestoreOwner=true
-        }
-        if(key === 2){
-          this.modalStatusDeleteFile=true
         }
       },
       sortFiles(){
