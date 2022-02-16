@@ -11,7 +11,7 @@
       <header-add class="user" @create="showSidebar()">
         <template #header-title>Пользователь</template>
       </header-add>
-      <assign-user :levels="levels"/>
+      <assign-user-ui :levels="levels"/>
       <modal-base :status="modalStatus" @onClose="modalStatus=false">
         <template #title>
           Назначить пользователя
@@ -62,9 +62,10 @@
   import ButtonSecondary from "@Facade/Button/Secondary"
   import ButtonBase from "@Facade/Button/Base"
   import InputPrice from "@Facade/Input/Price"
-  import AssignUser from "@/LTE/Providers/Navigation/sidebar/AssignUser";
   import ModalBase from "@Facade/Modal/Base"
   import TitleSub from "@Facade/Title/Sub"
+
+  import {AssignUserUi} from '@Providers'
 
   import {mapMutations} from "vuex";
 
@@ -81,7 +82,7 @@
       ButtonSecondary,
       ButtonBase,
       InputPrice,
-      AssignUser,
+      AssignUserUi,
       ModalBase,
       TitleSub
     },

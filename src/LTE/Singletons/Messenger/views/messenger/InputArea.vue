@@ -3,7 +3,7 @@
     <div class="messenger-attach-button" @click="changeStatus">
       <icon-attach :class="{'attach-button-active': actionListStatus}"/>
       <transition name="fade">
-        <action-list :items="items" :actionListStatus="actionListStatus" @changeStatus="changeStatus"/>
+        <modal-action-list :items="items" :actionListStatus="actionListStatus" @changeStatus="changeStatus"/>
       </transition>
     </div>
     <input-message @onInput="handleInputModel" :model="messageInput"/>
@@ -17,7 +17,7 @@
 import InputMessage from "@Facade/Input/Message";
 import IconAttach from '@Icon/Attach'
 import IconSendMessage from '@Icon/SendMessage'
-import ActionList from "@Facade/Modal/ActionList";
+import ModalActionList from "@Facade/Modal/ActionList";
 
 export default {
   name: 'Singleton.Messenger.Views.Messenger.InputArea',
@@ -25,7 +25,7 @@ export default {
     InputMessage,
     IconAttach,
     IconSendMessage,
-    ActionList,
+    ModalActionList,
   },
   data() {
     return {

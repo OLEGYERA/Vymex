@@ -19,129 +19,128 @@
 </template>
 
 <script>
-import Comeback from "@Facade/Navigation/Comeback";
-import TitleBase from "@Facade/Title/Base";
-import InputBase from "@Facade/Input/Base"
-import TextArea from "@Facade/Input/TextArea"
-import ButtonSecondary from "@Facade/Button/Secondary"
-import ButtonBase from "@Facade/Button/Base"
-import InputPassword from "@Facade/Input/Password"
+  import Comeback from "@Facade/Navigation/Comeback";
+  import TitleBase from "@Facade/Title/Base";
+  import InputBase from "@Facade/Input/Base"
+  import TextArea from "@Facade/Input/TextArea"
+  import ButtonSecondary from "@Facade/Button/Secondary"
+  import ButtonBase from "@Facade/Button/Base"
+  import InputPassword from "@Facade/Input/Password"
 
-export default {
-  name: 'vx.resource.intangible.create',
-  components: {
-    Comeback,
-    TitleBase,
-    InputBase,
-    TextArea,
-    ButtonSecondary,
-    ButtonBase,
-    InputPassword
-  },
-  data() {
-    return{
-      // buttonDisable: true,
-      newResource: {
-        name: null,
-        url: null,
-        login: null,
-        password: null,
-        description: null,
-      }
-    }
-  },
-  methods: {
-    setValue(stage, data){
-      if(data) {
-        this.newResource[`${stage}`] = data
-      } else {
-        this.newResource[`${stage}`] = null
+  export default {
+    name: 'vx.resource.intangible.create',
+    components: {
+      Comeback,
+      TitleBase,
+      InputBase,
+      TextArea,
+      ButtonSecondary,
+      ButtonBase,
+      InputPassword
+    },
+    data() {
+      return{
+        newResource: {
+          name: null,
+          url: null,
+          login: null,
+          password: null,
+          description: null,
+        }
       }
     },
-    addResource(){
-      if (!this.buttonDisable){
-        this.$router.push({name: 'vx.resource.intangible.resources'})
+    methods: {
+      setValue(stage, data){
+        if(data) {
+          this.newResource[`${stage}`] = data
+        } else {
+          this.newResource[`${stage}`] = null
+        }
+      },
+      addResource(){
+        if (!this.buttonDisable){
+          this.$router.push({name: 'vx.resource.intangible.resources'})
+        }
       }
-    }
-  },
-  computed:{
-    buttonDisable(){
-      if(this.newResource.name && this.newResource.url && this.newResource.login){
-        return false
+    },
+    computed:{
+      buttonDisable(){
+        if(this.newResource.name && this.newResource.url && this.newResource.login){
+          return false
+        }
+        return true
       }
-      return true
     }
   }
-}
 </script>
 
 <style lang="scss" scoped>
-.resource-create-intangible-resource-view {
-  width: 100%;
-  .facade-title-base {
-    text-align: center;
-    margin-bottom: rem(36);
-  }
-  .resource-main-plate {
+  .resource-create-intangible-resource-view {
     width: 100%;
-    margin-bottom: rem(36);
-    padding: 48px 164px 52px;
-    box-sizing: border-box;
-    background-color: $grey-scale-500;
-    border-radius: 16px;
-    .facade-input-base {
-      border-width: 1px;
-      margin-bottom: rem(16);
+    .facade-title-base {
+      text-align: center;
+      margin-bottom: rem(36);
     }
-    .facade-input-password::v-deep{
-      margin-bottom: rem(16);
-      .facade-input-base{
+    .resource-main-plate {
+      width: 100%;
+      margin-bottom: rem(36);
+      padding: 48px 164px 52px;
+      box-sizing: border-box;
+      background-color: $grey-scale-500;
+      border-radius: 16px;
+      .facade-input-base {
         border-width: 1px;
+        margin-bottom: rem(16);
       }
-    }
-    .facade-text-area::v-deep {
-      margin-bottom: rem(16);
+      .facade-input-password::v-deep{
+        margin-bottom: rem(16);
+        .facade-input-base{
+          border-width: 1px;
+        }
+      }
+      .facade-text-area::v-deep {
+        margin-bottom: rem(16);
 
-      .textarea-title{
+        .textarea-title{
+          font-size: 15px;
+          line-height: 20px;
+        }
+        .textarea-container{
+          min-height: 96px;
+        }
+      }
+      .facade-title-caps {
+        margin-bottom: rem(16);
+      }
+      .facade-input-price {
+        margin-bottom: rem(24);
+      }
+      .user {
+        margin-bottom: 24px;
+      }
+      .owner.facade-header-add::v-deep {
+        padding: rem(8) 0;
+        margin-bottom: rem(4);
+        .icon-add {
+          display: none;
+        }
+      }
+      .facade-resource-company {
+        margin-bottom: rem(24);
+      }
+    }
+    .create-resource-buttons {
+      display: flex;
+      justify-content: space-between;
+      .create-resource-button {
+        width: 222px;
+      }
+      .facade-button-base::v-deep {
         font-size: 15px;
-        line-height: 20px;
-      }
-      .textarea-container{
-        min-height: 96px;
-      }
-    }
-    .facade-title-caps {
-      margin-bottom: rem(16);
-    }
-    .facade-input-price {
-      margin-bottom: rem(24);
-    }
-    .user {
-      margin-bottom: 24px;
-    }
-    .owner.facade-header-add::v-deep {
-      padding: rem(8) 0;
-      margin-bottom: rem(4);
-      .icon-add {
-        display: none;
-      }
-    }
-    .facade-resource-company {
-      margin-bottom: rem(24);
-    }
-  }
-  .create-resource-buttons {
-    display: flex;
-    justify-content: space-between;
-    .create-resource-button {
-      width: 222px;
-    }
-    .facade-button-base::v-deep {
-      font-size: 15px;
-      &[disable] {
-        background-color: $grey-scale-400;
+        &[disable] {
+          background-color: $grey-scale-400;
+        }
       }
     }
   }
-}
 </style>

@@ -15,7 +15,7 @@
         </header-add>
         <structural-unit :user="object.user"><icon-points-vertical/></structural-unit>
       </div>
-      <assign-user/>
+      <assign-user-ui/>
       <header-add class="owner">
         <template #header-title>Владелец</template>
         <template #header-amount>1</template>
@@ -44,9 +44,9 @@
   import ButtonSecondary from "@Facade/Button/Secondary"
   import ButtonBase from "@Facade/Button/Base"
   import InputPrice from "@Facade/Input/Price"
-  import AssignUser from "@/LTE/Providers/Navigation/sidebar/AssignUser";
   import StructuralUnit from "@/LTE/Singletons/Dashboard/facades/StructuralUnit"; //// костыль
   import File from "@/LTE/Singletons/Resources/facades/File";
+  import {AssignUserUi} from '@Providers'
 
   import {mapMutations} from "vuex";
 
@@ -63,9 +63,9 @@
       ButtonSecondary,
       ButtonBase,
       InputPrice,
-      AssignUser,
       StructuralUnit,
-      File
+      File,
+      AssignUserUi
     },
     data() {
       return{
@@ -223,7 +223,7 @@
 </script>
 
 <style lang="scss" scoped>
-  .resource-editing-view {
+  .resource-editing-material-view {
     width: 100%;
     .facade-title-base {
       text-align: center;

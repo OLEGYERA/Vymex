@@ -10,8 +10,8 @@
         {{object.user.name}}
       </div>
     </div>
-    <icon-points-vertical @click.native.stop/>
-    <action-list :items="items" />
+    <icon-points-vertical @click.native.stop="actionListStatus=true"/>
+    <modal-action-list :actions="actions" :status="actionListStatus" @onList="cons"/>
   </div>
 </template>
 
@@ -19,7 +19,7 @@
   import TextBase from '@Facade/Text/Base'
   import TitleCaption from '@Facade/Title/Caption'
   import IconPointsVertical from "@Icon/PointsVertical"
-  import ActionList from "@Facade/Modal/ActionList";
+  import ModalActionList from "@Facade/Modal/ActionList";
 
   export default {
     name: 'Facade.Resource.Material.Object',
@@ -27,14 +27,14 @@
       TextBase,
       TitleCaption,
       IconPointsVertical,
-      ActionList
+      ModalActionList
     },
     props: {
       object: Object,
     },
     data(){
       return{
-        items: ['Назначить ресурс', 'Редактировать', 'Удалить '],
+        actions: ['Назначить ресурс', 'Редактировать'],
         actionListStatus: false,
       }
     },

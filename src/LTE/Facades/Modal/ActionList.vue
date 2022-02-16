@@ -11,40 +11,42 @@
     </div>
   </div>
 </template>
+
 <script>
 
-export default {
-  name: 'Facade.Modal.ActionList',
-  components: {
-  },
-  props: {
-    actions: {
-      type: Array,
-      required: true
+  export default {
+    name: 'Facade.Modal.ActionList',
+    components: {
     },
-    status: {
-      type: Boolean,
-      required: true
-    }
-  },
-  methods: {
-    handleClickOnItem(id){
-      this.$emit('onList', id);
-      this.handleClose();
+    props: {
+      actions: {
+        type: Array,
+        required: true
+      },
+      status: {
+        type: Boolean,
+        required: true
+      }
     },
-    handleClickOnDelete(){
-      this.$emit('onDelete');
-      this.handleClose();
-    },
-    handleClose(){
-      this.$emit('onClose');
+    methods: {
+      handleClickOnItem(id){
+        this.$emit('onList', id);
+        this.handleClose();
+      },
+      handleClickOnDelete(){
+        this.$emit('onDelete');
+        this.handleClose();
+      },
+      handleClose(){
+        this.$emit('onClose');
+      }
     }
   }
-}
 </script>
 
 <style lang="scss" scoped>
   .facade-modal-action-list {
+    position: absolute;
     .action-list-substrate{
       top: 0;
       left: 0;

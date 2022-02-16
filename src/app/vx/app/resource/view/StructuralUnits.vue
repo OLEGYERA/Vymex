@@ -15,9 +15,9 @@
 </template>
 
 <script>
-  import Folder from "@/LTE/Singletons/Resources/facades/Folder";
+  import Folder from "@/LTE/Singletons/Resources/facades/Folder"; //// костыль
   import Comeback from "@Facade/Navigation/Comeback";
-  import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd";
+  import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd"; //// костыль
   import InputSearch from "@Facade/Input/Search";
   import TitleBase from "@Facade/Title/Base"
 

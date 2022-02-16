@@ -26,10 +26,10 @@
 
 <script>
   import Comeback from "@Facade/Navigation/Comeback";
-  import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd";
+  import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd"; //// костыль
   import InputSearch from "@Facade/Input/Search";
   import TitleBase from "@Facade/Title/Base"
-  import IntangibleObject from "@/LTE/Singletons/Resources/facades/IntangibleObject";
+  import IntangibleObject from "@/LTE/Singletons/Resources/facades/IntangibleObject"; //// костыль
 
   export default {
     name: 'vx.resource.intangible.resources',

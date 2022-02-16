@@ -29,7 +29,7 @@
   import TitleCaps from "@Facade/Title/Caps";
 
   export default {
-    name: 'vx.sidebar.assignUser',
+    name: 'Providers.Navigation.sidebar.AssignUser',
     components: {
       SidebarHeader, SidebarRight, TitleCaps, Search, SidebarStructure
     },

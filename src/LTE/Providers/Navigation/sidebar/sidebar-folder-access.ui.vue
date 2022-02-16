@@ -42,7 +42,7 @@ import SidebarStructure from "../sidebar-structure.facade"; //// костыль
   import TitleCaps from "@Facade/Title/Caps";
 
   export default {
-    name: 'vx.sidebar.folder.access',
+    name: 'Providers.Navigation.sidebar.FolderAccess',
     components: {
       SidebarHeader, SidebarRight, TitleCaps, Search, ButtonBase, SidebarStructure
     },

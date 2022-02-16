@@ -4,7 +4,12 @@
     <div class="info-header-group">
       <title-base>{{object.name}}</title-base>
       <icon-points-vertical @click.native="actionListStatus = !actionListStatus" ref="list"/>
-      <action-list :actionListStatus="actionListStatus" :items="items" @onClick="performAction"/>
+      <modal-action-list
+          status="actionListStatus"
+          :actions="actions"
+          @onList="performAction"
+          @onClose="actionListStatus=false"
+      />
     </div>
     <title-caption class="resource-number">{{object.number}}</title-caption>
     <text-base>{{object.description}}</text-base>
@@ -46,7 +51,7 @@
   import Company from "@/LTE/Singletons/Resources/facades/Company";
   import StructuralUnit from "@/LTE/Singletons/Dashboard/facades/StructuralUnit";
   import IconPointsVertical from "@Icon/PointsVertical"
-  import ActionList from "@Facade/Modal/ActionList";
+  import ModalActionList from "@Facade/Modal/ActionList";
   import File from "@/LTE/Singletons/Resources/facades/File";
 
   export default {
@@ -60,7 +65,7 @@
       HeaderAdd,
       Company,
       StructuralUnit,
-      ActionList,
+      ModalActionList,
       IconPointsVertical,
       File,
     },
@@ -68,7 +73,7 @@
       return{
         actionListStatus: false,
         object: null,
-        items: ['Редактировать', 'Отправить на склад', 'Удалить'],
+        actions: ['Редактировать', 'Отправить на склад'],
         materialObjects: [
           {
             id: 1,

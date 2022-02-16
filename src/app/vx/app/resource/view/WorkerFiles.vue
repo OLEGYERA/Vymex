@@ -13,7 +13,7 @@
     <div class="resource-folders">
       <folder v-for="(folder, folderKey) in folders" :folder="folder" :key="folderKey" @getId="changePage"/>
     </div>
-    <header-add :sort="true" @sortFiles="modalStatus= true">
+    <header-add sort @sortFiles="modalStatus= true">
       <template #header-title>Файлы</template>
       <template #header-amount>{{files.length}}</template>
     </header-add>
@@ -29,15 +29,15 @@
       </template>
       <template #button-accept>Применить</template>
     </modal-base>
-    <file v-for="(file, key) in files" :file="file" :key="key" :items="items" @getActiveValue="actionListChange"/>
+    <file v-for="(file, key) in files" :file="file" :key="key" :actions="actions" @getActiveValue="actionListChange"/>
   </div>
 </template>
 
 <script>
-  import Folder from "@/LTE/Singletons/Resources/facades/Folder";
+  import Folder from "@/LTE/Singletons/Resources/facades/Folder"; //// костыль
   import Comeback from "@Facade/Navigation/Comeback";
-  import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd";
-  import File from "@/LTE/Singletons/Resources/facades/File";
+  import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd"; //// костыль
+  import File from "@/LTE/Singletons/Resources/facades/File"; //// костыль
   import InputSearch from "@Facade/Input/Search";
   import TitleBase from "@Facade/Title/Base"
   import ModalBase from "@Facade/Modal/Base"
@@ -61,7 +61,7 @@
         modalStatus: false,
         modalValues: ['По дате (сначала новое)', 'По дате (сначала старое)', 'По размеру файлов'],
         activeButton: 2,
-        items: ['Редактировать', 'Открыть доступ', 'Переместить', 'Удалить '],
+        actions: ['Редактировать', 'Открыть доступ', 'Переместить'],
         folders: [
           {
             id: 1,
@@ -168,11 +168,6 @@
     .facade-header-add {
       padding: rem(8) 0;
       margin-bottom: 4px;
-    }
-    .facade-modal-base::v-deep {
-      .modal-base-body {
-        height: max-content;
-      }
     }
     .facade-resource-file {
       margin-bottom: 8px;

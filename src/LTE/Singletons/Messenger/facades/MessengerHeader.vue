@@ -9,7 +9,7 @@
       <div class="menu-button" @click="actionListStatus = !actionListStatus">
         <points-vertical :class="{active: actionListStatus}"/>
         <transition name="fade">
-          <action-list :items="items" :actionListStatus="actionListStatus"/>
+          <modal-action-list :items="items" :actionListStatus="actionListStatus"/>
         </transition>
       </div>
     </div>
@@ -28,7 +28,7 @@
   import TextBase from '@Facade/Text/Base'
   import PointsVertical from '@Icon/PointsVertical'
   import IconError from '@Icon/Error'
-  import ActionList from "@Facade/Modal/ActionList";
+  import ModalActionList from "@Facade/Modal/ActionList";
   import ModalBase from '@Facade/Modal/Base'
   import {mapMutations} from "vuex";
   export default {
@@ -38,7 +38,7 @@
       TextBase,
       PointsVertical,
       IconError,
-      ActionList,
+      ModalActionList,
       ModalBase
     },
     data() {

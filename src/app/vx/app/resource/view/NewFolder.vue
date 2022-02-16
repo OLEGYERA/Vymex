@@ -17,15 +17,15 @@
       <template #header-title>Файлы</template>
       <template #header-amount>{{files.length}}</template>
     </header-add>
-    <file v-for="(file, key) in files" :file="file" :key="key" :items="items"/>
+    <file v-for="(file, key) in files" :file="file" :key="key" :actions="actions"/>
   </div>
 </template>
 
 <script>
-  import Folder from "@/LTE/Singletons/Resources/facades/Folder";
+  import Folder from "@/LTE/Singletons/Resources/facades/Folder"; //// костыль
   import Comeback from "@Facade/Navigation/Comeback";
-  import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd";
-  import File from "@/LTE/Singletons/Resources/facades/File"
+  import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd"; //// костыль
+  import File from "@/LTE/Singletons/Resources/facades/File" //// костыль
   import TitleBase from "@Facade/Title/Base"
   import InputSearch from "@Facade/Input/Search";
 
@@ -41,7 +41,7 @@
     },
     data() {
       return{
-        items: ['Редактировать', 'Открыть доступ', 'Переместить', 'Удалить '],
+        actions: ['Редактировать', 'Открыть доступ', 'Переместить'],
         folders: [
           {
             id: 1,

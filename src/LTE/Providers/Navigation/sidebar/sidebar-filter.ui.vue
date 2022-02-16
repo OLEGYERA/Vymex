@@ -33,34 +33,34 @@
 </template>
 
 <script>
-import SidebarHeader from "../sidebar-header.facade"; //// костыль
-import SidebarRight from "@Facade/Navigation/SidebarRight";
-import Search from "@Facade/Input/Search";
-import ButtonBase from "@Facade/Button/Base";
-import SidebarStructure from "../sidebar-structure.facade"; //// костыль
-import {mapMutations} from "vuex";
-import TitleCaps from "@Facade/Title/Caps";
+  import SidebarHeader from "../sidebar-header.facade"; //// костыль
+  import SidebarRight from "@Facade/Navigation/SidebarRight";
+  import Search from "@Facade/Input/Search";
+  import ButtonBase from "@Facade/Button/Base";
+  import SidebarStructure from "../sidebar-structure.facade"; //// костыль
+  import {mapMutations} from "vuex";
+  import TitleCaps from "@Facade/Title/Caps";
 
-export default {
-  name: 'vx.sidebar.filter',
-  components: {
-    SidebarHeader, SidebarRight, TitleCaps, Search, ButtonBase, SidebarStructure
-  },
-  data() {
-    return{
-      buttons: ['Все', 'Локальные', 'Глобальные'],
-      activeButton: 0
-    }
-  },
-  props: {
-    status: Boolean
-  },
-  methods: {
-    ...mapMutations({
-      closeSidebar: 'Resources/closeSidebar',
-    }),
-  },
-}
+  export default {
+    name: 'Providers.Navigation.sidebar.Filter',
+    components: {
+      SidebarHeader, SidebarRight, TitleCaps, Search, ButtonBase, SidebarStructure
+    },
+    data() {
+      return{
+        buttons: ['Все', 'Локальные', 'Глобальные'],
+        activeButton: 0
+      }
+    },
+    props: {
+      status: Boolean
+    },
+    methods: {
+      ...mapMutations({
+        closeSidebar: 'Resources/closeSidebar',
+      }),
+    },
+  }
 </script>
 
 <style lang="scss" scoped>
@@ -79,9 +79,6 @@ export default {
       display: flex;
       height: 100%;
       background-color: $grey;
-      //.sidebar-main{
-      //  width: 372px;
-      //}
     }
     .sidebar-main-plate {
       display: flex;

@@ -16,18 +16,19 @@
         :key="index"
         @click.native="$router.push({name: 'vx.resource.info', params: {id: object.id}})"
     />
-    <sidebar-filter :status="sidebarFilterStatus"/>
+    <sidebar-filter-ui :status="sidebarFilterStatus"/>
   </div>
 </template>
 
 <script>
   import Comeback from "@Facade/Navigation/Comeback";
-  import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd";
-  import MaterialObject from "@/LTE/Singletons/Resources/facades/MaterialObject";
-  import SidebarFilter from "@/LTE/Providers/Navigation/sidebar/SidebarFilter";
+  import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd";  //// костыль
+  import MaterialObject from "@/LTE/Singletons/Resources/facades/MaterialObject";  //// костыль
+  // import SidebarFilter from "@/LTE/Providers/Navigation/sidebar/sidebar-filter.ui";
   import InputSearch from "@Facade/Input/Search";
   import TitleBase from "@Facade/Title/Base"
   import {mapGetters, mapMutations} from "vuex";
+  import {SidebarFilterUi} from '@Providers'
 
   export default {
     name: 'vx.resource.material.resources',
@@ -35,7 +36,7 @@
       Comeback,
       HeaderAdd,
       MaterialObject,
-      SidebarFilter,
+      SidebarFilterUi,
       InputSearch,
       TitleBase
     },

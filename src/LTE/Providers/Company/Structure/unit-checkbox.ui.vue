@@ -12,7 +12,7 @@
   import Mixin from './mixin'
 
   export default {
-    name: 'Providers.Company.Structure.UnitSetting.Ui',
+    name: 'Company.Structure.UnitSetting.Ui',
     components: {UnitUi, InputCheckbox},
     mixins: [Mixin],
     props: {

@@ -12,8 +12,14 @@
       </div>
     </div>
     <icon-points-vertical @click.native="onClick"/>
-    <div class="action-list-outside" v-if="actionListStatus" @click="actionListStatus = false"></div>
-    <action-list :action-list-status="actionListStatus" :items="items" @onClick="changePage"/>
+    <modal-action-list
+        :status="actionListStatus"
+        :actions="actions"
+        @onList="changePage"
+        @onClose="actionListStatus=false"
+    >
+      <template #del-title><slot/></template>
+    </modal-action-list>
     <sidebar-folder-access :status="sidebarStatus"/>
   </div>
 </template>
@@ -23,8 +29,8 @@
   import TitleCaption from '@Facade/Title/Caption'
   import IconGroup from '@Icon/Group'
   import IconPointsVertical from "@Icon/PointsVertical"
-  import ActionList from "@Facade/Modal/ActionList";
-  import SidebarFolderAccess from "@/LTE/Providers/Navigation/sidebar/SidebarFolderAccess";
+  import ModalActionList from "@Facade/Modal/ActionList";
+  import SidebarFolderAccess from "@/LTE/Providers/Navigation/sidebar/sidebar-folder-access.ui";
 
   import {mapGetters} from "vuex";
 
@@ -35,7 +41,7 @@
       TitleCaption,
       IconGroup,
       IconPointsVertical,
-      ActionList,
+      ModalActionList,
       SidebarFolderAccess
     },
     data() {
@@ -45,7 +51,7 @@
     },
     props: {
       file: Object,
-      items: Array,
+      actions: Array,
     },
     computed: {
       content() {
@@ -57,14 +63,13 @@
     },
     methods: {
       changePage(key) {
-        // console.log(key)
         this.actionListStatus = false;
         this.$emit('getActiveValue', key)
       },
       onClick() {
         this.actionListStatus=true
         this.$emit('getChosenFile')
-      }
+      },
     },
   }
 </script>
@@ -103,22 +108,12 @@
       color: #fff;
       height: 16px;
     }
-    //.modal-action-list-space {
-    .action-list-outside{
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 1;
-      cursor: auto;
-      //background-color: #73D13D;
+    .facade-modal-action-list::v-deep {
+      right: 15px;
+      .action-list-body{
+        transform: translateX(-100%);
+        top: 6px;
+      }
     }
-    .facade-modal-action-list {
-      position: absolute;
-      right: 14px;
-      top: 40px;
-    }
-    //}
   }
 </style>

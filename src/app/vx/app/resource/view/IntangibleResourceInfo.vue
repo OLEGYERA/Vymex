@@ -4,7 +4,7 @@
     <div class="info-header-group">
       <title-base>{{object.name}}</title-base>
       <icon-points-vertical @click.native="actionListStatus = !actionListStatus" ref="list"/>
-      <action-list :actionListStatus="actionListStatus" :items="items" @onClick="performAction"/>
+      <modal-action-list :status="actionListStatus" :actions="actions" @onClick="performAction"/>
       <modal-base :status="modalStatus" @onClose="modalStatus=false" @onOk="$router.push({name: 'vx.resource.intangible.resources'})">
         <template #title>Удалить ресурс?</template>
         <template #description>Это действие необратимо</template>
@@ -38,7 +38,7 @@
   import TitleSub from "@Facade/Title/Sub"
   import TitleCaps from "@Facade/Title/Caps"
   import IconPointsVertical from "@Icon/PointsVertical"
-  import ActionList from "@Facade/Modal/ActionList";
+  import ModalActionList from "@Facade/Modal/ActionList";
   import ButtonBase from "@Facade/Button/Base"
   import ButtonSecondary from "@Facade/Button/Secondary"
   import ModalBase from "@Facade/Modal/Base"
@@ -53,7 +53,7 @@
       TextBase,
       TitleSub,
       TitleCaps,
-      ActionList,
+      ModalActionList,
       IconPointsVertical,
       ButtonBase,
       ButtonSecondary,
@@ -65,7 +65,7 @@
         actionListStatus: false,
         modalStatus: false,
         object: null,
-        items: ['Редактировать', 'Удалить'],
+        actions: ['Редактировать'],
         resources: [
           {
             id: 1,
