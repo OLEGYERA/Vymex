@@ -1,9 +1,6 @@
 <template>
-  <div class="container-vx-header">
+  <div class="container-vx-header" :class="{co: exceptionalStyle}">
     <div class="vx-header-body">
-      <div class="vymex-logo">
-        <img src="@/assets/img/vymex/base-reverse.svg" alt="">
-      </div>
       <div class="header-icons">
         <div @click="notificationsShow()">
           <icon-alarm/>
@@ -27,6 +24,11 @@
       IconAlarm,
       IconComments,
     },
+    computed: {
+      exceptionalStyle(){
+        return this.$route.name.indexOf('vx.co') !== -1;
+      }
+    },
     methods: {
       ...mapMutations({
         messengerShow: 'Messenger/show',
@@ -39,20 +41,16 @@
 <style lang="scss" scoped>
   .container-vx-header{
     width: 100%;
-    box-sizing: border-box;
+    height: 64px;
     padding: 12px 0;
+    box-sizing: border-box;
+    flex-shrink: 0;
     background-color: $grey-scale-500;
     .vx-header-body{
       padding: 0 20px;
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-end;
       align-items: center;
-      .vymex-logo{
-        height: 40px;
-        img{
-          height: 100%;
-        }
-      }
       .header-icons {
         display: flex;
         .icon {
@@ -66,6 +64,9 @@
           margin-right: 12px;
         }
       }
+    }
+    &.co{
+      background-color: $su-level-1;
     }
   }
 </style>

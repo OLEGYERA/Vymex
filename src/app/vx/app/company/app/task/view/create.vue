@@ -19,6 +19,7 @@
       </div>
 
       <unit-setting-ui :unit-data="{id: 5, avatar: null, name: 'Олег', lastname: 'Герасименко'}"/>
+      <unit-setting-ui :unit-level="3" :unit-data="{id: 5, avatar: null, name: 'Олег', lastname: 'Герасименко'}"/>
       <unit-checkbox-ui :model="unitCheckboxModel" @onClick="unitCheckboxModel = !unitCheckboxModel" :unit-level="2" :unit-data="{id: 5, avatar: null, name: 'Олег', lastname: 'Герасименко'}" unit-position="CTO"/>
       <unit-ui :unit-level="3" :unit-data="{id: 5, avatar: null, name: 'Олег', lastname: 'Герасименко'}" unit-position="Head of Front-End"/>
       <unit-ui :unit-level="4" :unit-data="{id: 5, avatar: null, name: 'Олег', lastname: 'Герасименко'}" unit-position="Front-End Executor"/>
