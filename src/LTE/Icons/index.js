@@ -35,4 +35,3 @@ Vue.component('icon-attach', () => import('./Attach'));
 Vue.component('icon-checkbox', () => import('./Checkbox'));
 Vue.component('icon-comments', () => import('./Comments'));
 
-Vue.component('icon-points-vertical', () => import('./PointsVertical'));

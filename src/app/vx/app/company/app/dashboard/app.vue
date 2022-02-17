@@ -39,7 +39,7 @@
     </div>
     <template>
       <div>
-        <div @click="$router.push({name: 'vx.co.task', params: {companyID: $route.params.companyID}})">Задачи</div>
+        <div @click="$router.push({name: 'vx.co.task', params: {companyID: $route.params.companyID}})"></div>
       </div>
     </template>
   </div>
@@ -71,8 +71,8 @@ export default {
     ModalData,
     Modal
   },
-  data(){
-    return{
+  data() {
+    return {
       showModal: false,
       showAccessModal: false,
       grantAccess: false,
