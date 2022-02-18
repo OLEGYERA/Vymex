@@ -6,11 +6,14 @@
       <icon-points-vertical/>
     </div>
     <input-search :placeholder="'Поиск'"/>
-    <header-add v-if="messages[0]" settingSlider>
+    <header-add v-if="messages[0]"
+                settingSlider
+                @create="$router.push({name: 'vx.process.create.process'})"
+    >
       <template #header-title>процессы</template>
       <template #header-amount>{{messages[0] ? 12 : ''}}</template>
     </header-add>
-    <header-add v-else>
+    <header-add v-else @create="$router.push({name: 'vx.process.create.process'})">
       <template #header-title>процессы</template>
       <template #header-amount>{{messages[0] ? 12 : ''}}</template>
     </header-add>
@@ -37,6 +40,11 @@ import ProcessMessage from "./ProcessMessage"
 import {mapGetters} from "vuex";
 export default {
   name: 'vx.process.company.processes',
+  data(){
+    return{
+      createProcess: false
+    }
+  },
   components: {
     Comeback,
     HeaderAdd,

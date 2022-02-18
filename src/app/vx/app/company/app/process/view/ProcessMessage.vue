@@ -15,7 +15,7 @@
 import IconPointsVertical from "@Icon/PointsVertical"
 import ActionList from "@Facade/Modal/ActionList";
 import {mapMutations} from "vuex";
-import ProcessEvent from "@/app/vx/app/process/facades/ProcessEvent";
+import ProcessEvent from "@/app/vx/app/company/app/process/facades/ProcessEvent";
 
 export default {
   name: 'vx.process.process.message',
@@ -43,7 +43,7 @@ export default {
     },
     clickedMessage() {
       this.setProcessIndex(this.index)
-      this.$router.push({name: 'vx.resource.selected.process'})
+      this.$router.push({name: 'vx.process.selected.process'})
     }
   },
 }

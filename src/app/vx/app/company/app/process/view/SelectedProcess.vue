@@ -22,12 +22,12 @@
           <template #header-title>исполнители</template>
           <template #header-amount>{{13}}</template>
         </header-add>
-        <process-performer/>
+        <process-performer :performers="performers"/>
       </div>
       <div class="body-files">
         <header-add>
           <template #header-title>файлы</template>
-          <template #header-amount>{{1}}</template>
+          <template #header-amount>{{files.length}}</template>
         </header-add>
         <file v-for="(file, key) in files" :file="file" :key="key"/>
       </div>
@@ -44,7 +44,7 @@ import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd";
 import File from "@/LTE/Singletons/Resources/facades/File";
 
 export default {
-  name: 'vx.resource.selected.process',
+  name: 'vx.process.selected.process',
   components: {
     Comeback,
     ProcessEvent,
@@ -56,7 +56,8 @@ export default {
     ...mapGetters({
       messages: 'getMessages',
       indexProcess: 'getProcessIndex',
-      files: 'getFiles'
+      files: 'getFiles',
+      performers: 'getPerformers',
     }),
   },
 }

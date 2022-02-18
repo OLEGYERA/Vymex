@@ -51,7 +51,16 @@ export default {
         performers: [
             {avatar: require('@/assets/img/icons/avatar.svg'), position: 'Должность', level: 2},
             {avatar: require('@/assets/img/icons/avatar.svg'), position: 'Должность', level: 3},
-            {avatar: require('@/assets/img/icons/avatar-eight.svg'), position: 'Должность', level: 4},
+            {numberPeople: 8, position: 'Должность', level: 4},
+        ],
+        periods: [
+            {title: 'Каждый день', isActive: true},
+            {title: 'Каждый месяц', isActive: false},
+            {title: 'Каждую неделю', isActive: false},
+            {title: 'Каждый год', isActive: false},
+        ],
+        subdivisions: [
+           {numberPeople: 4, position: 'Рекрутеры', level: 4}
         ]
     },
     getters: {
@@ -60,6 +69,8 @@ export default {
         getFiles: (state) => state.files,
         getProcessIndex: (state) => state.processIndex,
         getPerformers: (state) => state.performers,
+        getPeriods: (state) => state.periods,
+        getSubdivisions: (state) => state.subdivisions,
     },
      mutations: {
          setChooseProcessIndex: (state, payload) => state.processIndex = payload,

@@ -4,13 +4,16 @@
          :key="i"
          class="process-performer-context"
          :class="{
-         level1: performer.level===1,
-         level2: performer.level===2,
-         level3: performer.level===3,
-         level4: performer.level===4
+         level1: performer.level === 1,
+         level2: performer.level === 2,
+         level3: performer.level === 3,
+         level4: performer.level === 4
          }">
       <div class="performer-context-main">
-        <img :src="performer.avatar"/>
+        <img v-if="performer.avatar" :src="performer.avatar"/>
+        <div v-else class="context-main-num">
+          {{ performer.numberPeople }}
+        </div>
         <span class="context-main-position">{{ performer.position }}</span>
       </div>
       <icon-points-vertical @click.native="actionListStatus=true"/>
@@ -20,19 +23,15 @@
 
 <script>
 
-import {mapGetters} from "vuex";
-
 export default {
   name: 'vx.process.facade.process.performer',
+  props: {
+    performers: Array
+  },
   data() {
     return {
       actionListStatus: false,
     }
-  },
-  computed: {
-    ...mapGetters({
-      performers: 'getPerformers',
-    }),
   },
 }
 </script>
@@ -52,6 +51,24 @@ export default {
 
     .performer-context-main {
       display: inherit;
+      justify-content: center;
+      align-items: center;
+      .context-main-num {
+        display: inherit;
+        justify-content: center;
+        align-items: center;
+        color: #FFF;
+        width: 22px;
+        height: 22px;
+        background: rgba($grey-scale-700, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: rem(12);
+        line-height: rem(16);
+        text-align: center;
+        text-transform: uppercase;
+      }
 
       .context-main-position {
         font-size: rem(15);
@@ -61,8 +78,12 @@ export default {
       }
     }
   }
+  .icon-points-vertical{
+    margin-right: 10px;
+  }
 }
-.icon{
+
+.icon {
   color: $grey-scale-300;
 }
 </style>
