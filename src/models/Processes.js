@@ -8,13 +8,19 @@ export default {
         messages: [
             {
                 text: 'Длинное название процесса которое занимает 2, а то и все 3 строки. Больше - троеточие, но здесь его нет.',
-                calendarIcon: true, date: '15 янв. 2021', panel: true, sortIcon: true},
-            {text: 'Длинное название процесса которое занимает 2, а то и все 3 строки. Больше - троеточие, но здесь его нет.', panel: true, sortIcon: true},
+                calendarIcon: true, date: '15 янв. 2021', panel: true, sortIcon: true
+            },
+            {
+                text: 'Длинное название процесса которое занимает 2, а то и все 3 строки. Больше - троеточие, но здесь его нет.',
+                panel: true,
+                sortIcon: true
+            },
             {text: 'Длинное название процесса которое занимает 2, а то и все 3 строки.', panel: false},
-            {text: 'Длинное название процесса которое занимает 2, а то и все 3 строки. Больше - троеточие, но здесь его нет.',
-                calendarIcon: true, date: '15 янв. 2021', panel: true, sortIcon: true},
+            {
+                text: 'Длинное название процесса которое занимает 2, а то и все 3 строки. Больше - троеточие, но здесь его нет.',
+                calendarIcon: true, date: '15 янв. 2021', panel: true, sortIcon: true
+            },
         ],
-        processIndex: 0,
         folders: [
             {
                 id: 1,
@@ -39,7 +45,7 @@ export default {
         ],
         files: [
             {
-                title : 'Документы.jpg',
+                title: 'Документы.jpg',
                 content: {
                     size: '2,1',
                     date: '02.03.2020'
@@ -60,8 +66,10 @@ export default {
             {title: 'Каждый год', isActive: false},
         ],
         subdivisions: [
-           {numberPeople: 4, position: 'Рекрутеры', level: 4}
-        ]
+            {numberPeople: 4, position: 'Рекрутеры', level: 4}
+        ],
+        processIndex: 0,
+        editMode: false
     },
     getters: {
         getMessages: (state) => state.messages,
@@ -71,9 +79,12 @@ export default {
         getPerformers: (state) => state.performers,
         getPeriods: (state) => state.periods,
         getSubdivisions: (state) => state.subdivisions,
+        getEditMode: (state) => state.editMode,
     },
-     mutations: {
-         setChooseProcessIndex: (state, payload) => state.processIndex = payload,
-     },
+    mutations: {
+        setChooseProcessIndex: (state, payload) => state.processIndex = payload,
+        setNewMessages: (state, payload) => state.messages = payload,
+        setIsEditMode: (state, payload) => state.editMode = payload,
+    },
 
 }

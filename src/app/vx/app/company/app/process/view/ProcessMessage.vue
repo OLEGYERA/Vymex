@@ -1,14 +1,12 @@
 <template>
   <div class="container-process-message">
-    <div class="process-message-text-group" @click="clickedMessage">
-      <div class="text-group-text">{{ message.text }}</div>
-      <process-event  v-if="message.panel"
-                      :message="message"/>
+      <div class="text-group-text" @click="clickedMessage">{{ message.text }}</div>
+      <process-event v-if="message.panel"
+                     :message="message"/>
+      <icon-points-vertical @click.native="actionListStatus=true"/>
+      <div class="action-list-outside" v-if="actionListStatus" @click="actionListStatus = false"></div>
+      <action-list :action-list-status="actionListStatus" :items="items" @onClick="changePage"/>
     </div>
-    <icon-points-vertical @click.native="actionListStatus=true"/>
-    <div class="action-list-outside" v-if="actionListStatus" @click="actionListStatus = false"></div>
-    <action-list :action-list-status="actionListStatus" :items="items" @onClick="changePage"/>
-  </div>
 </template>
 
 <script>
@@ -36,10 +34,13 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setProcessIndex: 'setChooseProcessIndex'
+      setProcessIndex: 'setChooseProcessIndex',
+      setEditMode: 'setIsEditMode',
     }),
     changePage() {
       this.actionListStatus = false;
+      this.setEditMode(true)
+      this.$router.push({name: 'vx.process.create.process'})
     },
     clickedMessage() {
       this.setProcessIndex(this.index)
@@ -61,15 +62,10 @@ export default {
   height: 48px;
   margin-bottom: 8px;
 
-  .process-message-text-group {
-    display: inherit;
-    align-items: inherit;
-    justify-content: space-between;
-
     .text-group-text {
       display: inherit;
       align-items: flex-start;
-      width: 560px;
+      width: 71.9%;
       font-weight: 600;
       font-size: rem(15);
       line-height: rem(20);
@@ -113,5 +109,4 @@ export default {
     right: 14px;
     top: 40px;
   }
-}
 </style>

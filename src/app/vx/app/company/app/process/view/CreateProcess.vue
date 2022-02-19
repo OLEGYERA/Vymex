@@ -13,6 +13,7 @@
       </radio-slot>
       <input-base v-if="processModel" :placeholder="'Серийный номер'"/>
       <text-area v-else
+                 :textAreaValue="editMode ? messages[processIndex].text : ''"
                  :max-length="1000"
                  class="view-main-process-title"
                  placeholder="Название процесса"
@@ -43,13 +44,15 @@
       <process-alert/>
       <header-add>
         <template #header-title>исполнители</template>
-        <template #header-amount>{{!regularModel && subdivisions[0] ? subdivisions.length : ''}}</template>
+        <template #header-amount>{{subdivisions[0] ? subdivisions.length : ''}}</template>
       </header-add>
-      <process-performer v-if="!regularModel" :performers="subdivisions"/>
+      <process-performer :performers="subdivisions"/>
     </div>
     <div class="create-resource-buttons">
-      <button-secondary class="create-resource-button">Отмена</button-secondary>
-      <button-base class="create-resource-button">Создать процесс</button-base>
+      <button-secondary class="create-resource-button"
+                        @onClick="createProcessCancel"
+      >Отмена</button-secondary>
+      <button-base class="create-resource-button" @onClick="createProcess">Создать процесс</button-base>
     </div>
   </div>
 </template>
@@ -65,7 +68,7 @@ import ButtonBase from "@Facade/Button/Base"
 import StartProcess from "../facades/StartProcess"
 import RadioSlot from "../facades/RadioSlot"
 import ProcessAlert from "../facades/ProcessAlert"
-import {mapGetters} from "vuex";
+import {mapGetters, mapMutations} from "vuex";
 import File from "@/LTE/Singletons/Resources/facades/File";
 import ProcessPerformer from "@/app/vx/app/company/app/process/facades/ProcessPerformer";
 
@@ -83,8 +86,7 @@ export default {
     File,
     ProcessAlert,
     StartProcess,
-    ProcessPerformer
-
+    ProcessPerformer,
   },
   data() {
     return {
@@ -98,9 +100,16 @@ export default {
     ...mapGetters({
       files: 'getFiles',
       subdivisions: 'getSubdivisions',
+      messages: 'getMessages',
+      processIndex: 'getProcessIndex',
+      editMode: 'getEditMode'
     }),
   },
   methods: {
+    ...mapMutations({
+      setMessages: 'setNewMessages',
+      setEditMode: 'setIsEditMode'
+    }),
     changeStatusProcess() {
       this.processModel = !this.processModel
       this.processDisable = !this.processDisable
@@ -108,6 +117,28 @@ export default {
     changeStatusRegular() {
       this.regularModel = !this.regularModel
       this.regularDisable = !this.regularDisable
+    },
+    createProcess(){
+      if(!this.editMode) {
+        let newMessages = [{
+          text: 'Длинное название процесса которое занимает 2, а то и все 3 строки. Больше - троеточие, но здесь его нет.',
+          calendarIcon: true,
+          date: '15 янв. 2021',
+          panel: true,
+          sortIcon: true
+        }, ...this.messages]
+        this.setMessages(newMessages)
+        this.$notify({text: 'Процесс успешно создан!', type: 'success', duration: 3000, speed: 500})
+      } else {
+        this.$notify({text: 'Изменения сохранены!', type: 'success', duration: 3000, speed: 500})
+      }
+      this.setEditMode(false)
+      this.$router.push({name: 'vx.process.company.processes'})
+
+    },
+    createProcessCancel(){
+      this.setEditMode(false)
+      this.$router.push({name: 'vx.process.company.processes'})
     }
   },
 }
@@ -125,7 +156,7 @@ export default {
   .create-process-view-main {
     width: 100%;
     margin-bottom: rem(36);
-    padding: 48px 164px 52px;
+    padding: rem(48) rem(164) rem(52);
     box-sizing: border-box;
     background-color: $grey-scale-500;
     border-radius: 16px;
