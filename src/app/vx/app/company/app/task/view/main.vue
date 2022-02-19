@@ -18,9 +18,21 @@
             <task-ui :term-stage="1" title="Модули клиентской поддержки или еще чет ведь всякое "/>
             <task-ui :term-stage="2" title="Модули клиентской поддержки или еще чет ведь всякое Модули клиентской поддержки или еще чет ведь всякое "/>
           </task-column-ui>
-
+          <task-column-ui title="Отложено">
+            <task-ui :term-stage="1" title="Модули клиентской поддержки или еще чет ведь всякое "/>
+            <task-ui :term-stage="2" title="Модули клиентской поддержки или еще чет ведь всякое Модули клиентской поддержки или еще чет ведь всякое "/>
+          </task-column-ui>
+          <task-column-ui title="Отложено">
+            <task-ui :term-stage="1" title="Модули клиентской поддержки или еще чет ведь всякое "/>
+            <task-ui :term-stage="2" title="Модули клиентской поддержки или еще чет ведь всякое Модули клиентской поддержки или еще чет ведь всякое "/>
+          </task-column-ui>
+          <task-column-ui title="Отложено">
+            <task-ui :term-stage="1" title="Модули клиентской поддержки или еще чет ведь всякое "/>
+            <task-ui :term-stage="2" title="Модули клиентской поддержки или еще чет ведь всякое Модули клиентской поддержки или еще чет ведь всякое "/>
+          </task-column-ui>
           <task-column-ui title="Выполнено">
           </task-column-ui>
+          <task-column-create-ui/>
         </div>
       </template>
     </navigation-static-tabs>
@@ -28,18 +40,20 @@
 </template>
 
 <script>
+  /*eslint-disable*/
+
   import NavigationClose from '@Facade/Navigation/Close'
   import TitleBase from '@Facade/Title/Base'
   import TextBase from '@Facade/Text/Base'
   import NavigationStaticTabs from '@Facade/Navigation/StaticTabs'
   import TitleCaption from '@Facade/Title/Caption'
-  import {TaskColumnUi, TaskUi} from '@Providers'
+  import {TaskColumnUi, TaskColumnCreateUi, TaskUi} from '@Providers'
 
 
   export default {
     name: 'vx.co.task.main.view',
     components: {
-      NavigationClose, TitleBase, TextBase, NavigationStaticTabs, TaskColumnUi, TaskUi, TitleCaption
+      NavigationClose, TitleBase, TextBase, NavigationStaticTabs, TaskColumnUi, TaskUi, TitleCaption, TaskColumnCreateUi
     },
     data: () => ({
       currentNavigationCoTab: 0
@@ -49,6 +63,9 @@
 
 <style lang="scss" scoped>
   .task-main-view{
+    max-width: 90%!important;
+    min-width: 796px;
+    width: fit-content;
     .facade-title-base, .facade-text-base{
       margin: 0 0 12px;
     }
@@ -78,7 +95,7 @@
       width: 100%;
       padding: 16px 0;
       display: flex;
-      overflow: hidden;
+      overflow-x: scroll;
       .company-task-ui{
         margin-bottom: 8px;
 

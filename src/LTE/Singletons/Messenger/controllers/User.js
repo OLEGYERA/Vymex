@@ -12,7 +12,7 @@ class User extends Binder{
   }
 
   searchRes(response){
-    console.log(response)
+    this.$store.name('Messenger').set('SearchedContacts', response);
   }
 
 
@@ -24,8 +24,13 @@ class User extends Binder{
     console.log('details', data)
   }
 
-  full(data){
-    console.log('full', data)
+  async full(personID){
+    this.$store.name('Messenger').set('CurrentContact', []);
+    this.$socket.emit('listener', await encrypt(...arguments[1], numberToArray(personID)))
+  }
+
+  fullRes(fullContactData){
+    this.$store.name('Messenger').set('CurrentContact', fullContactData);
   }
 
   // searchRes(contacts){

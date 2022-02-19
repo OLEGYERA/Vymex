@@ -11,7 +11,6 @@
         <template #content>
           <image-cropper :imageResult="fileData.result" @onCropped="handleCroppedUpdate"/>
         </template>
-        <template #button-accept>Сохранить</template>
       </modal-base>
     </div>
     <title-caption>{{sizeWarning.warning}}</title-caption>

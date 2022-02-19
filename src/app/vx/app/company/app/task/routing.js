@@ -1,6 +1,7 @@
 import Task from "./app";
 import Main from './view/main'
 import Create from './view/create'
+import Other from './view/other'
 // import Profile from './view/profile'
 
 export default [
@@ -17,6 +18,11 @@ export default [
         path: 'create',
         name: 'vx.co.task.create',
         component: Create,
+      },
+      {
+        path: 'other',
+        name: 'vx.co.task.other',
+        component: Other,
       }
     ]
   },
