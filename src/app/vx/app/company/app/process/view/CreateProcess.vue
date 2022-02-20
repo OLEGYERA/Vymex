@@ -22,13 +22,16 @@
                  placeholder="Описание"
                  labeled
                  count/>
-      <header-add v-if="regularModel" class="view-main-files">
+      <header-add v-if="regularModel"
+                  class="view-main-files"
+                  @create="showModal = !showModal"
+      >
         <template #header-title>файлы</template>
       </header-add>
       <div v-else class="view-main-files">
         <header-add>
           <template #header-title>файлы</template>
-          <template #header-amount>{{files.length}}</template>
+          <template #header-amount>{{ files.length }}</template>
         </header-add>
         <file v-for="(file, key) in files" :file="file" :key="key"/>
       </div>
@@ -42,35 +45,56 @@
         <template #title>Не регулярный</template>
       </radio-slot>
       <process-alert/>
-      <header-add>
+      <header-add
+          :class="subdivisions[0] ? '' : 'hide-add-icon'">
         <template #header-title>исполнители</template>
-        <template #header-amount>{{subdivisions[0] ? subdivisions.length : ''}}</template>
+        <template #header-amount>{{ subdivisions[0] ? subdivisions.length : '' }}</template>
       </header-add>
-      <process-performer :performers="subdivisions"/>
+      <process-performer class="view-main-performer" :performers="subdivisions"/>
     </div>
     <div class="create-resource-buttons">
       <button-secondary class="create-resource-button"
                         @onClick="createProcessCancel"
-      >Отмена</button-secondary>
+      >Отмена
+      </button-secondary>
       <button-base class="create-resource-button" @onClick="createProcess">Создать процесс</button-base>
     </div>
+    <upload-file-modal
+        :status="showModal"
+        @onClose="showModal = !showModal">
+      <template #title>Загрузить файлы</template>
+      <template #description>Выберете вариант загрузки файлов</template>
+      <template #content>
+        <header-add class="hide-add-icon">
+          <template #header-title>приложение</template>
+        </header-add>
+        <process-performer
+            class="upload-files-recourse"
+            :performers="uploadResource"/>
+        <process-performer
+            class="upload-files-local"
+            :performers="uploadFromDevice"/>
+      </template>
+      <template #button-accept>Загрузить</template>
+    </upload-file-modal>
   </div>
 </template>
 
 <script>
 import Comeback from "@Facade/Navigation/Comeback";
 import TitleBase from "@Facade/Title/Base";
-import InputBase from "@Facade/Input/Base"
-import TextArea from "@Facade/Input/TextArea"
+import InputBase from "@Facade/Input/Base";
+import TextArea from "@Facade/Input/TextArea";
 import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd";
-import ButtonSecondary from "@Facade/Button/Secondary"
-import ButtonBase from "@Facade/Button/Base"
-import StartProcess from "../facades/StartProcess"
-import RadioSlot from "../facades/RadioSlot"
-import ProcessAlert from "../facades/ProcessAlert"
+import ButtonSecondary from "@Facade/Button/Secondary";
+import ButtonBase from "@Facade/Button/Base";
+import StartProcess from "../facades/StartProcess";
+import RadioSlot from "../facades/RadioSlot";
+import ProcessAlert from "../facades/ProcessAlert";
 import {mapGetters, mapMutations} from "vuex";
 import File from "@/LTE/Singletons/Resources/facades/File";
 import ProcessPerformer from "@/app/vx/app/company/app/process/facades/ProcessPerformer";
+import UploadFileModal from "@Facade/Modal/Base";
 
 export default {
   name: 'vx.process.create.process',
@@ -87,6 +111,8 @@ export default {
     ProcessAlert,
     StartProcess,
     ProcessPerformer,
+    UploadFileModal,
+
   },
   data() {
     return {
@@ -94,6 +120,13 @@ export default {
       processDisable: true,
       regularModel: true,
       regularDisable: true,
+      showModal: false,
+      uploadResource: [
+        {avatar: require('@/assets/img/my/resource.svg'), position: 'Ресурсы'},
+      ],
+      uploadFromDevice: [
+        {avatar: require('@/assets/img/icons/add-file.svg'), position: 'Загрузить с локального устройсва'},
+      ],
     }
   },
   computed: {
@@ -118,8 +151,8 @@ export default {
       this.regularModel = !this.regularModel
       this.regularDisable = !this.regularDisable
     },
-    createProcess(){
-      if(!this.editMode) {
+    createProcess() {
+      if (!this.editMode) {
         let newMessages = [{
           text: 'Длинное название процесса которое занимает 2, а то и все 3 строки. Больше - троеточие, но здесь его нет.',
           calendarIcon: true,
@@ -136,7 +169,7 @@ export default {
       this.$router.push({name: 'vx.process.company.processes'})
 
     },
-    createProcessCancel(){
+    createProcessCancel() {
       this.setEditMode(false)
       this.$router.push({name: 'vx.process.company.processes'})
     }
@@ -185,6 +218,7 @@ export default {
         min-height: 96px;
       }
     }
+
     .view-main-process-title.facade-text-area {
       ::v-deep {
         .textarea-container {
@@ -192,6 +226,7 @@ export default {
         }
       }
     }
+
     .facade-title-caps {
       margin-bottom: rem(16);
     }
@@ -204,15 +239,6 @@ export default {
           color: #fff;
           margin-right: 8px;
         }
-      }
-    }
-
-    .owner.facade-header-add::v-deep {
-      padding: rem(8) 0;
-      margin-bottom: rem(4);
-
-      .icon-add {
-        display: none;
       }
     }
 
@@ -237,5 +263,65 @@ export default {
       }
     }
   }
+
+  .hide-add-icon.facade-header-add::v-deep {
+    padding: rem(8) 0;
+    margin-bottom: rem(4);
+
+    .icon-add {
+      display: none;
+    }
+  }
+
+  .facade-modal-base {
+    &::v-deep {
+      .modal-base-body {
+        width: 632px;
+        height: 379px;
+        justify-content: space-between;
+        padding-bottom: 24px;
+      }
+    }
+  }
 }
+
+.view-main-performer.facade-process-performer::v-deep {
+  .context-main-position {
+    color: $grey-scale-500;
+    margin-left: 25px;
+  }
+}
+
+.upload-files-recourse.facade-process-performer::v-deep {
+  background: $grey-scale-400;
+  border-radius: 12px;
+
+  .icon-points-vertical {
+    display: none;
+  }
+
+  .context-main-position {
+    color: #FFF;
+    margin-left: 12px;
+  }
+
+  .performer-context-main {
+    padding-left: 10px;
+  }
+}
+
+.upload-files-local.facade-process-performer::v-deep {
+  background: $grey-scale-400;
+  border-radius: 12px;
+
+  .icon-points-vertical {
+    display: none;
+  }
+
+  .context-main-position {
+    color: #FFF;
+    margin-left: 12px;
+  }
+}
+
 </style>

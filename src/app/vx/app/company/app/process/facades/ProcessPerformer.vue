@@ -1,5 +1,5 @@
 <template>
-  <div class="container-process-performer">
+  <div class="facade-process-performer">
     <div v-for="(performer, i) in performers"
          :key="i"
          class="process-performer-context"
@@ -37,7 +37,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.container-process-performer {
+.facade-process-performer {
   width: 100%;
 
   .process-performer-context {
@@ -53,6 +53,7 @@ export default {
       display: inherit;
       justify-content: center;
       align-items: center;
+
       .context-main-num {
         display: inherit;
         justify-content: center;
@@ -73,12 +74,11 @@ export default {
       .context-main-position {
         font-size: rem(15);
         line-height: rem(20);
-        color: $grey-scale-500;
-        margin: 8px 12px;
       }
     }
   }
-  .icon-points-vertical{
+
+  .icon-points-vertical {
     margin-right: 10px;
   }
 }
