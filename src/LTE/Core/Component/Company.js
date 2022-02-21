@@ -61,6 +61,14 @@ class Company extends Binder{
   getUserCompaniesRes(companies) {
     this.$store.name('Company').set('All', companies)
   }
+
+  async getPlainStructure(companyId) {
+    this.$socket.emit('listener', await encrypt(...arguments[1], numberToArray(companyId)))
+  }
+
+  getPlainStructureRes(structure){
+    this.$store.name('CompanyInfo').set('PlainStructure', structure)
+  }
 }
 
 export default new Company();

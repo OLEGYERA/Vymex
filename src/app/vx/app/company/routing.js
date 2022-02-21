@@ -1,5 +1,5 @@
 import Company from "./app";
-import Structure from './view/structure',
+import Structure from './view/structure';
 import CoCreate from "./view/create";
 
 export default [

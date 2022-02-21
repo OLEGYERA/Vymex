@@ -29,7 +29,7 @@ import Categories from '@/app/faq/storage/Categories'
 import UserProfile from '@/app/auth/storage/UserProfile'
 import VxInfo from "@/app/vx/storage/VxInfo"
 import File from "@/app/vx/storage/File"
-import CompanyInfo from "@/app/vx/app/company/storage/CompanyInfo";
+import CompanyInfo from "@/models/CompanyInfo"
 import Crypto from '@/models/CryptoStorage'
 import Company from '@/models/Company'
 // import Messenger from '@/app/vx/app/messenger/storage/Messenger'
