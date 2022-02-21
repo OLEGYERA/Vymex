@@ -4,6 +4,7 @@
     <div class="header-text-group">
       <title-base>Корзина</title-base>
       <title-caps class="clear-trash-button" @click.native="modalStatusDeleteTrash=true">Очистить корзину</title-caps>
+
       <modal-base :status="modalStatusDeleteTrash" @onClose="modalStatusDeleteTrash=false" @onOk="clearTrash">
         <template #title>Удалить навсегда?</template>
         <template #description>Все объекты в корзине будут удалены без возможности их восстановления</template>
@@ -11,18 +12,21 @@
       </modal-base>
     </div>
     <input-search :placeholder="'Поиск'"/>
+
     <div class="trash-main-content" v-if="folders || files">
       <header-add>
         <template #header-title>папки</template>
         <template #header-amount>{{folders.length}}</template>
       </header-add>
       <div class="resources-folders">
-        <folder v-for="(folder, folderKey) in folders" :folder="folder" :key="folderKey"/>
+        <folder-ui v-for="(folder, folderKey) in folders" :folder="folder" :key="folderKey"/>
       </div>
+
       <header-add sort class="files-header" @sortFiles="modalStatusSort= true">
         <template #header-title>Файлы</template>
         <template #header-amount>{{files.length}}</template>
       </header-add>
+
       <modal-base :status="modalStatusSort" @onClose="modalStatusSort=false" @onOk="sortFiles">
         <template #title>Сортировка</template>
         <template #content>
@@ -35,7 +39,8 @@
         </template>
         <template #button-accept>Применить</template>
       </modal-base>
-      <file
+
+      <file-ui
           v-for="(file, fileKey) in files"
           :file="file" :key="fileKey"
           :actions="actions"
@@ -43,7 +48,7 @@
           @deleteFile="modalStatusDeleteFile=true"
           @getChosenFile="activeFile = fileKey">
         <template>Удалить безвозвратно</template>
-      </file>
+      </file-ui>
       <modal-base :status="modalStatusRestoreYourself" @onClose="modalStatusRestoreYourself=false" @onOk="modalStatusRestoreYourself=false">
         <template #title>Восстановление файла</template>
         <template #description>Файлы будет востановлен и доступен вам</template>
@@ -62,13 +67,14 @@
       </modal-base>
       <modal-base :status="modalStatusDeleteFile" @onClose="modalStatusDeleteFile=false" @onOk="modalStatusDeleteFile=false">
         <template #title>Удаление файла</template>
-        <template #description>Файлы будет удален, это действие безвозвратно</template>
+        <template #description>Файл будет удален, это действие безвозвратно</template>
         <template #content>
           <file :file="files[activeFile]"/>
         </template>
         <template #button-accept>Удалить</template>
       </modal-base>
     </div>
+
     <div class="empty-trash" v-else>
       <title-caps class="empty-trash-subtitle">Объекты</title-caps>
       <div class="background-plate">
@@ -85,10 +91,9 @@
   import InputSearch from "@Facade/Input/Search";
   import TitleBase from "@Facade/Title/Base"
   import TitleCaps from '@Facade/Title/Caps'
-  import Folder from "@/LTE/Singletons/Resources/facades/Folder"; //// костыль
-  import File from "@/LTE/Singletons/Resources/facades/File" //// костыль
   import ModalBase from "@Facade/Modal/Base"
   import ButtonCheckbox from "@Facade/Button/Checkbox"
+  import {FileUi, FolderUi} from '@Providers'
 
   export default {
     name: 'vx.resource.trash.folder',
@@ -98,8 +103,8 @@
       InputSearch,
       TitleBase,
       TitleCaps,
-      Folder,
-      File,
+      FolderUi,
+      FileUi,
       ModalBase,
       ButtonCheckbox
     },
@@ -199,11 +204,11 @@
       setNewValue(id) {
         this.activeButton = id
       },
-      changePage({id}) {
-        if(id === 1){
-          this.$router.push({name: 'vx.resource.new.folder'})
-        }
-      },
+      // changePage({id}) {
+      //   if(id === 1){
+      //     this.$router.push({name: 'vx.resource.new.folder'})
+      //   }
+      // },
       actionListChange(key) {
         if(key === 0){
           this.modalStatusRestoreYourself=true
@@ -265,7 +270,7 @@
           display: none;
         }
       }
-      .facade-resource-file {
+      .resource-file-ui {
         margin-bottom: 8px;
       }
       .files-header.facade-header-add::v-deep{
@@ -276,7 +281,8 @@
     }
     .empty-trash{
       .empty-trash-subtitle{
-        margin-bottom: rem(12);
+        padding: 8px 0;
+        margin-bottom: rem(4);
       }
       .background-plate {
         height: 160px;

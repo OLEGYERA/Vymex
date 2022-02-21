@@ -1,7 +1,7 @@
 <template>
-  <div class="facade-resource-company">
-    <img class="company-img" :src="company.img">
-    <div class="company-info">
+  <div class="resource-company-ui">
+    <img class="company-avatar" :src="company.avatar">
+    <div class="company-info-group">
       <title-sub>{{company.name}}</title-sub>
       <title-caption>Компания</title-caption>
     </div>
@@ -13,7 +13,7 @@
   import TitleSub from "@Facade/Title/Sub"
 
   export default {
-    name: 'Facade.Resource.Company',
+    name: 'Providers.Company.Resource.Company.Ui',
     components: {
       TitleSub,
       TitleCaption,
@@ -25,17 +25,22 @@
 </script>
 
 <style lang="scss" scoped>
-  .facade-resource-company {
+  .resource-company-ui {
     display: flex;
     align-items: center;
     padding: rem(8);
     border-radius: 8px;
     background-color: $grey-scale-400;
-    .company-img {
+    .company-avatar {
       margin-right: rem(12);
       height: 36px;
       width: 36px;
       border-radius: 50%;
+    }
+    .company-info-group{
+      .facade-title-sub{
+        margin-bottom: 4px;
+      }
     }
   }
 </style>

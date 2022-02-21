@@ -10,21 +10,21 @@
       <template #header-title>папки</template>
       <template #header-amount>{{folders.length}}</template>
     </header-add>
-    <folder v-for="(folder, folderKey) in folders" :folder="folder" :key="folderKey" @getId="changePage"/>
+    <folder-ui v-for="(folder, folderKey) in folders" :folder="folder" :key="folderKey" @onClick="changePage"/>
   </div>
 </template>
 
 <script>
-  import Folder from "@/LTE/Singletons/Resources/facades/Folder"; //// костыль
   import Comeback from "@Facade/Navigation/Comeback";
   import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd"; //// костыль
   import InputSearch from "@Facade/Input/Search";
   import TitleBase from "@Facade/Title/Base"
+  import {FolderUi} from '@Providers'
 
   export default {
     name: 'vx.resource.structural.units',
     components: {
-      Folder,
+      FolderUi,
       Comeback,
       HeaderAdd,
       InputSearch,

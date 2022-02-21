@@ -3,12 +3,12 @@
     <comeback @onClick="$router.push({name: 'vx.resource.material.resources'})"/>
     <div class="info-header-group">
       <title-base>{{object.name}}</title-base>
-      <icon-points-vertical @click.native="actionListStatus = !actionListStatus" ref="list"/>
+      <icon-points-vertical @click.native="infoActionListStatus = true" ref="list"/>
       <modal-action-list
-          status="actionListStatus"
+          :status="infoActionListStatus"
           :actions="actions"
           @onList="performAction"
-          @onClose="actionListStatus=false"
+          @onClose="infoActionListStatus=false"
       />
     </div>
     <title-caption class="resource-number">{{object.number}}</title-caption>
@@ -23,21 +23,22 @@
           <template #header-title>Владелец</template>
           <template #header-amount>1</template>
         </header-add>
-        <company :company="object.owner"/>
+        <company-ui :company="object.owner"/>
       </div>
       <div class="resource-user">
         <header-add>
           <template #header-title>Пользователь</template>
           <template #header-amount>1</template>
         </header-add>
-        <structural-unit :user="object.user"/>
+        <unit-ui :unit-level="object.user.level" :unit-position="object.user.position" :unit-data="object.user"/>
+<!--        <structural-unit :user="object.user"/>-->
       </div>
     </div>
     <header-add>
       <template #header-title>изображения</template>
       <template #header-amount>2</template>
     </header-add>
-    <file v-for="(file, key) in object.files" :file="file" :key="key"/>
+    <file-ui v-for="(file, key) in object.files" :file="file" :key="key" :actions="fileActionList"/>
   </div>
 </template>
 
@@ -48,11 +49,9 @@
   import TextBase from "@Facade/Text/Base"
   import TitleSemi from "@Facade/Title/Semi"
   import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd";
-  import Company from "@/LTE/Singletons/Resources/facades/Company";
-  import StructuralUnit from "@/LTE/Singletons/Dashboard/facades/StructuralUnit";
-  import IconPointsVertical from "@Icon/PointsVertical"
+  // import StructuralUnit from "@/LTE/Singletons/Dashboard/facades/StructuralUnit";
   import ModalActionList from "@Facade/Modal/ActionList";
-  import File from "@/LTE/Singletons/Resources/facades/File";
+  import {UnitUi, FileUi, CompanyUi} from '@Providers'
 
   export default {
     name: 'vx.resource.material.info',
@@ -63,16 +62,17 @@
       TextBase,
       TitleSemi,
       HeaderAdd,
-      Company,
-      StructuralUnit,
+      CompanyUi,
+      // StructuralUnit,
       ModalActionList,
-      IconPointsVertical,
-      File,
+      FileUi,
+      UnitUi
     },
     data() {
       return{
-        actionListStatus: false,
         object: null,
+        infoActionListStatus: false,
+        fileActionList: ['Редактировать', 'Открыть доступ', 'Переместить'],
         actions: ['Редактировать', 'Отправить на склад'],
         materialObjects: [
           {
@@ -81,14 +81,16 @@
             number: 'ABK2921BDSFLBS',
             description: 'Простой для понимания документ - документ, не требующий усилий для чтения и понимания, т.е. при изложении материала не используются сложные предложения',
             user: {
-              name: 'Дмитрий Соколов',
+              id: 1,
+              name: 'Дмитрий',
+              lastname: 'Соколов',
               position: 'Космонавт',
               level: 1,
-              img: require('@/assets/img/my/process.svg')
+              avatar: null,
             },
             owner: {
               name: 'Sharashkina Kontora',
-              img: require('@/assets/img/my/process.svg')
+              avatar: require('@/assets/img/my/process.svg')
             },
             price: '3000',
             files: [
@@ -127,14 +129,16 @@
             number: 'ABK2921BDSFLBS',
             description: 'Простой для понимания документ - документ, не требующий усилий для чтения и понимания, т.е. при изложении материала не используются сложные предложения',
             user: {
-              name: 'Дмитрий Соколов',
+              id: 2,
+              name: 'Дмитрий',
+              lastname: 'Соколов',
               position: 'Космонавт',
               level: 2,
-              img: require('@/assets/img/my/process.svg')
+              avatar: null
             },
             owner: {
               name: 'Sharashkina Kontora',
-              img: require('@/assets/img/my/process.svg'),
+              avatar: require('@/assets/img/my/process.svg'),
             },
             price: '3000',
             files: [
@@ -173,14 +177,16 @@
             number: 'ABK2921BDSFLBS',
             description: 'Простой для понимания документ - документ, не требующий усилий для чтения и понимания, т.е. при изложении материала не используются сложные предложения',
             user: {
-              name: 'Дмитрий Соколов',
+              id: 3,
+              name: 'Дмитрий',
+              lastname: 'Соколов',
               position: 'Космонавт',
               level: 4,
-              img: require('@/assets/img/my/process.svg')
+              avatar: null
             },
             owner: {
               name: 'Sharashkina Kontora',
-              img: require('@/assets/img/my/process.svg'),
+              avatar: require('@/assets/img/my/process.svg'),
             },
             price: '3000',
             files: [
@@ -219,14 +225,16 @@
             number: 'ABK2921BDSFLBS',
             description: 'Простой для понимания документ - документ, не требующий усилий для чтения и понимания, т.е. при изложении материала не используются сложные предложения',
             user: {
-              name: 'Дмитрий Соколов',
+              id: 4,
+              name: 'Дмитрий',
+              lastname: 'Соколов',
               position: 'Космонавт',
               level: 1,
-              img: require('@/assets/img/my/process.svg')
+              avatar: null
             },
             owner: {
               name: 'Sharashkina Kontora',
-              img: require('@/assets/img/my/process.svg'),
+              avatar: require('@/assets/img/my/process.svg'),
             },
             price: '3000',
             files: [
@@ -265,14 +273,16 @@
             number: 'ABK2921BDSFLBS',
             description: 'Простой для понимания документ - документ, не требующий усилий для чтения и понимания, т.е. при изложении материала не используются сложные предложения',
             user: {
-              name: 'Дмитрий Соколов',
+              id: 5,
+              name: 'Дмитрий',
+              lastname: 'Соколов',
               position: 'Космонавт',
               level: 3,
-              img: require('@/assets/img/my/process.svg')
+              avatar: null
             },
             owner: {
               name: 'Sharashkina Kontora',
-              img: require('@/assets/img/my/process.svg')
+              avatar: require('@/assets/img/my/process.svg')
             },
             price: '3000',
             files: [
@@ -311,14 +321,16 @@
             number: 'ABK2921BDSFLBS',
             description: 'Простой для понимания документ - документ, не требующий усилий для чтения и понимания, т.е. при изложении материала не используются сложные предложения',
             user: {
-              name: 'Дмитрий Соколов',
+              id: 6,
+              name: 'Дмитрий',
+              lastname: 'Соколов',
               position: 'Космонавт',
               level: 3,
-              img: require('@/assets/img/my/process.svg')
+              avatar: null
             },
             owner: {
               name: 'Sharashkina Kontora',
-              img: require('@/assets/img/my/process.svg')
+              avatar: require('@/assets/img/my/process.svg')
             },
             price: '3000',
             files: [
@@ -357,14 +369,16 @@
             number: 'ABK2921BDSFLBS',
             description: 'Простой для понимания документ - документ, не требующий усилий для чтения и понимания, т.е. при изложении материала не используются сложные предложения',
             user: {
-              name: 'Дмитрий Соколов',
+              id: 7,
+              name: 'Дмитрий',
+              lastname: 'Соколов',
               position: 'Космонавт',
               level: 2,
-              img: require('@/assets/img/my/process.svg')
+              avatar: null
             },
             owner: {
               name: 'Sharashkina Kontora',
-              img: require('@/assets/img/my/process.svg')
+              avatar: require('@/assets/img/my/process.svg')
             },
             price: '3000',
             files: [
@@ -403,14 +417,15 @@
             number: 'ABK2921BDSFLBS',
             description: 'Простой для понимания документ - документ, не требующий усилий для чтения и понимания, т.е. при изложении материала не используются сложные предложения',
             user: {
-              name: 'Дмитрий Соколов',
+              name: 'Дмитрий',
+              lastname: 'Соколов',
               position: 'Космонавт',
               level: 4,
-              img: require('@/assets/img/my/process.svg')
+              avatar: require('@/assets/img/my/process.svg')
             },
             owner: {
               name: 'Sharashkina Kontora',
-              img: require('@/assets/img/my/process.svg')
+              avatar: require('@/assets/img/my/process.svg')
             },
             price: '3000',
             files: [
@@ -447,6 +462,7 @@
       }
     },
     created() {
+      console.log(this.status)
       this.object = this.materialObjects.find(el => el.id === this.$route.params.id)
     },
     methods: {
@@ -478,9 +494,12 @@
         height: 16px;
         cursor: pointer;
       }
-      .facade-modal-action-list{
-        top: 24px;
+      .facade-modal-action-list::v-deep {
         right: 4px;
+        .action-list-body{
+          transform: translateX(-100%);
+          top: 7px;
+        }
       }
     }
     .resource-number{
@@ -518,7 +537,7 @@
         display: none;
       }
     }
-    .facade-resource-file {
+    .resource-file-ui {
       margin-bottom: rem(8);
     }
     .container-sidebar-structure-unit::v-deep{

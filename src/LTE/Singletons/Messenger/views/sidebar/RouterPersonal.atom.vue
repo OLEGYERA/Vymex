@@ -2,46 +2,46 @@
   <div class="router-personal-view">
     <div class="main-info">
       <name :name="fullName" @updateRouter="updateRouter" :type="type"/>
-      <div class="photo">
+      <div class="personal-photo">
         <avatar :logo="avatar.logo" :colorCode="avatar.colorCode"/>
       </div>
       <div class="info-block">
-        <div class="user-info">
-          <div class="icon-info"><icon-mail/></div>
-          <div class="info-text-group">
-            <text-base>{{alias}}</text-base>
-            <title-caption>Имя пользователя VYMEX</title-caption>
+        <div class="group-top-block">
+          <div class="user-info">
+            <div class="icon-info"><icon-mail/></div>
+            <div class="info-text-group">
+              <text-base>{{alias}}</text-base>
+              <title-caption>Имя пользователя VYMEX</title-caption>
+            </div>
+            <icon-copy/>
           </div>
-          <icon-copy/>
-        </div>
-        <div class="user-info">
-          <div class="icon-info"><icon-phone/></div>
-          <div class="info-text-group">
-            <text-base>{{phone}}</text-base>
-            <title-caption>Телефон</title-caption>
+          <div class="user-info">
+            <div class="icon-info"><icon-phone/></div>
+            <div class="info-text-group">
+              <text-base>{{phone}}</text-base>
+              <title-caption>Телефон</title-caption>
+            </div>
+            <icon-copy/>
           </div>
-          <icon-copy/>
-        </div>
-        <div class="user-info">
-          <div class="icon-info"><icon-letter/></div>
-          <div class="info-text-group">
-            <text-base>{{email}}</text-base>
-            <title-caption>Электронная почта</title-caption>
+          <div class="user-info">
+            <div class="icon-info"><icon-letter/></div>
+            <div class="info-text-group">
+              <text-base>{{email}}</text-base>
+              <title-caption>Электронная почта</title-caption>
+            </div>
+            <icon-copy/>
           </div>
-          <icon-copy/>
-        </div>
-        <div class="user-info">
-          <div class="icon-info"><icon-calendar/></div>
-          <div class="info-text-group">
-            <text-base>{{birthday}}</text-base>
-            <title-caption>День рождения</title-caption>
+          <div class="user-info">
+            <div class="icon-info"><icon-calendar/></div>
+            <div class="info-text-group">
+              <text-base>{{birthday}}</text-base>
+              <title-caption>День рождения</title-caption>
+            </div>
+            <icon-copy/>
           </div>
-          <icon-copy/>
         </div>
-        <text-area v-model="textarea" :model="about" :max-length="1000">
-          <template #title>О себе</template>
-        </text-area>
-        <title-sub v-if="type==='user'"><button-base>Написать</button-base></title-sub>
+        <text-area :model="about" labeled :placeholder="'О себе'" :max-length="1000"/>
+        <button-base v-if="type==='user'">Написать</button-base>
       </div>
     </div>
   </div>
@@ -83,7 +83,7 @@ export default {
   data() {
     return {
       textarea: '',
-      about: this.about || 'Короткий но емкий текст о том насколько я хорош, профессионален, и самое главное — скромен до глубины души.',
+      about: 'Короткий но емкий текст о том насколько я хорош, профессионален, и самое главное — скромен до глубины души.',
     }
   },
   updated() {
@@ -122,7 +122,7 @@ export default {
       .container-vx-name {
         margin-bottom: 36px;
       }
-      .photo {
+      .personal-photo {
         margin: 0 auto 32px;
         height: 120px;
         width: 120px;
@@ -134,6 +134,9 @@ export default {
       }
       .info-block {
         padding: 0 20px;
+        .group-top-block{
+          margin-bottom: 20px;
+        }
       }
       .user-info {
         display: flex;
@@ -180,11 +183,18 @@ export default {
         color: #fff;
         margin-bottom: 4px;
       }
-      .facade-text-area {
-        margin: 12px 0 44px;
-        ::v-deep {
-          .textarea-container{
-            padding-bottom: 24px;
+      .facade-input-text-area::v-deep {
+        margin-bottom: 44px;
+        .textarea-title{
+          font-size: 12px;
+        }
+        .textarea-container{
+          border-width: 1px;
+          padding: 0 0 24px ;
+        }
+        &[labeled] {
+          textarea {
+            padding-top: 12px;
           }
         }
       }

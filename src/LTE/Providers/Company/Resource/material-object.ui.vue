@@ -1,17 +1,22 @@
 <template>
-  <div class="facade-resource-material-object">
-    <div class="object-main">
-      <div class="object-info">
-        <text-base><slot name="title">{{object.name}}.</slot></text-base>
-        <title-caption><slot name="folder-content">{{object.number}}</slot></title-caption>
+  <div class="resource-material-object-ui">
+    <div class="object-main-plate">
+      <div class="object-text-group">
+        <text-base>{{object.name}}</text-base>
+        <title-caption>{{object.number}}</title-caption>
       </div>
-      <div class="object-user"
+      <div class="object-user-name"
            :class="{level1: object.user.level===1, level2: object.user.level===2, level3: object.user.level===3, level4: object.user.level===4}">
         {{object.user.name}}
       </div>
     </div>
     <icon-points-vertical @click.native.stop="actionListStatus=true"/>
-    <modal-action-list :actions="actions" :status="actionListStatus" @onList="cons"/>
+    <modal-action-list
+        :actions="actions"
+        :status="actionListStatus"
+        @onClose="actionListStatus=false"
+        @onDelete="onDelete"
+        @onList="sendData"/>
   </div>
 </template>
 
@@ -39,14 +44,19 @@
       }
     },
     methods: {
-      cons() {
-        console.log(111)
+      sendData(id) {
+        this.$emit('sendData', id)
+      },
+      onDelete(){
+
       }
     }
   }
 </script>
+
 <style lang="scss" scoped>
-  .facade-resource-material-object {
+  .resource-material-object-ui {
+    position: relative;
     padding: 12px 6px 12px 16px;
     display: flex;
     justify-content: space-between;
@@ -57,9 +67,9 @@
     &:hover{
       background-color: $grey-scale-500;
     }
-    .object-main {
+    .object-main-plate {
       display: inherit;
-      .object-info{
+      .object-text-group{
         width: 232px;
         margin-right: 12px;
         .facade-text-base {
@@ -67,7 +77,7 @@
           margin-bottom: 4px;
         }
       }
-      .object-user{
+      .object-user-name{
         font-size: 11px;
         line-height: 12px;
         height: max-content;
@@ -80,6 +90,13 @@
       padding: 0 10px 10px;
       color: #fff;
       cursor: pointer;
+    }
+    .facade-modal-action-list::v-deep {
+      right: 10px;
+      .action-list-body{
+        transform: translateX(-100%);
+        top: 16px;
+      }
     }
   }
 </style>

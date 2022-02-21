@@ -15,7 +15,7 @@
       Файлов нет
     </div>
     <div class="intangible-resources-list">
-      <intangible-object
+      <intangible-object-ui
           v-for="(object, objectKey) in resources"
           :object="object"
           :key="objectKey"
@@ -29,7 +29,7 @@
   import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd"; //// костыль
   import InputSearch from "@Facade/Input/Search";
   import TitleBase from "@Facade/Title/Base"
-  import IntangibleObject from "@/LTE/Singletons/Resources/facades/IntangibleObject"; //// костыль
+  import {IntangibleObjectUi} from "@Providers"
 
   export default {
     name: 'vx.resource.intangible.resources',
@@ -38,7 +38,7 @@
       HeaderAdd,
       InputSearch,
       TitleBase,
-      IntangibleObject
+      IntangibleObjectUi
     },
     data(){
       return{

@@ -1,6 +1,6 @@
 <template>
-  <div class="facade-resource-file">
-    <div class="file-main">
+  <div class="resource-file-ui">
+    <div class="file-main-section">
       <div class="file-image">
         <img v-if="file.type === 'zip'" src="@/assets/img/my/zip.svg">
         <img v-else src="@/assets/img/my/file.svg">
@@ -36,7 +36,7 @@
   import {mapGetters} from "vuex";
 
   export default {
-    name: 'Facade.Resource.File',
+    name: 'Providers.Company.Resource.File.Ui',
     components: {
       TextBase,
       TitleCaption,
@@ -76,7 +76,7 @@
 </script>
 
 <style lang="scss" scoped>
-  .facade-resource-file {
+  .resource-file-ui {
     position: relative;
     padding: 8px;
     display: flex;
@@ -85,7 +85,7 @@
     border-radius: 12px;
     background-color: $grey-scale-400;
     cursor: pointer;
-    .file-main {
+    .file-main-section {
       display: inherit;
       align-items: inherit;
       .file-image {

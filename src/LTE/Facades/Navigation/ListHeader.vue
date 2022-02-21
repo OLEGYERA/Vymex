@@ -33,6 +33,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding: rem(4) 0;
 
     .list-title-counter{
       color: $blue;

@@ -53,6 +53,8 @@
       width: 100%;
       height: 100%;
       position: fixed;
+      //background-color: #73D13D;
+      z-index: 2;
     }
     .action-list-body{
       position: absolute;
@@ -62,7 +64,7 @@
       box-sizing: border-box;
       background-color: $grey-scale-700;
       box-shadow: 0 0 65px 3px rgba(0, 0, 0, 0.5);
-      z-index: 2;
+      z-index: 3;
       .action-item {
         color: #fff;
         padding: 12px;

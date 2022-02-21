@@ -1,29 +1,28 @@
 <template>
-  <div class="facade-resource-intangible-object">
-    <div class="object-main">
+  <div class="resource-intangible-object-ui">
+    <div class="object-main-plate">
       <div class="object-icon">
         <img src="@/assets/img/my/notion.svg">
       </div>
-      <div class="object-info">
-        <text-base><slot name="title">{{object.name}}.</slot></text-base>
-        <title-caption><slot name="folder-content">{{object.login}}</slot></title-caption>
+      <div class="object-text-group">
+        <text-base>{{object.name}}</text-base>
+        <title-caption>{{object.login}}</title-caption>
       </div>
     </div>
     <icon-points-vertical @click.native="$emit('onClick')"/>
   </div>
 </template>
-@asset
+
 <script>
   import TextBase from '@Facade/Text/Base'
   import TitleCaption from '@Facade/Title/Caption'
-  import IconPointsVertical from "@Icon/PointsVertical"
 
   export default {
-    name: 'Facade.Resource.Intangible.Object',
+    name: 'Providers.Company.Resource.IntangibleObject.Ui',
+
     components: {
       TextBase,
       TitleCaption,
-      IconPointsVertical
     },
     props: {
       object: Object,
@@ -31,7 +30,7 @@
   }
 </script>
 <style lang="scss" scoped>
-  .facade-resource-intangible-object {
+  .resource-intangible-object-ui {
     width: 100%;
     box-sizing: border-box;
     padding: rem(8);
@@ -45,7 +44,7 @@
     &:hover{
       background-color: $grey-scale-300;
     }
-    .object-main {
+    .object-main-plate {
       display: inherit;
       align-items: inherit;
       .object-icon{
@@ -58,7 +57,7 @@
         margin-right: 12px;
         border-radius: 50%;
       }
-      .object-info{
+      .object-text-group{
         .facade-text-base {
           color: #fff;
         }

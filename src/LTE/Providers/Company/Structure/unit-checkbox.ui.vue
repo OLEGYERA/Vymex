@@ -1,7 +1,7 @@
 <template>
   <unit-ui class="su-checkbox" v-bind="$props" @click.native="$emit('onClick')">
     <div class="structure-unit-checkbox">
-      <input-checkbox :model="model"/>
+      <input-checkbox :model="model" :view-type="viewType"/>
     </div>
   </unit-ui>
 </template>
@@ -19,7 +19,8 @@
       model: {
         type: Boolean,
         required: true
-      }
+      },
+      viewType: Number
     },
     data: () => ({
       modalSettingList: false

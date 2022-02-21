@@ -1,11 +1,11 @@
 <template>
   <div class="resource-create-material-resource-view">
-    <comeback @onClick="$router.push({name: 'vx.resource.material.resources'})"/>
+    <comeback @onClick="saveChanges"/>
     <title-base>Создать ресурс</title-base>
     <div class="resource-main-plate">
-      <input-base :model="newResource.name" labeled :placeholder="'Название'"/>
-      <input-base :model="newResource.number" labeled :placeholder="'Серийный номер'"/>
-      <text-area :model="newResource.description" :max-length="1000" placeholder="Описание" labeled/>
+      <input-base :model="newResource.name" labeled :placeholder="'Название'" @onInput="setValue('name', $event)"/>
+      <input-base :model="newResource.number" labeled :placeholder="'Серийный номер'" @onInput="setValue('number', $event)"/>
+      <text-area :model="newResource.description" :max-length="1000" placeholder="Описание" labeled @onInput="setValue('description', $event)"/>
       <title-caps>Стоимость ресурса</title-caps>
       <input-price :model="newResource.price"/>
       <header-add class="user" @create="showSidebar()">
@@ -39,15 +39,63 @@
         <template #header-title>Владелец</template>
         <template #header-amount>1</template>
       </header-add>
-      <company :company="newResource.owner"/>
-      <header-add class="">
+      <company-ui :company="newResource.owner"/>
+      <header-add class="" @create="modalDownload=true">
         <template #header-title>изображения</template>
       </header-add>
+      <modal-base :status="modalDownload" @onClose="modalDownload=false" class="modal-download" @onOk="modalDownload=false">
+        <template #title>
+          Загрузить файлы
+        </template>
+        <template #description>
+          Файлы которые вы выберете будут прикреплены к ресурсу
+        </template>
+        <template #content>
+          <title-caps class="modal-subtitle">изображения</title-caps>
+          <div class="download-plate">
+            <div class="button-add">
+              <icon-add/>
+            </div>
+            <text-base>Выбрать файл</text-base>
+          </div>
+        </template>
+        <template #button-accept>
+          Сохранить
+        </template>
+      </modal-base>
     </div>
     <div class="create-resource-buttons">
-      <button-secondary class="create-resource-button">Отмена</button-secondary>
-      <button-base class="create-resource-button" :disable="buttonDisable">Создать ресурс</button-base>
+      <button-secondary class="create-resource-button" @click.native="saveChanges">
+        Отмена
+      </button-secondary>
+      <button-base class="create-resource-button" :disable="buttonDisable"  @onClick="$router.push({name: 'vx.resource.material.resources'})">
+        Создать ресурс
+      </button-base>
     </div>
+    <modal-base :status="modalSaveStatus"
+                @onClose="$router.push({name: 'vx.resource.material.resources'})"
+                class="modal-save"
+                @onOk="$router.push({name: 'vx.resource.material.resources'})">
+      <template #title>
+        Сохранить изменения?
+      </template>
+      <template #description>
+        Данные не сохраняются автоматически
+      </template>
+      <template #content>
+        <title-caps class="modal-subtitle">Ресурс</title-caps>
+        <div class="save-resource-plate">
+          <title-sub>{{newResource.name}}</title-sub>
+          <title-caption>{{newResource.number}}</title-caption>
+        </div>
+      </template>
+      <template #button-cancel>
+        Выйти без сохранения
+      </template>
+      <template #button-accept>
+        Сохранить и выйти
+      </template>
+    </modal-base>
   </div>
 </template>
 
@@ -58,14 +106,16 @@
   import TextArea from "@Facade/Input/TextArea"
   import TitleCaps from "@Facade/Title/Caps"
   import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd";
-  import Company from "@/LTE/Singletons/Resources/facades/Company";
   import ButtonSecondary from "@Facade/Button/Secondary"
   import ButtonBase from "@Facade/Button/Base"
   import InputPrice from "@Facade/Input/Price"
   import ModalBase from "@Facade/Modal/Base"
   import TitleSub from "@Facade/Title/Sub"
+  import IconAdd from "@Icon/Add"
+  import TextBase from "@Facade/Text/Base";
+  import TitleCaption from "@Facade/Title/Caption"
 
-  import {AssignUserUi} from '@Providers'
+  import {AssignUserUi, CompanyUi} from '@Providers'
 
   import {mapMutations} from "vuex";
 
@@ -78,18 +128,22 @@
       TextArea,
       TitleCaps,
       HeaderAdd,
-      Company,
+      CompanyUi,
       ButtonSecondary,
       ButtonBase,
       InputPrice,
       AssignUserUi,
       ModalBase,
-      TitleSub
+      TitleSub,
+      IconAdd,
+      TextBase,
+      TitleCaption
     },
     data() {
       return{
-        buttonDisable: true,
-        modalStatus: true,
+        modalStatus: false,
+        modalSaveStatus: false,
+        modalDownload: false,
         levels: [
           {
             level: 1, showContext: true, checkedLevel: false, data: [
@@ -195,11 +249,11 @@
             name: null,
             position: null,
             level: null,
-            img: null
+            avatar: null
           },
           owner: {
             name: 'Arxel',
-            img: require('@/assets/img/my/process.svg'),
+            avatar: require('@/assets/img/my/process.svg'),
           },
           price: null
         }
@@ -209,7 +263,29 @@
       ...mapMutations({
         showSidebar: 'Resources/showSidebarAssign',
       }),
+      setValue(stage, data){
+        if(data) {
+          this.newResource[`${stage}`] = data
+        } else {
+          this.newResource[`${stage}`] = null
+        }
+      },
+      saveChanges(){
+        if(this.newResource.name && this.newResource.number){
+          this.modalSaveStatus=true
+        } else{
+          this.$router.push({name: 'vx.resource.material.resources'})
+        }
+      }
     },
+    computed:{
+      buttonDisable(){
+        if(this.newResource.name && this.newResource.number){
+          return false
+        }
+        return true
+      }
+    }
   }
 </script>
 
@@ -231,7 +307,7 @@
         border-width: 1px;
         margin-bottom: rem(16);
       }
-      .facade-text-area::v-deep {
+      .facade-input-text-area::v-deep {
         margin-bottom: rem(16);
 
         .textarea-title{
@@ -250,9 +326,6 @@
         margin-bottom: rem(24);
       }
       .facade-modal-base::v-deep{
-        .modal-base-body{
-          height: max-content;
-        }
         .modal-subtitle{
           padding: rem(8) 0;
           margin-bottom: rem(4);
@@ -294,6 +367,35 @@
         margin-bottom: rem(24);
       }
     }
+    .modal-download{
+      .download-plate{
+        display: flex;
+        align-items: center;
+        padding: rem(8);
+        margin-bottom: rem(12);
+        border-radius: 8px;
+        background-color: $grey-scale-400;
+        .button-add{
+          display: inherit;
+          height: 36px;
+          width: 36px;
+          border-radius: 50%;
+          border: 2px solid $grey-scale-300;
+          align-items: inherit;
+          justify-content: center;
+          box-sizing: border-box;
+          margin-right: 12px;
+          cursor: pointer;
+          .icon-add::v-deep{
+            color: #fff;
+            svg{
+              height: 14px;
+              width: 14px;
+            }
+          }
+        }
+      }
+    }
     .create-resource-buttons {
       display: flex;
       justify-content: space-between;
@@ -305,6 +407,21 @@
         &[disable] {
           background-color: $grey-scale-400;
         }
+      }
+    }
+    .modal-save{
+      .save-resource-plate{
+        padding: rem(8) rem(16);
+        border-radius: 8px;
+        background-color: $grey-scale-400;
+        margin-bottom: 12px;
+        .facade-title-sub{
+          margin-bottom: 4px;
+        }
+      }
+      .facade-title-caps{
+        padding: rem(8) 0;
+        margin-bottom: 4px;
       }
     }
   }

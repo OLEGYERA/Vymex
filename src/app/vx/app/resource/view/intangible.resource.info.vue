@@ -2,27 +2,39 @@
   <div class="resource-intangible-info-view">
     <comeback @onClick="$router.push({name: 'vx.resource.intangible.resources'})"/>
     <div class="info-header-group">
+
       <title-base>{{object.name}}</title-base>
       <icon-points-vertical @click.native="actionListStatus = !actionListStatus" ref="list"/>
-      <modal-action-list :status="actionListStatus" :actions="actions" @onClick="performAction"/>
+
+      <modal-action-list
+          :status="actionListStatus"
+          :actions="actions"
+          @onList="performAction"
+          @onClose="actionListStatus=false"
+          @onDelete="modalStatus = true"
+      />
+
       <modal-base :status="modalStatus" @onClose="modalStatus=false" @onOk="$router.push({name: 'vx.resource.intangible.resources'})">
         <template #title>Удалить ресурс?</template>
         <template #description>Это действие необратимо</template>
         <template #content>
           <title-caps class="modal-subtitle">Ресурс</title-caps>
-          <intangible-object :object="object"/>
+          <intangible-object-ui :object="object"/>
         </template>
         <template #button-accept>Удалить</template>
       </modal-base>
     </div>
+
     <title-caption class="resource-url">{{object.url}}</title-caption>
     <text-base>{{object.description}}</text-base>
+
     <div class="resource-password-plate">
       <div class="hidden-password">
         <div class="password-unit" v-for="(letter, key) in object.password" :letter="letter" :key="key"></div>
       </div>
       <title-sub>Показать пароль</title-sub>
     </div>
+
     <div class="buttons-group">
       <button-secondary>Скопировать в буфер</button-secondary>
       <button-base>Перейти на ресурс</button-base>
@@ -37,12 +49,11 @@
   import TextBase from "@Facade/Text/Base"
   import TitleSub from "@Facade/Title/Sub"
   import TitleCaps from "@Facade/Title/Caps"
-  import IconPointsVertical from "@Icon/PointsVertical"
   import ModalActionList from "@Facade/Modal/ActionList";
   import ButtonBase from "@Facade/Button/Base"
   import ButtonSecondary from "@Facade/Button/Secondary"
   import ModalBase from "@Facade/Modal/Base"
-  import IntangibleObject from "@/LTE/Singletons/Resources/facades/IntangibleObject";
+  import {IntangibleObjectUi} from "@Providers"
 
   export default {
     name: 'vx.resource.intangible.info',
@@ -54,11 +65,10 @@
       TitleSub,
       TitleCaps,
       ModalActionList,
-      IconPointsVertical,
       ButtonBase,
       ButtonSecondary,
       ModalBase,
-      IntangibleObject
+      IntangibleObjectUi
     },
     data() {
       return{
@@ -85,17 +95,13 @@
       this.object = this.resources[0]
     },
     methods: {
-      performAction({key}) {
-        console.log(key)
-        console.log(this.$route.params.id)
-        switch (key) {
-          case 0: this.$router.push({name: 'vx.resource.intangible.resource.editing', params: {resourceId: this.$route.params.id}});
-            break;
-          case 1: this.modalStatus = true
-
-        }
+      performAction() {
+      this.$router.push({name: 'vx.resource.intangible.resource.editing', params: {resourceId: this.$route.params.id || 0}});
       }
     },
+    updated() {
+      console.log(this.modalStatus)
+    }
   }
 </script>
 
@@ -114,9 +120,12 @@
         height: 16px;
         cursor: pointer;
       }
-      .facade-modal-action-list{
-        top: 24px;
-        right: 4px;
+      .facade-modal-action-list::v-deep {
+        right: 10px;
+        .action-list-body{
+          transform: translateX(-100%);
+          top: 2px;
+        }
       }
     }
     .facade-modal-base::v-deep {
@@ -125,6 +134,9 @@
         .modal-subtitle {
           padding: rem(8) 0;
           margin-bottom: rem(4);
+        }
+        .icon-points-vertical{
+          display: none;
         }
       }
 

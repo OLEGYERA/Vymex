@@ -6,36 +6,37 @@
         <icon-points-vertical/>
       </div>
       <input-search :placeholder="'Поиск'"/>
+
     <header-add>
       <template #header-title>папки</template>
       <template #header-amount>{{folders.length}}</template>
     </header-add>
     <div class="resources-folders">
-      <folder v-for="(folder, folderKey) in folders" :folder="folder" :key="folderKey" @click.native="$router.push({name: 'vx.resource.empty.folder'})"/>
+      <folder-ui v-for="(folder, folderKey) in folders" :folder="folder" :key="folderKey" @onClick="$router.push({name: 'vx.resource.empty.folder'})"/>
     </div>
+
     <header-add sort>
       <template #header-title>Файлы</template>
       <template #header-amount>{{files.length}}</template>
     </header-add>
-    <file v-for="(file, key) in files" :file="file" :key="key" :actions="actions"/>
+    <file-ui v-for="(file, key) in files" :file="file" :key="key" :actions="actions"/>
   </div>
 </template>
 
 <script>
-  import Folder from "@/LTE/Singletons/Resources/facades/Folder"; //// костыль
   import Comeback from "@Facade/Navigation/Comeback";
   import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd"; //// костыль
-  import File from "@/LTE/Singletons/Resources/facades/File" //// костыль
   import TitleBase from "@Facade/Title/Base"
   import InputSearch from "@Facade/Input/Search";
+  import {FileUi, FolderUi} from '@Providers'
 
   export default {
     name: 'vx.resource.new.folder',
     components: {
-      Folder,
+      FolderUi,
       Comeback,
       HeaderAdd,
-      File,
+      FileUi,
       TitleBase,
       InputSearch
     },
@@ -151,7 +152,7 @@
     .resources-folders {
       margin-bottom: 20px;
     }
-    .facade-resource-file {
+    .resource-file-ui {
       margin-bottom: 8px;
     }
   }

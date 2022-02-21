@@ -1,18 +1,18 @@
 import Resources from "./app";
-import Main from "./view/Main";
-import WorkerFiles from "./view/WorkerFiles";
-import NewFolder from "./view/NewFolder";
-import EmptyFolder from "./view/EmptyFolder";
-import StructuralUnits from "./view/StructuralUnits";
-import MaterialResources from "./view/MaterialResources";
-import CreateResource from "./view/CreateMaterialResource";
-import ResourceEditing from "./view/MaterialResourceEditing";
-import ResourceInfo from "./view/MaterialResourceInfo";
-import IntangibleResources from "./view/IntangibleResources";
-import CreateIntangibleResource from "./view/CreateIntangibleResource";
-import IntangibleResourceInfo from "./view/IntangibleResourceInfo";
-import IntangibleResourceEditing from "./view/IntangibleResourceEditing";
-import TrashFolder from "./view/TrashFolder";
+import Main from "./view/main";
+import WorkerFiles from "./view/worker.files";
+import NewFolder from "./view/new.folder";
+import EmptyFolder from "./view/empty.folder";
+import StructuralUnits from "./view/structural.units";
+import MaterialResources from "./view/material.resources";
+import CreateResource from "./view/create.material.resource";
+import ResourceEditing from "./view/material.resource.editing";
+import ResourceInfo from "./view/material.resource.info";
+import IntangibleResources from "./view/intangible.resources";
+import CreateIntangibleResource from "./view/create.intangible.resource";
+import IntangibleResourceInfo from "./view/intangible.resource.info";
+import IntangibleResourceEditing from "./view/intangible.resource.editing";
+import TrashFolder from "./view/trash.folder";
 
 export default [
     {

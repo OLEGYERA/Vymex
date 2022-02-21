@@ -40,7 +40,7 @@
     </header>
 
     <main class="resource-folders">
-      <folder v-for="(folder, folderKey) in folders" :folder="folder" :key="folderKey" @getId="changePage"/>
+      <folder-ui v-for="(folder, folderKey) in folders" :folder="folder" :key="folderKey" @onClick="changePage"/>
     </main>
   </div>
 </template>
@@ -51,8 +51,8 @@
   import TitleBase from '@Facade/Title/Base'
   import TextBase from '@Facade/Text/Base'
   import TitleCaption from '@Facade/Title/Caption'
-  import Folder from "@/LTE/Singletons/Resources/facades/Folder";
   import ButtonBase from '@Facade/Button/Base'
+  import {FolderUi} from '@Providers'
 
   export default {
     name: 'vx.resource.main',
@@ -61,7 +61,7 @@
       TitleBase,
       TextBase,
       TitleCaption,
-      Folder,
+      FolderUi,
       ButtonBase
     },
     data() {

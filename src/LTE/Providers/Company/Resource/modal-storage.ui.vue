@@ -1,13 +1,13 @@
 <template>
-  <div class="facade-modal-storage" v-if="status">
+  <div class="resource-modal-storage-ui" v-if="status">
     <div class="modal-title">
       Свободное пространство в хранилище
       ({{percent}} %)
     </div>
-    <text-base class="modal-text">
+    <text-base class="modal-subtitle">
       Вскоре вы не сможете загружать файлы на Диск, а также получать и отправлять письма
     </text-base>
-    <div class="modal-buttons">
+    <div class="modal-storage-buttons">
       <text-base class="button-detailed">Подробнее</text-base>
       <text-base><button-base>Купить место</button-base></text-base>
     </div>
@@ -38,7 +38,7 @@
 </script>
 
 <style lang="scss" scoped>
-  .facade-modal-storage{
+  .resource-modal-storage-ui {
     position: absolute;
     padding: rem(20) rem(16) rem(16) rem(20);
     background-color: $grey-scale-400;
@@ -57,7 +57,7 @@
       top: -5px;
       z-index: -1;
     }
-    .modal-title {
+    .modal-subtitle {
       margin-bottom: rem(5);
       font-weight: 600;
       font-size: 17px;
@@ -67,7 +67,7 @@
     .modal-text {
       margin-bottom: rem(19);
     }
-    .modal-buttons {
+    .modal-storage-buttons {
       display: flex;
       justify-content: space-between;
       .button-detailed {

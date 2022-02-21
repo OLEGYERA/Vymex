@@ -20,15 +20,17 @@
         <template #header-title>Владелец</template>
         <template #header-amount>1</template>
       </header-add>
-      <company :company="object.owner"/>
+      <company-ui :company="object.owner"/>
       <header-add class="">
         <template #header-title>изображения</template>
       </header-add>
-      <file/>
+      <file-ui/>
     </div>
     <div class="create-resource-buttons">
       <button-secondary class="create-resource-button">Отмена</button-secondary>
-      <button-base class="create-resource-button" :disable="buttonDisable">Сохранить</button-base>
+      <button-base class="create-resource-button" :disable="buttonDisable" @onClick="$router.push({name: 'vx.resource.material.resources'})">
+        Сохранить
+      </button-base>
     </div>
   </div>
 </template>
@@ -39,14 +41,12 @@
   import InputBase from "@Facade/Input/Base"
   import TextArea from "@Facade/Input/TextArea"
   import TitleCaps from "@Facade/Title/Caps"
-  import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd";
-  import Company from "@/LTE/Singletons/Resources/facades/Company";
+  import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd"; //// костыль
   import ButtonSecondary from "@Facade/Button/Secondary"
   import ButtonBase from "@Facade/Button/Base"
   import InputPrice from "@Facade/Input/Price"
   import StructuralUnit from "@/LTE/Singletons/Dashboard/facades/StructuralUnit"; //// костыль
-  import File from "@/LTE/Singletons/Resources/facades/File";
-  import {AssignUserUi} from '@Providers'
+  import {AssignUserUi, CompanyUi, FileUi} from '@Providers'
 
   import {mapMutations} from "vuex";
 
@@ -59,13 +59,13 @@
       TextArea,
       TitleCaps,
       HeaderAdd,
-      Company,
+      CompanyUi,
       ButtonSecondary,
       ButtonBase,
       InputPrice,
       StructuralUnit,
-      File,
-      AssignUserUi
+      FileUi,
+      AssignUserUi,
     },
     data() {
       return{
@@ -240,7 +240,7 @@
         border-width: 1px;
         margin-bottom: rem(16);
       }
-      .facade-text-area{
+      .facade-input-text-area{
         margin-bottom: rem(16);
       }
       .facade-title-caps {
