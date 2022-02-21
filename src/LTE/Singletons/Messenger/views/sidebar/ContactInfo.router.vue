@@ -1,47 +1,49 @@
 <template>
   <div class="router-personal-view">
     <div class="main-info">
-      <name :name="fullName" @updateRouter="updateRouter" :type="type"/>
-      <div class="personal-photo">
-        <avatar :logo="avatar.logo" :colorCode="avatar.colorCode"/>
+      <name :name="`${contactInfo.name} ${contactInfo.lastname}`" @updateRouter="updateRouter" :type="type"/>
+      <div class="photo">
+        <image-avatar :logo="$core.traits.ImageLogo(contactInfo.avatar, contactInfo.name, contactInfo.lastname)" :color-code="$core.traits.ImageColorCode(contactInfo.id)"/>
       </div>
       <div class="info-block">
-        <div class="group-top-block">
-          <div class="user-info">
-            <div class="icon-info"><icon-mail/></div>
-            <div class="info-text-group">
-              <text-base>{{alias}}</text-base>
-              <title-caption>Имя пользователя VYMEX</title-caption>
-            </div>
-            <icon-copy/>
+        <div class="user-info" v-if="contactInfo.alias">
+          <div class="icon-info"><icon-mail/></div>
+          <div class="info-text-group">
+            <text-base>{{contactInfo.alias}}</text-base>
+            <title-caption>Имя пользователя VYMEX</title-caption>
           </div>
-          <div class="user-info">
-            <div class="icon-info"><icon-phone/></div>
-            <div class="info-text-group">
-              <text-base>{{phone}}</text-base>
-              <title-caption>Телефон</title-caption>
-            </div>
-            <icon-copy/>
-          </div>
-          <div class="user-info">
-            <div class="icon-info"><icon-letter/></div>
-            <div class="info-text-group">
-              <text-base>{{email}}</text-base>
-              <title-caption>Электронная почта</title-caption>
-            </div>
-            <icon-copy/>
-          </div>
-          <div class="user-info">
-            <div class="icon-info"><icon-calendar/></div>
-            <div class="info-text-group">
-              <text-base>{{birthday}}</text-base>
-              <title-caption>День рождения</title-caption>
-            </div>
-            <icon-copy/>
-          </div>
+          <icon-copy/>
         </div>
-        <text-area :model="about" labeled :placeholder="'О себе'" :max-length="1000"/>
-        <button-base v-if="type==='user'">Написать</button-base>
+        <div class="user-info" v-if="contactInfo.details.telephone">
+          <div class="icon-info"><icon-phone/></div>
+          <div class="info-text-group">
+            <text-base>{{contactInfo.details.telephone}}</text-base>
+            <title-caption>Телефон</title-caption>
+          </div>
+          <icon-copy/>
+        </div>
+        <div class="user-info" v-if="contactInfo.details.email">
+          <div class="icon-info"><icon-letter/></div>
+          <div class="info-text-group">
+            <text-base>{{contactInfo.details.email}}</text-base>
+            <title-caption>Электронная почта</title-caption>
+          </div>
+          <icon-copy/>
+        </div>
+        <div class="user-info" v-if="contactInfo.details.birthday">
+          <div class="icon-info"><icon-calendar/></div>
+          <div class="info-text-group">
+            <text-base>{{contactInfo.details.birthday}}</text-base>
+            <title-caption>День рождения</title-caption>
+          </div>
+          <icon-copy/>
+        </div>
+        <div class="button-msg-row">
+          <title-sub>
+            <button-base @onClick="sendContactMessage">Написать</button-base>
+          </title-sub>
+        </div>
+<!--        <text-area v-model="textarea" :model="contactInfo.about" placeholder="О себе" disable/>-->
       </div>
     </div>
   </div>
@@ -51,7 +53,7 @@
 /*eslint-disable*/
 
  import Name from "@/LTE/Singletons/Messenger/facades/Name";
- import Avatar from "@Facade/Image/Avatar";
+ import ImageAvatar from "@Facade/Image/Avatar";
  import TextBase from "@Facade/Text/Base";
  import TitleCaption from "@Facade/Title/Caption";
  import IconMail from "@Icon/Mail";
@@ -62,13 +64,13 @@
  import TextArea from "@Facade/Input/TextArea";
  import ButtonBase from '@Facade/Button/Base'
  import TitleSub from '@Facade/Title/Sub'
-import {mapGetters} from "vuex";
+import {mapGetters, mapMutations} from "vuex";
 
 export default {
   name: 'Singleton.Messenger.Views.Sidebar.RouterPersonal',
   components: {
     Name,
-    Avatar,
+    ImageAvatar,
     TextBase,
     TitleCaption,
     IconMail,
@@ -83,7 +85,7 @@ export default {
   data() {
     return {
       textarea: '',
-      about: 'Короткий но емкий текст о том насколько я хорош, профессионален, и самое главное — скромен до глубины души.',
+      about: this.about || 'Короткий но емкий текст о том насколько я хорош, профессионален, и самое главное — скромен до глубины души.',
     }
   },
   updated() {
@@ -98,12 +100,20 @@ export default {
       email: 'getUserEmail',
       about: 'getUserAbout',
       avatar: 'getUserAvatarData',
-      type: 'Messenger/personalRouterType'
+      type: 'Messenger/personalRouterType',
+      contactInfo: 'Messenger/getCurrentContact'
     }),
   },
   methods: {
+    ...mapMutations({
+      openMessenger: 'Messenger/openMessenger'
+    }),
+    sendContactMessage(){
+      console.log(243234231)
+      this.openMessenger()
+    },
     updateRouter(value) {
-      this.$emit('updateRouter', value)
+      this.$emit('updateRouter', 'search')
     }
   }
 }
@@ -117,12 +127,13 @@ export default {
     box-sizing: border-box;
     overflow: hidden;
     .main-info {
+      width: 100%;
       height: 100%;
       overflow-y: scroll;
       .container-vx-name {
         margin-bottom: 36px;
       }
-      .personal-photo {
+      .photo {
         margin: 0 auto 32px;
         height: 120px;
         width: 120px;
@@ -197,6 +208,9 @@ export default {
             padding-top: 12px;
           }
         }
+      }
+      .button-msg-row{
+        margin-top: 24px;
       }
     }
   }

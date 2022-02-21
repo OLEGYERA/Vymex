@@ -1,12 +1,12 @@
 <template>
-  <div class="facade-messenger-person" @click="onClick">
+  <div class="facade-messenger-person" @click="$emit('onClick', data.id)">
     <div class="private-info">
       <div class="dialog-image">
-        <avatar :logo="logo" :colorCode="color"/>
+        <image-avatar :logo="$core.traits.ImageLogo(data.avatar, data.name, data.lastname)" :color-code="$core.traits.ImageColorCode(data.id)"/>
       </div>
       <div class="info-text">
-        <div class="name">{{contact.title}}</div>
-        <title-caption>{{contact.alias}}</title-caption>
+        <div class="name">{{data.name}} {{data.lastname}}</div>
+        <title-caption>@{{data.alias}}</title-caption>
       </div>
     </div>
     <points-vertical/>
@@ -14,46 +14,31 @@
 </template>
 
 <script>
-import TitleCaption from '@Facade/Title/Caption'
-import PointsVertical from '@Icon/PointsVertical'
-import Avatar from '@Facade/Image/Avatar'
-import {mapMutations} from "vuex";
+  import TitleCaption from '@Facade/Title/Caption'
+  import PointsVertical from '@Icon/PointsVertical'
+  import ImageAvatar from '@Facade/Image/Avatar'
 
-export default {
-  name: 'Singleton.Messenger.Facades.Person',
-  components: {
-    TitleCaption,
-    PointsVertical,
-    Avatar
-  },
-  data() {
-    return {
-      color: '4'
-    }
-  },
-  props: ['contact'],
-  computed: {
-    logo: function () {
-      let initials = ''
-      for (const char of this.contact.title) {
-        if (char === char.toUpperCase() && char !== ' ') {
-          initials += char
+  export default {
+    name: 'Singleton.Messenger.Facades.Person',
+    components: {
+      TitleCaption,
+      PointsVertical,
+      ImageAvatar
+    },
+    props: {
+      data: {
+        type: Object,
+        validator: function (value) {
+          return value === null
+            || typeof value.id === "number"
+            || typeof value.alias === "string"
+            || typeof value.name === "string"
+            || (typeof value.avatar === "string" && value.avatar === null)
+            || typeof value.details === "string";
         }
       }
-      return initials.slice(0, 2);
     },
-  },
-  methods: {
-    ...mapMutations({
-      setRouterName: 'Messenger/setRouterName',
-      changePersonalRouterType: 'Messenger/changePersonalRouterType'
-    }),
-    onClick() {
-      this.setRouterName('personal')
-      this.changePersonalRouterType('user')
-    }
-  },
-}
+  }
 </script>
 
 <style lang="scss" scoped>

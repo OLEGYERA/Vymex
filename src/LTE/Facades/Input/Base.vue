@@ -103,7 +103,7 @@
     outline: none;
 
     .input-label{
-      padding: 0 2px;
+      //padding: 0 2px;
       position: absolute;
       color: $grey-scale-200;
       font-weight: 400;

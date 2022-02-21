@@ -202,6 +202,7 @@
 
 <style lang="scss" scoped>
   .task-create-view{
+    max-width: 1200px;
     .task-create-title{
       text-align: center;
       margin: 0 0 36px;
