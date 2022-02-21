@@ -94,7 +94,7 @@
             title: 'Доступные мне',
             content: {
               folders: 12,
-              files: 2
+              files: 21
             },
             group: true,
             trash: null,
@@ -127,6 +127,9 @@
         }
         if(id === 2){
           this.$router.push({name: 'vx.resource.worker.files'})
+        }
+        if(id === 4){
+          this.$router.push({name: 'vx.resource.trash.folder'})
         }
       }
     },

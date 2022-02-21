@@ -1,5 +1,5 @@
 <template>
-  <div class="resources-structural-units">
+  <div class="resource-structural-units-view">
     <comeback @onClick="$router.push({name: 'vx.resource'})"/>
     <div class="header-text-group">
       <title-base>Ресурсы С.Е.</title-base>
@@ -72,14 +72,14 @@
 </script>
 
 <style lang="scss" scoped>
-  .resources-structural-units {
+  .resource-structural-units-view {
     width: 100%;
     .header-text-group {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 20px;
-      .icon-points {
+      .icon-points-vertical {
         height: 16px;
         color: #fff;
         padding: 8px 10px;

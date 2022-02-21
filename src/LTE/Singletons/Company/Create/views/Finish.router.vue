@@ -75,6 +75,10 @@
       },
       createCo(){
         this.$core.execViaComponent('Company', 'create');
+        // for (let i=0; i<5000; i++) {
+        //   console.log('Тест создания: ' + i);
+        //   this.$core.execViaComponent('Company', 'create');
+        // }
         this.$root.clearOverlapRoute();
         this.$router.push({name: 'vx'});
         setTimeout(() => this.clearCreator(), 0);

@@ -1,5 +1,5 @@
 <template>
-  <div class="resources-new-folder">
+  <div class="resources-new-folder-view">
     <comeback @onClick="$router.push({name: 'vx.resource.worker.files'})"/>
       <div class="header-text-group">
         <title-base>Новая папка</title-base>
@@ -17,7 +17,7 @@
       <template #header-title>Файлы</template>
       <template #header-amount>{{files.length}}</template>
     </header-add>
-    <file v-for="(file, key) in files" :file="file" :key="key"/>
+    <file v-for="(file, key) in files" :file="file" :key="key" :items="items"/>
   </div>
 </template>
 
@@ -41,6 +41,7 @@
     },
     data() {
       return{
+        items: ['Редактировать', 'Открыть доступ', 'Переместить', 'Удалить '],
         folders: [
           {
             id: 1,
@@ -126,14 +127,14 @@
 </script>
 
 <style lang="scss" scoped>
-  .resources-new-folder {
+  .resources-new-folder-view {
     width: 100%;
     .header-text-group {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 20px;
-      .icon-points {
+      .icon-points-vertical {
         height: 16px;
         color: #fff;
         padding: 8px 10px;

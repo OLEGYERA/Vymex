@@ -51,7 +51,7 @@ export default {
       font-size: rem(17);
       line-height: rem(22);
     }
-    .icon-points {
+    .icon-points-vertical {
       height: 16px;
       padding: 5px 10px;
       cursor: pointer;

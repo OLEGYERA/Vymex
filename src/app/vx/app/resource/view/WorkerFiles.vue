@@ -1,5 +1,5 @@
 <template>
-  <div class="resource-worker-files">
+  <div class="resource-worker-files-view">
     <comeback @onClick="$router.push({name: 'vx.resource'})"/>
     <div class="header-text-group">
       <title-base>Рабочие файлы</title-base>
@@ -17,14 +17,19 @@
       <template #header-title>Файлы</template>
       <template #header-amount>{{files.length}}</template>
     </header-add>
-    <modal-base :status="modalStatus" @onClose="modalStatus=false">
+    <modal-base :status="modalStatus" @onClose="modalStatus=false" @onOk="modalStatus=false">
       <template #title>Сортировка</template>
       <template #content>
-        <button-checkbox :selectedOption="activeButton" :values="modalValues" @getValue="setNewValue"/>
+        <button-checkbox
+            v-for="(value, valueKey) in modalValues"
+            :key="valueKey"
+            :title="value"
+            :selected="activeButton === valueKey"
+            @onCheckbox="setNewValue(valueKey)"/>
       </template>
       <template #button-accept>Применить</template>
     </modal-base>
-    <file v-for="(file, key) in files" :file="file" :key="key"/>
+    <file v-for="(file, key) in files" :file="file" :key="key" :items="items" @getActiveValue="actionListChange"/>
   </div>
 </template>
 
@@ -37,9 +42,10 @@
   import TitleBase from "@Facade/Title/Base"
   import ModalBase from "@Facade/Modal/Base"
   import ButtonCheckbox from "@Facade/Button/Checkbox"
+  import {mapMutations} from "vuex";
 
   export default {
-    name: 'vx.resource.working.files',
+    name: 'vx.resource.worker.files',
     components: {
       Folder,
       Comeback,
@@ -55,6 +61,7 @@
         modalStatus: false,
         modalValues: ['По дате (сначала новое)', 'По дате (сначала старое)', 'По размеру файлов'],
         activeButton: 2,
+        items: ['Редактировать', 'Открыть доступ', 'Переместить', 'Удалить '],
         folders: [
           {
             id: 1,
@@ -115,13 +122,22 @@
       }
     },
     methods:{
+      ...mapMutations({
+        showSidebar: 'Resources/showSidebarFolderAccess',
+      }),
       changePage({id}) {
         if(id === 1){
           this.$router.push({name: 'vx.resource.new.folder'})
         }
       },
-      setNewValue({id}) {
-        console.log(id)
+      actionListChange(key) {
+        console.log(key)
+        this.actionListStatus = false;
+        if(key === 1){
+          this.showSidebar()
+        }
+      },
+      setNewValue(id) {
         this.activeButton = id
       }
     }
@@ -129,14 +145,14 @@
 </script>
 
 <style lang="scss" scoped>
-  .resource-worker-files {
+  .resource-worker-files-view {
     width: 100%;
     .header-text-group {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 20px;
-      .icon-points {
+      .icon-points-vertical {
         height: 16px;
         color: #fff;
         padding: 8px 10px;

@@ -10,67 +10,76 @@
         {{object.user.name}}
       </div>
     </div>
-    <icon-points-vertical @click.native.stop="cons"/>
+    <icon-points-vertical @click.native.stop/>
+    <action-list :items="items" />
   </div>
 </template>
 
 <script>
-import TextBase from '@Facade/Text/Base'
-import TitleCaption from '@Facade/Title/Caption'
-import IconPointsVertical from "@Icon/PointsVertical"
+  import TextBase from '@Facade/Text/Base'
+  import TitleCaption from '@Facade/Title/Caption'
+  import IconPointsVertical from "@Icon/PointsVertical"
+  import ActionList from "@Facade/Modal/ActionList";
 
-export default {
-  name: 'Facade.Resource.Folder',
-  components: {
-    TextBase,
-    TitleCaption,
-    IconPointsVertical
-  },
-  props: {
-    object: Object,
-  },
-  methods: {
-    cons() {
-      console.log(111)
-    }
-  }
-}
-</script>
-<style lang="scss" scoped>
-.facade-resource-material-object {
-  padding: 12px 6px 12px 16px;
-  display: flex;
-  justify-content: space-between;
-  border-radius: 12px;
-  background-color: $grey-scale-400;
-  transition: background-color .3s;
-  cursor: pointer;
-  &:hover{
-    background-color: $grey-scale-500;
-  }
-  .object-main {
-    display: inherit;
-    .object-info{
-      width: 232px;
-      margin-right: 12px;
-      .facade-text-base {
-        color: #fff;
-        margin-bottom: 4px;
+  export default {
+    name: 'Facade.Resource.Material.Object',
+    components: {
+      TextBase,
+      TitleCaption,
+      IconPointsVertical,
+      ActionList
+    },
+    props: {
+      object: Object,
+    },
+    data(){
+      return{
+        items: ['Назначить ресурс', 'Редактировать', 'Удалить '],
+        actionListStatus: false,
+      }
+    },
+    methods: {
+      cons() {
+        console.log(111)
       }
     }
-    .object-user{
-      font-size: 11px;
-      line-height: 12px;
-      height: max-content;
-      color: $grey;
-      padding: 2px 8px;
-      border-radius: 8px;
+  }
+</script>
+<style lang="scss" scoped>
+  .facade-resource-material-object {
+    padding: 12px 6px 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    border-radius: 12px;
+    background-color: $grey-scale-400;
+    transition: background-color .3s;
+    cursor: pointer;
+    &:hover{
+      background-color: $grey-scale-500;
+    }
+    .object-main {
+      display: inherit;
+      .object-info{
+        width: 232px;
+        margin-right: 12px;
+        .facade-text-base {
+          color: #fff;
+          margin-bottom: 4px;
+        }
+      }
+      .object-user{
+        font-size: 11px;
+        line-height: 12px;
+        height: max-content;
+        color: $grey;
+        padding: 2px 8px;
+        border-radius: 8px;
+      }
+    }
+    .icon-points-vertical {
+      padding: 0 10px 10px;
+      color: #fff;
+      cursor: pointer;
     }
   }
-  .icon-points {
-    padding: 0 10px 10px;
-    color: #fff;
-    cursor: pointer;
-  }
-}
 </style>

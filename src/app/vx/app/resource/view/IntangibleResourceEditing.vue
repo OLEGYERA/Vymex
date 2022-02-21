@@ -1,18 +1,18 @@
 <template>
-  <div class="resource-create-intangible-resource-view">
-    <comeback @onClick="$router.push({name: 'vx.resource.intangible.resources'})"/>
-    <title-base>Создать ресурс</title-base>
+  <div class="resource-editing-intangible-view">
+    <comeback @onClick="$router.push({name: 'vx.resource.intangible.resource.info'})"/>
+    <title-base>Редактировать ресурс</title-base>
     <div class="resource-main-plate">
-      <input-base :model="newResource.name" labeled :placeholder="'Название'" @onInput="setValue('name', $event)"/>
-      <input-base :model="newResource.url" labeled :placeholder="'URL'" @onInput="setValue('url', $event)"/>
-      <input-base :model="newResource.login" labeled :placeholder="'Логин'" @onInput="setValue('login', $event)"/>
-      <input-password :model="newResource.password" labeled :placeholder="'Пароль'" @onInput="setValue('password', $event)"/>
-      <text-area :model="newResource.description" labeled :placeholder="'Описание (не обязательно)'" :max-length="1000" @onInput="setValue('description', $event)" />
+      <input-base :model="resource.name" labeled :placeholder="'Название'" @onInput="setValue('name', $event)"/>
+      <input-base :model="resource.url" labeled :placeholder="'URL'" @onInput="setValue('url', $event)"/>
+      <input-base :model="resource.login" labeled :placeholder="'Логин'" @onInput="setValue('login', $event)"/>
+      <input-password :model="resource.password" labeled :placeholder="'Пароль'" @onInput="setValue('password', $event)"/>
+      <text-area :model="resource.description" labeled :placeholder="'Описание (не обязательно)'" :max-length="1000" @onInput="setValue('description', $event)" />
     </div>
     <div class="create-resource-buttons">
       <button-secondary class="create-resource-button">Отмена</button-secondary>
       <button-base class="create-resource-button" :disable="buttonDisable" @click.native="addResource">
-        Создать ресурс
+        Сохранить
       </button-base>
     </div>
   </div>
@@ -28,7 +28,7 @@ import ButtonBase from "@Facade/Button/Base"
 import InputPassword from "@Facade/Input/Password"
 
 export default {
-  name: 'vx.resource.intangible.create',
+  name: 'vx.resource.editing.intangible',
   components: {
     Comeback,
     TitleBase,
@@ -40,22 +40,29 @@ export default {
   },
   data() {
     return{
-      // buttonDisable: true,
-      newResource: {
-        name: null,
-        url: null,
-        login: null,
-        password: null,
-        description: null,
-      }
+      resource: null,
+      resources: [
+        {
+          id: 1,
+          name: 'facebook account',
+          url: 'facebook.com/29kadgdbsi9a_21g3_1%_ab',
+          login: 'jerronvymex@vymex.com',
+          password: 'Abra_Kadabra',
+          description: 'Тестовый аккаунт для рекламных сайтов, что бы мы лучше понимали рынок земли и продажи алюминия, радости вам и хорошего настроения',
+        }
+      ]
     }
+  },
+  created() {
+    console.log(this.$route.params.resourceId)
+    this.resource = this.resources.find(el => el.id === this.$route.params.resourceId)
   },
   methods: {
     setValue(stage, data){
       if(data) {
-        this.newResource[`${stage}`] = data
+        this.resource[`${stage}`] = data
       } else {
-        this.newResource[`${stage}`] = null
+        this.resource[`${stage}`] = null
       }
     },
     addResource(){
@@ -66,7 +73,7 @@ export default {
   },
   computed:{
     buttonDisable(){
-      if(this.newResource.name && this.newResource.url && this.newResource.login){
+      if(this.resource.name && this.resource.url && this.resource.login){
         return false
       }
       return true
@@ -76,7 +83,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.resource-create-intangible-resource-view {
+.resource-editing-intangible-view {
   width: 100%;
   .facade-title-base {
     text-align: center;

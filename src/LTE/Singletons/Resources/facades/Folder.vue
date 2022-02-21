@@ -37,16 +37,21 @@ export default {
         return 'Пусто'
       }
       if(this.folder.content.objects) {
-        if (Number(String(this.folder.content.objects).slice(-1)) === 1) {
-          return `${this.folder.content.objects} объект`
-        } else if (Number(String(this.folder.content.objects).slice(-1)) < 5){
-          return `${this.folder.content.objects} объекта`
-        } else {
+        if(this.folder.content.objects >10 && this.folder.content.objects < 21){
           return `${this.folder.content.objects} объектов`
         }
+        if (Number(String(this.folder.content.objects).slice(-1)) === 1) {
+          return `${this.folder.content.objects} объект`
+        }
+        if (Number(String(this.folder.content.objects).slice(-1)) < 5){
+          return `${this.folder.content.objects} объекта`
+        }
+          return `${this.folder.content.objects} объектов`
       }
       if (this.folder.content.folders){
-        if (Number(String(this.folder.content.folders).slice(-1)) === 1) {
+        if(this.folder.content.folders >10 && this.folder.content.folders < 21){
+          folders = `${this.folder.content.folders} папок`
+        } else if (Number(String(this.folder.content.folders).slice(-1)) === 1) {
           folders = `${this.folder.content.folders} папка`
         } else if (Number(String(this.folder.content.folders).slice(-1)) < 5){
           folders = `${this.folder.content.folders} папки`
@@ -55,7 +60,9 @@ export default {
         }
       }
       if(this.folder.content.files) {
-        if (Number(String(this.folder.content.files).slice(-1)) === 1) {
+        if(this.folder.content.files >10 && this.folder.content.files < 21) {
+          files = `${this.folder.content.files} папок`
+        }else if (Number(String(this.folder.content.files).slice(-1)) === 1) {
           files = `${this.folder.content.files} файл`
         } else if (Number(String(this.folder.content.files).slice(-1)) < 5){
           files = `${this.folder.content.files} файла`

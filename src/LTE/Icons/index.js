@@ -34,4 +34,3 @@ Vue.component('icon-calendar', () => import('./Calendar'));
 Vue.component('icon-attach', () => import('./Attach'));
 Vue.component('icon-checkbox', () => import('./Checkbox'));
 Vue.component('icon-comments', () => import('./Comments'));
-

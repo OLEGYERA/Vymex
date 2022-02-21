@@ -60,7 +60,7 @@
       flex-direction: column;
       justify-content: center;
       width: 620px;
-      height: 720px;
+      //height: 720px;
       margin: auto;
       position: relative;
       box-sizing: border-box;

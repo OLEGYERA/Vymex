@@ -1,5 +1,5 @@
 <template>
-  <div class="facade-text-area"
+  <div class="facade-input-text-area"
        tabindex="0"
        @click="focusInput"
        :disable="disable"
@@ -7,17 +7,17 @@
     <div class="textarea-container">
       <textarea
           class="textarea"
-          v-model="currentValue"
+          v-model="textAreaModel"
           :maxlength="maxLength"
           rows="1"
           ref="facade-input-text-area-ref"
           @input="resize($event)"
           :placeholder="placeholder">
       </textarea>
-      <title-caption class="textarea-title" v-if="labeled">{{placeholder}}</title-caption>
+      <label class="textarea-title" v-if="labeled">{{ placeholder }}</label>
     </div>
     <title-caption v-if="count" class="textarea-text-length">
-      <span :class="{'textarea-count': currentValue}">{{currentValue.length}}</span>/{{maxLength}}
+      <span :class="{'textarea-count': textAreaModel}">{{textAreaModel.length}}</span>/{{maxLength}}
     </title-caption>
   </div>
 </template>
@@ -31,7 +31,7 @@
       TitleCaption
     },
     props: {
-      textAreaValue: String,
+      model: String,
       placeholder: String,
       count: Boolean,
       maxLength: Number,
@@ -40,7 +40,7 @@
     },
     data () {
       return {
-        currentValue: this.textAreaValue || '',
+        textAreaModel: this.model || '',
       }
     },
     methods: {
@@ -53,27 +53,34 @@
       },
     },
     mounted() {
-      setTimeout(() => this.$refs['textarea'].style.height = `${this.$refs['textarea'].scrollHeight}px`, 200)
-      console.log(this.$refs['textarea'].scrollHeight)
+      setTimeout(() => this.$refs['facade-input-text-area-ref'].style.height = `${this.$refs['facade-input-text-area-ref'].scrollHeight}px`, 200)
+      console.log(this.$refs['facade-input-text-area-ref'].scrollHeight)
     }
   }
 </script>
 
 <style scoped lang="scss">
-  .facade-text-area {
+  .facade-input-text-area {
     position: relative;
     cursor: text;
     padding: 8px 0 0;
     .textarea-title {
       top: 20px;
+      left: 0;
+      font-size: rem(14);
+      padding: 0 2px;
       position: absolute;
+      color: $grey-scale-200;
+      font-weight: 400;
+      line-height: rem(16);
+      cursor: text;
     }
 
     .textarea-container {
       width: 100%;
       box-sizing: border-box;
-      padding: 0 0 4px;
-      border-bottom: 1px solid $grey-scale-300;
+      padding: 0 0 2px;
+      border-bottom: 2px solid $grey-scale-300;
       &:focus-within{
         transition: all .2s ease-out;
         border-color: $blue;
@@ -86,11 +93,11 @@
         background-color: transparent;
         color: #fff;
         font-weight: 400;
+        font-size: rem(15);
+        line-height: rem(20);
         font-family: Inter, sans-serif;
-        font-size: 15px;
-        line-height: 20px;
         box-sizing: border-box;
-        padding: 0;
+        padding: 0 2px;
 
         &::placeholder {
           color: $grey-scale-200;
