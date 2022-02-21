@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import CheckboxRound from "@Facade/Input/CheckboxRound";
+import CheckboxRound from "@Facade/Input/Checkbox";
 
 export default {
   name: 'vx.process.facade.radio.slot',
