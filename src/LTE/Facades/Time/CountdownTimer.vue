@@ -35,7 +35,7 @@
         this.$emit('onStart')
         let timer = setInterval(() => {
           if(this.value < 1) {
-            this.$console.variable(this.value <= 0)
+            this.$core.log.variable(this.value <= 0)
             this.$emit('onExpired');
             clearInterval(timer);
           } else {

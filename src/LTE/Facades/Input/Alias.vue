@@ -45,7 +45,7 @@
       generateMaskPattern(){
         let maskPattern = ['@'];
         for(let i = 0; i < 32; i++) maskPattern.push(/[a-z0-9_]/)
-        return maskPattern
+        return maskPattern;
       }
     },
   }

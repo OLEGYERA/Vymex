@@ -62,16 +62,13 @@
       },
       sendApproveCodeData(code){
         this.approveCodeStatus = false;
-        this.$engine.Predictor
-          .prepareEraManually('second', 'phase5', code)
-          .runPredictedData()
+        this.$core.execViaComponent('Second', 'phase5', code)
+
       },
       resendCode(){
-        this.$engine.Predictor
-          .prepareEraManually('second', 'generateNewAuthData')
-          .runPredictedData()
-          .prepareComponentManually('auth', 'sendNewCode')
-          .runPredictedData()
+        this.$core.execViaComponent('Second', 'generateNewAuthData')
+                  .execViaComponent('Auth', 'sendNewCode')
+
       }
     },
     watch: {
@@ -80,13 +77,11 @@
       },
       isEqualDash(status){
         if(status === true){
-          this.$engine.Predictor
-            .prepareEraManually('second', 'phase6')
-            .runPredictedData()        }
+          this.$core.execViaComponent('Second', 'phase6')
+                    }
         else if(status === false) {
-          this.$engine.Predictor
-            .prepareComponentManually('auth', 'sendKeyError')
-            .runPredictedData()
+          this.$core.execViaComponent('Auth', 'sendKeyError')
+
         } else {
           this.approveCodeStatus = true
         }

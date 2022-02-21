@@ -1,5 +1,6 @@
 <template>
-  <div class="facade-plate-account create" :class="{'plate-account-tiny': tiny}" v-if="category === 'create-company'">
+  <div class="facade-plate-account create" :class="{'plate-account-tiny': tiny}"
+       v-if="category === 'create-company'" @click="$root.pushOverlapRoute({name: 'vx.co.create'})">
     <div class="plate-account-body">
       <div class="button-add">
         <icon-add/>
@@ -49,10 +50,11 @@
     },
     computed: {
       accountInfo(){
+        //все костыль нужно переделывать
         switch (this.category){
           case 'company':
             return  {
-              colorId: String(this.data.id).substr(this.data.id.length - 1, 1),
+              colorId: this.$core.traits.ImageColorCode(this.data.id),
               name: this.data.name,
               logo: this.data?.logo ? this.data.logo : this.data.name.substr(0, 1)
             }
@@ -74,8 +76,10 @@
   .facade-plate-account{
     border-radius: 8px;
     box-sizing: border-box;
-    background: $grey-scale-500;
+    background-color: $grey-scale-500;
     border-left: 4px solid transparent;
+    transition: .2s all linear;
+    cursor: pointer;
     .plate-account-body{
       width: 100%;
       display: flex;
@@ -119,6 +123,7 @@
           }
         }
         .facade-text-base{
+          transition: .2s all linear;
           color: $blue;
         }
       }
@@ -133,8 +138,21 @@
       }
     }
 
+    &:hover{
+      background-color: $grey-scale-400;
+      &.create{
+        .plate-account-body{
+          .facade-text-base{
+            color: #fff;
+          }
+        }
+      }
+    }
+
     &.active{
+      cursor: default;
       border-color: $blue;
+      background-color: $grey-scale-500;
     }
   }
 

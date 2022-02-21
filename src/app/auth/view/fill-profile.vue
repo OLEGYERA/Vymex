@@ -98,20 +98,17 @@
         setName: 'setUserName',
         setLastname: 'setUserLastname',
         setPassword: 'setUserPassword',
+        setAlias: 'setUserAlias'
       }),
       focusOn(referral){
         setTimeout(() => referral.$refs['facade-input-base-ref'].focus(), 100)
       },
       verifyAlias(alias){
-        this.$console.variable(this.aliasError, 'aliasError', true)
-        this.$engine.Predictor
-          .prepareComponentManually('setting', 'checkAlias', alias)
-          .runPredictedData();
+        this.setAlias(alias);
+        this.$core.execViaComponent('Setting', 'checkAlias', alias);
       },
       createAccount(){
-        this.$engine.Predictor
-          .prepareComponentManually('setting', 'fillProfile')
-          .runPredictedData();
+        this.$core.execViaComponent('Setting', 'fillProfile');
       }
     },
   }

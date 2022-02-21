@@ -18,16 +18,26 @@ export default {
     },
     Name: null,
     Lastname: null,
-    About: null,
+    About: '',
     Birthday: null,
     Email: null,
     Avatar: null,
+    PK: null,
+    KEY: null,
     IsNewDevice: true,
     ShowEmail: false,
     ShowPhone: true,
     Password: null,
   },
   getters: {
+    getUser: (state) => {
+      return {
+        id: state.ID,
+        name: state.Name,
+        lastname: state.Lastname,
+        avatar: state.Avatar
+      }
+    },
     getPhoneLthNumber: (state) => state.PhoneLthNumber,
     getUserID: (state) => state.ID,
     getUserAvatar: (state) => {
@@ -37,14 +47,29 @@ export default {
         return state.Avatar
       }
     },
+    getUserAvatarData: (state) => {
+      let logo;
+      if(!state.Avatar){
+        logo = state.Name.substr(0, 1) + state.Lastname.substr(0, 1);
+      } else {
+        logo = state.Avatar;
+      }
+
+      return {logo, colorCode: String(state.ID).substr(state.ID.length - 1, 1)}
+    },
     getUserAvatarColor: (state) => String(state.ID).substr(state.ID.length - 1, 1),
     getUserName: (state) => state.Name,
     getUserLastname: (state) => state.Lastname,
+    getUserFullName: (state) => state.Name + ' ' + state.Lastname,
     getUserAlias: (state) => state.Alias.data,
+    getUserAliasMask: (state) => '@' + state.Alias.data,
     getUserAliasError: (state) => state.Alias.error,
     getUserPassword: (state) => state.Password,
     getUserIsJumpReg: (state) => state.IsJumpReg,
     getUserBirthday: (state) => state.Birthday,
+    getUserAbout: (state) => state.About,
+    getUserKEY: (state) => state.KEY,
+    getUserPK: (state) => state.PK,
   },
   mutations: {
     setPhoneLthNumber: (state, payload) => state.PhoneLthNumber = payload,
@@ -59,20 +84,23 @@ export default {
       state.ID = payload.id
       state.IsJumpReg = payload.isJumpReg
       state.Alias = {
-        data: payload.alias,
+        data: '@' + payload.alias,
         error: null,
       }
       state.Name = payload.name
       state.Lastname = payload.lastname
-      state.About = payload.about
+      state.About = payload.about || ''
       state.Birthday = payload.birthday
       state.Email = payload.email
       state.Avatar = payload.avatar
+      state.PK = payload.pk
+      state.KEY = payload.key
       state.IsNewDevice = payload.isNewDevice
       state.ShowEmail = payload.showEmail
       state.ShowPhone = payload.showPhone
     },
     setUserAvatar: (state, payload) => state.Avatar = payload,
     setUserBirthday: (state, payload) => state.Birthday = payload,
+    setUserAbout: (state, payload) => state.About = payload,
   }
 }

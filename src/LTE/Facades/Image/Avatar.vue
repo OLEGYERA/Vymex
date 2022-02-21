@@ -17,7 +17,7 @@
     },
     computed: {
       getColor(){
-        return this.colorCode ? `color color-id-${this.colorCode}` : '';
+        return this.logo.length <= 2 && this.colorCode ? `color color-id-${this.colorCode}` : '';
       }
     }
   }
@@ -50,7 +50,7 @@
         line-height: 12px;
         color: #fff;
         &-id-{
-          &.0{
+          &0{
             background: linear-gradient(135deg, #6083FF 0%, #76FFF7 100%);
           }
           &1{

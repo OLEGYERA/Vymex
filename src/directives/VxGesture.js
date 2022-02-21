@@ -332,8 +332,6 @@ function _gestureControlHandler(e = null){
     }
   }
 
-  console.log(!EVENT_GESTURE_RECOGNIZING, EVENT_ANIMATION_RECOGNIZING)
-
   // Определяем тип анимации для жеста
   if(!EVENT_GESTURE_RECOGNIZING && EVENT_ANIMATION_RECOGNIZING){
     //call Start Emit

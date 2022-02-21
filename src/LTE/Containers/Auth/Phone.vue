@@ -56,10 +56,7 @@
       DropdownBase,
     },
     created() {
-      if(!this.countries.length)
-        this.$engine.Predictor
-          .prepareComponentManually('auth', 'getCountries')
-          .runPredictedData()
+      if(!this.countries.length) this.$core.execViaComponent('Auth', 'getCountries');
     },
     mounted() {
       this.phoneNumberModel = this.phoneLthNumber ? this.phoneLthNumber.withMask : ''; //relink vuex state on Container model

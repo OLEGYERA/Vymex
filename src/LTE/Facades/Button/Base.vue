@@ -1,7 +1,5 @@
 <template>
-  <div class="facade-button-base" :disable="disable" @click="buttonBaseClick">
-    <slot/>
-  </div>
+  <div class="facade-button-base" :disable="disable" @click="buttonBaseClick"><slot/></div>
 </template>
 
 <script>
@@ -24,17 +22,19 @@
     width: 100%;
     border-radius: 30px;
     padding: 16px 0;
+    box-sizing: border-box;
     display: flex;
     justify-content: center;
-    align-content: center;
+    align-items: center;
     background-color: $blue;
     color: #fff;
     line-height: 20px;
     font-weight: 600;
     cursor: pointer;
-    transition: .2s all ease;
+    //transition: .2s all ease;
+
     &:hover{
-      background-color: $blue-scale-200;
+      background-color: $blue-scale-300;
     }
   
     &[disable]{

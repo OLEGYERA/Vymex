@@ -22,14 +22,19 @@ import Secure from './Secure'
 
 
 Vue.use(Vuex);
+import History from '@/models/History'
 
 import Countries from '@/app/auth/storage/Countries'
 import Categories from '@/app/faq/storage/Categories'
 import UserProfile from '@/app/auth/storage/UserProfile'
 import VxInfo from "@/app/vx/storage/VxInfo"
 import File from "@/app/vx/storage/File"
-import Crypto from '@/core/SEKSproto/CryptoStorage'
 import CompanyInfo from "@/app/vx/app/company/storage/CompanyInfo";
+import Crypto from '@/models/CryptoStorage'
+import Company from '@/models/Company'
+// import Messenger from '@/app/vx/app/messenger/storage/Messenger'
+import {MessengerStore as Messenger} from '@Singletons'
+
 
 export default new Vuex.Store({
   state: {},
@@ -37,21 +42,33 @@ export default new Vuex.Store({
   getters: {},
   modules: {
     Countries,
+    History,
     Categories,
     UserProfile,
     Crypto,
     VxInfo,
     File,
-    CompanyInfo
+    CompanyInfo,
+    Messenger,
+    Company
   },
   plugins: [
     createPersistedState({
       key: 'vymex_session',
-      paths: ['Countries', 'Crypto', 'UserProfile', 'VxInfo'],
+      paths: ['Countries', 'Crypto', 'UserProfile', 'VxInfo', 'History', 'Company'],
       storage: {
         getItem: (key) => {
           return Secure.get(key)
         },
+        setItem: (key, value) => Secure.set(key, value),
+        removeItem: (key) => Secure.remove(key),
+      },
+    }),
+    createPersistedState({
+      key: 'vymex_msg_session',
+      paths: ['Messenger'],
+      storage: {
+        getItem: (key) => Secure.get(key),
         setItem: (key, value) => Secure.set(key, value),
         removeItem: (key) => Secure.remove(key),
       },
