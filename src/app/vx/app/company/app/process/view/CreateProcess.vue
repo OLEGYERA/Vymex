@@ -24,7 +24,7 @@
                  count/>
       <header-add v-if="regularModel"
                   class="view-main-files"
-                  @create="showModal = !showModal"
+                  @create="modalUpload = !modalUpload"
       >
         <template #header-title>файлы</template>
       </header-add>
@@ -59,9 +59,21 @@
       </button-secondary>
       <button-base class="create-resource-button" @onClick="createProcess">Создать процесс</button-base>
     </div>
-    <upload-file-modal
-        :status="showModal"
-        @onClose="showModal = !showModal">
+    <modal
+        class="modal-upload-resource"
+        :status="modalUploadResource"
+        @onClose="modalUploadResource = !modalUploadResource">
+      <template #title>Загрузить файлы из "Ресурсы"</template>
+      <template #description>Файлы которые вы выберете будут прикреплены к ресурсу</template>
+      <template #content>
+        <div class="modal-upload-resource-text">Ресурсы /</div>
+        <folder v-for="(folder, folderKey) in resourceFolders" :folder="folder" :key="folderKey" @getId="changePage"/>
+      </template>
+      <template #button-accept>Загрузить</template>
+    </modal>
+    <modal
+        :status="modalUpload"
+        @onClose="modalUpload = !modalUpload">
       <template #title>Загрузить файлы</template>
       <template #description>Выберете вариант загрузки файлов</template>
       <template #content>
@@ -69,6 +81,7 @@
           <template #header-title>приложение</template>
         </header-add>
         <process-performer
+            @onClick="changeModal"
             class="upload-files-recourse"
             :performers="uploadResource"/>
         <process-performer
@@ -76,7 +89,33 @@
             :performers="uploadFromDevice"/>
       </template>
       <template #button-accept>Загрузить</template>
-    </upload-file-modal>
+    </modal>
+    <modal
+        class="upload-files-recourse-folder"
+        :status="modalUploadResourceFolder"
+        @onClose="modalUploadResourceFolder = !modalUploadResourceFolder">
+      <template #title>Загрузить файлы из "Ресурсы"</template>
+      <template #description>Файлы которые вы выберете будут прикреплены к ресурсу</template>
+      <template #content>
+        <div class="modal-upload-resource-text">
+          <span class="modal-upload-resource-text-root">Ресурсы / Ресурсы С.Е. / </span>
+          <span>Новая папка</span>
+        </div>
+        <header-add class="hide-add-icon" :style="{margin: '15px 0 12px'}">
+          <template #header-title>папки</template>
+          <template #header-amount>{{ newFolder.length }}</template>
+        </header-add>
+        <folder v-for="(folder, folderKey) in newFolder" :folder="folder" :key="folderKey" @getId="changePage"/>
+        <header-add class="hide-add-icon" :style="{margin: '13px 0'}">
+          <template #header-title>Файлы</template>
+          <template #header-amount>{{ filesToUpload.length }}</template>
+        </header-add>
+        <file v-for="(file, key) in filesToUpload" :file="file" :key="key" class="files-to-upload">
+          <checkbox />
+        </file>
+      </template>
+      <template #button-accept>Загрузить</template>
+    </modal>
   </div>
 </template>
 
@@ -84,6 +123,7 @@
 import Comeback from "@Facade/Navigation/Comeback";
 import TitleBase from "@Facade/Title/Base";
 import InputBase from "@Facade/Input/Base";
+import Checkbox from "@Facade/Input/Checkbox";
 import TextArea from "@Facade/Input/TextArea";
 import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd";
 import ButtonSecondary from "@Facade/Button/Secondary";
@@ -94,7 +134,8 @@ import ProcessAlert from "../facades/ProcessAlert";
 import {mapGetters, mapMutations} from "vuex";
 import File from "@/LTE/Singletons/Resources/facades/File";
 import ProcessPerformer from "@/app/vx/app/company/app/process/facades/ProcessPerformer";
-import UploadFileModal from "@Facade/Modal/Base";
+import Modal from "@Facade/Modal/Base";
+import Folder from "@/LTE/Singletons/Resources/facades/Folder";
 
 export default {
   name: 'vx.process.create.process',
@@ -111,8 +152,9 @@ export default {
     ProcessAlert,
     StartProcess,
     ProcessPerformer,
-    UploadFileModal,
-
+    Modal,
+    Folder,
+    Checkbox
   },
   data() {
     return {
@@ -120,7 +162,9 @@ export default {
       processDisable: true,
       regularModel: true,
       regularDisable: true,
-      showModal: false,
+      modalUpload: false,
+      modalUploadResource: false,
+      modalUploadResourceFolder: false,
       uploadResource: [
         {avatar: require('@/assets/img/my/resource.svg'), position: 'Ресурсы'},
       ],
@@ -135,7 +179,11 @@ export default {
       subdivisions: 'getSubdivisions',
       messages: 'getMessages',
       processIndex: 'getProcessIndex',
-      editMode: 'getEditMode'
+      editMode: 'getEditMode',
+      folders: 'getFolders',
+      resourceFolders: 'getResourceFolders',
+      newFolder: 'getNewFolder',
+      filesToUpload: 'getFilesToUpload'
     }),
   },
   methods: {
@@ -172,8 +220,18 @@ export default {
     createProcessCancel() {
       this.setEditMode(false)
       this.$router.push({name: 'vx.process.company.processes'})
+    },
+    changeModal() {
+      this.modalUploadResource = !this.modalUploadResource
+      this.modalUpload = !this.modalUpload
+    },
+    changePage(key){
+      if(key.id === 1){
+        this.modalUploadResource = !this.modalUploadResource
+        this.modalUploadResourceFolder = !this.modalUploadResourceFolder
+      }
     }
-  },
+  }
 }
 </script>
 
@@ -210,8 +268,8 @@ export default {
 
       .textarea-title {
         font-weight: 400;
-        font-size: 14px;
-        line-height: 16px;
+        font-size: rem(14);
+        line-height: rem(16);
       }
 
       .textarea-container {
@@ -237,7 +295,7 @@ export default {
       ::v-deep {
         .icon-points-vertical {
           color: #fff;
-          margin-right: 8px;
+          margin-right: rem(8);
         }
       }
     }
@@ -256,7 +314,7 @@ export default {
     }
 
     .facade-button-base::v-deep {
-      font-size: 15px;
+      font-size: rem(15);
 
       &[disable] {
         background-color: $grey-scale-400;
@@ -279,8 +337,44 @@ export default {
         width: 632px;
         height: 379px;
         justify-content: space-between;
-        padding-bottom: 24px;
+        padding-bottom: rem(24);
       }
+    }
+  }
+}
+
+.modal-upload-resource-text{
+  font-size: rem(12);
+  line-height: rem(16);
+  color: #FFF;
+  margin-bottom: rem(11);
+  margin-top: rem(8);
+
+  .modal-upload-resource-text-root{
+    color: $grey-scale-200;
+  }
+}
+
+.modal-upload-resource.facade-modal-base {
+  &::v-deep {
+    .modal-base-body {
+      width: 632px;
+      height: 456px;
+      justify-content: space-between;
+      padding-bottom: 24px;
+    }
+    .modal-base-header{
+      margin-bottom: 8px;
+    }
+  }
+}
+.upload-files-recourse-folder.facade-modal-base {
+  &::v-deep {
+    .modal-base-body {
+      width: 632px;
+      height: 805px;
+      justify-content: space-between;
+      padding-bottom: rem(43);
     }
   }
 }
@@ -323,5 +417,10 @@ export default {
     margin-left: 12px;
   }
 }
-
+.files-to-upload::v-deep{
+  margin-top: 9px;
+  .icon-points-vertical {
+    display: none;
+  }
+}
 </style>

@@ -69,7 +69,108 @@ export default {
             {numberPeople: 4, position: 'Рекрутеры', level: 4}
         ],
         processIndex: 0,
-        editMode: false
+        editMode: false,
+        resourceFolders: [
+            {
+                id: 1,
+                title: 'Ресурсы C.Е.',
+                content: {
+                    folders: 2,
+                    files: null
+                },
+                group: null,
+                trash: null
+            },
+            {
+                id: 2,
+                title: 'Рабочие файлы',
+                content: {
+                    folders: 2,
+                    files: 12,
+                },
+                group: null,
+                trash: null
+            },
+            {
+                id: 3,
+                title: 'Доступные мне',
+                content: {
+                    folders: 12,
+                    files: 2
+                },
+                group: true,
+                trash: null,
+            }
+        ],
+        newFolder: [
+            {
+                id: 1,
+                title: 'Новая папка',
+                content: {
+                    folders: 3,
+                    files: 2
+                },
+                group: null,
+                trash: null
+            }
+        ],
+        filesToUpload: [
+            {
+                title : 'doc.vmx',
+                content: {
+                    size: '2,1',
+                    date: '02.03.2020'
+                },
+                type: null,
+                group: true,
+            },
+            {
+                title : 'doc.vmx',
+                content: {
+                    size: '2,1',
+                    date: '02.03.2020'
+                },
+                type: null,
+                group: true,
+            },
+            {
+                title : 'doc.vmx',
+                content: {
+                    size: '2,1',
+                    date: '02.03.2020'
+                },
+                type: null,
+                group: null,
+            },
+            {
+                title : 'doc.zip',
+                content: {
+                    size: '2,1',
+                    date: '02.03.2020'
+                },
+                type: 'zip',
+                group: true,
+            },
+            {
+                title : 'doc.vmx',
+                content: {
+                    size: '2,1',
+                    date: '02.03.2020'
+                },
+                type: null,
+                group: null,
+            },
+            {
+                title : 'doc.zip',
+                content: {
+                    size: '2,1',
+                    date: '02.03.2020'
+                },
+                type: 'zip',
+                group: true,
+            },
+        ],
+
     },
     getters: {
         getMessages: (state) => state.messages,
@@ -80,6 +181,9 @@ export default {
         getPeriods: (state) => state.periods,
         getSubdivisions: (state) => state.subdivisions,
         getEditMode: (state) => state.editMode,
+        getResourceFolders: (state) => state.resourceFolders,
+        getNewFolder: (state) => state.newFolder,
+        getFilesToUpload: (state) => state.filesToUpload
     },
     mutations: {
         setChooseProcessIndex: (state, payload) => state.processIndex = payload,

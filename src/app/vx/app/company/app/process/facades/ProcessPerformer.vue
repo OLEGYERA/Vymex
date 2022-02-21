@@ -1,5 +1,5 @@
 <template>
-  <div class="facade-process-performer">
+  <div class="facade-process-performer" @click="$emit('onClick')">
     <div v-for="(performer, i) in performers"
          :key="i"
          class="process-performer-context"
