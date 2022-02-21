@@ -67,7 +67,7 @@
 
     .tools-scene-animation{
       &-enter-active{
-        transition: .2s all ease;
+        transition: .2s all ease .05s;
         transform: translateX(100%);
       }
       &-enter-to{
