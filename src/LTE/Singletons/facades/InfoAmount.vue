@@ -1,5 +1,5 @@
 <template>
-  <span class="facade-info-amount"><title-caps><slot/></title-caps></span>
+  <div class="facade-info-amount"><title-caps><slot/></title-caps></div>
 </template>
 
 <script>
