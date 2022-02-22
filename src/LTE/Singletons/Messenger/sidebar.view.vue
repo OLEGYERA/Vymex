@@ -67,8 +67,8 @@
   .sidebarViewController{
     width: 100%;
     height: 100%;
-    display: flex;
-    justify-content: center;
+    //display: flex;
+    //justify-content: center;
     .sidebarViewComponent{
       width: 100%;
       height: 100%;

@@ -3,13 +3,17 @@
     <div class="level-plate" v-for="(unit, unitKey) in levels" :key="unitKey">
 
       <div class="sidebar-level-header" v-if="unit.level === 1">
-        <title-caps>Для себя</title-caps>
+        <title-caps><slot>Для себя</slot></title-caps>
+        <input-checkbox v-if="multiply" :model="unit.levelChecked" :view-type="viewType" @onClick="checkLevel(unitKey)"/>
       </div>
-      <div class="sidebar-level-header header-arrow" @click="onClick(unitKey)" v-else>
-        <div class="level-title-arrow">
-          <arrow-right :class="{'open-units': !unit.disable}"/>
+      <div class="sidebar-level-header header-arrow" v-else>
+        <div class="title-right-part" @click="onClick(unitKey)">
+          <div class="level-title-arrow">
+            <arrow-right :class="{'open-units': !unit.disable}"/>
+          </div>
+          <title-caps>{{ unit.level }} уровень</title-caps>
         </div>
-        <title-caps>{{ unit.level }} уровень</title-caps>
+        <input-checkbox v-if="multiply" :model="unit.levelChecked" :view-type="viewType" @onClick="checkLevel(unitKey)"/>
       </div>
 
       <transition name="fade">
@@ -17,12 +21,12 @@
           <unit-checkbox-ui
               v-for="(person, personKey) in unit.data"
               :key="personKey"
-              :view-type="2"
-              :model="person.checked"
+              :view-type="viewType"
+              :model="person.unitChecked"
               :unit-data="person.unitData"
               :unit-level="person.unitLevel"
               :unit-position="person.unitPosition"
-              @onClick="person.checked = !person.checked"
+              @onClick="choosePerson(unitKey, personKey)"
           />
         </div>
       </transition>
@@ -32,33 +36,41 @@
 
 <script>
   /*eslint-disable*/
-  import {UnitUi, UnitSettingUi} from '@Providers'
   import TitleCaps from "@Facade/Title/Caps";
   import ArrowRight from "@Icon/ArrowRight";
   import UnitCheckboxUi from "@/LTE/Providers/Company/Structure/unit-checkbox.ui";
+  import InputCheckbox from "@Facade/Input/Checkbox"
 
   export default {
     name: 'Providers.Navigation.Sidebar.Structure.Ui',
     components:{
       TitleCaps,
       UnitCheckboxUi,
-      UnitSettingUi,
-      UnitUi,
-      ArrowRight
+      ArrowRight,
+      InputCheckbox
     },
     props:{
       levels: {
         type: Array,
         required: true
       },
+      viewType: Number,
+      multiply: Boolean
     },
     methods:{
       onClick(key){
-        this.levels.find((el, i) => {
-          if (i === key){
-            el.disable = !el.disable
-          }
-        })
+        this.levels[key].disable = !this.levels[key].disable
+      },
+      checkLevel(key){
+        this.levels[key].levelChecked = !this.levels[key].levelChecked
+        if(this.levels[key].levelChecked === true){
+          this.levels[key].data.map(el => el.unitChecked = true)
+        } else {
+          this.levels[key].data.map(el => el.unitChecked = false)
+        }
+      },
+      choosePerson(personKey, unitKey){
+        this.$emit('onClick', unitKey, personKey)
       }
     }
   }
@@ -74,25 +86,32 @@
       margin-bottom: 12px;
       .sidebar-level-header{
         display: flex;
-        padding: rem(6) 0;
+        justify-content: space-between;
+        align-items: center;
+        height: 28px;
+        padding-right: rem(8);
         margin-bottom: 8px;
         align-items: center;
-        .level-title-arrow{
-          border-right: 1px solid $grey-scale-200;
-          margin-right: 8px;
-          .icon-arrow-right{
-            display: flex;
-            color: $grey-scale-200;
-            height: 16px;
-            margin-right: 12px;
-            transition: transform .2s;
-            svg {
-              align-self: center;
-              height: 14px;
+        .title-right-part{
+          display: inherit;
+          align-items: inherit;
+          .level-title-arrow{
+            border-right: 1px solid $grey-scale-200;
+            margin-right: 8px;
+            .icon-arrow-right{
+              display: flex;
+              color: $grey-scale-200;
+              height: 16px;
+              margin-right: 12px;
+              transition: transform .2s;
+              svg {
+                align-self: center;
+                height: 14px;
+              }
             }
-          }
-          .open-units{
-            transform: rotate(90deg);
+            .open-units{
+              transform: rotate(90deg);
+            }
           }
         }
       }

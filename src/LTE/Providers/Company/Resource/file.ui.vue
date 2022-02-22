@@ -2,12 +2,12 @@
   <div class="resource-file-ui">
     <div class="file-main-section">
       <div class="file-image">
-        <img v-if="file.type === 'zip'" src="@/assets/img/my/zip.svg">
+        <img v-if="file.extension === 'zip'" src="@/assets/img/my/zip.svg">
         <img v-else src="@/assets/img/my/file.svg">
         <icon-group v-if="file.group"/>
       </div>
       <div class="file-text-group">
-        <text-base>{{file.title}}</text-base>
+        <text-base>{{title}}</text-base>
         <title-caption>{{content}}</title-caption>
       </div>
     </div>
@@ -55,8 +55,11 @@
       actions: Array,
     },
     computed: {
+      title(){
+        return `${this.file.label}.${this.file.extension}`
+      },
       content() {
-        return `${this.file.content.size} MB ${this.file.content.date}`
+        return `${this.file.size} MB ${this.file.date}`
       },
       ...mapGetters({
         sidebarStatus: 'Resources/sidebarFolderAccessStatus',

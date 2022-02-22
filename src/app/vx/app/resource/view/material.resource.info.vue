@@ -2,7 +2,7 @@
   <div class="resource-material-info-view">
     <comeback @onClick="$router.push({name: 'vx.resource.material.resources'})"/>
     <div class="info-header-group">
-      <title-base>{{object.name}}</title-base>
+      <title-base>{{selectedResource.name}}</title-base>
       <icon-points-vertical @click.native="infoActionListStatus = true" ref="list"/>
       <modal-action-list
           :status="infoActionListStatus"
@@ -11,10 +11,10 @@
           @onClose="infoActionListStatus=false"
       />
     </div>
-    <title-caption class="resource-number">{{object.number}}</title-caption>
-    <text-base>{{object.description}}</text-base>
+    <title-caption class="resource-number">{{selectedResource.identifier}}</title-caption>
+    <text-base>{{selectedResource.description}}</text-base>
     <div class="resource-price">
-      <title-semi>$ {{object.price}}</title-semi>
+      <title-semi>$ {{selectedResource.cost}}</title-semi>
       <title-caption>Стоимость ресурса</title-caption>
     </div>
     <div class="resource-main-info">
@@ -23,35 +23,35 @@
           <template #header-title>Владелец</template>
           <template #header-amount>1</template>
         </header-add>
-        <company-ui :company="object.owner"/>
+        <company-ui :data="selectedResource.company"/>
       </div>
       <div class="resource-user">
         <header-add>
           <template #header-title>Пользователь</template>
           <template #header-amount>1</template>
         </header-add>
-        <unit-ui :unit-level="object.user.level" :unit-position="object.user.position" :unit-data="object.user"/>
-<!--        <structural-unit :user="object.user"/>-->
+        <unit-ui :unit-level="selectedResource.worker.unitLevel" :unit-position="selectedResource.worker.unitName" :unit-data="selectedResource.worker"/>
       </div>
     </div>
     <header-add>
       <template #header-title>изображения</template>
-      <template #header-amount>2</template>
+      <template #header-amount>{{selectedResource.files.length}}</template>
     </header-add>
-    <file-ui v-for="(file, key) in object.files" :file="file" :key="key" :actions="fileActionList"/>
+    <file-ui v-for="(file, key) in selectedResource.files" :file="file" :key="key" :actions="fileActionList"/>
   </div>
 </template>
 
 <script>
+  /*eslint-disable*/
   import Comeback from "@Facade/Navigation/Comeback";
   import TitleBase from "@Facade/Title/Base"
   import TitleCaption from "@Facade/Title/Caption"
   import TextBase from "@Facade/Text/Base"
   import TitleSemi from "@Facade/Title/Semi"
   import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd";
-  // import StructuralUnit from "@/LTE/Singletons/Dashboard/facades/StructuralUnit";
   import ModalActionList from "@Facade/Modal/ActionList";
   import {UnitUi, FileUi, CompanyUi} from '@Providers'
+  import {mapGetters} from "vuex";
 
   export default {
     name: 'vx.resource.material.info',
@@ -63,407 +63,24 @@
       TitleSemi,
       HeaderAdd,
       CompanyUi,
-      // StructuralUnit,
       ModalActionList,
       FileUi,
       UnitUi
     },
     data() {
       return{
-        object: null,
         infoActionListStatus: false,
         fileActionList: ['Редактировать', 'Открыть доступ', 'Переместить'],
         actions: ['Редактировать', 'Отправить на склад'],
-        materialObjects: [
-          {
-            id: 1,
-            name : 'Монитор HP Horus 27 inc.',
-            number: 'ABK2921BDSFLBS',
-            description: 'Простой для понимания документ - документ, не требующий усилий для чтения и понимания, т.е. при изложении материала не используются сложные предложения',
-            user: {
-              id: 1,
-              name: 'Дмитрий',
-              lastname: 'Соколов',
-              position: 'Космонавт',
-              level: 1,
-              avatar: null,
-            },
-            owner: {
-              name: 'Sharashkina Kontora',
-              avatar: require('@/assets/img/my/process.svg')
-            },
-            price: '3000',
-            files: [
-              {
-                title : 'doc.vmx',
-                content: {
-                  size: '2,1',
-                  date: '02.03.2020'
-                },
-                type: null,
-                group: null,
-              },
-              {
-                title : 'doc.vmx',
-                content: {
-                  size: '2,1',
-                  date: '02.03.2020'
-                },
-                type: null,
-                group: true,
-              },
-              {
-                title : 'doc.zip',
-                content: {
-                  size: '2,1',
-                  date: '02.03.2020'
-                },
-                type: 'zip',
-                group: null,
-              },
-            ]
-          },
-          {
-            id: 2,
-            name : 'iMac 27 inch. 2015',
-            number: 'ABK2921BDSFLBS',
-            description: 'Простой для понимания документ - документ, не требующий усилий для чтения и понимания, т.е. при изложении материала не используются сложные предложения',
-            user: {
-              id: 2,
-              name: 'Дмитрий',
-              lastname: 'Соколов',
-              position: 'Космонавт',
-              level: 2,
-              avatar: null
-            },
-            owner: {
-              name: 'Sharashkina Kontora',
-              avatar: require('@/assets/img/my/process.svg'),
-            },
-            price: '3000',
-            files: [
-              {
-                title : 'doc.vmx',
-                content: {
-                  size: '2,1',
-                  date: '02.03.2020'
-                },
-                type: null,
-                group: null,
-              },
-              {
-                title : 'doc.vmx',
-                content: {
-                  size: '2,1',
-                  date: '02.03.2020'
-                },
-                type: null,
-                group: true,
-              },
-              {
-                title : 'doc.zip',
-                content: {
-                  size: '2,1',
-                  date: '02.03.2020'
-                },
-                type: 'zip',
-                group: null,
-              },
-            ]
-          },
-          {
-            id: 3,
-            name : 'Молоток',
-            number: 'ABK2921BDSFLBS',
-            description: 'Простой для понимания документ - документ, не требующий усилий для чтения и понимания, т.е. при изложении материала не используются сложные предложения',
-            user: {
-              id: 3,
-              name: 'Дмитрий',
-              lastname: 'Соколов',
-              position: 'Космонавт',
-              level: 4,
-              avatar: null
-            },
-            owner: {
-              name: 'Sharashkina Kontora',
-              avatar: require('@/assets/img/my/process.svg'),
-            },
-            price: '3000',
-            files: [
-              {
-                title : 'doc.vmx',
-                content: {
-                  size: '2,1',
-                  date: '02.03.2020'
-                },
-                type: null,
-                group: null,
-              },
-              {
-                title : 'doc.vmx',
-                content: {
-                  size: '2,1',
-                  date: '02.03.2020'
-                },
-                type: null,
-                group: true,
-              },
-              {
-                title : 'doc.zip',
-                content: {
-                  size: '2,1',
-                  date: '02.03.2020'
-                },
-                type: 'zip',
-                group: null,
-              },
-            ]
-          },
-          {
-            id: 4,
-            name : 'Монитор HP Horus 27 inc.',
-            number: 'ABK2921BDSFLBS',
-            description: 'Простой для понимания документ - документ, не требующий усилий для чтения и понимания, т.е. при изложении материала не используются сложные предложения',
-            user: {
-              id: 4,
-              name: 'Дмитрий',
-              lastname: 'Соколов',
-              position: 'Космонавт',
-              level: 1,
-              avatar: null
-            },
-            owner: {
-              name: 'Sharashkina Kontora',
-              avatar: require('@/assets/img/my/process.svg'),
-            },
-            price: '3000',
-            files: [
-              {
-                title : 'doc.vmx',
-                content: {
-                  size: '2,1',
-                  date: '02.03.2020'
-                },
-                type: null,
-                group: null,
-              },
-              {
-                title : 'doc.vmx',
-                content: {
-                  size: '2,1',
-                  date: '02.03.2020'
-                },
-                type: null,
-                group: true,
-              },
-              {
-                title : 'doc.zip',
-                content: {
-                  size: '2,1',
-                  date: '02.03.2020'
-                },
-                type: 'zip',
-                group: null,
-              },
-            ]
-          },
-          {
-            id: 5,
-            name : 'iMac 27 inch. 2015',
-            number: 'ABK2921BDSFLBS',
-            description: 'Простой для понимания документ - документ, не требующий усилий для чтения и понимания, т.е. при изложении материала не используются сложные предложения',
-            user: {
-              id: 5,
-              name: 'Дмитрий',
-              lastname: 'Соколов',
-              position: 'Космонавт',
-              level: 3,
-              avatar: null
-            },
-            owner: {
-              name: 'Sharashkina Kontora',
-              avatar: require('@/assets/img/my/process.svg')
-            },
-            price: '3000',
-            files: [
-              {
-                title : 'doc.vmx',
-                content: {
-                  size: '2,1',
-                  date: '02.03.2020'
-                },
-                type: null,
-                group: null,
-              },
-              {
-                title : 'doc.vmx',
-                content: {
-                  size: '2,1',
-                  date: '02.03.2020'
-                },
-                type: null,
-                group: true,
-              },
-              {
-                title : 'doc.zip',
-                content: {
-                  size: '2,1',
-                  date: '02.03.2020'
-                },
-                type: 'zip',
-                group: null,
-              },
-            ]
-          },
-          {
-            id: 6,
-            name : 'Монитор HP Horus 27 inc.',
-            number: 'ABK2921BDSFLBS',
-            description: 'Простой для понимания документ - документ, не требующий усилий для чтения и понимания, т.е. при изложении материала не используются сложные предложения',
-            user: {
-              id: 6,
-              name: 'Дмитрий',
-              lastname: 'Соколов',
-              position: 'Космонавт',
-              level: 3,
-              avatar: null
-            },
-            owner: {
-              name: 'Sharashkina Kontora',
-              avatar: require('@/assets/img/my/process.svg')
-            },
-            price: '3000',
-            files: [
-              {
-                title : 'doc.vmx',
-                content: {
-                  size: '2,1',
-                  date: '02.03.2020'
-                },
-                type: null,
-                group: null,
-              },
-              {
-                title : 'doc.vmx',
-                content: {
-                  size: '2,1',
-                  date: '02.03.2020'
-                },
-                type: null,
-                group: true,
-              },
-              {
-                title : 'doc.zip',
-                content: {
-                  size: '2,1',
-                  date: '02.03.2020'
-                },
-                type: 'zip',
-                group: null,
-              },
-            ]
-          },
-          {
-            id: 7,
-            name : 'iMac 27 inch. 2015',
-            number: 'ABK2921BDSFLBS',
-            description: 'Простой для понимания документ - документ, не требующий усилий для чтения и понимания, т.е. при изложении материала не используются сложные предложения',
-            user: {
-              id: 7,
-              name: 'Дмитрий',
-              lastname: 'Соколов',
-              position: 'Космонавт',
-              level: 2,
-              avatar: null
-            },
-            owner: {
-              name: 'Sharashkina Kontora',
-              avatar: require('@/assets/img/my/process.svg')
-            },
-            price: '3000',
-            files: [
-              {
-                title : 'doc.vmx',
-                content: {
-                  size: '2,1',
-                  date: '02.03.2020'
-                },
-                type: null,
-                group: null,
-              },
-              {
-                title : 'doc.vmx',
-                content: {
-                  size: '2,1',
-                  date: '02.03.2020'
-                },
-                type: null,
-                group: true,
-              },
-              {
-                title : 'doc.zip',
-                content: {
-                  size: '2,1',
-                  date: '02.03.2020'
-                },
-                type: 'zip',
-                group: null,
-              },
-            ]
-          },
-          {
-            id: 8,
-            name : 'Монитор HP Horus 27 inc.',
-            number: 'ABK2921BDSFLBS',
-            description: 'Простой для понимания документ - документ, не требующий усилий для чтения и понимания, т.е. при изложении материала не используются сложные предложения',
-            user: {
-              name: 'Дмитрий',
-              lastname: 'Соколов',
-              position: 'Космонавт',
-              level: 4,
-              avatar: require('@/assets/img/my/process.svg')
-            },
-            owner: {
-              name: 'Sharashkina Kontora',
-              avatar: require('@/assets/img/my/process.svg')
-            },
-            price: '3000',
-            files: [
-              {
-                title : 'doc.vmx',
-                content: {
-                  size: '2,1',
-                  date: '02.03.2020'
-                },
-                type: null,
-                group: null,
-              },
-              {
-                title : 'doc.vmx',
-                content: {
-                  size: '2,1',
-                  date: '02.03.2020'
-                },
-                type: null,
-                group: true,
-              },
-              {
-                title : 'doc.zip',
-                content: {
-                  size: '2,1',
-                  date: '02.03.2020'
-                },
-                type: 'zip',
-                group: null,
-              },
-            ]
-          },
-        ]
       }
     },
-    created() {
-      console.log(this.status)
-      this.object = this.materialObjects.find(el => el.id === this.$route.params.id)
+    computed: {
+      ...mapGetters({
+        materialResources: 'Resources/materialResources'
+      }),
+      selectedResource(){
+        return this.materialResources.find(el => el.id === this.$route.params.id)
+      }
     },
     methods: {
       performAction(key) {
@@ -472,7 +89,7 @@
         break;
         case 1:
           this.$router.push({name: 'vx.resource.material.resources', params: {resourceId: this.$route.params.id}})
-                this.materialObjects.splice(+this.$route.params.id, 1)
+                this.materialResources.splice(+this.$route.params.id, 1)
         }
       }
     },

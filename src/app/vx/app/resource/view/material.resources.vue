@@ -11,13 +11,16 @@
       <template #header-amount>{{materialObjects.length}}</template>
     </header-add>
     <material-object-ui
-        v-for="(object, index) in materialObjects"
-        :object="object"
+        v-for="(resource, index) in materialResources"
+        :resource-identifier="resource.identifier"
+        :resource-name="resource.name"
+        :worker="resource.worker"
         :key="index"
         @onDelete="modalStatus=true"
-        @click.native="$router.push({name: 'vx.resource.info', params: {id: object.id}})"
+        @click.native="$router.push({name: 'vx.resource.info', params: {id: resource.id}})"
     />
-    <sidebar-filter-ui :status="sidebarFilterStatus"/>
+    <sidebar-filter-ui :status="sidebarFilterStatus" :levels="levels" disable/>
+
     <modal-base :status="modalStatus"
                 @onClose="modalStatus=false"
                 class="modal-delete"
@@ -39,14 +42,12 @@
         Удалить
       </template>
     </modal-base>
-
   </div>
 </template>
-//  @sendData="makeAction" => material object
+
 <script>
   import Comeback from "@Facade/Navigation/Comeback";
   import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd";  //// костыль
-  // import SidebarFilter from "@/LTE/Providers/Navigation/sidebar/sidebar-filter.ui";
   import InputSearch from "@Facade/Input/Search";
   import TitleBase from "@Facade/Title/Base"
   import ModalBase from "@Facade/Modal/Base"
@@ -88,7 +89,7 @@
             },
             owner: {
               name: 'Sharashkina Kontora',
-              img: require('@/assets/img/my/process.svg')
+              avatar: require('@/assets/img/my/process.svg')
             },
             price: '3000'
           },
@@ -225,14 +226,26 @@
     computed: {
       ...mapGetters({
         sidebarFilterStatus: 'Resources/sidebarFilterStatus',
-      })
+        levels: 'Resources/levels',
+        materialResources: 'Resources/materialResources'
+      }),
+    //   buttonDisable(){
+    //     let status = true
+    //     this.levels.every(el => {
+    //       if (el.data.every(a => a.checked === false)) {
+    //         status = true
+    //       } else {
+    //         status = false
+    //       }
+    //     })
+    //     return status
+    //   }
     },
     mounted() {
-      console.log(this.$route.params.resourceId)
       if(this.$route.params.resourceId){
         this.materialObjects.splice(this.materialObjects.findIndex(el => el.id === this.$route.params.resourceId), 1)
       }
-    }
+    },
   }
 </script>
 

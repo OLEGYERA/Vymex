@@ -11,7 +11,9 @@
       <header-add class="user" @create="showSidebar()">
         <template #header-title>Пользователь</template>
       </header-add>
-      <assign-user-ui :levels="levels"/>
+
+      <assign-user-ui :levels="levels" :status="assignStatus"/>
+
       <modal-base :status="modalStatus" @onClose="modalStatus=false">
         <template #title>
           Назначить пользователя
@@ -105,7 +107,7 @@
   import InputBase from "@Facade/Input/Base"
   import TextArea from "@Facade/Input/TextArea"
   import TitleCaps from "@Facade/Title/Caps"
-  import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd";
+  import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd"; /// костыль
   import ButtonSecondary from "@Facade/Button/Secondary"
   import ButtonBase from "@Facade/Button/Base"
   import InputPrice from "@Facade/Input/Price"
@@ -117,7 +119,7 @@
 
   import {AssignUserUi, CompanyUi} from '@Providers'
 
-  import {mapMutations} from "vuex";
+  import {mapGetters, mapMutations} from "vuex";
 
   export default {
     name: 'vx.resource.material.create',
@@ -144,103 +146,6 @@
         modalStatus: false,
         modalSaveStatus: false,
         modalDownload: false,
-        levels: [
-          {
-            level: 1, showContext: true, checkedLevel: false, data: [
-              {
-                avatar: require('@/assets/img/icons/avatar.svg'),
-                name: "Александр Ким", position: "Должность", color: "#D5F1C5",
-                checkedPosition: false
-              },
-            ]
-          },
-          {
-            level: 2, showContext: false, checkedLevel: false, data: [
-              {
-                avatar: require('@/assets/img/icons/avatar.svg'),
-                name: "Александр Ким", position: "Должность", color: "#FEF0BD",
-                checkedPosition: false
-              },
-            ]
-          },
-          {
-            level: 3, showContext: false, checkedLevel: false, data: [
-              {
-                avatar: require('@/assets/img/icons/avatar.svg'),
-                name: "Александр Ким", position: "Должность", color: "#BAE7FF",
-                checkedPosition: false
-              },
-              {
-                avatar: require('@/assets/img/icons/avatar.svg'),
-                name: "Александр Ким", position: "Должность", color: "#BAE7FF",
-                checkedPosition: false
-              },
-              {
-                avatar: require('@/assets/img/icons/avatar.svg'),
-                name: "Александр Ким", position: "Должность", color: "#BAE7FF",
-                checkedPosition: false
-              },
-              {
-                avatar: require('@/assets/img/icons/avatar.svg'),
-                name: "Александр Ким", position: "Должность", color: "#BAE7FF",
-                checkedPosition: false
-              },
-              {
-                avatar: require('@/assets/img/icons/avatar.svg'),
-                name: "Александр Ким", position: "Должность", color: "#BAE7FF",
-                checkedPosition: false
-              },
-              {
-                avatar: require('@/assets/img/icons/avatar.svg'),
-                name: "Александр Ким", position: "Должность", color: "#BAE7FF",
-                checkedPosition: false
-              },
-            ]
-          },
-          {
-            level: 4, showContext: false, checkedLevel: false, data: [
-              {
-                avatar: require('@/assets/img/icons/avatar.svg'),
-                name: "Александр Ким", position: "Должность", color: "#F2CBF8",
-                checkedPosition: false
-              },
-              {
-                avatar: require('@/assets/img/icons/avatar.svg'),
-                name: "Александр Ким", position: "Должность", color: "#F2CBF8",
-                checkedPosition: false
-              },            {
-                avatar: require('@/assets/img/icons/avatar.svg'),
-                name: "Александр Ким", position: "Должность", color: "#F2CBF8",
-                checkedPosition: false
-              },            {
-                avatar: require('@/assets/img/icons/avatar.svg'),
-                name: "Александр Ким", position: "Должность", color: "#F2CBF8",
-                checkedPosition: false
-              },            {
-                avatar: require('@/assets/img/icons/avatar.svg'),
-                name: "Александр Ким", position: "Должность", color: "#F2CBF8",
-                checkedPosition: false
-              },
-              {
-                avatar: require('@/assets/img/icons/avatar.svg'),
-                name: "Александр Ким", position: "Должность", color: "#F2CBF8",
-                checkedPosition: false
-              },            {
-                avatar: require('@/assets/img/icons/avatar.svg'),
-                name: "Александр Ким", position: "Должность", color: "#F2CBF8",
-                checkedPosition: false
-              },            {
-                avatar: require('@/assets/img/icons/avatar.svg'),
-                name: "Александр Ким", position: "Должность", color: "#F2CBF8",
-                checkedPosition: false
-              },            {
-                avatar: require('@/assets/img/icons/avatar.svg'),
-                name: "Александр Ким", position: "Должность", color: "#F2CBF8",
-                checkedPosition: false
-              },
-            ]
-          },
-        ],
         newResource: {
           name: null,
           number: null,
@@ -279,6 +184,10 @@
       }
     },
     computed:{
+      ...mapGetters({
+        levels: 'Resources/levels',
+        assignStatus: 'Resources/sidebarAssignStatus'
+      }),
       buttonDisable(){
         if(this.newResource.name && this.newResource.number){
           return false

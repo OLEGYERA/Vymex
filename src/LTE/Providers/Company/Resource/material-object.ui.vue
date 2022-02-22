@@ -2,12 +2,11 @@
   <div class="resource-material-object-ui">
     <div class="object-main-plate">
       <div class="object-text-group">
-        <text-base>{{object.name}}</text-base>
-        <title-caption>{{object.number}}</title-caption>
+        <text-base>{{resourceName}}</text-base>
+        <title-caption>{{resourceIdentifier}}</title-caption>
       </div>
-      <div class="object-user-name"
-           :class="{level1: object.user.level===1, level2: object.user.level===2, level3: object.user.level===3, level4: object.user.level===4}">
-        {{object.user.name}}
+      <div class="object-user-name" :class="`su-level-${worker.unitLevel}`">
+        {{worker.name}} {{worker.lastname}}
       </div>
     </div>
     <icon-points-vertical @click.native.stop="actionListStatus=true"/>
@@ -19,7 +18,7 @@
         @onList="sendData"/>
   </div>
 </template>
-
+/// :class="{level1: object.user.level===1, level2: object.user.level===2, level3: object.user.level===3, level4: object.user.level===4}"
 <script>
   import TextBase from '@Facade/Text/Base'
   import TitleCaption from '@Facade/Title/Caption'
@@ -35,7 +34,15 @@
       ModalActionList
     },
     props: {
-      object: Object,
+      resourceName: {
+        type: String,
+        required: true
+      },
+      resourceIdentifier: {
+        type: String,
+        required: true
+      },
+      worker: Object
     },
     data(){
       return{
@@ -84,6 +91,23 @@
         color: $grey;
         padding: 2px 8px;
         border-radius: 8px;
+        &.su-level{
+          &-0{
+            background-color: $grey-scale-400; //уточнить
+          }
+          &-1{
+            background-color: $su-level-1; //уточнить
+          }
+          &-2{
+            background-color: $su-level-2; //уточнить
+          }
+          &-3{
+            background-color: $su-level-3; //уточнить
+          }
+          &-4{
+            background-color: $su-level-4; //уточнить
+          }
+        }
       }
     }
     .icon-points-vertical {

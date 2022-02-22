@@ -1,15 +1,15 @@
 <template>
-  <div class="resource-sidebar-filter" v-if="status">
+  <div class="resource-sidebar-filter-ui" v-if="status">
     <sidebar-right
         class="sidebar-filter-container" @onClose="closeSidebar()">
       <template #main-header>
-        <sidebar-header>Фильтры</sidebar-header>
+        <sidebar-header-atom>Фильтры</sidebar-header-atom>
       </template>
       <template #main-content>
         <div class="sidebar-main-plate">
           <div class="header-text-group">
             <title-caps>Расположение</title-caps>
-            <div class="buttons">
+            <div class="sidebar-filter-buttons-group">
               <div
                   class="button-location"
                   :class="{active: activeButton === buttonKey}"
@@ -22,10 +22,10 @@
             <title-caps class="sidebar-view-header-title">
               пользователь
             </title-caps>
-            <search :placeholder="'Поиск'"/>
-            <sidebar-structure />
+            <input-search :placeholder="'Поиск'"/>
           </div>
-          <button-base>Применить</button-base>
+          <sidebar-structure-ui multiply :levels="levels">1 уровень</sidebar-structure-ui>
+          <button-base :disable="disable" @onClick="getChosenUnits()">Применить</button-base>
         </div>
       </template>
     </sidebar-right>
@@ -33,18 +33,19 @@
 </template>
 
 <script>
-  import SidebarHeader from "../sidebar-header.facade"; //// костыль
   import SidebarRight from "@Facade/Navigation/SidebarRight";
-  import Search from "@Facade/Input/Search";
+  import InputSearch from "@Facade/Input/Search";
   import ButtonBase from "@Facade/Button/Base";
-  import SidebarStructure from "../sidebar-structure.facade"; //// костыль
   import {mapMutations} from "vuex";
   import TitleCaps from "@Facade/Title/Caps";
 
+  import SidebarHeaderAtom from "./sidebar-header.atom";
+  import SidebarStructureUi from "./sidebar-structure.ui";
+
   export default {
-    name: 'Providers.Navigation.sidebar.Filter',
+    name: 'Providers.Navigation.Sidebar.Filter',
     components: {
-      SidebarHeader, SidebarRight, TitleCaps, Search, ButtonBase, SidebarStructure
+      SidebarRight, TitleCaps, InputSearch, ButtonBase, SidebarStructureUi, SidebarHeaderAtom
     },
     data() {
       return{
@@ -53,18 +54,27 @@
       }
     },
     props: {
-      status: Boolean
+      status: {
+        type: Boolean,
+        required: true,
+      },
+      levels: {
+        type: Array,
+        required: true,
+      },
+      disable: Boolean,
     },
     methods: {
       ...mapMutations({
         closeSidebar: 'Resources/closeSidebar',
+        getChosenUnits: 'Resources/getChosenUnits'
       }),
     },
   }
 </script>
 
 <style lang="scss" scoped>
-  .resource-sidebar-filter {
+  .resource-sidebar-filter-ui {
     top: 0;
     left: 0;
     width: 100%;
@@ -79,44 +89,43 @@
       display: flex;
       height: 100%;
       background-color: $grey;
-    }
-    .sidebar-main-plate {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: 20px 20px 0;
-      height: 100%;
-      box-sizing: border-box;
-      .header-text-group{
+      .sidebar-main-plate {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 20px 20px 0;
         height: 100%;
-        padding: 0 0 30px;
-        overflow-y: scroll;
-      }
-      .facade-button-base {
-        transform: translateY(-20px);
+        box-sizing: border-box;
+        .header-text-group{
+          margin-bottom: 12px;
+          .facade-title-caps {
+            margin-bottom: 4px;
+            padding: 8px 0;
+          }
+          .facade-input-search {
+            margin-top: 8px;
+          }
+          .sidebar-filter-buttons-group {
+            display: flex;
+            margin-bottom: rem(12);
+            .button-location {
+              padding: rem(8) rem(16);
+              margin-right: rem(8);
+              background-color: $grey-scale-400;
+              border-radius: 20px;
+              color: #fff;
+              cursor: pointer;
+            }
+            .active {
+              background-color: $blue;
+            }
+          }
+        }
+        .facade-button-base {
+          transform: translateY(-20px);
+        }
       }
     }
-    .facade-title-caps {
-      margin-bottom: 4px;
-      padding: 8px 0;
-    }
-    .facade-input-search {
-      margin-top: 8px;
-    }
-    .buttons {
-      display: flex;
-      margin-bottom: rem(20);
-      .button-location {
-        padding: rem(8) rem(16);
-        margin-right: rem(8);
-        background-color: $grey-scale-400;
-        border-radius: 20px;
-        color: #fff;
-        cursor: pointer;
-      }
-      .active {
-        background-color: $blue;
-      }
-    }
+
   }
 </style>

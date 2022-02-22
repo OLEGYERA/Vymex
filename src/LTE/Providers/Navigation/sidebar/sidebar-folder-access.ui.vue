@@ -1,5 +1,5 @@
 <template>
-  <div class="resource-sidebar-folder-access" v-if="status">
+  <div class="resource-sidebar-folder-access-ui" v-if="status">
     <sidebar-right
         class="sidebar-filter-container" @onClose="closeSidebar()">
       <template #main-header>
@@ -64,7 +64,7 @@ import SidebarStructure from "../sidebar-structure.facade"; //// костыль
 </script>
 
 <style lang="scss" scoped>
-  .resource-sidebar-folder-access {
+  .resource-sidebar-folder-access-ui {
     top: 0;
     left: 0;
     width: 100%;

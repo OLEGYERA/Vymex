@@ -1,8 +1,8 @@
 <template>
   <div class="resource-company-ui">
-    <img class="company-avatar" :src="company.avatar">
+    <image-avatar class="resource-company-avatar" :logo="$core.traits.ImageLogo(data.avatar, data.name)" :color-code="$core.traits.ImageColorCode(data.id)"/>
     <div class="company-info-group">
-      <title-sub>{{company.name}}</title-sub>
+      <title-sub>{{data.name}}</title-sub>
       <title-caption>Компания</title-caption>
     </div>
   </div>
@@ -11,15 +11,17 @@
 <script>
   import TitleCaption from '@Facade/Title/Caption'
   import TitleSub from "@Facade/Title/Sub"
+  import ImageAvatar from '@Facade/Image/Avatar'
 
   export default {
     name: 'Providers.Company.Resource.Company.Ui',
     components: {
       TitleSub,
       TitleCaption,
+      ImageAvatar
     },
     props: {
-      company: Object
+      data: Object
     }
   }
 </script>
@@ -31,7 +33,7 @@
     padding: rem(8);
     border-radius: 8px;
     background-color: $grey-scale-400;
-    .company-avatar {
+    .resource-company-avatar {
       margin-right: rem(12);
       height: 36px;
       width: 36px;

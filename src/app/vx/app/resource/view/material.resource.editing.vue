@@ -81,13 +81,13 @@
               name: 'Дмитрий Соколов',
               position: 'Космонавт',
               level: 1,
-              img: require('@/assets/img/my/process.svg')
+              avatar: require('@/assets/img/my/process.svg')
             },
             owner: {
               name: 'Sharashkina Kontora',
-              img: require('@/assets/img/my/process.svg')
+              avatar: require('@/assets/img/my/process.svg')
             },
-            price: '3000'
+            price: 3000
           },
           {
             id: 2,
@@ -98,13 +98,13 @@
               name: 'Дмитрий Соколов',
               position: 'Космонавт',
               level: 2,
-              img: require('@/assets/img/my/process.svg')
+              avatar: require('@/assets/img/my/process.svg')
             },
             owner: {
               name: 'Sharashkina Kontora',
-              img: require('@/assets/img/my/process.svg'),
+              avatar: require('@/assets/img/my/process.svg'),
             },
-            price: '3000'
+            price: 3000
           },
           {
             id: 3,
@@ -115,13 +115,13 @@
               name: 'Дмитрий Соколов',
               position: 'Космонавт',
               level: 4,
-              img: require('@/assets/img/my/process.svg')
+              avatar: require('@/assets/img/my/process.svg')
             },
             owner: {
               name: 'Sharashkina Kontora',
-              img: require('@/assets/img/my/process.svg'),
+              avatar: require('@/assets/img/my/process.svg'),
             },
-            price: '3000'
+            price:300
           },
           {
             id: 4,
@@ -132,13 +132,13 @@
               name: 'Дмитрий Соколов',
               position: 'Космонавт',
               level: 1,
-              img: require('@/assets/img/my/process.svg')
+              avatar: require('@/assets/img/my/process.svg')
             },
             owner: {
               name: 'Sharashkina Kontora',
-              img: require('@/assets/img/my/process.svg'),
+              avatar: require('@/assets/img/my/process.svg'),
             },
-            price: '3000'
+            price:300
           },
           {
             id: 5,
@@ -149,13 +149,13 @@
               name: 'Дмитрий Соколов',
               position: 'Космонавт',
               level: 3,
-              img: require('@/assets/img/my/process.svg')
+              avatar: require('@/assets/img/my/process.svg')
             },
             owner: {
               name: 'Sharashkina Kontora',
-              img: require('@/assets/img/my/process.svg')
+              avatar: require('@/assets/img/my/process.svg')
             },
-            price: '3000'
+            price: 3000
           },
           {
             id: 6,
@@ -166,13 +166,13 @@
               name: 'Дмитрий Соколов',
               position: 'Космонавт',
               level: 3,
-              img: require('@/assets/img/my/process.svg')
+              avatar: require('@/assets/img/my/process.svg')
             },
             owner: {
               name: 'Sharashkina Kontora',
-              img: require('@/assets/img/my/process.svg')
+              avatar: require('@/assets/img/my/process.svg')
             },
-            price: '3000'
+            price: 3000
           },
           {
             id: 7,
@@ -183,13 +183,13 @@
               name: 'Дмитрий Соколов',
               position: 'Космонавт',
               level: 2,
-              img: require('@/assets/img/my/process.svg')
+              avatar: require('@/assets/img/my/process.svg')
             },
             owner: {
               name: 'Sharashkina Kontora',
-              img: require('@/assets/img/my/process.svg')
+              avatar: require('@/assets/img/my/process.svg')
             },
-            price: '3000'
+            price: 3000
           },
           {
             id: 8,
@@ -204,9 +204,9 @@
             },
             owner: {
               name: 'Sharashkina Kontora',
-              img: require('@/assets/img/my/process.svg')
+              avatar: require('@/assets/img/my/process.svg')
             },
-            price: '3000'
+            price: 3000
           },
         ]
       }
