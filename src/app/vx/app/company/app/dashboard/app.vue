@@ -97,8 +97,8 @@ export default {
     }),
     showContext(value, name) {
       this.setComponentsName(name)
-      if (value.key === 1) this.showModal = true
-      if (value.key === 0) this.grantAccess = true
+      if (value === 1) this.showModal = true
+      if (value === 0) this.grantAccess = true
     },
     onClose() {
       this.showModal = false

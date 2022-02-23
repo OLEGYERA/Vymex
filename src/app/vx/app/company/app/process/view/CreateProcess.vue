@@ -15,10 +15,10 @@
       <text-area v-else
                  :textAreaValue="editMode ? messages[processIndex].text : ''"
                  :max-length="1000"
-                 class="view-main-process-title"
                  placeholder="Название процесса"
                  labeled/>
       <text-area :max-length="1000"
+                 class="text-area-description"
                  placeholder="Описание"
                  labeled
                  count/>
@@ -29,11 +29,11 @@
         <template #header-title>файлы</template>
       </header-add>
       <div v-else class="view-main-files">
-        <header-add>
+        <header-add @create="modalUpload = !modalUpload">
           <template #header-title>файлы</template>
           <template #header-amount>{{ files.length }}</template>
         </header-add>
-        <file v-for="(file, key) in files" :file="file" :key="key"/>
+        <file class="view-main-files-margin" v-for="(file, key) in files" :file="file" :key="key"/>
       </div>
       <radio-slot :model="!regularModel"
                   :disable="!regularDisable" @onClick="changeStatusRegular">
@@ -91,6 +91,7 @@
       <template #button-accept>Загрузить</template>
     </modal>
     <modal
+        @onOk="chooseFiles"
         class="upload-files-recourse-folder"
         :status="modalUploadResourceFolder"
         @onClose="modalUploadResourceFolder = !modalUploadResourceFolder">
@@ -110,11 +111,30 @@
           <template #header-title>Файлы</template>
           <template #header-amount>{{ filesToUpload.length }}</template>
         </header-add>
-        <file v-for="(file, key) in filesToUpload" :file="file" :key="key" class="files-to-upload">
-          <checkbox />
-        </file>
+        <file-checkbox v-for="(file, key) in filesToUpload"
+                       :file="file"
+                       :key="key"
+                       :index="key"
+                       class="files-to-upload"
+                       @onClick="changeFileStatus"/>
       </template>
       <template #button-accept>Загрузить</template>
+    </modal>
+    <modal
+        @onOk="saveFiles"
+        class="upload-from-app"
+        :status="modalChooseFiles"
+        @onClose="modalChooseFiles = !modalChooseFiles">
+      <template #title>Загрузить из приложения</template>
+      <template #description>Выбранные файлы будут прикреплены к ресурсу</template>
+      <template #content>
+        <header-add>
+          <template #header-title>изображения</template>
+          <template #header-amount>{{ images.length }}</template>
+        </header-add>
+        <file class="upload-from-app-file" v-for="(file, fileKey) in images" :file="file" :key="fileKey"/>
+      </template>
+      <template #button-accept>Сохранить</template>
     </modal>
   </div>
 </template>
@@ -123,12 +143,12 @@
 import Comeback from "@Facade/Navigation/Comeback";
 import TitleBase from "@Facade/Title/Base";
 import InputBase from "@Facade/Input/Base";
-import Checkbox from "@Facade/Input/Checkbox";
 import TextArea from "@Facade/Input/TextArea";
 import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd";
 import ButtonSecondary from "@Facade/Button/Secondary";
 import ButtonBase from "@Facade/Button/Base";
 import StartProcess from "../facades/StartProcess";
+import FileCheckbox from "../facades/FileCheckbox";
 import RadioSlot from "../facades/RadioSlot";
 import ProcessAlert from "../facades/ProcessAlert";
 import {mapGetters, mapMutations} from "vuex";
@@ -154,7 +174,7 @@ export default {
     ProcessPerformer,
     Modal,
     Folder,
-    Checkbox
+    FileCheckbox
   },
   data() {
     return {
@@ -165,6 +185,8 @@ export default {
       modalUpload: false,
       modalUploadResource: false,
       modalUploadResourceFolder: false,
+      modalChooseFiles: false,
+      images: [],
       uploadResource: [
         {avatar: require('@/assets/img/my/resource.svg'), position: 'Ресурсы'},
       ],
@@ -189,7 +211,9 @@ export default {
   methods: {
     ...mapMutations({
       setMessages: 'setNewMessages',
-      setEditMode: 'setIsEditMode'
+      setEditMode: 'setIsEditMode',
+      setFilesToUpload: 'setNewFilesToUpload',
+      setFiles: 'setNewFiles'
     }),
     changeStatusProcess() {
       this.processModel = !this.processModel
@@ -225,11 +249,28 @@ export default {
       this.modalUploadResource = !this.modalUploadResource
       this.modalUpload = !this.modalUpload
     },
-    changePage(key){
-      if(key.id === 1){
+    changePage(key) {
+      if (key.id === 1) {
         this.modalUploadResource = !this.modalUploadResource
         this.modalUploadResourceFolder = !this.modalUploadResourceFolder
       }
+    },
+    changeFileStatus(index) {
+      let newData = [...this.filesToUpload,
+        this.filesToUpload[index].checked = !this.filesToUpload[index].checked]
+      this.setFilesToUpload(newData)
+    },
+    chooseFiles() {
+      this.modalUploadResourceFolder = !this.modalUploadResourceFolder
+      this.modalChooseFiles = !this.modalChooseFiles
+      this.images = this.filesToUpload.filter(el => el.checked === true)
+    },
+    saveFiles() {
+      this.setFiles(this.images)
+      this.modalChooseFiles = !this.modalChooseFiles
+      this.regularModel = !this.regularModel
+      this.regularDisable = !this.regularDisable
+      this.$notify({text: 'Файл успешно загружен!', type: 'success', duration: 3000, speed: 500})
     }
   }
 }
@@ -292,6 +333,10 @@ export default {
     .view-main-files {
       margin: rem(24) 0;
 
+      .view-main-files-margin {
+        margin-top: 8px;
+      }
+
       ::v-deep {
         .icon-points-vertical {
           color: #fff;
@@ -343,14 +388,14 @@ export default {
   }
 }
 
-.modal-upload-resource-text{
+.modal-upload-resource-text {
   font-size: rem(12);
   line-height: rem(16);
   color: #FFF;
   margin-bottom: rem(11);
   margin-top: rem(8);
 
-  .modal-upload-resource-text-root{
+  .modal-upload-resource-text-root {
     color: $grey-scale-200;
   }
 }
@@ -363,11 +408,13 @@ export default {
       justify-content: space-between;
       padding-bottom: 24px;
     }
-    .modal-base-header{
+
+    .modal-base-header {
       margin-bottom: 8px;
     }
   }
 }
+
 .upload-files-recourse-folder.facade-modal-base {
   &::v-deep {
     .modal-base-body {
@@ -375,6 +422,25 @@ export default {
       height: 805px;
       justify-content: space-between;
       padding-bottom: rem(43);
+    }
+  }
+}
+
+.upload-from-app.facade-modal-base {
+  &::v-deep {
+    .modal-base-body {
+      width: 632px;
+      height: auto;
+      justify-content: space-between;
+      padding-bottom: rem(48);
+    }
+
+    .modal-base-content {
+      margin-top: 16px;
+    }
+
+    .modal-base-footer {
+      margin-top: 16px;
     }
   }
 }
@@ -417,10 +483,26 @@ export default {
     margin-left: 12px;
   }
 }
-.files-to-upload::v-deep{
+
+.files-to-upload::v-deep {
   margin-top: 9px;
+
   .icon-points-vertical {
     display: none;
+  }
+}
+
+.facade-input-text-area::v-deep {
+  margin-top: 24px;
+}
+
+.text-area-description.facade-input-text-area::v-deep {
+  margin-top: 32px;
+}
+
+.upload-from-app {
+  .upload-from-app-file {
+    margin-top: 8px;
   }
 }
 </style>

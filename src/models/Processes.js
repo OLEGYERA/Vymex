@@ -123,6 +123,7 @@ export default {
                 },
                 type: null,
                 group: true,
+                checked: false
             },
             {
                 title : 'doc.vmx',
@@ -132,24 +133,7 @@ export default {
                 },
                 type: null,
                 group: true,
-            },
-            {
-                title : 'doc.vmx',
-                content: {
-                    size: '2,1',
-                    date: '02.03.2020'
-                },
-                type: null,
-                group: null,
-            },
-            {
-                title : 'doc.zip',
-                content: {
-                    size: '2,1',
-                    date: '02.03.2020'
-                },
-                type: 'zip',
-                group: true,
+                checked: true
             },
             {
                 title : 'doc.vmx',
@@ -159,6 +143,7 @@ export default {
                 },
                 type: null,
                 group: null,
+                checked: true
             },
             {
                 title : 'doc.zip',
@@ -168,6 +153,27 @@ export default {
                 },
                 type: 'zip',
                 group: true,
+                checked: false
+            },
+            {
+                title : 'doc.vmx',
+                content: {
+                    size: '2,1',
+                    date: '02.03.2020'
+                },
+                type: null,
+                group: null,
+                checked: false
+            },
+            {
+                title : 'doc.zip',
+                content: {
+                    size: '2,1',
+                    date: '02.03.2020'
+                },
+                type: 'zip',
+                group: true,
+                checked: false
             },
         ],
 
@@ -189,6 +195,8 @@ export default {
         setChooseProcessIndex: (state, payload) => state.processIndex = payload,
         setNewMessages: (state, payload) => state.messages = payload,
         setIsEditMode: (state, payload) => state.editMode = payload,
+        setNewFilesToUpload: (state, payload) => state.filesToUpload = payload,
+        setNewFiles: (state, payload) => state.files = payload,
     },
 
 }
