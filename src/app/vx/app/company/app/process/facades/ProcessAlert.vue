@@ -9,16 +9,17 @@
               class="process-alert-select-icon"
               :class="{active: actionListStatus}"/>
           <transition>
-            <action-list
+x            <action-list
                 class="process-alert-context"
-                :actionListStatus="actionListStatus"
-                :items="items"
+                :status="actionListStatus"
+                :actions="items"
                 v-if="actionListStatus"
             />
           </transition>
         </div>
       </div>
     </div>
+    <div class="action-list-outside" v-if="actionListStatus" @click="actionListStatus = false"></div>
     <div class="process-alert-border"></div>
   </div>
 </template>
@@ -32,7 +33,7 @@ export default {
   data() {
     return {
       actionListStatus: false,
-      items: ['Заменить', 'Удалить']
+      items: ['Заменить']
     }
   },
   components: {
@@ -81,7 +82,7 @@ export default {
           position: absolute;
           bottom: 8px;
           z-index: 1;
-          right: 10px;
+          right: 110px;
           transform: translateY(100%);
         }
       }
@@ -95,5 +96,13 @@ export default {
     margin: 7px 0;
   }
 }
-
+.action-list-outside {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  cursor: auto;
+}
 </style>

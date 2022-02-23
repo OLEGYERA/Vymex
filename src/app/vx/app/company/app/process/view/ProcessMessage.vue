@@ -5,12 +5,12 @@
                      :message="message"/>
       <icon-points-vertical @click.native="actionListStatus=true"/>
       <div class="action-list-outside" v-if="actionListStatus" @click="actionListStatus = false"></div>
-      <action-list :action-list-status="actionListStatus" :items="items" @onClick="changePage"/>
+      <action-list :status="actionListStatus" :actions="items" @onList="changePage"/>
     </div>
 </template>
 
 <script>
-import IconPointsVertical from "@Icon/PointsVertical"
+import IconPointsVertical from "@Icon/PointsVertical";
 import ActionList from "@Facade/Modal/ActionList";
 import {mapMutations} from "vuex";
 import ProcessEvent from "@/app/vx/app/company/app/process/facades/ProcessEvent";
@@ -25,7 +25,7 @@ export default {
   data() {
     return {
       actionListStatus: false,
-      items: ['Редактировать', 'Удалить ']
+      items: ['Редактировать']
     }
   },
   props: {
@@ -106,7 +106,7 @@ export default {
 
   .facade-modal-action-list {
     position: absolute;
-    right: 14px;
-    top: 40px;
+    right: 144px;
+    top: 50px;
   }
 </style>

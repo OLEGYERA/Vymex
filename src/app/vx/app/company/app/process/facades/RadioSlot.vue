@@ -1,7 +1,8 @@
 <template>
   <div class="facade-radio-slot">
     <div><slot name="title"/></div>
-    <checkbox-round :model="model"
+    <checkbox-round :viewType="2"
+                    :model="model"
                     :disable="disable"
                     class="radio-slot-checkbox"
                     @onClick="$emit('onClick')"
@@ -10,7 +11,7 @@
 </template>
 
 <script>
-import CheckboxRound from "@Facade/Input/CheckboxRound";
+import CheckboxRound from "@Facade/Input/Checkbox";
 
 export default {
   name: 'vx.process.facade.radio.slot',

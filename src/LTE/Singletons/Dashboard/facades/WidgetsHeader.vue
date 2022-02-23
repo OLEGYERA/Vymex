@@ -9,10 +9,10 @@
       <transition>
         <action-list
             class="show-context-animation"
-            :actionListStatus="actionListStatus"
-            :items="items"
+            :status="actionListStatus"
+            :actions="items"
             v-if="actionListStatus"
-            @onClick="showContext"
+            @onList="showContext"
         />
       </transition>
     </div>
@@ -70,37 +70,42 @@ export default {
 
     .facade-modal-action-list {
       position: absolute;
-      bottom: -1px;
       z-index: 1;
-      right: -1px;
+      right: 140px;
       transform: translateY(100%);
     }
   }
 }
-.show-context-animation{
-  animation: show-context;
-  animation-duration: $vx-nav-time;
-}
-@keyframes show-context{
-  0%{
-    font-size: 0;
-    right: 0;
-    width: 0;
-    height: 0;
-  }
-  50%{
-    font-size: 0;
-  }
-  90%{
-    font-size: 0;
-  }
-  99%{
-    font-size: 0;
-  }
-  100%{
-    bottom: 0;
-    width: 155px;
-    height: 96px;
+.facade-modal-action-list::v-deep{
+  .action-item-del{
+    display: none;
   }
 }
+
+//.show-context-animation{
+//  animation: show-context;
+//  animation-duration: $vx-nav-time;
+//}
+//@keyframes show-context{
+//  0%{
+//    font-size: 0;
+//    right: 0;
+//    width: 0;
+//    height: 0;
+//  }
+//  50%{
+//    font-size: 0;
+//  }
+//  90%{
+//    font-size: 0;
+//  }
+//  99%{
+//    font-size: 0;
+//  }
+//  100%{
+//    bottom: 0;
+//    width: 155px;
+//    height: 96px;
+//  }
+//}
 </style>
