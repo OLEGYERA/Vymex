@@ -41,6 +41,11 @@ export default {
     changeStatus(i) {
       this.sections.map(el => el.isActive = false)
       this.sections[i].isActive = !this.sections[i].isActive
+      if(this.sections[1].isActive){
+        this.$router.push({name: 'vx.process'})
+      } else if(this.sections[0].isActive){
+        this.$router.push({name: 'vx.co'})
+      }
     },
   },
 }
