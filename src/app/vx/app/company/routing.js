@@ -1,6 +1,9 @@
 import CoCreate from "./create.app";
+import CoFounder from "./founder.app";
+import Blur from "./blur"
 import Co from "./app";
 import Dashboard from "./app/dashboard/app";
+import {CoFounderApp} from '@Singletons';
 
 import Task from './app/task/routing'
 // import Profile from './view/profile'
@@ -10,6 +13,22 @@ export default [
     path: 'co-create',
     name: 'vx.co.create',
     component: CoCreate,
+  },
+  {
+    path: 'co-founder',
+    component: CoFounder,
+    children: [
+      {
+        path: '/',
+        name: 'vx.co.founder',
+        component: CoFounderApp
+      },
+      {
+        path: 'blur',
+        name: 'vx.co.founder.blur',
+        component: Blur,
+      },
+    ]
   },
   {
     path: 'co-:companyID',

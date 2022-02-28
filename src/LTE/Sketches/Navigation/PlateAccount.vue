@@ -2,12 +2,12 @@
   <div class="sketch-navigation-plate-account">
     <transition name="vx-center-right">
       <div class="navigation-plate-body" v-if="tiny">
-        <plate-account tiny :category="category" :data="data" :active="active" @click.native="routerPush"/>
+        <plate-account @isOpen="toggle" :isOpen="isOpen" tiny :category="category" :data="data" :active="active" :router="router" />
       </div>
     </transition>
     <transition name="vx-center-left">
       <div class="navigation-plate-body" v-if="!tiny">
-        <plate-account :category="category" :data="data" :active="active" @click.native="routerPush"/>
+        <plate-account @is-open="toggle" :isOpen="isOpen" :category="category" :data="data" :active="active" :router="router" />
       </div>
     </transition>
   </div>
@@ -37,10 +37,16 @@
     components: {
       PlateAccount
     },
-    methods: {
-      routerPush(){
-        this.$router.push(this.router).catch(() => {})
+    data() {
+      return {
+        isOpen: false
       }
+    },
+    methods: {
+      toggle() {
+        if(this.category === 'company') 
+          this.isOpen = !this.isOpen
+      },
     }
   }
 </script>

@@ -9,10 +9,21 @@
     </div>
   </div>
   <div class="facade-plate-account" :class="{'plate-account-tiny': tiny, 'active': active}" v-else>
-    <div class="plate-account-body">
+    <div class="plate-account-body" @click="$emit('is-open', isOpen)">
       <image-avatar :logo="accountInfo.logo" :color-code="accountInfo.colorId"/>
       <title-sub v-if="!tiny">{{ accountInfo.name }}</title-sub>
-      <div class="dropdown-box" v-if="category === 'company' && !tiny"><icon-dropdown-arrow /></div>
+      <div class="dropdown-box" v-if="category === 'company' && !tiny" :turned="isOpen">
+        <icon-dropdown-arrow />
+      </div>
+    </div>
+    <div class="plate-account-content" v-show="isOpen">
+      <level-ui 
+        v-for="l in ['co-founder', 'one', 'two', 'four']" 
+        :key="l" 
+        :level="l"
+        :tiny="tiny"
+        @click.native="routerPush(l)"
+      />
     </div>
   </div>
 </template>
@@ -23,6 +34,7 @@
   import TitleSub from '@Facade/Title/Sub'
   import TextBase from '@Facade/Text/Base'
   import IconDropdownArrow from '@Icon/DropdownArrow'
+  import {LevelUi} from '@Providers'
 
   export default {
     name: 'Facade.Plate.Account',
@@ -36,14 +48,17 @@
         required: true
       },
       data: Object,
-      active: Boolean
+      active: Boolean,
+      router: Object,
+      isOpen: Boolean
     },
     components: {
       IconAdd,
       ImageAvatar,
       TitleSub,
       TextBase,
-      IconDropdownArrow
+      IconDropdownArrow,
+      LevelUi
     },
     created() {
 
@@ -67,8 +82,16 @@
         }
         return {}
       }
+    },
+    methods: {
+      routerPush(level) {
+        if (level === 'co-founder') {
+          this.$router.push({name: 'vx.co.founder'}).catch(() => {})
+        } else {
+          this.$router.push(this.router).catch(() => {})
+        }
+      }
     }
-
   }
 </script>
 
@@ -79,8 +102,8 @@
     background-color: $grey-scale-500;
     border-left: 4px solid transparent;
     transition: .2s all linear;
-    cursor: pointer;
     .plate-account-body{
+      cursor: pointer;
       width: 100%;
       display: flex;
       align-items: center;
@@ -102,6 +125,9 @@
       .dropdown-box{
         width: 16px;
         color: #fff;
+        &[turned]{
+          transform: rotate(180deg);
+        }
       }
     }
     &.create{
@@ -153,6 +179,10 @@
       cursor: default;
       border-color: $blue;
       background-color: $grey-scale-500;
+    }
+    & .plate-account-content {
+      padding: 0 12px 12px 8px;
+      cursor: default;
     }
   }
 
