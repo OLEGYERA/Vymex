@@ -120,6 +120,9 @@
             margin-bottom: 36px;
           }
           .company-group{
+            overflow: auto;
+            height: calc(100vh - 380px);
+            
             .sketch-navigation-plate-account{
               margin-bottom: 16px;
               &:last-child{

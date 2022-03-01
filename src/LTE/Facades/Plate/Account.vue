@@ -9,14 +9,14 @@
     </div>
   </div>
   <div class="facade-plate-account" :class="{'plate-account-tiny': tiny, 'active': active}" v-else>
-    <div class="plate-account-body" @click="$emit('is-open', isOpen)">
+    <div class="plate-account-body" @click="toggleCompany">
       <image-avatar :logo="accountInfo.logo" :color-code="accountInfo.colorId"/>
       <title-sub v-if="!tiny">{{ accountInfo.name }}</title-sub>
-      <div class="dropdown-box" v-if="category === 'company' && !tiny" :turned="isOpen">
+      <div class="dropdown-box" v-if="category === 'company' && !tiny" :turned="isShow">
         <icon-dropdown-arrow />
       </div>
     </div>
-    <div class="plate-account-content" v-show="isOpen">
+    <div class="plate-account-content" v-show="isShow">
       <level-ui 
         v-for="l in ['co-founder', 'one', 'two', 'four']" 
         :key="l" 
@@ -36,6 +36,8 @@
   import IconDropdownArrow from '@Icon/DropdownArrow'
   import {LevelUi} from '@Providers'
 
+  import {mapGetters, mapMutations} from "vuex";
+
   export default {
     name: 'Facade.Plate.Account',
     props: {
@@ -50,7 +52,6 @@
       data: Object,
       active: Boolean,
       router: Object,
-      isOpen: Boolean
     },
     components: {
       IconAdd,
@@ -64,6 +65,12 @@
 
     },
     computed: {
+      ...mapGetters({
+        openCompany: 'getOpenCompany'
+      }),
+      isShow() {
+        return this.openCompany.status && this.openCompany.id === this.data.id
+      },
       accountInfo(){
         //все костыль нужно переделывать
         switch (this.category){
@@ -84,11 +91,19 @@
       }
     },
     methods: {
+      ...mapMutations(['setOpenCompany']),
       routerPush(level) {
         if (level === 'co-founder') {
           this.$router.push({name: 'vx.co.founder'}).catch(() => {})
         } else {
           this.$router.push(this.router).catch(() => {})
+        }
+      },
+      toggleCompany() {
+        if(this.category === 'company') {
+          let status = this.data.id !== this.openCompany.id 
+            ? true : !this.openCompany.status
+          this.setOpenCompany({id: this.data.id, status})
         }
       }
     }
