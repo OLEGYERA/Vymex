@@ -18,12 +18,14 @@
             <template>{{ level.level }} уровень</template>
           </title-caps>
         </div>
-        <checkbox :model="level.checkedLevel"
+        <checkbox v-if="level.showCheckbox"
+                  :model="level.checkedLevel"
                   class="checkbox"
                   @onClick="changeStatusLevel(index)"/>
       </div>
       <div v-if="level.showContext">
-        <structure-unit :data="level.data"/>
+        <structure-unit :data="level.data"
+                        :level="level.level"/>
       </div>
     </div>
   </div>

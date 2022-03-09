@@ -1,38 +1,64 @@
 <template>
   <div class="container-sidebar-structure-unit">
-        <div v-for="(men, i) in data"
-             :key="i"
-             class="structure-unit-level-context"
-             :style="{background: men.color}">
-          <div class="level-context-main">
-            <img :src="men.avatar"/>
-            <div class="level-context-main-description">
-              <span class="main-description-name">{{ men.name }}</span>
-              <span class="main-description-position">{{ men.position }}</span>
-            </div>
-          </div>
-          <div>
-            <checkbox :model="men.checkedPosition"
-                      @onClick="changeStatusPosition(i)"></checkbox>
+    <div v-for="(men, i) in data"
+         :key="i"
+         class="structure-unit-level-context"
+         :class="{
+         level1: level === 1,
+         level2: level === 2,
+         level3: level === 3,
+         level4: level === 4
+         }">
+      <div v-if="!men.name" class="level-context-main">
+        <div class="performer-context-main">
+          <img v-if="men.avatar" :src="men.avatar" class="context-main-avatar"/>
+          <div v-else class="context-main-num">{{ men.numberPeople }}</div>
+          <span class="context-main-position">{{ men.position }}</span>
+        </div>
+        </div>
+        <div v-else class="level-context-main">
+          <img :src="men.avatar"/>
+          <div class="level-context-main-description">
+            <span class="main-description-name">{{ men.name }}</span>
+            <span class="main-description-position">{{ men.position }}</span>
           </div>
         </div>
+      <div>
+        <checkbox :viewType="men.checkboxType"
+                  :model="men.checkedPosition"
+                  @onClick="changeStatusPosition(i)"></checkbox>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
 import Checkbox from '@Facade/Input/Checkbox';
+import {mapMutations, mapGetters} from "vuex";
 
 export default {
   name: "StructuralUnit",
   props: {
-    data: Array
+    data: Array,
+    level: Number
   },
   components: {
     Checkbox
   },
+    computed: {
+    ...mapGetters({
+      disableStatusCount: 'getDisableStatusCount'
+    }),
+  },
   methods: {
+        ...mapMutations({
+      setDisableStatusCount: 'setCheckDisableStatusCount'
+    }),
     changeStatusPosition(i) {
       this.data[i].checkedPosition = !this.data[i].checkedPosition
+      this.data[i].checkedPosition === true 
+      ? this.setDisableStatusCount(this.disableStatusCount + 1) 
+      : this.setDisableStatusCount(this.disableStatusCount - 1)
     },
   }
 }
@@ -41,6 +67,7 @@ export default {
 <style lang="scss" scoped>
 .container-sidebar-structure-unit {
   width: 100%;
+
   .structure-unit-level-context {
     display: flex;
     align-items: center;
@@ -73,6 +100,39 @@ export default {
           line-height: rem(16);
           color: #4A5A6A;
           flex: none;
+        }
+      }
+
+      .performer-context-main {
+        display: inherit;
+        justify-content: center;
+        align-items: center;
+
+        .context-main-avatar {
+          margin-right: rem(12);
+        }
+
+        .context-main-num {
+          display: inherit;
+          justify-content: center;
+          align-items: center;
+          color: #FFF;
+          width: 22px;
+          height: 22px;
+          background: rgba($grey-scale-700, 0.2);
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          border-radius: 8px;
+          font-weight: 600;
+          font-size: rem(12);
+          line-height: rem(16);
+          text-align: center;
+          text-transform: uppercase;
+          margin-right: rem(22);
+        }
+
+        .context-main-position {
+          font-size: rem(15);
+          line-height: rem(20);
         }
       }
     }

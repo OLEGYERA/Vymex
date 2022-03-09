@@ -193,54 +193,54 @@ export default {
         },
         levels: [
             {
-                level: 1, showContext: true, checkedLevel: false, data: [
+                level: 1, showContext: true, checkedLevel: false, showCheckbox: true, data: [
                     {
                         avatar: require('@/assets/img/icons/avatar.svg'),
-                        name: "Александр Ким", position: "Должность", color: "#D5F1C5",
+                        name: "Александр Ким", position: "Должность",
                         checkedPosition: true
                     },
                 ]
             },
             {
-                level: 2, showContext: false, checkedLevel: false, data: [
+                level: 2, showContext: false, checkedLevel: false, showCheckbox: true, data: [
                     {
                         avatar: require('@/assets/img/icons/avatar.svg'),
-                        name: "Александр Ким", position: "Должность", color: "#FEF0BD",
+                        name: "Александр Ким", position: "Должность",
                         checkedPosition: true
                     },
                 ]
             },
             {
-                level: 3, showContext: false, checkedLevel: false, data: [
+                level: 3, showContext: false, checkedLevel: false, showCheckbox: true, data: [
                     {
                         avatar: require('@/assets/img/icons/avatar.svg'),
-                        name: "Александр Ким", position: "Должность", color: "#BAE7FF",
+                        name: "Александр Ким", position: "Должность",
                         checkedPosition: true
                     },
                 ]
             },
             {
-                level: 4, showContext: false, checkedLevel: false, data: [
+                level: 4, showContext: false, checkedLevel: false, showCheckbox: true, data: [
                     {
                         avatar: require('@/assets/img/icons/avatar.svg'),
-                        name: "Александр Ким", position: "Должность", color: "#F2CBF8",
+                        name: "Александр Ким", position: "Должность",
                         checkedPosition: true
                     },
                     {
                         avatar: require('@/assets/img/icons/avatar.svg'),
-                        name: "Александр Ким", position: "Должность", color: "#F2CBF8",
+                        name: "Александр Ким", position: "Должность",
                         checkedPosition: true
                     }, {
                         avatar: require('@/assets/img/icons/avatar.svg'),
-                        name: "Александр Ким", position: "Должность", color: "#F2CBF8",
+                        name: "Александр Ким", position: "Должность",
                         checkedPosition: true
                     }, {
                         avatar: require('@/assets/img/icons/avatar.svg'),
-                        name: "Александр Ким", position: "Должность", color: "#F2CBF8",
+                        name: "Александр Ким", position: "Должность",
                         checkedPosition: true
                     }, {
                         avatar: require('@/assets/img/icons/avatar.svg'),
-                        name: "Александр Ким", position: "Должность", color: "#F2CBF8",
+                        name: "Александр Ким", position: "Должность",
                         checkedPosition: true
                     },
                 ]

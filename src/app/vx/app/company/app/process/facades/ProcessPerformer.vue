@@ -10,7 +10,7 @@
          level4: performer.level === 4
          }">
       <div class="performer-context-main">
-        <img v-if="performer.avatar" :src="performer.avatar"/>
+        <img v-if="performer.avatar" :src="performer.avatar" class="context-main-avatar"/>
         <div v-else class="context-main-num">
           {{ performer.numberPeople }}
         </div>
@@ -54,6 +54,10 @@ export default {
       justify-content: center;
       align-items: center;
 
+      .context-main-avatar {
+        margin-right: rem(12);
+      }
+
       .context-main-num {
         display: inherit;
         justify-content: center;
@@ -69,6 +73,7 @@ export default {
         line-height: rem(16);
         text-align: center;
         text-transform: uppercase;
+        margin-right: rem(22);
       }
 
       .context-main-position {

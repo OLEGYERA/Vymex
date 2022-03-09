@@ -70,6 +70,7 @@ export default {
         ],
         processIndex: 0,
         editMode: false,
+        disableStatusCount: 0,
         resourceFolders: [
             {
                 id: 1,
@@ -115,26 +116,26 @@ export default {
             }
         ],
         filesToUpload: [
-            {
-                title : 'doc.vmx',
-                content: {
-                    size: '2,1',
-                    date: '02.03.2020'
-                },
-                type: null,
-                group: true,
-                checked: false
-            },
-            {
-                title : 'doc.vmx',
-                content: {
-                    size: '2,1',
-                    date: '02.03.2020'
-                },
-                type: null,
-                group: true,
-                checked: true
-            },
+            // {
+            //     title : 'doc.vmx',
+            //     content: {
+            //         size: '2,1',
+            //         date: '02.03.2020'
+            //     },
+            //     type: null,
+            //     group: true,
+            //     checked: false
+            // },
+            // {
+            //     title : 'doc.vmx',
+            //     content: {
+            //         size: '2,1',
+            //         date: '02.03.2020'
+            //     },
+            //     type: null,
+            //     group: true,
+            //     checked: true
+            // },
             {
                 title : 'doc.vmx',
                 content: {
@@ -176,7 +177,41 @@ export default {
                 checked: false
             },
         ],
-
+        levelsProcess: [
+            {
+                level: 1, showContext: true, data: [
+                    {
+                        avatar: require('@/assets/img/icons/avatar.svg'),
+                        position: "CEO", checkedPosition: false, checkboxType: 2
+                    },
+                ]
+            },
+            { level: 2 },
+            {
+                level: 3, showContext: true, data: [
+                    {
+                        avatar: require('@/assets/img/icons/avatar.svg'),
+                        position: "TTFO", checkedPosition: false, checkboxType: 2
+                    },
+                ]
+            },
+            {
+                level: 4, showContext: true, data: [
+                    {
+                        position: "Должность", checkedPosition: false, checkboxType: 2, numberPeople: 2
+                    },
+                    {
+                        position: "Должность", checkedPosition: false, checkboxType: 2, numberPeople: 4
+                    },
+                    {
+                        position: "Должность", checkedPosition: false, checkboxType: 2, numberPeople: 7
+                    },
+                    {
+                        position: "Должность", checkedPosition: false, checkboxType: 2, numberPeople: 2
+                    }
+                ]
+            },
+        ],
     },
     getters: {
         getMessages: (state) => state.messages,
@@ -189,7 +224,9 @@ export default {
         getEditMode: (state) => state.editMode,
         getResourceFolders: (state) => state.resourceFolders,
         getNewFolder: (state) => state.newFolder,
-        getFilesToUpload: (state) => state.filesToUpload
+        getFilesToUpload: (state) => state.filesToUpload,
+        getLevelsProcess: (state) => state.levelsProcess,
+        getDisableStatusCount: (state) => state.disableStatusCount
     },
     mutations: {
         setChooseProcessIndex: (state, payload) => state.processIndex = payload,
@@ -197,6 +234,7 @@ export default {
         setIsEditMode: (state, payload) => state.editMode = payload,
         setNewFilesToUpload: (state, payload) => state.filesToUpload = payload,
         setNewFiles: (state, payload) => state.files = payload,
+        setCheckDisableStatusCount: (state, payload) => state.disableStatusCount = payload
     },
 
 }

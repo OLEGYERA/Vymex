@@ -46,6 +46,7 @@
       </radio-slot>
       <process-alert/>
       <header-add
+          @create="showSidebar"
           :class="subdivisions[0] ? '' : 'hide-add-icon'">
         <template #header-title>исполнители</template>
         <template #header-amount>{{ subdivisions[0] ? subdivisions.length : '' }}</template>
@@ -63,6 +64,15 @@
                            :modalUploadResource="modalUploadResource"
                            :modalUploadResourceFolder="modalUploadResourceFolder"
                            :modalChooseFiles="modalChooseFiles"/>
+    <sidebar v-if="isShowSidebar"
+             :status="isShowSidebar"
+             :disable="disableStatusCount === 0"
+             @on-close="isShowSidebar = false"
+             @handle-access="isShowSidebar = false">
+      <template #head-title>Назначить исполнителя</template>
+      <template #button-title>Сохранить</template>
+    </sidebar>
+
   </div>
 </template>
 
@@ -80,7 +90,8 @@ import ProcessAlert from "../facades/ProcessAlert";
 import {mapGetters, mapMutations} from "vuex";
 import File from "@/LTE/Singletons/Resources/facades/File";
 import ProcessPerformer from "@/app/vx/app/company/app/process/facades/ProcessPerformer";
-import CreateProcessModals from "./CreateProcessModals"
+import CreateProcessModals from "./CreateProcessModals";
+import Sidebar from "@/LTE/Singletons/Dashboard/views/sidebar/Sidebar";
 
 export default {
   name: 'vx.process.create.process',
@@ -98,6 +109,7 @@ export default {
     StartProcess,
     ProcessPerformer,
     CreateProcessModals,
+    Sidebar
   },
   data() {
     return {
@@ -109,6 +121,7 @@ export default {
       modalUploadResource: false,
       modalUploadResourceFolder: false,
       modalChooseFiles: false,
+      isShowSidebar: false,
     }
   },
   computed: {
@@ -119,10 +132,13 @@ export default {
       processIndex: 'getProcessIndex',
       editMode: 'getEditMode',
       folders: 'getFolders',
+      levelsProcess: 'getLevelsProcess',
+      disableStatusCount: 'getDisableStatusCount'
     }),
   },
   methods: {
     ...mapMutations({
+      setLevels: 'setWidgetLevels',
       setMessages: 'setNewMessages',
       setEditMode: 'setIsEditMode',
     }),
@@ -156,6 +172,10 @@ export default {
       this.setEditMode(false)
       this.$router.push({name: 'vx.process.company.processes'})
     },
+    showSidebar() {
+      this.isShowSidebar = !this.isShowSidebar
+      this.setLevels(this.levelsProcess)
+    }
   }
 }
 </script>
@@ -249,6 +269,13 @@ export default {
         background-color: $grey-scale-400;
       }
     }
+  }
+}
+
+.view-main-performer.facade-process-performer::v-deep {
+  .context-main-position {
+    color: $grey-scale-500;
+    margin-left: 25px;
   }
 }
 </style>

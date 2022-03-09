@@ -65,7 +65,7 @@
         @onOk="saveFiles"
         class="upload-from-app"
         :status="modalChooseFiles"
-        @onClose="modalChooseFiles = !modalChooseFiles">
+        @onClose="modalChooseFilesClose">
       <template #title>Загрузить из приложения</template>
       <template #description>Выбранные файлы будут прикреплены к ресурсу</template>
       <template #content>
@@ -140,8 +140,7 @@ export default {
       }
     },
     changeFileStatus(index) {
-      let newData = [...this.filesToUpload,
-        this.filesToUpload[index].checked = !this.filesToUpload[index].checked]
+      let newData = this.filesToUpload.map((el, i) => i === index ? {...el, checked: !el.checked} : el)
       this.setFilesToUpload(newData)
     },
     chooseFiles() {
@@ -155,6 +154,10 @@ export default {
       this.regularModel = !this.regularModel
       this.regularDisable = !this.regularDisable
       this.$notify({text: 'Файл успешно загружен!', type: 'success', duration: 3000, speed: 500})
+    },
+    modalChooseFilesClose(){
+      this.modalChooseFiles = !this.modalChooseFiles
+      this.modalUploadResourceFolder = !this.modalUploadResourceFolder
     }
   }
 }
@@ -213,9 +216,13 @@ export default {
   &::v-deep {
     .modal-base-body {
       width: 632px;
-      height: 805px;
+      height: auto;
+      //height: 805px;
       justify-content: space-between;
       padding-bottom: rem(43);
+    }
+    .modal-base-content {
+      margin-bottom: rem(31);
     }
   }
 }
@@ -236,13 +243,6 @@ export default {
     .modal-base-footer {
       margin-top: 16px;
     }
-  }
-}
-
-.view-main-performer.facade-process-performer::v-deep {
-  .context-main-position {
-    color: $grey-scale-500;
-    margin-left: 25px;
   }
 }
 

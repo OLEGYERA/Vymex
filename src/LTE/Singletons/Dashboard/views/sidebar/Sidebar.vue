@@ -1,17 +1,20 @@
 <template>
-  <div class="dashboard-sidebar-container" v-if="status">
+  <div class="sidebar-container" v-if="status">
     <sidebar-right
         class="notifications-dashboard-sidebar"
         @onClose="$emit('on-close')">
       <template #main-header>
-        <sidebar-header>Выдать доступ</sidebar-header>
+        <sidebar-header><slot name="head-title"/></sidebar-header>
       </template>
       <template #main-content>
-        <sidebar-view/>
+        <sidebar-view>
+          <template #title-caps-child><slot name="title-caps-parent"/></template>
+        </sidebar-view>
       </template>
     </sidebar-right>
     <button-base class="button"
-                 @onClick="$emit('handle-access')">Выдать доступ</button-base>
+                 :disable="disable"
+                 @onClick="$emit('handle-access')"><slot name="button-title"/></button-base>
   </div>
 </template>
 
@@ -22,9 +25,10 @@ import SidebarView from "./SidebarView";
 import ButtonBase from "@Facade/Button/Base";
 
 export default {
-  name: "Dashboard",
+  name: "Sidebar",
   props: {
     status: Boolean,
+    disable: Boolean,
     levels: Array
   },
   components: {
@@ -37,7 +41,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.dashboard-sidebar-container {
+.sidebar-container {
   top: 0;
   left: 0;
   width: 100%;
