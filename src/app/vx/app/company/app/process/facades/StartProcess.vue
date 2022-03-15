@@ -17,16 +17,20 @@
 
 <script>
 
-import {mapGetters} from "vuex";
+import {mapGetters, mapMutations} from "vuex";
 
 export default {
   name: 'vx.process.facade.start.process',
-methods: {
-  choosePeriod(i){
-    this.periods.map(el => el.isActive = false)
-    this.periods[i].isActive = !this.periods[i].isActive
-  }
-},
+  methods: {
+    ...mapMutations({
+      setChoosePeriod: 'setNewChoosePeriod'
+    }),
+    choosePeriod(i) {
+      this.periods.map(el => el.isActive = false)
+      this.periods[i].isActive = !this.periods[i].isActive
+      this.setChoosePeriod(this.periods[i].title)
+    }
+  },
   computed: {
     ...mapGetters({
       periods: 'getPeriods',
@@ -78,6 +82,7 @@ methods: {
     justify-content: space-around;
     align-items: flex-start;
     width: 100%;
+
     .process-period-every {
       display: inherit;
       justify-content: center;
@@ -90,6 +95,7 @@ methods: {
       background: $blue;
       border-radius: 20px;
       margin-left: 4px;
+
       &:first-child {
         margin-left: 0;
       }

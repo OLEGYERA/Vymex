@@ -22,7 +22,7 @@
                  placeholder="Описание"
                  labeled
                  count/>
-      <header-add v-if="regularModel"
+      <header-add v-if="!files.length"
                   class="view-main-files"
                   @create="modalUpload = !modalUpload"
       >
@@ -35,13 +35,13 @@
         </header-add>
         <file class="view-main-files-margin" v-for="(file, key) in files" :file="file" :key="key"/>
       </div>
-      <radio-slot :model="!regularModel"
-                  :disable="!regularDisable" @onClick="changeStatusRegular">
-        <template #title>Регулярный</template>
-      </radio-slot>
-      <start-process v-if="!regularModel"/>
       <radio-slot :model="regularModel"
                   :disable="regularDisable" @onClick="changeStatusRegular">
+        <template #title>Регулярный</template>
+      </radio-slot>
+      <start-process v-if="regularModel"/>
+      <radio-slot :model="!regularModel"
+                  :disable="!regularDisable" @onClick="changeStatusRegular">
         <template #title>Не регулярный</template>
       </radio-slot>
       <process-alert/>
@@ -49,7 +49,7 @@
           @create="showSidebar"
           :class="subdivisions[0] ? '' : 'hide-add-icon'">
         <template #header-title>исполнители</template>
-        <template #header-amount>{{ subdivisions[0] ? subdivisions.length : '' }}</template>
+        <template #header-amount>{{ subdivisions[0] ? performersCounter : '' }}</template>
       </header-add>
       <process-performer class="view-main-performer" :performers="subdivisions"/>
     </div>
@@ -60,19 +60,27 @@
       </button-secondary>
       <button-base class="create-resource-button" @onClick="createProcess">Создать процесс</button-base>
     </div>
-    <create-process-modals :modalUpload="modalUpload"
+    <create-process-modals @closeModalUpload="modalUpload = !modalUpload"
+                           :modalUpload="modalUpload"
                            :modalUploadResource="modalUploadResource"
                            :modalUploadResourceFolder="modalUploadResourceFolder"
                            :modalChooseFiles="modalChooseFiles"/>
-    <sidebar v-if="isShowSidebar"
-             :status="isShowSidebar"
+    <sidebar v-if="isOfficialProcesses"
+             :status="isOfficialProcesses"
              :disable="disableStatusCount === 0"
-             @on-close="isShowSidebar = false"
-             @handle-access="isShowSidebar = false">
+             @on-close="isOfficialProcesses = !isOfficialProcesses"
+             @handle-access="handleAccessOfficial">
       <template #head-title>Назначить исполнителя</template>
       <template #button-title>Сохранить</template>
     </sidebar>
-
+    <sidebar v-if="isProcessesCompanyLevels"
+             :status="isProcessesCompanyLevels"
+             :disable="disableStatusCount === 0"
+             @on-close="isProcessesCompanyLevels = !isProcessesCompanyLevels"
+             @handle-access="handleAccessLevels">
+      <template #head-title>Назначить исполнителей</template>
+      <template #button-title>Сохранить</template>
+    </sidebar>
   </div>
 </template>
 
@@ -113,7 +121,6 @@ export default {
   },
   data() {
     return {
-      processModel: true,
       processDisable: true,
       regularModel: true,
       regularDisable: true,
@@ -121,7 +128,8 @@ export default {
       modalUploadResource: false,
       modalUploadResourceFolder: false,
       modalChooseFiles: false,
-      isShowSidebar: false,
+      isOfficialProcesses: false,
+      isProcessesCompanyLevels: false,
     }
   },
   computed: {
@@ -133,17 +141,33 @@ export default {
       editMode: 'getEditMode',
       folders: 'getFolders',
       levelsProcess: 'getLevelsProcess',
-      disableStatusCount: 'getDisableStatusCount'
+      disableStatusCount: 'getDisableStatusCount',
+      choosePeriod: 'getChoosePeriod',
+      levelsStructure: 'getLevelsStructure',
+      processModel: 'getProcessModel',
+      performerCount: 'getPerformerCount'
     }),
+    performersCounter() {
+      let count = 0
+      for (let i = 0; i < this.subdivisions.length; i++) {
+        this.subdivisions[i].numberPeople ? count += this.subdivisions[i].numberPeople : count += 1
+      }
+      this.setPerformerCount(count)
+      return count
+    },
   },
   methods: {
     ...mapMutations({
       setLevels: 'setWidgetLevels',
       setMessages: 'setNewMessages',
       setEditMode: 'setIsEditMode',
+      setPerformers: 'setCurrentPerformers',
+      setSubdivisions: 'setChooseSubdivisions',
+      setProcessModel: 'setChangeProcessModel',
+      setPerformerCount: 'setNewPerformerCount'
     }),
     changeStatusProcess() {
-      this.processModel = !this.processModel
+      this.setProcessModel(!this.processModel)
       this.processDisable = !this.processDisable
     },
     changeStatusRegular() {
@@ -152,29 +176,56 @@ export default {
     },
     createProcess() {
       if (!this.editMode) {
-        let newMessages = [{
-          text: 'Длинное название процесса которое занимает 2, а то и все 3 строки. Больше - троеточие, но здесь его нет.',
+        let newMessage = [{
+          text: 'Длинное название процесса которое занимает 2, а то и все 3 строки. ' +
+              'Больше - троеточие, но здесь его нет.',
           calendarIcon: true,
           date: '15 янв. 2021',
-          panel: true,
-          sortIcon: true
+          regular: this.regularModel,
+          sortIcon: true,
+          activePeriod: this.choosePeriod
         }, ...this.messages]
-        this.setMessages(newMessages)
+        this.setMessages(newMessage)
         this.$notify({text: 'Процесс успешно создан!', type: 'success', duration: 3000, speed: 500})
       } else {
         this.$notify({text: 'Изменения сохранены!', type: 'success', duration: 3000, speed: 500})
       }
       this.setEditMode(false)
-      this.$router.push({name: 'vx.process.company.processes'})
-
+      this.$router.push({name: 'vx.process.selected.process'})
+      this.setPerformers(this.subdivisions)
     },
     createProcessCancel() {
       this.setEditMode(false)
       this.$router.push({name: 'vx.process.company.processes'})
     },
     showSidebar() {
-      this.isShowSidebar = !this.isShowSidebar
-      this.setLevels(this.levelsProcess)
+      if (this.processModel) {
+        this.isOfficialProcesses = !this.isOfficialProcesses
+        this.setLevels(this.levelsProcess)
+      } else {
+        this.isProcessesCompanyLevels = !this.isProcessesCompanyLevels
+        this.setLevels(this.levelsStructure)
+      }
+    },
+    handleAccessOfficial() {
+      this.isOfficialProcesses = !this.isOfficialProcesses
+      let newSubdivisions = []
+      for (let i = 0; i < this.levelsProcess.length; i++) {
+        for (let j = 0; j < this.levelsProcess[i].data.length; j++) {
+          if (this.levelsProcess[i].data[j]) {
+            if (this.levelsProcess[i].data[j].checkedPosition === true) {
+              newSubdivisions.push({...this.levelsProcess[i].data[j], level: this.levelsProcess[i].level})
+            }
+            this.setSubdivisions(newSubdivisions)
+          }
+        }
+      }
+    },
+    handleAccessLevels() {
+      this.isProcessesCompanyLevels = !this.isProcessesCompanyLevels
+      let filteredSubdivisions = this.levelsStructure.filter(el => el.data[0].checkedPosition)
+      let newSubdivisions = filteredSubdivisions.map(el => ({...el.data[0], level: el.level}))
+      this.setSubdivisions(newSubdivisions)
     }
   }
 }

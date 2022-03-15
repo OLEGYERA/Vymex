@@ -11,11 +11,10 @@
                 @create="$router.push({name: 'vx.process.create.process'})"
     >
       <template #header-title>процессы</template>
-      <template #header-amount>{{messages[0] ? 12 : ''}}</template>
+      <template #header-amount>{{messages.length}}</template>
     </header-add>
     <header-add v-else @create="$router.push({name: 'vx.process.create.process'})">
       <template #header-title>процессы</template>
-      <template #header-amount>{{messages[0] ? 12 : ''}}</template>
     </header-add>
     <div v-if="messages[0]">
     <process-message v-for="(message, key) in messages"

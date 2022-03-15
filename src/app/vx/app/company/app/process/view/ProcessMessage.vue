@@ -1,9 +1,9 @@
 <template>
   <div class="container-process-message">
-      <div class="text-group-text" @click="clickedMessage">{{ message.text }}</div>
-      <process-event v-if="message.panel"
+      <div class="text-group-text" @click="clickedMessage">{{ createElipsis }}</div>
+      <process-event v-if="message.regular"
                      :message="message"/>
-      <icon-points-vertical @click.native="actionListStatus=true"/>
+      <icon-points-vertical @click.native="actionListStatus = true"/>
       <div class="action-list-outside" v-if="actionListStatus" @click="actionListStatus = false"></div>
       <action-list :status="actionListStatus" :actions="items" @onList="changePage"/>
     </div>
@@ -47,6 +47,22 @@ export default {
       this.$router.push({name: 'vx.process.selected.process'})
     }
   },
+  computed:{
+    createElipsis(){
+      let ArrayCounter = this.message.text.split('')
+      if(ArrayCounter.length > 85){
+        let ArrayCountSlice = ArrayCounter.slice(0,85)
+        let finalString = ''
+        for(let i = 0; i < ArrayCountSlice.length; i++){
+          finalString += ArrayCountSlice[i]
+        }
+        finalString += '...'
+        return finalString
+      } else {
+        return this.message.text
+      }
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>
@@ -71,15 +87,14 @@ export default {
       line-height: rem(20);
       color: #FFF;
       margin: 0 12px;
-      -ms-text-overflow: ellipsis;
-      -o-text-overflow: ellipsis;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      -webkit-line-clamp: 2;
-      line-clamp: 2;
-      display: -webkit-box;
-      word-wrap: break-word;
-      -webkit-box-orient: vertical;
+      //-ms-text-overflow: ellipsis;
+      //-o-text-overflow: ellipsis;
+      //text-overflow: ellipsis;
+      //overflow: hidden;
+      //-webkit-line-clamp: 2;
+      //display: -webkit-box;
+      //word-wrap: break-word;
+      //-webkit-box-orient: vertical;
     }
   }
 

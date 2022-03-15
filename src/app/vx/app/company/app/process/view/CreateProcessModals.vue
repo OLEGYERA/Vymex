@@ -1,20 +1,8 @@
 <template>
   <div>
-    <modal
-        class="modal-upload-resource"
-        :status="modalUploadResource"
-        @onClose="modalUploadResource = !modalUploadResource">
-      <template #title>Загрузить файлы из "Ресурсы"</template>
-      <template #description>Файлы которые вы выберете будут прикреплены к ресурсу</template>
-      <template #content>
-        <div class="modal-upload-resource-text">Ресурсы /</div>
-        <folder v-for="(folder, folderKey) in resourceFolders" :folder="folder" :key="folderKey" @getId="changePage"/>
-      </template>
-      <template #button-accept>Загрузить</template>
-    </modal>
-    <modal
-        :status="modalUpload"
-        @onClose="modalUpload = !modalUpload">
+    <modal :disable="true"
+           :status="modalUpload"
+           @onClose="$emit('closeModalUpload')">
       <template #title>Загрузить файлы</template>
       <template #description>Выберете вариант загрузки файлов</template>
       <template #content>
@@ -31,11 +19,23 @@
       </template>
       <template #button-accept>Загрузить</template>
     </modal>
-    <modal
-        @onOk="chooseFiles"
-        class="upload-files-recourse-folder"
-        :status="modalUploadResourceFolder"
-        @onClose="modalUploadResourceFolder = !modalUploadResourceFolder">
+    <modal :disable="true"
+           class="modal-upload-resource"
+           :status="modalUploadResource"
+           @onClose="modalUploadResource = !modalUploadResource">
+      <template #title>Загрузить файлы из "Ресурсы"</template>
+      <template #description>Файлы которые вы выберете будут прикреплены к ресурсу</template>
+      <template #content>
+        <div class="modal-upload-resource-text">Ресурсы /</div>
+        <folder v-for="(folder, folderKey) in resourceFolders" :folder="folder" :key="folderKey" @getId="changePage"/>
+      </template>
+      <template #button-accept>Загрузить</template>
+    </modal>
+    <modal :disable="checkedFile"
+           @onOk="chooseFiles"
+           class="upload-files-recourse-folder"
+           :status="modalUploadResourceFolder"
+           @onClose="modalUploadResourceFolder = !modalUploadResourceFolder">
       <template #title>Загрузить файлы из "Ресурсы"</template>
       <template #description>Файлы которые вы выберете будут прикреплены к ресурсу</template>
       <template #content>
@@ -120,18 +120,25 @@ export default {
     ...mapGetters({
       resourceFolders: 'getResourceFolders',
       newFolder: 'getNewFolder',
-      filesToUpload: 'getFilesToUpload'
+      filesToUpload: 'getFilesToUpload',
     }),
+    checkedFile() {
+      let isCheck = this.filesToUpload.filter(el => el.checked)
+      if (isCheck.length) {
+        return false
+      } else {
+        return true
+      }
+    }
   },
   methods: {
     ...mapMutations({
       setEditMode: 'setIsEditMode',
       setFilesToUpload: 'setNewFilesToUpload',
-      setFiles: 'setNewFiles'
+      setFiles: 'setNewFiles',
     }),
     changeModal() {
       this.modalUploadResource = !this.modalUploadResource
-      this.modalUpload = !this.modalUpload
     },
     changePage(key) {
       if (key.id === 1) {
@@ -150,12 +157,12 @@ export default {
     },
     saveFiles() {
       this.setFiles(this.images)
-      this.modalChooseFiles = !this.modalChooseFiles
-      this.regularModel = !this.regularModel
-      this.regularDisable = !this.regularDisable
-      this.$notify({text: 'Файл успешно загружен!', type: 'success', duration: 3000, speed: 500})
+      this.$emit('closeModalUpload')
+      if (this.images.length) {
+        this.$notify({text: 'Файл успешно загружен!', type: 'success', duration: 3000, speed: 500})
+      }
     },
-    modalChooseFilesClose(){
+    modalChooseFilesClose() {
       this.modalChooseFiles = !this.modalChooseFiles
       this.modalUploadResourceFolder = !this.modalUploadResourceFolder
     }
@@ -221,6 +228,7 @@ export default {
       justify-content: space-between;
       padding-bottom: rem(43);
     }
+
     .modal-base-content {
       margin-bottom: rem(31);
     }
