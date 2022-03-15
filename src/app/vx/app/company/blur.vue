@@ -6,7 +6,7 @@
 			<div class="blur-content">
 				<div class="blur-content-head">
 					<title-caps>Получатель доли</title-caps>
-					<button-add />
+					<button-add @click.native="show()" />
 				</div>
 				<div class="blur-content-item">
 					<icon-process />
@@ -44,6 +44,8 @@ import InputBase from '@Facade/Input/Base'
 import ButtonSecondary from "@Facade/Button/Secondary"
 import ButtonBase from "@Facade/Button/Base"
 
+import {mapMutations} from 'vuex'
+
 export default {
 	name: 'vx.co.founder.blur',
 	components: {
@@ -63,6 +65,11 @@ export default {
 			available: 74,
 			share: null
 		}
+	},
+	methods: {
+		...mapMutations({
+			show: 'Users/show',
+		})
 	},
 	computed: {
 		remainder() {
