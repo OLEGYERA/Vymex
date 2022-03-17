@@ -34,7 +34,7 @@ import ButtonBase from '@Facade/Button/Base'
 import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd";
 import IconAdd from "@Icon/Add";
 import IconEye from "@Icon/Eye";
-import {mapGetters} from "vuex";
+import {mapGetters, mapMutations} from "vuex";
 
 export default {
   name: 'vx.process.main',
@@ -55,10 +55,12 @@ export default {
     })
   },
   methods: {
+      ...mapMutations({
+        setProcessModel: 'setChangeProcessModel',
+      }),
     changePage({id}) {
-      if (id === 2) {
+        id === 2 ? this.setProcessModel(false) : this.setProcessModel(true)
         this.$router.push({name: 'vx.process.company.processes'})
-      }
     }
   },
 }

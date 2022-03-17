@@ -9,7 +9,7 @@
           class="textarea"
           v-model="textAreaModel"
           :maxlength="maxLength"
-          rows="1"
+          :rows="numRows ? numRows : 1"
           ref="facade-input-text-area-ref"
           @input="resize($event)"
           :placeholder="placeholder">
@@ -31,6 +31,7 @@
       TitleCaption
     },
     props: {
+      numRows: Number,
       model: String,
       placeholder: String,
       count: Boolean,
@@ -47,6 +48,7 @@
       resize(e) {
         e.target.style.height = 'auto';
         e.target.style.height = `${e.target.scrollHeight}px`
+        this.$emit('text-area-model', this.textAreaModel)
       },
       focusInput(){
         if(!this.disable) this.$refs['facade-input-text-area-ref'].focus()
@@ -54,7 +56,6 @@
     },
     mounted() {
       setTimeout(() => this.$refs['facade-input-text-area-ref'].style.height = `${this.$refs['facade-input-text-area-ref'].scrollHeight}px`, 200)
-      console.log(this.$refs['facade-input-text-area-ref'].scrollHeight)
     }
   }
 </script>

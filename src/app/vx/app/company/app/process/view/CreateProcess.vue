@@ -11,13 +11,15 @@
                   :disable="!processDisable" @onClick="changeStatusProcess">
         <template #title>Процессы для уровней компании</template>
       </radio-slot>
-      <input-base v-if="processModel" :placeholder="'Серийный номер'"/>
+      <input-base v-if="processModel" @onInput="inputSerialNumber = $event" :placeholder="'Серийный номер'"/>
       <text-area v-else
-                 :textAreaValue="editMode ? messages[processIndex].text : ''"
+                 @text-area-model="textAreaTitle = $event"
                  :max-length="1000"
                  placeholder="Название процесса"
                  labeled/>
       <text-area :max-length="1000"
+                 @text-area-model="textAreaDescription = $event"
+                 num-rows="4"
                  class="text-area-description"
                  placeholder="Описание"
                  labeled
@@ -130,6 +132,9 @@ export default {
       modalChooseFiles: false,
       isOfficialProcesses: false,
       isProcessesCompanyLevels: false,
+      textAreaDescription: '',
+      textAreaTitle: '',
+      inputSerialNumber: ''
     }
   },
   computed: {
@@ -177,13 +182,13 @@ export default {
     createProcess() {
       if (!this.editMode) {
         let newMessage = [{
-          text: 'Длинное название процесса которое занимает 2, а то и все 3 строки. ' +
-              'Больше - троеточие, но здесь его нет.',
+          text: this.textAreaTitle,
+          description:  this.textAreaDescription,
           calendarIcon: true,
           date: '15 янв. 2021',
           regular: this.regularModel,
           sortIcon: true,
-          activePeriod: this.choosePeriod
+          activePeriod: this.choosePeriod,
         }, ...this.messages]
         this.setMessages(newMessage)
         this.$notify({text: 'Процесс успешно создан!', type: 'success', duration: 3000, speed: 500})

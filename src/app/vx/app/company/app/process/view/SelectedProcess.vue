@@ -12,10 +12,7 @@
       <icon-points-vertical/>
     </div>
     <div class="selected-process-text">{{ messages[indexProcess].text }}</div>
-    <div class="selected-process-description">
-      Простой для понимания документ - документ, не требующий усилий для чтения
-      и понимания, т.е. при изложении материала не используя сложные предложения
-    </div>
+    <div class="selected-process-description">{{messages[indexProcess].description}}</div>
     <div class="selected-process-body">
       <div class="body-performers">
         <header-add>

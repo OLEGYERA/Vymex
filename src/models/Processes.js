@@ -54,9 +54,9 @@ export default {
             // },
         ],
         performers: [
-            {avatar: require('@/assets/img/icons/avatar.svg'), position: 'Должность', level: 2},
-            {avatar: require('@/assets/img/icons/avatar.svg'), position: 'Должность', level: 3},
-            {numberPeople: 8, position: 'Должность', level: 4},
+            // {avatar: require('@/assets/img/icons/avatar.svg'), position: 'Должность', level: 2},
+            // {avatar: require('@/assets/img/icons/avatar.svg'), position: 'Должность', level: 3},
+            // {numberPeople: 8, position: 'Должность', level: 4},
         ],
         periods: [
             {title: 'Каждый день', isActive: true},
