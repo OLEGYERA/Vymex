@@ -24,7 +24,10 @@
     />
     </div>
     <div v-else class="empty-processes">
-      <img class="empty-processes-image" src="@/assets/img/my/empty-process.svg">
+      <div class="image-circle-big">
+      <img src="@/assets/img/my/empty-process.svg">
+      </div>
+      <div class="image-circle-small"></div>
       Процессов нет
     </div>
   </div>
@@ -93,8 +96,24 @@ export default {
     font-size: 17px;
     line-height: 22px;
     color: $grey-scale-300;
-    .empty-processes-image {
-      margin-bottom: 8px;
+    .image-circle-big{
+      position: relative;
+      height: 36px;
+      width: 36px;
+      border-radius: 18px;
+      background: linear-gradient(45deg, $grey-scale-300 40%, #69C0FF 80%);
+      z-index: 1;
+      margin-bottom: 4px;
+    }
+    .image-circle-small{
+      position: absolute;
+      height: 30px;
+      width: 30px;
+      border-radius: 15px;
+      background: #69C0FF;
+      margin-bottom: 34px;
+      margin-left: 22px;
+      z-index: 0;
     }
   }
 }

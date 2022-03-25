@@ -7,7 +7,7 @@
           <title-base>Процессы</title-base>
           <div class="header-container-icons">
             <icon-eye class="header-container-icon"/>
-            <icon-add class="header-container-icon"/>
+<!--            <icon-add class="header-container-icon"/>-->
           </div>
         </div>
         <text-base>Тут храняться все процессы в вашей компании</text-base>

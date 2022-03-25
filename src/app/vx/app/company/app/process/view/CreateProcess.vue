@@ -4,23 +4,22 @@
     <title-base>Создать процесс</title-base>
     <div class="create-process-view-main">
       <radio-slot :model="processModel"
-                  :disable="processDisable" @onClick="changeStatusProcess">
+                  :disable="!processDisable" @onClick="changeStatusProcess">
         <template #title>Процессы должностного лица</template>
       </radio-slot>
       <radio-slot :model="!processModel"
-                  :disable="!processDisable" @onClick="changeStatusProcess">
+                  :disable="processDisable" @onClick="changeStatusProcess">
         <template #title>Процессы для уровней компании</template>
       </radio-slot>
-      <input-base v-if="processModel" @onInput="inputSerialNumber = $event" :placeholder="'Серийный номер'"/>
-      <text-area v-else
-                 @text-area-model="textAreaTitle = $event"
-                 :max-length="1000"
-                 placeholder="Название процесса"
-                 labeled/>
+      <text-area
+          @text-area-model="textAreaTitle = $event"
+          :max-length="1000"
+          placeholder="Название процесса"
+          class="text-area-title"
+          labeled/>
       <text-area :max-length="1000"
                  @text-area-model="textAreaDescription = $event"
                  num-rows="4"
-                 class="text-area-description"
                  placeholder="Описание"
                  labeled
                  count/>
@@ -49,11 +48,12 @@
       <process-alert/>
       <header-add
           @create="showSidebar"
-          :class="subdivisions[0] ? '' : 'hide-add-icon'">
+          :class="processModel && subdivisions[0] ? 'hide-add-icon' : ''
+          || !processModel && subdivisions.length > 3 ? 'hide-add-icon' : ''">
         <template #header-title>исполнители</template>
         <template #header-amount>{{ subdivisions[0] ? performersCounter : '' }}</template>
       </header-add>
-      <process-performer class="view-main-performer" :performers="subdivisions"/>
+      <process-performer class="view-main-performer" @show-sidebar="showSidebar" :performers="subdivisions"/>
     </div>
     <div class="create-resource-buttons">
       <button-secondary class="create-resource-button"
@@ -70,7 +70,7 @@
     <sidebar v-if="isOfficialProcesses"
              :status="isOfficialProcesses"
              :disable="disableStatusCount === 0"
-             @on-close="isOfficialProcesses = !isOfficialProcesses"
+             @on-close="handleAccessOfficial"
              @handle-access="handleAccessOfficial">
       <template #head-title>Назначить исполнителя</template>
       <template #button-title>Сохранить</template>
@@ -78,7 +78,7 @@
     <sidebar v-if="isProcessesCompanyLevels"
              :status="isProcessesCompanyLevels"
              :disable="disableStatusCount === 0"
-             @on-close="isProcessesCompanyLevels = !isProcessesCompanyLevels"
+             @on-close="handleAccessLevels"
              @handle-access="handleAccessLevels">
       <template #head-title>Назначить исполнителей</template>
       <template #button-title>Сохранить</template>
@@ -89,7 +89,6 @@
 <script>
 import Comeback from "@Facade/Navigation/Comeback";
 import TitleBase from "@Facade/Title/Base";
-import InputBase from "@Facade/Input/Base";
 import TextArea from "@Facade/Input/TextArea";
 import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd";
 import ButtonSecondary from "@Facade/Button/Secondary";
@@ -108,7 +107,6 @@ export default {
   components: {
     Comeback,
     TitleBase,
-    InputBase,
     TextArea,
     HeaderAdd,
     ButtonSecondary,
@@ -134,7 +132,6 @@ export default {
       isProcessesCompanyLevels: false,
       textAreaDescription: '',
       textAreaTitle: '',
-      inputSerialNumber: ''
     }
   },
   computed: {
@@ -150,7 +147,8 @@ export default {
       choosePeriod: 'getChoosePeriod',
       levelsStructure: 'getLevelsStructure',
       processModel: 'getProcessModel',
-      performerCount: 'getPerformerCount'
+      performerCount: 'getPerformerCount',
+      levels: 'getLevels'
     }),
     performersCounter() {
       let count = 0
@@ -169,7 +167,8 @@ export default {
       setPerformers: 'setCurrentPerformers',
       setSubdivisions: 'setChooseSubdivisions',
       setProcessModel: 'setChangeProcessModel',
-      setPerformerCount: 'setNewPerformerCount'
+      setPerformerCount: 'setNewPerformerCount',
+      setDisableStatusCount: 'setCheckDisableStatusCount'
     }),
     changeStatusProcess() {
       this.setProcessModel(!this.processModel)
@@ -183,7 +182,7 @@ export default {
       if (!this.editMode) {
         let newMessage = [{
           text: this.textAreaTitle,
-          description:  this.textAreaDescription,
+          description: this.textAreaDescription,
           calendarIcon: true,
           date: '15 янв. 2021',
           regular: this.regularModel,
@@ -215,22 +214,24 @@ export default {
     handleAccessOfficial() {
       this.isOfficialProcesses = !this.isOfficialProcesses
       let newSubdivisions = []
-      for (let i = 0; i < this.levelsProcess.length; i++) {
-        for (let j = 0; j < this.levelsProcess[i].data.length; j++) {
-          if (this.levelsProcess[i].data[j]) {
-            if (this.levelsProcess[i].data[j].checkedPosition === true) {
-              newSubdivisions.push({...this.levelsProcess[i].data[j], level: this.levelsProcess[i].level})
+      for (let i = 0; i < this.levels.length; i++) {
+        for (let j = 0; j < this.levels[i].data.length; j++) {
+          if (this.levels[i].data[j]) {
+            if (this.levels[i].data[j].checkedPosition === true) {
+              newSubdivisions.push({...this.levels[i].data[j], level: this.levels[i].level})
             }
             this.setSubdivisions(newSubdivisions)
           }
         }
       }
+      this.setDisableStatusCount(0)
     },
     handleAccessLevels() {
       this.isProcessesCompanyLevels = !this.isProcessesCompanyLevels
-      let filteredSubdivisions = this.levelsStructure.filter(el => el.data[0].checkedPosition)
+      let filteredSubdivisions = this.levels.filter(el => el.data[0].checkedPosition === true)
       let newSubdivisions = filteredSubdivisions.map(el => ({...el.data[0], level: el.level}))
       this.setSubdivisions(newSubdivisions)
+      this.setDisableStatusCount(0)
     }
   }
 }
@@ -264,18 +265,8 @@ export default {
       margin-top: rem(16);
     }
 
-    .facade-text-area::v-deep {
-      margin-bottom: rem(8);
-
-      .textarea-title {
-        font-weight: 400;
-        font-size: rem(14);
-        line-height: rem(16);
-      }
-
-      .textarea-container {
-        min-height: 96px;
-      }
+    .text-area-title.facade-input-text-area::v-deep {
+      margin-bottom: rem(32);
     }
 
     .view-main-process-title.facade-text-area {
@@ -316,6 +307,7 @@ export default {
 
     .create-resource-button {
       width: 222px;
+      margin-bottom: rem(80);
     }
 
     .facade-button-base::v-deep {
@@ -332,6 +324,12 @@ export default {
   .context-main-position {
     color: $grey-scale-500;
     margin-left: 25px;
+  }
+}
+
+.hide-add-icon.facade-header-add::v-deep {
+  .icon-add {
+    display: none;
   }
 }
 </style>

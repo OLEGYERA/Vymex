@@ -35,8 +35,8 @@ export default {
                 id: 2,
                 title: 'Процессы компании',
                 content: {
-                    folders: 1,
-                    processes: 12,
+                    folders: 0,
+                    processes: null,
                 },
                 group: null,
                 trash: null
@@ -184,7 +184,8 @@ export default {
                 level: 1, showContext: true, data: [
                     {
                         avatar: require('@/assets/img/icons/avatar.svg'),
-                        position: "CEO", checkedPosition: false, checkboxType: 2
+                        position: "CEO", checkedPosition: false, checkboxType: 2,
+                        actionListStatus: false
                     },
                 ]
             },
@@ -193,39 +194,48 @@ export default {
                 level: 3, showContext: true, data: [
                     {
                         avatar: require('@/assets/img/icons/avatar.svg'),
-                        position: "TTFO", checkedPosition: false, checkboxType: 2
+                        position: "TTFO", checkedPosition: false, checkboxType: 2,
+                        actionListStatus: false
                     },
                 ]
             },
             {
                 level: 4, showContext: true, data: [
                     {
-                        position: "Должность", checkedPosition: false, checkboxType: 2, numberPeople: 2
+                        position: "Должность", checkedPosition: false, checkboxType: 2, numberPeople: 2,
+                        actionListStatus: false
                     },
                     {
-                        position: "Должность", checkedPosition: false, checkboxType: 2, numberPeople: 4
+                        position: "Должность", checkedPosition: false, checkboxType: 2, numberPeople: 4,
+                        actionListStatus: false
                     },
                     {
-                        position: "Должность", checkedPosition: false, checkboxType: 2, numberPeople: 7
+                        position: "Должность", checkedPosition: false, checkboxType: 2, numberPeople: 7,
+                        actionListStatus: false
                     },
                     {
-                        position: "Должность", checkedPosition: false, checkboxType: 2, numberPeople: 2
+                        position: "Должность", checkedPosition: false, checkboxType: 2, numberPeople: 2,
+                        actionListStatus: false
                     }
                 ]
             },
         ],
         levelsStructure: [
             { level: 1, showContext: true, data: [
-                {position: "1 Уровень", checkedPosition: false, checkboxType: 1, numberPeople: 1},
+                {position: "1 Уровень", checkedPosition: false, checkboxType: 1,
+                    numberPeople: 1, actionListStatus: false},
                 ] },
             { level: 2, showContext: true, data: [
-                    {position: "2 Уровень", checkedPosition: false, checkboxType: 1, numberPeople: 2},
+                    {position: "2 Уровень", checkedPosition: false, checkboxType: 1,
+                        numberPeople: 2, actionListStatus: false},
                 ] },
             { level: 3, showContext: true, data: [
-                    {position: "3 Уровень", checkedPosition: false, checkboxType: 1, numberPeople: 8},
+                    {position: "3 Уровень", checkedPosition: false, checkboxType: 1,
+                        numberPeople: 8, actionListStatus: false},
                 ] },
             { level: 4, showContext: true, data: [
-                    {position: "4 Уровень", checkedPosition: false, checkboxType: 1, numberPeople: 2},
+                    {position: "4 Уровень", checkedPosition: false, checkboxType: 1,
+                        numberPeople: 2, actionListStatus: false},
                 ] },
         ]
     },

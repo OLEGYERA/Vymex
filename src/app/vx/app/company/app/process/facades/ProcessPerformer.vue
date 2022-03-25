@@ -16,12 +16,26 @@
         </div>
         <span class="context-main-position">{{ performer.position }}</span>
       </div>
-      <icon-points-vertical @click.native="actionListStatus=true"/>
+      <div @click="performer.actionListStatus = !performer.actionListStatus">
+        <icon-points-vertical/>
+        <transition>
+          <action-list
+              class="process-alert-context"
+              @onList="$emit('show-sidebar')"
+              :status="performer.actionListStatus"
+              :actions="items"
+              v-if="performer.actionListStatus"
+          />
+        </transition>
+      </div>
+<!--          <div class="action-list-outside" v-if="performer.actionListStatus"-->
+<!--               @click="performer.actionListStatus = false"></div>-->
     </div>
   </div>
 </template>
 
 <script>
+import ActionList from "@Facade/Modal/ActionList"
 
 export default {
   name: 'vx.process.facade.process.performer',
@@ -31,7 +45,11 @@ export default {
   data() {
     return {
       actionListStatus: false,
+      items: ['Заменить']
     }
+  },
+  components: {
+    ActionList
   },
 }
 </script>
@@ -48,6 +66,7 @@ export default {
     border-radius: 8px;
     margin-top: 8px;
     padding: 8px;
+    position: relative;
 
     .performer-context-main {
       display: inherit;
@@ -81,6 +100,14 @@ export default {
         line-height: rem(20);
       }
     }
+
+    .facade-modal-action-list {
+      position: absolute;
+      top: -73px;
+      z-index: 1;
+      right: 106px;
+      transform: translateY(100%);
+    }
   }
 
   .icon-points-vertical {
@@ -90,5 +117,14 @@ export default {
 
 .icon {
   color: $grey-scale-300;
+}
+.action-list-outside {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  cursor: auto;
 }
 </style>

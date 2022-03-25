@@ -47,18 +47,29 @@ export default {
   },
     computed: {
     ...mapGetters({
+      levels: 'getLevels',
       disableStatusCount: 'getDisableStatusCount'
     }),
   },
   methods: {
         ...mapMutations({
-      setDisableStatusCount: 'setCheckDisableStatusCount'
-    }),
-    changeStatusPosition(i) {
-      this.data[i].checkedPosition = !this.data[i].checkedPosition
-      this.data[i].checkedPosition === true 
-      ? this.setDisableStatusCount(this.disableStatusCount + 1) 
-      : this.setDisableStatusCount(this.disableStatusCount - 1)
+          setDisableStatusCount: 'setCheckDisableStatusCount',
+          setLevels: 'setWidgetLevels'
+        }),
+    changeStatusPosition(index) {
+      if(this.data[index].checkboxType === 2){
+        let newLevels = this.levels.map(el => ({...el, data: el.data.map(el => ({...el, checkedPosition: false}))}))
+        this.setLevels(newLevels)
+      }
+      let newLevels = this.levels.map((el, i) => i === this.level - 1
+            ? ({...el, data: el.data.map((el, i) => i === index
+                  ? ({...el, checkedPosition: !el.checkedPosition})
+                  : el)})
+            : el)
+        this.setLevels(newLevels)
+      this.data[index].checkedPosition === true
+          ? this.setDisableStatusCount(this.disableStatusCount + 1)
+          : this.setDisableStatusCount(this.disableStatusCount - 1)
     },
   }
 }

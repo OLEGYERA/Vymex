@@ -69,8 +69,8 @@
       <template #title>Загрузить из приложения</template>
       <template #description>Выбранные файлы будут прикреплены к ресурсу</template>
       <template #content>
-        <header-add>
-          <template #header-title>изображения</template>
+        <header-add @create="modalChooseFilesClose">
+          <template #header-title>файлы</template>
           <template #header-amount>{{ images.length }}</template>
         </header-add>
         <file class="upload-from-app-file" v-for="(file, fileKey) in images" :file="file" :key="fileKey"/>
@@ -124,11 +124,8 @@ export default {
     }),
     checkedFile() {
       let isCheck = this.filesToUpload.filter(el => el.checked)
-      if (isCheck.length) {
-        return false
-      } else {
-        return true
-      }
+      if (isCheck.length) return false
+      else return true
     }
   },
   methods: {
@@ -165,7 +162,7 @@ export default {
     modalChooseFilesClose() {
       this.modalChooseFiles = !this.modalChooseFiles
       this.modalUploadResourceFolder = !this.modalUploadResourceFolder
-    }
+    },
   }
 }
 </script>
