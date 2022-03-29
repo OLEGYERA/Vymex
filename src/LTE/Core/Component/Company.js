@@ -16,6 +16,7 @@ class Company extends Binder{
 
   async create() {
     const CreatorData = this.$store.name('Company').get('Creator');
+    console.log(CreatorData, 'CreatorData')
     let data = serialize(
       utf8ToArray(CreatorData.name),
       utf8ToArray(CreatorData.link),
@@ -31,6 +32,7 @@ class Company extends Binder{
       numberToArray(CreatorData.logo),
       objectToArray(CreatorData.checkedActivities),
     );
+    console.log(data, 'data')
     this.$socket.emit('listener', await encrypt(...arguments[1], data));
   }
   async createRes() {

@@ -1,11 +1,11 @@
 <template>
   <div class="facade-modal-action-list" v-if="status">
-    <div class="action-list-substrate" @click="handleClose"></div>
+    <div class="action-list-substrate" @click.stop="handleClose"></div>
     <div class="action-list-body">
-      <div v-for="(action, actionKey) in actions" :key="actionKey" class="action-item" @click="handleClickOnItem(actionKey)">
+      <div v-for="(action, actionKey) in actions" :key="actionKey" class="action-item" @click.stop="handleClickOnItem(actionKey)">
         {{ action }}
       </div>
-      <div class="action-item action-item-del" @click="handleClickOnDelete">
+      <div class="action-item action-item-del" v-if="!disableDelete" @click.stop="handleClickOnDelete">
         <slot name="del-title">Удалить</slot>
       </div>
     </div>
@@ -26,6 +26,11 @@
       status: {
         type: Boolean,
         required: true
+      },
+      disableDelete: {
+        type: Boolean,
+        default: () => false
+
       }
     },
     methods: {

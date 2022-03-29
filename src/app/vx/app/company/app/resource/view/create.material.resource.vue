@@ -2,19 +2,24 @@
   <div class="resource-create-material-resource-view">
     <comeback @onClick="saveChanges"/>
     <title-base>Создать ресурс</title-base>
+
     <div class="resource-main-plate">
-      <input-base :model="newResource.name" labeled :placeholder="'Название'" @onInput="setValue('name', $event)"/>
-      <input-base :model="newResource.number" labeled :placeholder="'Серийный номер'" @onInput="setValue('number', $event)"/>
-      <text-area :model="newResource.description" :max-length="1000" placeholder="Описание" labeled @onInput="setValue('description', $event)"/>
-      <title-caps>Стоимость ресурса</title-caps>
-      <input-price :model="newResource.price"/>
+      <input-base :model="newResource.name" labeled :placeholder="'Название'" @onInput="setCreatorMaterial(['name', $event])"/>
+      <input-base :model="newResource.number" labeled :placeholder="'Серийный номер'" @onInput="setCreatorMaterial(['number', $event])"/>
+      <input-textarea :model="newResource.description" :max-length="1000" placeholder="Описание" labeled @onInput="setCreatorMaterial(['description', $event])"/>
+      <title-caps class="resource-price">Стоимость ресурса</title-caps>
+      <input-price :model="newResource.cost" @onInput="setCreatorMaterial(['cost', $event])"/>
+
       <header-add class="user" @create="showSidebar()">
         <template #header-title>Пользователь</template>
       </header-add>
+      <div class="resource-user">
+        <unit-setting-ui v-if="Object.keys(user).length !== 0" :unit-level="user.unitLevel" :unit-data="user.unitData" :unit-position="user.unitPosition"/>
+      </div>
 
-      <assign-user-ui :levels="levels" :status="assignStatus"/>
+      <assign-user-ui :levels="levels" :status="assignStatus" @chooseUser="setWorker"/>
 
-      <modal-base :status="modalStatus" @onClose="modalStatus=false">
+      <modal-base :status="modalStatus" @onClose="cancelUser" @onOk="confirmWorker">
         <template #title>
           Назначить пользователя
         </template>
@@ -24,27 +29,27 @@
         <template #content>
           <title-caps class="modal-subtitle">Ресурс</title-caps>
           <div class="resource-plate">
-            <title-sub>ddd</title-sub>
-            <title-caps>ddd</title-caps>
+            <title-sub>{{ newResource.name }}</title-sub>
+            <title-caps>{{newResource.number}}</title-caps>
           </div>
           <title-caps class="modal-subtitle">Пользователь</title-caps>
-          <div class="user-plate" :class="{level1: levels.level===1, level2: levels.level===2, level3: levels.level===3, level4: levels.level===4}">
-            <title-sub></title-sub>
-            <title-caps></title-caps>
-          </div>
+          <unit-ui :unit-level="selectedUser.unitLevel" :unit-data="selectedUser.unitData" :unit-position="selectedUser.unitPosition"/>
         </template>
         <template #button-accept>
           Подтвердить
         </template>
       </modal-base>
+
       <header-add class="owner">
         <template #header-title>Владелец</template>
-        <template #header-amount>1</template>
+        <template #header-amount>{{currentCompany ? '1' : ''}}</template>
       </header-add>
-      <company-ui :company="newResource.owner"/>
+      <company-ui :company="currentCompany.base"/>
+
       <header-add class="" @create="modalDownload=true">
         <template #header-title>изображения</template>
       </header-add>
+
       <modal-base :status="modalDownload" @onClose="modalDownload=false" class="modal-download" @onOk="modalDownload=false">
         <template #title>
           Загрузить файлы
@@ -54,6 +59,7 @@
         </template>
         <template #content>
           <title-caps class="modal-subtitle">изображения</title-caps>
+          <input type="file" class="file"/>
           <div class="download-plate">
             <div class="button-add">
               <icon-add/>
@@ -66,18 +72,20 @@
         </template>
       </modal-base>
     </div>
+
     <div class="create-resource-buttons">
       <button-secondary class="create-resource-button" @click.native="saveChanges">
         Отмена
       </button-secondary>
-      <button-base class="create-resource-button" :disable="buttonDisable"  @onClick="$router.push({name: 'vx.resource.material.resources'})">
+      <button-base class="create-resource-button" @onClick="createResource()">
         Создать ресурс
       </button-base>
     </div>
+
     <modal-base :status="modalSaveStatus"
-                @onClose="$router.push({name: 'vx.resource.material.resources'})"
+                @onClose="onClose"
                 class="modal-save"
-                @onOk="$router.push({name: 'vx.resource.material.resources'})">
+                @onOk="onOk">
       <template #title>
         Сохранить изменения?
       </template>
@@ -105,7 +113,6 @@
   import Comeback from "@Facade/Navigation/Comeback";
   import TitleBase from "@Facade/Title/Base";
   import InputBase from "@Facade/Input/Base"
-  import TextArea from "@Facade/Input/TextArea"
   import TitleCaps from "@Facade/Title/Caps"
   import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd"; /// костыль
   import ButtonSecondary from "@Facade/Button/Secondary"
@@ -116,8 +123,9 @@
   import IconAdd from "@Icon/Add"
   import TextBase from "@Facade/Text/Base";
   import TitleCaption from "@Facade/Title/Caption"
+  import InputTextarea from "@Facade/Input/TextArea"
 
-  import {AssignUserUi, CompanyUi} from '@Providers'
+  import {AssignUserUi, CompanyUi, UnitUi, UnitSettingUi} from '@Providers'
 
   import {mapGetters, mapMutations} from "vuex";
 
@@ -127,7 +135,6 @@
       Comeback,
       TitleBase,
       InputBase,
-      TextArea,
       TitleCaps,
       HeaderAdd,
       CompanyUi,
@@ -139,34 +146,42 @@
       TitleSub,
       IconAdd,
       TextBase,
-      TitleCaption
+      TitleCaption,
+      InputTextarea,
+      UnitUi,
+      UnitSettingUi
     },
     data() {
       return{
         modalStatus: false,
         modalSaveStatus: false,
         modalDownload: false,
-        newResource: {
-          name: null,
-          number: null,
-          description: null,
-          user: {
-            name: null,
-            position: null,
-            level: null,
-            avatar: null
-          },
-          owner: {
-            name: 'Arxel',
-            avatar: require('@/assets/img/my/process.svg'),
-          },
-          price: null
-        }
+        selectedUser: {}
       }
+    },
+    computed:{
+      ...mapGetters({
+        levels: 'Resources/levels',
+        assignStatus: 'Resources/sidebarAssignStatus',
+        newResource: 'Resources/getCreatorMaterialResource',
+        currentCompany: 'Company/getCurrentCompany',
+        structure: 'Resources/getStructure',
+        user: 'Resources/chosenUser'
+      }),
+      // buttonDisable(){
+      //   if(!this.newResource.name && !this.newResource.number){
+      //     return true
+      //   } else {
+      //     return true
+      //   }
+      // }
     },
     methods: {
       ...mapMutations({
         showSidebar: 'Resources/showSidebarAssign',
+        setCreatorMaterial: 'Resources/setCreatorMaterialResource',
+        clear: 'Resources/clear',
+        getConfirmedUser: 'Resources/getConfirmedUser'
       }),
       setValue(stage, data){
         if(data) {
@@ -179,20 +194,55 @@
         if(this.newResource.name && this.newResource.number){
           this.modalSaveStatus=true
         } else{
+          this.clear()
+          this.getConfirmedUser({})
           this.$router.push({name: 'vx.resource.material.resources'})
         }
+      },
+      createResource() {
+        this.$core.execViaComponent('Resources', 'createMaterial');
+        this.clear()
+        this.getConfirmedUser({})
+        this.$router.push({name: 'vx.resource.material.resources'})
+      },
+      setWorker(unitKey, personKey){
+        console.log('unitKey', unitKey, 'personKey', personKey)
+        this.selectedUser = this.levels[unitKey].data[personKey]
+        this.modalStatus = true
+      },
+      confirmWorker(){
+        this.setCreatorMaterial(['workerId', this.selectedUser.unitData.id])
+        this.getConfirmedUser(this.selectedUser)
+        this.modalStatus = false
+      },
+      cancelUser(){
+        this.chosenUser = {}
+        this.modalStatus = false
+        console.log('this.chosenUser:', this.chosenUser)
+      },
+      onClose(){
+        this.clear()
+        this.getConfirmedUser({})
+        this.$router.push({name: 'vx.resource.material.resources'})
+      },
+      onOk() {
+        this.$core.execViaComponent('Resources', 'createMaterial');
+        this.clear()
+        this.getConfirmedUser({})
+        this.$router.push({name: 'vx.resource.material.resources'})
       }
     },
-    computed:{
-      ...mapGetters({
-        levels: 'Resources/levels',
-        assignStatus: 'Resources/sidebarAssignStatus'
-      }),
-      buttonDisable(){
-        if(this.newResource.name && this.newResource.number){
-          return false
-        }
-        return true
+    created() {
+      this.$core.execViaComponent('Resources', 'getStructure', this.currentCompany.base.id);
+      this.setCreatorMaterial(['companyId', this.currentCompany.base.id])
+    },
+
+    watch: {
+      newResourceName(){
+        return !this.newResource.name
+      },
+      newResourceNumber() {
+        return !this.newResource.number
       }
     }
   }
@@ -226,6 +276,7 @@
         }
         .textarea-container{
           min-height: 96px;
+          border-width: 1px;
         }
       }
       .resource-price {
@@ -241,6 +292,8 @@
         }
         .resource-plate{
           padding: rem(8) rem(16);
+          min-height: 52px;
+          box-sizing: border-box;
           margin-bottom: rem(12);
           border-radius: 8px;
           background-color: $grey-scale-400;
@@ -251,18 +304,11 @@
             font-weight: 400;
           }
         }
-        .user-plate{
-          padding: rem(8) rem(16);
-          border-radius: 8px;
-          .facade-title-sub{
-            margin-bottom: rem(4);
-          }
-          .facade-title-caps{
-            font-weight: 400;
-          }
-        }
       }
       .user {
+        margin-bottom: 4px;
+      }
+      .resource-user{
         margin-bottom: 24px;
       }
       .owner.facade-header-add::v-deep {
@@ -272,34 +318,47 @@
           display: none;
         }
       }
-      .facade-resource-company {
+      .resource-company-ui {
         margin-bottom: rem(24);
       }
     }
-    .modal-download{
-      .download-plate{
-        display: flex;
-        align-items: center;
-        padding: rem(8);
-        margin-bottom: rem(12);
-        border-radius: 8px;
-        background-color: $grey-scale-400;
-        .button-add{
-          display: inherit;
-          height: 36px;
-          width: 36px;
-          border-radius: 50%;
-          border: 2px solid $grey-scale-300;
-          align-items: inherit;
-          justify-content: center;
+    .modal-download ::v-deep{
+      .modal-base-content{
+        position: relative;
+        .file{
           box-sizing: border-box;
-          margin-right: 12px;
+          height: 52px;
+          width: 100%;
+          opacity: 0;
+          position: absolute;
           cursor: pointer;
-          .icon-add::v-deep{
+        }
+        .download-plate{
+          display: flex;
+          align-items: center;
+          padding: rem(8);
+          margin-bottom: rem(12);
+          border-radius: 8px;
+          background-color: $grey-scale-400;
+          .facade-text-base {
             color: #fff;
-            svg{
-              height: 14px;
-              width: 14px;
+          }
+          .button-add{
+            display: inherit;
+            height: 36px;
+            width: 36px;
+            border-radius: 50%;
+            border: 2px solid $grey-scale-300;
+            align-items: inherit;
+            justify-content: center;
+            box-sizing: border-box;
+            margin-right: 12px;
+            .icon-add{
+              color: #fff;
+              svg{
+                height: 12px;
+                width: 14px;
+              }
             }
           }
         }
@@ -334,4 +393,5 @@
       }
     }
   }
+
 </style>

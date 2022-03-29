@@ -2,7 +2,7 @@
   <div class="sketch-navigation-plate-account">
     <transition name="vx-center-right">
       <div class="navigation-plate-body" v-if="tiny">
-        <plate-account tiny :category="category" :data="data" :active="active" @click.native="routerPush"/>
+        <plate-account tiny :category="category" :data="data" :active="active" @click.native="routerPush(data.id)"/>
       </div>
     </transition>
     <transition name="vx-center-left">
@@ -39,6 +39,7 @@
     },
     methods: {
       routerPush(){
+        this.$core.execViaComponent('Company', 'get', this.router.params.companyID)
         this.$router.push(this.router).catch(() => {})
       }
     }

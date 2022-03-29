@@ -50,6 +50,9 @@
         searchedContacts: 'Messenger/getSearchedContacts',
 
       }),
+    },
+    mounted() {
+      console.log('111')
     }
   }
 </script>

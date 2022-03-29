@@ -1,49 +1,53 @@
 <template>
   <div class="router-personal-view">
     <div class="main-info">
-      <name :name="`${contactInfo.name} ${contactInfo.lastname}`" @updateRouter="updateRouter" :type="type"/>
+      <name :name="`${contactInfo.name} ${contactInfo.lastname}`" @onClick="routerBack()" :type="'user'"/>
       <div class="photo">
         <image-avatar :logo="$core.traits.ImageLogo(contactInfo.avatar, contactInfo.name, contactInfo.lastname)" :color-code="$core.traits.ImageColorCode(contactInfo.id)"/>
       </div>
       <div class="info-block">
-        <div class="user-info" v-if="contactInfo.alias">
-          <div class="icon-info"><icon-mail/></div>
-          <div class="info-text-group">
-            <text-base>{{contactInfo.alias}}</text-base>
-            <title-caption>Имя пользователя VYMEX</title-caption>
+        <div class="group-top-block">
+          <div class="user-info" v-if="contactInfo.alias">
+            <div class="icon-info"><icon-mail/></div>
+            <div class="info-text-group">
+              <text-base>{{contactInfo.alias}}</text-base>
+              <title-caption>Имя пользователя VYMEX</title-caption>
+            </div>
+            <icon-copy/>
           </div>
-          <icon-copy/>
+          <div class="user-info" v-if="contactInfo.details.telephone">
+            <div class="icon-info"><icon-phone/></div>
+            <div class="info-text-group">
+              <text-base>{{contactInfo.details.telephone}}</text-base>
+              <title-caption>Телефон</title-caption>
+            </div>
+            <icon-copy/>
+          </div>
+          <div class="user-info" v-if="contactInfo.details.email">
+            <div class="icon-info"><icon-letter/></div>
+            <div class="info-text-group">
+              <text-base>{{contactInfo.details.email}}</text-base>
+              <title-caption>Электронная почта</title-caption>
+            </div>
+            <icon-copy/>
+          </div>
+          <div class="user-info" v-if="contactInfo.details.birthday">
+            <div class="icon-info"><icon-calendar/></div>
+            <div class="info-text-group">
+              <text-base>{{contactInfo.details.birthday}}</text-base>
+              <title-caption>День рождения</title-caption>
+            </div>
+            <icon-copy/>
+          </div>
         </div>
-        <div class="user-info" v-if="contactInfo.details.telephone">
-          <div class="icon-info"><icon-phone/></div>
-          <div class="info-text-group">
-            <text-base>{{contactInfo.details.telephone}}</text-base>
-            <title-caption>Телефон</title-caption>
-          </div>
-          <icon-copy/>
-        </div>
-        <div class="user-info" v-if="contactInfo.details.email">
-          <div class="icon-info"><icon-letter/></div>
-          <div class="info-text-group">
-            <text-base>{{contactInfo.details.email}}</text-base>
-            <title-caption>Электронная почта</title-caption>
-          </div>
-          <icon-copy/>
-        </div>
-        <div class="user-info" v-if="contactInfo.details.birthday">
-          <div class="icon-info"><icon-calendar/></div>
-          <div class="info-text-group">
-            <text-base>{{contactInfo.details.birthday}}</text-base>
-            <title-caption>День рождения</title-caption>
-          </div>
-          <icon-copy/>
+        <div v-if="contactInfo.details.about">
+          <text-area :model="contactInfo.details.about" placeholder="О себе" disable labeled/>
         </div>
         <div class="button-msg-row">
           <title-sub>
             <button-base @onClick="sendContactMessage">Написать</button-base>
           </title-sub>
         </div>
-<!--        <text-area v-model="textarea" :model="contactInfo.about" placeholder="О себе" disable/>-->
       </div>
     </div>
   </div>
@@ -52,7 +56,7 @@
 <script>
 /*eslint-disable*/
 
- import Name from "@/LTE/Singletons/Messenger/facades/Name";
+ import Name from "@/LTE/Singletons/MessengerDff/facade/Name";
  import ImageAvatar from "@Facade/Image/Avatar";
  import TextBase from "@Facade/Text/Base";
  import TitleCaption from "@Facade/Title/Caption";
@@ -84,32 +88,31 @@ export default {
   },
   data() {
     return {
-      textarea: '',
-      about: this.about || 'Короткий но емкий текст о том насколько я хорош, профессионален, и самое главное — скромен до глубины души.',
     }
   },
   updated() {
-    console.log(this.textarea)
+    console.log('mounted', this.contactInfo)
   },
   computed: {
     ...mapGetters({
-      fullName: 'getUserFullName',
-      birthday: 'getUserBirthday',
-      alias: 'getUserAlias',
-      phone: 'getUserTelephone',
-      email: 'getUserEmail',
-      about: 'getUserAbout',
-      avatar: 'getUserAvatarData',
-      type: 'Messenger/personalRouterType',
+      // fullName: 'getUserFullName',
+      // birthday: 'getUserBirthday',
+      // alias: 'getUserAlias',
+      // phone: 'getUserTelephone',
+      // email: 'getUserEmail',
+      // about: 'getUserAbout',
+      // avatar: 'getUserAvatarData',
+      // type: 'Messenger/personalRouterType',
       contactInfo: 'Messenger/getCurrentContact'
     }),
   },
   methods: {
     ...mapMutations({
-      openMessenger: 'Messenger/openMessenger'
+      openMessenger: 'Messenger/openMessenger',
+      routerBack: 'Messenger/ToolsScene/routerBack'
     }),
     sendContactMessage(){
-      console.log(243234231)
+      this.$core.execViaComponent('MsgDlg', 'create', this.contactInfo);
       this.openMessenger()
     },
     updateRouter(value) {
@@ -147,6 +150,25 @@ export default {
         padding: 0 20px;
         .group-top-block{
           margin-bottom: 20px;
+        }
+        .facade-input-text-area::v-deep {
+          margin-bottom: 44px;
+          .textarea-title{
+            font-size: 12px;
+          }
+          .textarea-container{
+            border-width: 1px;
+            border-color: $grey-scale-400;
+            padding: 0 0 24px ;
+          }
+          &[labeled] {
+            textarea {
+              padding-top: 12px;
+            }
+          }
+          textarea{
+            color: #fff;
+          }
         }
       }
       .user-info {
@@ -194,21 +216,7 @@ export default {
         color: #fff;
         margin-bottom: 4px;
       }
-      .facade-input-text-area::v-deep {
-        margin-bottom: 44px;
-        .textarea-title{
-          font-size: 12px;
-        }
-        .textarea-container{
-          border-width: 1px;
-          padding: 0 0 24px ;
-        }
-        &[labeled] {
-          textarea {
-            padding-top: 12px;
-          }
-        }
-      }
+
       .button-msg-row{
         margin-top: 24px;
       }

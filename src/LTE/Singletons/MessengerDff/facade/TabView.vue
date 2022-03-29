@@ -7,7 +7,9 @@
                     @onSearch="sendData"
                     @click.native="$emit('onSearchClick')"/>
     </div>
-    <slot name="header-add"/>
+    <div class="list-header">
+      <slot name="list-header"/>
+    </div>
     <div class="tab-view-content">
       <slot name="content"/>
     </div>
@@ -76,6 +78,9 @@
       .container-vx-group-chat {
         margin-bottom: 4px;
       }
+    }
+    .list-header{
+      margin-bottom: 4px;
     }
     .tab-view-content{
       height: 100%;

@@ -70,7 +70,7 @@
         }
       },
       choosePerson(personKey, unitKey){
-        this.$emit('onClick', unitKey, personKey)
+        this.$emit('onClick', personKey, unitKey)
       }
     }
   }

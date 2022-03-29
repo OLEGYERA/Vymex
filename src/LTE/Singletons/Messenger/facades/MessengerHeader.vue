@@ -1,19 +1,26 @@
 <template>
   <div class="facade-messenger-header">
     <div class="private-info">
+      <transition name="fade">
+        <modal-action-list
+            :actions="actions"
+            :status="statusAction"
+            @onClose="statusAction = false"
+            @onList="makeAction"
+            @onDelete="modalStatus = true">
+          <template #del-title>Удалить чат</template>
+        </modal-action-list>
+      </transition>
       <div class="dialog-image"></div>
       <div class="info-text">
         <text-base><slot>Илон Маск зовет на Марс</slot></text-base>
         <title-caption><slot>4 участника</slot></title-caption>
       </div>
-      <div class="menu-button" @click="actionListStatus = !actionListStatus">
-        <points-vertical :class="{active: actionListStatus}"/>
-        <transition name="fade">
-          <modal-action-list :items="items" :actionListStatus="actionListStatus"/>
-        </transition>
+      <div class="menu-button" @click="statusAction = true">
+        <points-vertical :class="{active: statusAction}"/>
       </div>
     </div>
-    <div @click="closeMessenger()"><icon-error/></div>
+    <icon-error @click.native="closeMessenger()"/>
     <modal-base :status="modalStatus" @onClose="modalStatus = false" @onOk="handlePressOk">
       <template #title>Удалить диалог?</template>
       <template #description>Данные будут удалены вместе со всеми медиа данными без возможности восстановления</template>
@@ -43,18 +50,23 @@
     },
     data() {
       return {
-        items: ['Профиль', 'Отключить уведомления', 'Удалить чат'],
-        actionListStatus: false,
+        actions: ['Профиль', 'Отключить уведомления'],
+        statusAction: false,
         modalStatus: false,
       }
     },
     methods: {
       handlePressOk() {
-        console.log(this.actionListStatus)
+        this.modalStatus = false
       },
       ...mapMutations({
         closeMessenger: 'Messenger/closeMessenger'
       }),
+      // makeAction(id){
+      //   if(id === 0){
+      //
+      //   }
+      // }
     }
   }
 </script>
@@ -70,6 +82,7 @@
     background-color: $grey-scale-500;
     border-bottom: $grey-scale-700 solid 1px;
     .private-info {
+      position: relative;
       display: inherit;
       align-items: center;
       .dialog-image {
@@ -93,6 +106,12 @@
       .active {
         color: #fff;
       }
+      .facade-modal-action-list::v-deep {
+        .action-list-body{
+          top: 46px;
+          left: 274px; /// говно
+        }
+      }
     }
     .icon-error{
       color: $grey-scale-200;
@@ -100,26 +119,17 @@
       cursor: pointer;
     }
   }
-  .menu-button {
-    position: relative;
-    .facade-modal-action-list {
-      position: absolute;
-      bottom: -10px;
-      z-index: 1;
-      left: 10px;
-      transform: translateY(100%);
-    }
-  }
-  .facade-modal-base {
-    &::v-deep {
-      .modal-base-body {
-        width: 632px;
-        height: 244px;
-        justify-content: space-between;
-      }
-      .modal-base-content {
-        display: none;
-      }
-    }
-  }
+
+  //.facade-modal-base {
+  //  &::v-deep {
+  //    .modal-base-body {
+  //      width: 632px;
+  //      height: 244px;
+  //      justify-content: space-between;
+  //    }
+  //    .modal-base-content {
+  //      display: none;
+  //    }
+  //  }
+  //}
 </style>

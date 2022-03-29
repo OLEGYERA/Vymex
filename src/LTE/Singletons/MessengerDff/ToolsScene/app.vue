@@ -3,9 +3,9 @@
     <sidebar class="messenger-app-sidebar"
              :tab-active="TabViewActive"
              :tab-list="{data: TabViewCollection.list, group: TabViewCollection.group}"
-             @onChangeTab="switchActiveTab($event)" @onClose="close()">
+             @onChangeTab="switchActiveTab($event)" @onClose="closeAll">
       <template #main-header>
-        <div class="sidebar-header">
+        <div class="sidebar-header" @click="routerNext({name: 'personal-info'})">
           <div class="header-user-info">
             <image-avatar :logo="UserAvatar.logo" :colorCode="UserAvatar.colorCode"/>
             <div class="info-title-group">
@@ -43,9 +43,13 @@
 
   import TabViewContacts from "./TabView/Contacts";
   import TabViewChats from "./TabView/Chats";
+  import TabViewVolumes from "./TabView/Volumes"
 
   import RouterViewSearch from "./RouterView/Search";
   import RouterViewContact from "./RouterView/Contact";
+  import RouterViewPersonalInfo from "./RouterView/PersonalInfo"
+  import RouterViewContactInfo from "./RouterView/ContactInfo"
+  import RouterViewInvite from "./RouterView/Invite"
 
 
   export default {
@@ -53,8 +57,8 @@
     components: {
       Sidebar,
       ImageAvatar, TitleCaption, TextBase, InfoAmount,
-      TabViewContacts, TabViewChats,
-      RouterViewSearch, RouterViewContact
+      TabViewContacts, TabViewChats, TabViewVolumes,
+      RouterViewSearch, RouterViewContact, RouterViewPersonalInfo, RouterViewContactInfo, RouterViewInvite
     },
     computed: {
       ...mapGetters({
@@ -88,7 +92,12 @@
         routerNext: 'Messenger/ToolsScene/routerNext',
         routerBack: 'Messenger/ToolsScene/routerBack',
         close: 'Messenger/close',
-      })
+        closeMessenger: 'Messenger/closeMessenger'
+      }),
+      closeAll(){
+        this.close()
+        this.closeMessenger()
+      }
     }
   }
 </script>

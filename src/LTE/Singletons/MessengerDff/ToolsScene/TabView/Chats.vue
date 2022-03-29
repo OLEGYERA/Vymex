@@ -1,12 +1,9 @@
 <template>
   <div class="tab-view-chats">
-    <tab-view :search-placeholder="'Поиск по диалогам'" search-disable
+    <tab-view :search-placeholder="'Поиск по контактам и чатам'" search-disable
               @onSearchClick="$emit('routerAdd', {name: 'search'})">
-      <template #header-add>
-        <header-add>
-          <template #header-title>Диалоги</template>
-          <template #header-amount>{{dialogs.length}}</template>
-        </header-add>
+      <template #list-header>
+        <list-header :title="'Чаты'" :title-count="dialogs.length"/>
       </template>
       <template #content>
         <div class="chats-table">
@@ -21,12 +18,12 @@
   /*eslint-disable*/
   import TabView from "../../facade/TabView"
   import Chat from "@/LTE/Singletons/Messenger/facades/Chat";
-  import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd";
+  import ListHeader from "@Facade/Navigation/ListHeader";
 
   export default {
     name: 'Singleton.Messenger.ToolsScene.TabView.Chats',
     components: {
-      TabView, Chat, HeaderAdd
+      TabView, Chat, ListHeader
     },
     data() {
       return {
@@ -156,6 +153,9 @@
         ],
       }
     },
+    mounted() {
+      console.log(666)
+    }
   }
 </script>
 

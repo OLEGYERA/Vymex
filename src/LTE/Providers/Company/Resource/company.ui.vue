@@ -1,8 +1,8 @@
 <template>
   <div class="resource-company-ui">
-    <image-avatar class="resource-company-avatar" :logo="$core.traits.ImageLogo(data.avatar, data.name)" :color-code="$core.traits.ImageColorCode(data.id)"/>
+    <image-avatar class="resource-company-avatar" :logo="$core.traits.ImageLogo(company.avatar, company.name)" :color-code="$core.traits.ImageColorCode(company.id)"/>
     <div class="company-info-group">
-      <title-sub>{{data.name}}</title-sub>
+      <title-sub>{{company.name}}</title-sub>
       <title-caption>Компания</title-caption>
     </div>
   </div>
@@ -21,7 +21,7 @@
       ImageAvatar
     },
     props: {
-      data: Object
+      company: Object
     }
   }
 </script>

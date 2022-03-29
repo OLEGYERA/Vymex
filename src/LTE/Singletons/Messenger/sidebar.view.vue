@@ -21,7 +21,7 @@
   import ChatsTab from './views/sidebar/Chats.tab'
   import ContactsTab from './views/sidebar/Contacts.tab'
   import SearchRouter from './views/sidebar/Search.router'
-  import ContactInfoRouter from './views/sidebar/ContactInfo.router'
+  import ContactInfoRouter from '../MessengerDff/ToolsScene/RouterView/ContactInfo'
 
   /**/
   import VolumesTab from '../facades/TabVolumes.atom'

@@ -9,21 +9,38 @@
         <title-caption>@{{data.alias}}</title-caption>
       </div>
     </div>
-    <points-vertical/>
+    <points-vertical @click.native.stop="statusAction = true"/>
+    <modal-action-list :status="statusAction"
+                       :actions="actions"
+                       @onClose="statusAction = false"
+                       @onDelete="$emit('deleteContact')"
+                       @onList="makeAction">
+      <template #del-title>Удалить из контактов</template>
+    </modal-action-list>
   </div>
 </template>
 
 <script>
+  /*eslint-disable*/
   import TitleCaption from '@Facade/Title/Caption'
   import PointsVertical from '@Icon/PointsVertical'
   import ImageAvatar from '@Facade/Image/Avatar'
+  import ModalActionList from '@Facade/Modal/ActionList'
 
   export default {
     name: 'Singleton.Messenger.Facades.Person',
     components: {
       TitleCaption,
       PointsVertical,
-      ImageAvatar
+      ImageAvatar,
+      ModalActionList,
+    },
+    data(){
+      return{
+        statusAction: false,
+        actions: ['Профиль', 'Написать', 'Отлючить уведомления'],
+        statusBase: false,
+      }
     },
     props: {
       data: {
@@ -38,6 +55,14 @@
         }
       }
     },
+    methods: {
+      makeAction(id){
+        console.log(id, 'data id', this.data.id)
+        if (id === 0) {
+          this.$emit('openProfile', this.data.id)
+        }
+      }
+    }
   }
 </script>
 
@@ -51,6 +76,7 @@
     background-color: $grey-scale-400;
     border-radius: 12px;
     cursor: pointer;
+    
     .private-info {
       display: inherit;
       align-items: center;
@@ -70,6 +96,12 @@
       padding: 10px;
       color: #fff;
       cursor: pointer;
+    }
+    .facade-modal-action-list::v-deep {
+      .action-list-body{
+        left: 68px;
+        top: 6px;
+      }
     }
   }
 </style>

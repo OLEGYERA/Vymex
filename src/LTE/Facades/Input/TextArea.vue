@@ -7,23 +7,24 @@
     <div class="textarea-container">
       <textarea
           class="textarea"
-          v-model="textAreaModel"
           :maxlength="maxLength"
           rows="1"
           ref="facade-input-text-area-ref"
           @input="resize($event)"
+          v-model="baseModel"
           :placeholder="placeholder">
       </textarea>
       <label class="textarea-title" v-if="labeled">{{ placeholder }}</label>
     </div>
-    <title-caption v-if="count" class="textarea-text-length">
-      <span :class="{'textarea-count': textAreaModel}">{{textAreaModel.length}}</span>/{{maxLength}}
+    <title-caption v-if="maxLength" class="textarea-text-length">
+      <span :class="{'textarea-count': baseModel}">{{baseModel.length}}</span>/{{maxLength}}
     </title-caption>
   </div>
 </template>
 
 <script>
   import TitleCaption from '@Facade/Title/Caption'
+  import debounce from "lodash/debounce";
 
   export default {
     name: 'Facade.Input.TextArea',
@@ -31,16 +32,19 @@
       TitleCaption
     },
     props: {
-      model: String,
+      model: {
+        validator: function (value) {
+          return value === null || typeof value === "string" || typeof value === "number";
+        }
+      },
       placeholder: String,
-      count: Boolean,
       maxLength: Number,
       disable: Boolean,
       labeled: Boolean
     },
     data () {
       return {
-        textAreaModel: this.model || '',
+        baseModel: this.model
       }
     },
     methods: {
@@ -51,11 +55,25 @@
       focusInput(){
         if(!this.disable) this.$refs['facade-input-text-area-ref'].focus()
       },
+      applicableCopyOfEmit(){
+        this.$emit('onInput', this.baseModel)
+      }
+    },
+    watch: {
+      model(_model) {
+        if (_model !== this.baseModel) this.baseModel = _model;
+      },
+      baseModel() {
+        this.modelDebounceFunction()
+      }
     },
     mounted() {
-      setTimeout(() => this.$refs['facade-input-text-area-ref'].style.height = `${this.$refs['facade-input-text-area-ref'].scrollHeight}px`, 200)
+      setTimeout(() => this.$refs['facade-input-text-area-ref'].style.height = `${this.$refs['facade-input-text-area-ref'].scrollHeight}px`, 300)
       console.log(this.$refs['facade-input-text-area-ref'].scrollHeight)
-    }
+    },
+    created() {
+      this.modelDebounceFunction = debounce(() => this.applicableCopyOfEmit(), this.disableDebounce ? 0 : 200)
+    },
   }
 </script>
 

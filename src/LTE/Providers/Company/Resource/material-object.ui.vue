@@ -6,7 +6,7 @@
         <title-caption>{{resourceIdentifier}}</title-caption>
       </div>
       <div class="object-user-name" :class="`su-level-${worker.unitLevel}`">
-        {{worker.name}} {{worker.lastname}}
+         {{worker.name ? `${worker.name} ${worker.lastname}` : 'Нет пользователя'}}
       </div>
     </div>
     <icon-points-vertical @click.native.stop="actionListStatus=true"/>

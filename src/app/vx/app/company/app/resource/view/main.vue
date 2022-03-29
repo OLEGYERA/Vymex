@@ -1,6 +1,6 @@
 <template>
   <div class="resource-main-view">
-    <navigation-close/>
+    <navigation-close @onClick="closeResources"/>
 
     <header class="resource-main-header">
       <div class="header-group-text">
@@ -53,6 +53,7 @@
   import TitleCaption from '@Facade/Title/Caption'
   import ButtonBase from '@Facade/Button/Base'
   import {FolderUi} from '@Providers'
+  import {mapMutations} from "vuex";
 
   export default {
     name: 'vx.resource.main',
@@ -66,7 +67,7 @@
     },
     data() {
       return{
-        memoryPercent: 45,
+        memoryPercent: 70,
         modalStatus: false,
         folders: [
           {
@@ -118,6 +119,9 @@
       }
     },
     methods: {
+      ...mapMutations({
+        changeStatus: 'Company/changeStatus'
+      }),
       setSliderWidth() {
         this.$refs['slider'].style.width = this.memoryPercent + '%'
       },
@@ -131,6 +135,10 @@
         if(id === 4){
           this.$router.push({name: 'vx.resource.trash.folder'})
         }
+      },
+      closeResources(){
+        this.$router.push({name: 'vx.co'})
+        this.changeStatus(0)
       }
     },
     mounted() {

@@ -53,9 +53,11 @@
       ...mapMutations({
         closeSidebar: 'Resources/closeSidebarAssign',
       }),
-      // chooseUser(unitKey, personKey){
-      //   this.levels[unitKey].data[personKey].unitChecked = !this.levels[unitKey].data[personKey].unitChecked
-      // }
+      chooseUser(unitKey, personKey){
+        this.$emit('chooseUser', unitKey, personKey)
+        // this.levels[unitKey].data[personKey].unitChecked = !this.levels[unitKey].data[personKey].unitChecked
+        this.closeSidebar()
+      }
     },
   }
 </script>
