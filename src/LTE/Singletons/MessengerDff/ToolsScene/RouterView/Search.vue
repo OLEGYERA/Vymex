@@ -34,7 +34,7 @@
 <script>
   /*eslint-disable*/
   import TabView from "../../facade/TabView"
-  import Chat from "@/LTE/Singletons/Messenger/facades/Chat";
+  import Chat from "@/LTE/Singletons/MessengerDff/facade/Chat";
   import Person from "@/LTE/Singletons/MessengerDff/facade/PersonSearch";
   import TitleCaps from '@Facade/Title/Caps'
   import  {mapGetters, mapMutations} from "vuex";

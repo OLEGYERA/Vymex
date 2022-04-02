@@ -5,7 +5,11 @@
       <div class="block">{{name}}</div>
     </div>
     <points-vertical v-if="type==='user'" @click.native="statusAction = true"/>
-    <modal-action-list :status="statusAction" :actions="actions" @onClose="statusAction = false" @onDelete="statusBase = true">
+    <modal-action-list :status="statusAction"
+                       :actions="actions"
+                       @onList="$notify({text: 'Уведомления отключены', type: 'success', duration: 3000, speed: 500})"
+                       @onClose="statusAction = false"
+                       @onDelete="statusBase = true">
       <template #del-title>Удалить из контактов</template>
     </modal-action-list>
     <modal-base :status="statusBase" @onClose="statusBase = false" @onOk="deleteContact">
@@ -53,6 +57,7 @@ export default {
     }),
     deleteContact(){
       this.statusBase = false
+      this.$notify({text: 'Контакт удален', type: 'success', duration: 3000, speed: 500})
       this.routerBack()
     }
   },
@@ -73,7 +78,7 @@ export default {
     background-color: transparent;
     box-sizing: border-box;
     margin-bottom: 36px;
-    cursor: pointer;
+    //cursor: pointer;
     .icon-arrow-left-bold {
       margin-right: 12px;
       height: 18px;

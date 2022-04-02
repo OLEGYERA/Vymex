@@ -19,7 +19,7 @@
 
 <script>
 import TabView from "../../facades/TabView"
-import Person from "@/LTE/Singletons/Messenger/facades/Person";
+import Person from "@/LTE/Singletons/MessengerDff/facade/Person";
 import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd";
 
 export default {

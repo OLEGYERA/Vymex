@@ -21,7 +21,7 @@
     props: {
       actions: {
         type: Array,
-        required: true
+        // required: true
       },
       status: {
         type: Boolean,

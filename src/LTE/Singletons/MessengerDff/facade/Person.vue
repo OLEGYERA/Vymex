@@ -13,9 +13,9 @@
     <modal-action-list :status="statusAction"
                        :actions="actions"
                        @onClose="statusAction = false"
-                       @onDelete="$emit('deleteContact')"
+                       @onDelete="$emit('deleteContact', data.id)"
                        @onList="makeAction">
-      <template #del-title>Удалить из контактов</template>
+      <template #del-title>{{ modalDelete }}</template>
     </modal-action-list>
   </div>
 </template>
@@ -38,7 +38,6 @@
     data(){
       return{
         statusAction: false,
-        actions: ['Профиль', 'Написать', 'Отлючить уведомления'],
         statusBase: false,
       }
     },
@@ -53,7 +52,9 @@
             || (typeof value.avatar === "string" && value.avatar === null)
             || typeof value.details === "string";
         }
-      }
+      },
+      actions: Array,
+      modalDelete: String
     },
     methods: {
       makeAction(id){
@@ -61,6 +62,10 @@
         if (id === 0) {
           this.$emit('openProfile', this.data.id)
         }
+        if(id === 2){
+          this.$notify({text: 'Уведомления отключены', type: 'success', duration: 3000, speed: 500})
+        }
+
       }
     }
   }
@@ -68,6 +73,7 @@
 
 <style lang="scss" scoped>
   .facade-messenger-person {
+    position: relative;
     margin-bottom: 4px;
     padding: rem(16) rem(12);
     display: flex;
