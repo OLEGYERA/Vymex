@@ -3,6 +3,8 @@ import Co from "./app";
 import Dashboard from "./app/dashboard/app";
 
 import Task from './app/task/routing'
+import ControlCenter from "./app/control-center/routing";
+
 // import Profile from './view/profile'
 
 export default [
@@ -20,7 +22,8 @@ export default [
         name: 'vx.co',
         component: Dashboard
       },
-      ...Task
+      ...Task,
+      ...ControlCenter,
     ]
   },
 ]
