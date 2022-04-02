@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import MessengerHeader from "@/LTE/Singletons/Messenger/facades/MessengerHeader";
+import MessengerHeader from "@/LTE/Singletons/MessengerDff/facade/MessengerGroupHeader";
 import Message from "@/LTE/Singletons/Messenger/facades/Message";
 import MessengerDate from "@/LTE/Singletons/Messenger/facades/MessengerDate";
 import InputArea from "@/LTE/Singletons/Messenger/views/messenger/InputArea";

@@ -17,10 +17,12 @@
                   :data="contact" :key="key"
                   @onClick="openPersonData"
                   @openProfile="openPersonData"
-                  @deleteContact="statusBase=true"
-          /> ///@deleteContact="ttt"
+                  @deleteContact="statusBase = true"
+                  :actions="actionsContact"
+                  modal-delete="Удалить из контактов"
+          />
         </div>
-        <modal-base :status="statusBase" @onClose="statusBase = false" @onOk="statusBase=false">
+        <modal-base :status="statusBase" @onClose="statusBase = false" @onOk="deleteContact">
           <template #title>Удалить из контактов?</template>
           <template #description>
             Контакт будет удален вместе со всеми медиа данными без возможности восстановления
@@ -34,7 +36,7 @@
 
 <script>
   import TabView from "../../facade/TabView"
-  import Person from "@/LTE/Singletons/Messenger/facades/Person";
+  import Person from "../../facade/Person";
   import ListHeader from "@Facade/Navigation/ListHeader";
   import ModalBase from '@Facade/Modal/Base'
   import ModalActionList from '@Facade/Modal/ActionList'
@@ -51,6 +53,7 @@
         statusBase: false,
         statusAction: false,
         actions: ['Найти контакт', 'Пригласить в VYMEX'],
+        actionsContact: ['Профиль', 'Написать', 'Отлючить уведомления'],
         contacts: [
           {
             title: 'Татьяна Булатова',
@@ -122,7 +125,6 @@
         routerNext: 'Messenger/ToolsScene/routerNext'
       }),
       openPersonData(personID){
-        console.log(personID, 'idddd')
         this.$core.execViaComponent('MsgUser', 'full', personID);
         this.routerNext({name: 'contact-info'})
       },
@@ -132,7 +134,10 @@
         } else{
           this.routerNext({name: 'invite'})
         }
-
+      },
+      deleteContact(){
+        this.$notify({text: 'Контакт удален', type: 'success', duration: 3000, speed: 500})
+        this.statusBase = false;
       }
     },
     created() {

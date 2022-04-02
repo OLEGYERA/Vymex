@@ -1,6 +1,7 @@
 <template>
   <div class="sender-scene-app" v-if="messengerStatus">
-    <messenger-header/>
+    <messenger-group-header/>
+    <messenger-dialog-header/>
     <main class="messenger-main-plate" ref="messageArea">
       <messenger-date/>
       <message v-for="(message, key) in messages" :message="message" :key="key"/>
@@ -10,135 +11,137 @@
 </template>
 
 <script>
-import MessengerHeader from "@/LTE/Singletons/Messenger/facades/MessengerHeader";
-import Message from "@/LTE/Singletons/Messenger/facades/Message";
-import MessengerDate from "@/LTE/Singletons/Messenger/facades/MessengerDate";
-import InputArea from "@/LTE/Singletons/Messenger/views/messenger/InputArea";
-import {mapGetters} from "vuex";
+  import MessengerGroupHeader from "@/LTE/Singletons/MessengerDff/facade/MessengerGroupHeader";
+  import MessengerDialogHeader from "@/LTE/Singletons/MessengerDff/facade/MessengerDialogHeader";
+  import Message from "@/LTE/Singletons/Messenger/facades/Message";
+  import MessengerDate from "@/LTE/Singletons/Messenger/facades/MessengerDate";
+  import InputArea from "@/LTE/Singletons/Messenger/views/messenger/InputArea";
+  import {mapGetters} from "vuex";
 
-export default {
-  name: 'Singleton.Messenger.Views.Messenger.MessengerMain',
-  components: {
-    MessengerHeader,
-    Message,
-    MessengerDate,
-    InputArea
-  },
-  data() {
-    return {
-      messages: [
-        {
-          type: 'response',
-          name: 'Нина Меркулова,',
-          time : '04:20',
-          text: 'Норм, а что по задачам?'
-        },
-        {
-          type: 'response',
-          name: 'Нина Меркулова,',
-          time : '04:20',
-          text: 'Всё четко, смотри, файлик...'
-        },
-        {
-          type: 'owner',
-          time : '04:20',
-          status: 'delivered',
-          text: 'Да всё нормас, давайте сразу подумаем, как будем покупать акваланг, я в этом нуб...'
-        },
-        {
-          type: 'owner',
-          time : '04:20',
-          status: 'delivered',
-          text: 'да и в целом всё гуд'
-        },
-        {
-          type: 'owner',
-          time : '04:20',
-          status: 'delivered',
-          text: 'А ты как там? Гоу тусить?'
-        },
-        {
-          type: 'response',
-          name: 'Нина Меркулова,',
-          time : '04:20',
-          text: 'Норм, а что по задачам?'
-        },
-        {
-          type: 'response',
-          name: 'Нина Меркулова,',
-          time : '04:20',
-          text: 'Всё четко, смотри, файлик...'
-        },
-        {
-          type: 'owner',
-          time : '04:20',
-          status: 'delivered',
-          text: 'Да всё нормас, давайте сразу подумаем, как будем покупать акваланг, я в этом нуб...'
-        },
-        {
-          type: 'owner',
-          time : '04:20',
-          status: 'sent',
-          text: 'да и в целом всё гуд'
-        },
-        {
-          type: 'owner',
-          time : '04:20',
-          status: 'sent',
-          text: 'А ты как там? Гоу тусить?'
-        },
-        {
-          type: 'response',
-          name: 'Нина Меркулова,',
-          time : '04:20',
-          text: 'Норм, а что по задачам?'
-        },
-        {
-          type: 'response',
-          name: 'Нина Меркулова,',
-          time : '04:20',
-          text: 'Всё четко, смотри, файлик...'
-        },
-        {
-          type: 'owner',
-          time : '04:20',
-          status: 'sent',
-          text: 'Да всё нормас, давайте сразу подумаем, как будем покупать акваланг, я в этом нуб...'
-        },
-        {
-          type: 'owner',
-          time : '04:20',
-          status: 'sent',
-          text: 'да и в целом всё гуд'
-        },
-      ],
-    }
-  },
-  methods: {
-    sendMessage(text) {
-      const time = new Date().toLocaleTimeString().slice(0,-3)
-      const newMessage = {
-        type: 'owner',
-        time : time,
-        status: 'sent',
-        text: text,
-      }
-      this.messages.push(newMessage)
+  export default {
+    name: 'Singleton.Messenger.Views.Messenger.MessengerMain',
+    components: {
+      MessengerGroupHeader,
+      MessengerDialogHeader,
+      Message,
+      MessengerDate,
+      InputArea
     },
-  },
-  computed: {
-    ...mapGetters({
-      messengerStatus: 'Messenger/messengerStatus'
-    })
-  },
-  updated() {
-    // this.$refs.messageArea.style.scrollBehavior = 'smooth'
-    this.$refs.messageArea.scrollBy(0, this.$refs.messageArea.scrollHeight);
-  },
-  mounted() {
-    this.$refs.messageArea.scrollBy(0, this.$refs.messageArea.scrollHeight);
-  },
-}
+    data() {
+      return {
+        messages: [
+          {
+            type: 'response',
+            name: 'Нина Меркулова,',
+            time : '04:20',
+            text: 'Норм, а что по задачам?'
+          },
+          {
+            type: 'response',
+            name: 'Нина Меркулова,',
+            time : '04:20',
+            text: 'Всё четко, смотри, файлик...'
+          },
+          {
+            type: 'owner',
+            time : '04:20',
+            status: 'delivered',
+            text: 'Да всё нормас, давайте сразу подумаем, как будем покупать акваланг, я в этом нуб...'
+          },
+          {
+            type: 'owner',
+            time : '04:20',
+            status: 'delivered',
+            text: 'да и в целом всё гуд'
+          },
+          {
+            type: 'owner',
+            time : '04:20',
+            status: 'delivered',
+            text: 'А ты как там? Гоу тусить?'
+          },
+          {
+            type: 'response',
+            name: 'Нина Меркулова,',
+            time : '04:20',
+            text: 'Норм, а что по задачам?'
+          },
+          {
+            type: 'response',
+            name: 'Нина Меркулова,',
+            time : '04:20',
+            text: 'Всё четко, смотри, файлик...'
+          },
+          {
+            type: 'owner',
+            time : '04:20',
+            status: 'delivered',
+            text: 'Да всё нормас, давайте сразу подумаем, как будем покупать акваланг, я в этом нуб...'
+          },
+          {
+            type: 'owner',
+            time : '04:20',
+            status: 'sent',
+            text: 'да и в целом всё гуд'
+          },
+          {
+            type: 'owner',
+            time : '04:20',
+            status: 'sent',
+            text: 'А ты как там? Гоу тусить?'
+          },
+          {
+            type: 'response',
+            name: 'Нина Меркулова,',
+            time : '04:20',
+            text: 'Норм, а что по задачам?'
+          },
+          {
+            type: 'response',
+            name: 'Нина Меркулова,',
+            time : '04:20',
+            text: 'Всё четко, смотри, файлик...'
+          },
+          {
+            type: 'owner',
+            time : '04:20',
+            status: 'sent',
+            text: 'Да всё нормас, давайте сразу подумаем, как будем покупать акваланг, я в этом нуб...'
+          },
+          {
+            type: 'owner',
+            time : '04:20',
+            status: 'sent',
+            text: 'да и в целом всё гуд'
+          },
+        ],
+      }
+    },
+    methods: {
+      sendMessage(text) {
+        const time = new Date().toLocaleTimeString().slice(0,-3)
+        const newMessage = {
+          type: 'owner',
+          time : time,
+          status: 'sent',
+          text: text,
+        }
+        this.messages.push(newMessage)
+      },
+    },
+    computed: {
+      ...mapGetters({
+        messengerStatus: 'Messenger/messengerStatus'
+      })
+    },
+    updated() {
+      // this.$refs.messageArea.style.scrollBehavior = 'smooth'
+      this.$refs.messageArea.scrollBy(0, this.$refs.messageArea.scrollHeight);
+    },
+    mounted() {
+      this.$refs.messageArea.scrollBy(0, this.$refs.messageArea.scrollHeight);
+    },
+  }
 </script>
 
 <style lang="scss">

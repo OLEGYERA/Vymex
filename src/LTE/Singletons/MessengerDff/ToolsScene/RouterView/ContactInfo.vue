@@ -7,7 +7,7 @@
       </div>
       <div class="info-block">
         <div class="group-top-block">
-          <div class="user-info" v-if="contactInfo.alias">
+          <div class="user-info" v-if="contactInfo.alias" @click="copyInfo">
             <div class="icon-info"><icon-mail/></div>
             <div class="info-text-group">
               <text-base>{{contactInfo.alias}}</text-base>
@@ -15,7 +15,7 @@
             </div>
             <icon-copy/>
           </div>
-          <div class="user-info" v-if="contactInfo.details.telephone">
+          <div class="user-info" v-if="contactInfo.details.telephone" @click="copyInfo">
             <div class="icon-info"><icon-phone/></div>
             <div class="info-text-group">
               <text-base>{{contactInfo.details.telephone}}</text-base>
@@ -23,7 +23,7 @@
             </div>
             <icon-copy/>
           </div>
-          <div class="user-info" v-if="contactInfo.details.email">
+          <div class="user-info" v-if="contactInfo.details.email" @click="copyInfo">
             <div class="icon-info"><icon-letter/></div>
             <div class="info-text-group">
               <text-base>{{contactInfo.details.email}}</text-base>
@@ -31,7 +31,7 @@
             </div>
             <icon-copy/>
           </div>
-          <div class="user-info" v-if="contactInfo.details.birthday">
+          <div class="user-info" v-if="contactInfo.details.birthday" @click="copyInfo">
             <div class="icon-info"><icon-calendar/></div>
             <div class="info-text-group">
               <text-base>{{contactInfo.details.birthday}}</text-base>
@@ -117,6 +117,9 @@ export default {
     },
     updateRouter(value) {
       this.$emit('updateRouter', 'search')
+    },
+    copyInfo(){
+      this.$notify({text: 'Данные скопированы', type: 'success', duration: 3000, speed: 500})
     }
   }
 }
@@ -190,9 +193,9 @@ export default {
         .icon-copy {
           position: absolute;
           right: 18px;
-          top: 50%;
-          transform: translateY(-50%);
+          top: 24px;
           display: none;
+          transition: all .2s;
         }
         .icon {
           height: 16px;
@@ -203,6 +206,11 @@ export default {
       .user-info:hover {
         .icon-copy {
           display: block;
+        }
+      }
+      .user-info:active {
+        .icon-copy {
+          transform: scale(0.8);
         }
       }
       .user-info-about {

@@ -1,3 +1,4 @@
+
 export default {
   namespaced: true,
   state: {
@@ -15,6 +16,92 @@ export default {
     },
     notificationsStatus: false,
     disableTime: 0,
+    chosenContacts: [],
+    contactsAll: [
+      {
+        "id": 1,
+        "alias": "penisdominator",
+        "name": "Андрей",
+        "lastname": "Вашуленко",
+        "pk": "3f7947e3d2cd027321c439f33c72cc8375cda133b3db142a7e410e6c0c220609",
+        "avatar": null,
+        "details": {
+          checked: false,
+        }
+      },
+      {
+        "id": 2,
+        "alias": "user_12",
+        "name": "Testfd",
+        "lastname": "sdfsd",
+        "pk": "1bf0869e3e4258abbc286c0af61131d0e357db413804b85c2744b4cdb672ba28",
+        "avatar": null,
+        "details": {
+          checked: false,
+        }
+      },
+      {
+        "id": 3,
+        "alias": "penisdominator",
+        "name": "Андрей",
+        "lastname": "Вашуленко",
+        "pk": "3f7947e3d2cd027321c439f33c72cc8375cda133b3db142a7e410e6c0c220609",
+        "avatar": null,
+        "details": {
+          checked: false,
+        }
+      },
+      {
+        "id": 4,
+        "alias": "user_12",
+        "name": "Testfd",
+        "lastname": "sdfsd",
+        "pk": "1bf0869e3e4258abbc286c0af61131d0e357db413804b85c2744b4cdb672ba28",
+        "avatar": null,
+        "details": {
+          checked: false,
+        },
+      },
+      {
+        "id": 5,
+        "alias": "user_12",
+        "name": "Testfd",
+        "lastname": "sdfsd",
+        "pk": "1bf0869e3e4258abbc286c0af61131d0e357db413804b85c2744b4cdb672ba28",
+        "avatar": null,
+        "details": {
+          checked: false,
+        }
+      },
+      {
+        "id": 6,
+        "alias": "penisdominator",
+        "name": "Андрей",
+        "lastname": "Вашуленко",
+        "pk": "3f7947e3d2cd027321c439f33c72cc8375cda133b3db142a7e410e6c0c220609",
+        "avatar": null,
+        "details": {
+          checked: false,
+        }
+      },
+      {
+        "id": 7,
+        "alias": "user_12",
+        "name": "Testfd",
+        "lastname": "sdfsd",
+        "pk": "1bf0869e3e4258abbc286c0af61131d0e357db413804b85c2744b4cdb672ba28",
+        "avatar": null,
+        "details": {
+          checked: false,
+        },
+      }
+    ],
+    newGroupChat: {
+      title: '',
+      description: '',
+      avatar: '',
+      users: []
+    }
   },
   getters: {
     getTabCollections: (state) => state.tab,
@@ -22,6 +109,9 @@ export default {
     getRouterCollections: (state) => state.router,
     getNotificationsStatus: (state) => state.notificationsStatus,
     getDisableTime: (state) => state.disableTime,
+    chosenContacts: (state) => state.chosenContacts,
+    contactsAll: (state) => state.contactsAll,
+    newGroupChat: (state) => state.newGroupChat
   },
   mutations: {
     switchActiveTab: (state, activeIdx) => {
@@ -59,7 +149,17 @@ export default {
       }
       state.notificationsStatus = !state.notificationsStatus;
     },
-    changeTime: (state, newTime) => state.disableTime = newTime
+    changeTime: (state, newTime) => state.disableTime = newTime,
+    chooseUser: (state, key) => {
+      state.contactsAll[key].details.checked = !state.contactsAll[key].details.checked
+      console.log(key, 'key', state.contactsAll[key].details.checked)
+    },
+    selectContacts: (state) => state.chosenContacts = [...state.contactsAll.filter(contact => contact.details.checked === true)],
 
+    deleteSelectedContact: (state, id) => {
+      state.contactsAll.find(contact => contact.id === id).details.checked = false
+      state.chosenContacts = [...state.contactsAll.filter(contact => contact.details.checked === true)]
+    },
+    clearNewGroupChat: (state) => state.newGroupChat = { title: '', description: '', avatar: '', users: []}
   }
 }

@@ -29,7 +29,7 @@ class Dialog extends Binder{
       AES256Key: this.$store.get('AesKey'),
       MAC256Key: this.$store.get('MacKey')
     }, this.name, 'create', SGDFinalPack);
-    console.log(fullPack, 'fullPack')
+
     this.$socket.emit('listener', fullPack)
   }
 

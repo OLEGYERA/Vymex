@@ -24,13 +24,6 @@ export default {
     TitleCaption,
     ImageAvatar,
   },
-  data(){
-    return{
-      statusAction: false,
-      actions: ['Профиль', 'Написать', 'Отлючить уведомления'],
-      statusBase: false,
-    }
-  },
   props: {
     data: {
       type: Object,

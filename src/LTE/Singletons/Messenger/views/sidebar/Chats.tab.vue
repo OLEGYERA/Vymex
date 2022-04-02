@@ -19,7 +19,7 @@
 
 <script>
   import TabView from "../../facades/TabView"
-  import Chat from "@/LTE/Singletons/Messenger/facades/Chat";
+  import Chat from "@/LTE/Singletons/MessengerDff/facade/Chat";
   import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd";
 
   export default {

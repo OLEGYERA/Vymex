@@ -50,6 +50,7 @@ export default {
     }),
     onOk(){
       this.routerBack()
+      this.$notify({text: 'Ссылка скопирована', type: 'success', duration: 3000, speed: 500})
     },
     onClose(){
       this.routerBack()

@@ -6,7 +6,6 @@
             :actions="actions"
             :status="statusAction"
             @onClose="statusAction = false"
-            @onList="makeAction"
             @onDelete="modalStatus = true">
           <template #del-title>Удалить чат</template>
         </modal-action-list>
@@ -119,17 +118,4 @@
       cursor: pointer;
     }
   }
-
-  //.facade-modal-base {
-  //  &::v-deep {
-  //    .modal-base-body {
-  //      width: 632px;
-  //      height: 244px;
-  //      justify-content: space-between;
-  //    }
-  //    .modal-base-content {
-  //      display: none;
-  //    }
-  //  }
-  //}
 </style>

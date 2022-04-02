@@ -6,44 +6,43 @@
         <image-avatar :logo="$core.traits.ImageLogo( avatar, name, lastname)" :color-code="$core.traits.ImageColorCode(id)"/>
       </div>
       <div class="info-block">
-        <div class="user-info" v-if="alias">
-          <div class="icon-info"><icon-mail/></div>
-          <div class="info-text-group">
-            <text-base>{{alias}}</text-base>
-            <title-caption>Имя пользователя VYMEX</title-caption>
+        <div class="group-top-block">
+          <div class="user-info" v-if="alias">
+            <div class="icon-info"><icon-mail/></div>
+            <div class="info-text-group">
+              <text-base>{{alias}}</text-base>
+              <title-caption>Имя пользователя VYMEX</title-caption>
+            </div>
+            <icon-copy/>
           </div>
-          <icon-copy/>
-        </div>
-        <div class="user-info" v-if="phone">
-          <div class="icon-info"><icon-phone/></div>
-          <div class="info-text-group">
-            <text-base>{{phone}}</text-base>
-            <title-caption>Телефон</title-caption>
+          <div class="user-info" v-if="phone">
+            <div class="icon-info"><icon-phone/></div>
+            <div class="info-text-group">
+              <text-base>{{phone}}</text-base>
+              <title-caption>Телефон</title-caption>
+            </div>
+            <icon-copy/>
           </div>
-          <icon-copy/>
-        </div>
-        <div class="user-info" v-if="email">
-          <div class="icon-info"><icon-letter/></div>
-          <div class="info-text-group">
-            <text-base>{{email}}</text-base>
-            <title-caption>Электронная почта</title-caption>
+          <div class="user-info" v-if="email">
+            <div class="icon-info"><icon-letter/></div>
+            <div class="info-text-group">
+              <text-base>{{email}}</text-base>
+              <title-caption>Электронная почта</title-caption>
+            </div>
+            <icon-copy/>
           </div>
-          <icon-copy/>
-        </div>
-        <div class="user-info" v-if="birthday">
-          <div class="icon-info"><icon-calendar/></div>
-          <div class="info-text-group">
-            <text-base>{{birthday}}</text-base>
-            <title-caption>День рождения</title-caption>
+          <div class="user-info" v-if="birthday">
+            <div class="icon-info"><icon-calendar/></div>
+            <div class="info-text-group">
+              <text-base>{{birthday}}</text-base>
+              <title-caption>День рождения</title-caption>
+            </div>
+            <icon-copy/>
           </div>
-          <icon-copy/>
         </div>
-<!--        <div class="button-msg-row">-->
-<!--          <title-sub>-->
-<!--            <button-base @onClick="sendContactMessage">Написать</button-base>-->
-<!--          </title-sub>-->
+<!--        <div v-if="about">-->
+        <text-area :model="about" placeholder="О себе" labeled/>
 <!--        </div>-->
-        <!--        <text-area v-model="textarea" :model="contactInfo.about" placeholder="О себе" disable/>-->
       </div>
     </div>
   </div>
@@ -150,6 +149,26 @@
         .group-top-block{
           margin-bottom: 20px;
         }
+        .facade-input-text-area::v-deep {
+          margin-bottom: 44px;
+          .textarea-title{
+            top: 0;
+            font-size: 12px;
+          }
+          .textarea-container{
+            border-width: 1px;
+            border-color: $grey-scale-400;
+            padding: 0 0 24px ;
+          }
+          &[labeled] {
+            textarea {
+              padding-top: 12px;
+            }
+          }
+          textarea{
+            color: #fff;
+          }
+        }
       }
       .user-info {
         display: flex;
@@ -209,6 +228,24 @@
           textarea {
             padding-top: 12px;
           }
+        }
+      }
+      .facade-input-text-area::v-deep {
+        .textarea-title{
+          font-size: 12px;
+        }
+        .textarea-container{
+          border-width: 1px;
+          border-color: $grey-scale-400;
+          padding: 0 0 24px ;
+        }
+        &[labeled] {
+          textarea {
+            padding-top: 12px;
+          }
+        }
+        textarea{
+          color: #fff;
         }
       }
       .button-msg-row{
