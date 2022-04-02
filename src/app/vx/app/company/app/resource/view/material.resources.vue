@@ -92,7 +92,8 @@
         sidebarFilterStatus: 'Resources/sidebarFilterStatus',
         levels: 'Resources/levels',
         materialResources: 'Resources/materialResources',
-        userID: 'getUserID'
+        userID: 'getUserID',
+        user: 'getUser'
       }),
     //   buttonDisable(){
     //     let status = true
@@ -107,6 +108,7 @@
     //   }
     },
     created() {
+      console.log('this.user', this.user)
       this.$core.execViaComponent('Resources', 'getMaterialResources', this.userID);
       // if(this.$route.params.resourceId){
       //   this.materialObjects.splice(this.materialObjects.findIndex(el => el.id === this.$route.params.resourceId), 1)
