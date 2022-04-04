@@ -1,5 +1,5 @@
 <template>
-  <div class="facade-messenger-person" @click="onClick">
+  <div class="facade-messenger-person" :class="{'user': user}" @click="onClick">
     <div class="private-info">
       <div class="dialog-image">
         <avatar :logo="logo" :colorCode="color"/>
@@ -9,7 +9,7 @@
         <title-caption>{{contact.alias}}</title-caption>
       </div>
     </div>
-    <points-vertical/>
+    <points-vertical v-if="!user"/>
   </div>
 </template>
 
@@ -31,7 +31,16 @@ export default {
       color: '4'
     }
   },
-  props: ['contact'],
+  props: {
+    contact: {
+      type: Object,
+      default: ()=> {}
+    }, 
+    user: {
+      type: Boolean, 
+      default: false
+    }
+  },
   computed: {
     logo: function () {
       let initials = ''
@@ -85,6 +94,11 @@ export default {
       padding: 10px;
       color: #fff;
       cursor: pointer;
+    }
+
+    &.user {
+      margin-bottom: 8px;
+      padding: rem(10) rem(12);
     }
   }
 </style>

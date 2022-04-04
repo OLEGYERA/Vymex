@@ -34,6 +34,7 @@ import Crypto from '@/models/CryptoStorage'
 import Company from '@/models/Company'
 import {MessengerStore as Messenger} from '@Singletons'
 import {NotificationsStore as Notifications} from '@Singletons'
+import {UsersStore as Users} from '@Singletons'
 import Dashboard from '@/models/Dashboard'
 import Processes from '@/models/Processes'
 import Resources from "@/LTE/Singletons/Resources/models/Resources";
@@ -56,7 +57,8 @@ export default new Vuex.Store({
     Resources,
     Company,
     Dashboard,
-    Processes
+    Processes,
+    Users
   },
   plugins: [
     createPersistedState({
@@ -82,6 +84,15 @@ export default new Vuex.Store({
     createPersistedState({
       key: 'vymex_notif_session',
       paths: ['Notifications'],
+      storage: {
+        getItem: (key) => Secure.get(key),
+        setItem: (key, value) => Secure.set(key, value),
+        removeItem: (key) => Secure.remove(key),
+      },
+    }),
+    createPersistedState({
+      key: 'vymex_users_session',
+      paths: ['Users'],
       storage: {
         getItem: (key) => Secure.get(key),
         setItem: (key, value) => Secure.set(key, value),
