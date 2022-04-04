@@ -68,7 +68,7 @@
       }
     },
     mounted() {
-      setTimeout(() => this.$refs['facade-input-text-area-ref'].style.height = `${this.$refs['facade-input-text-area-ref'].scrollHeight}px`, 300)
+      // setTimeout(() => this.$refs['facade-input-text-area-ref'].style.height = `${this.$refs['facade-input-text-area-ref'].scrollHeight}px`, 300)
       console.log(this.$refs['facade-input-text-area-ref'].scrollHeight)
     },
     created() {

@@ -18,22 +18,26 @@ class Resources extends Binder{
         super();
     }
 
-    async createMaterial(){
+    async createMaterial(id){
         const CreatorData = this.$store.name('Resources').get('CreatorMaterialResource');
-        console.log(CreatorData)
+
+        // const WorkerID = CreatorData.workerId ? numberToArray(CreatorData.workerId) : null;
+
         let data = serialize(
-            utf8ToArray(CreatorData.name),
-            // utf8ToArray(CreatorData.description),
-            // utf8ToArray(CreatorData.identifier),
-            // numberToArray(CreatorData.workerId),
-            // utf8ToArray(CreatorData.currency),
-            // numberToArray(CreatorData.companyId),
-            // utf8ToArray(CreatorData.cost),
-            // objectToArray(CreatorData.fileIds),
-            // objectToArray(CreatorData.imageIds),
+            utf8ToArray(String(CreatorData.name)),
+            utf8ToArray(String(CreatorData.description || '')),
+            utf8ToArray(String(CreatorData.identifier)),
+            numberToArray(id), //нужно вытягивать по пользователю его текущий воркер компании CreatorData.workerId
+            objectToArray([]),
+            utf8ToArray(CreatorData.currency),
+            numberToArray(200),
+            numberToArray(CreatorData.companyId),
+            objectToArray([]),
         );
-        console.log(...arguments[1], data)
-        this.$socket.emit('listener', await encrypt(...arguments[1], utf8ToArray(CreatorData.name)));
+
+        //
+        // this.$socket.emit('listener', await encrypt(...arguments[1], utf8ToArray('daf')));
+        this.$socket.emit('listener', await encrypt(...arguments[1], data));
     }
 
     createMaterialRes(){

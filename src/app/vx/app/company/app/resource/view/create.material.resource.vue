@@ -166,15 +166,9 @@
         newResource: 'Resources/getCreatorMaterialResource',
         currentCompany: 'Company/getCurrentCompany',
         structure: 'Resources/getStructure',
-        user: 'Resources/chosenUser'
+        user: 'Resources/chosenUser',
+        userID: 'getUserID',
       }),
-      // buttonDisable(){
-      //   if(!this.newResource.name && !this.newResource.number){
-      //     return true
-      //   } else {
-      //     return true
-      //   }
-      // }
     },
     methods: {
       ...mapMutations({
@@ -200,13 +194,12 @@
         }
       },
       createResource() {
-        this.$core.execViaComponent('Resources', 'createMaterial');
+        this.$core.execViaComponent('Resources', 'createMaterial', this.userID);
         this.clear()
         this.getConfirmedUser({})
         this.$router.push({name: 'vx.resource.material.resources'})
       },
       setWorker(unitKey, personKey){
-        console.log('unitKey', unitKey, 'personKey', personKey)
         this.selectedUser = this.levels[unitKey].data[personKey]
         this.modalStatus = true
       },
@@ -218,7 +211,6 @@
       cancelUser(){
         this.chosenUser = {}
         this.modalStatus = false
-        console.log('this.chosenUser:', this.chosenUser)
       },
       onClose(){
         this.clear()

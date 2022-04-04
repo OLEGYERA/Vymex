@@ -1,7 +1,23 @@
 <template>
-  <div class="router-personal-view">
+  <div class="router-contact-info-view">
     <div class="main-info">
-      <name :name="`${contactInfo.name} ${contactInfo.lastname}`" @onClick="routerBack()" :type="'user'"/>
+      <name
+          :name="`${contactInfo.name} ${contactInfo.lastname}`"
+          @onClick="routerBack()"
+          :actions="actions"
+          del-title="Удалить из контактов"
+          @onDelete="statusBase = true"
+          @onList="$notify({text: 'Уведомления отключены', type: 'success', duration: 3000, speed: 500})"
+          :type="'user'"/>
+
+      <modal-base :status="statusBase" @onClose="statusBase = false" @onOk="deleteContact">
+        <template #title>Удалить из контактов?</template>
+        <template #description>
+          Контакт будет удален вместе со всеми медиа данными без возможности восстановления
+        </template>
+        <template #button-accept>Удалить</template>
+      </modal-base>
+
       <div class="photo">
         <image-avatar :logo="$core.traits.ImageLogo(contactInfo.avatar, contactInfo.name, contactInfo.lastname)" :color-code="$core.traits.ImageColorCode(contactInfo.id)"/>
       </div>
@@ -68,65 +84,68 @@
  import TextArea from "@Facade/Input/TextArea";
  import ButtonBase from '@Facade/Button/Base'
  import TitleSub from '@Facade/Title/Sub'
-import {mapGetters, mapMutations} from "vuex";
+ import ModalBase from '@Facade/Modal/Base'
 
-export default {
-  name: 'Singleton.Messenger.Views.Sidebar.RouterPersonal',
-  components: {
-    Name,
-    ImageAvatar,
-    TextBase,
-    TitleCaption,
-    IconMail,
-    IconPhone,
-    IconLetter,
-    IconCalendar,
-    IconCopy,
-    TextArea,
-    ButtonBase,
-    TitleSub
-  },
-  data() {
-    return {
-    }
-  },
-  updated() {
-    console.log('mounted', this.contactInfo)
-  },
-  computed: {
-    ...mapGetters({
-      // fullName: 'getUserFullName',
-      // birthday: 'getUserBirthday',
-      // alias: 'getUserAlias',
-      // phone: 'getUserTelephone',
-      // email: 'getUserEmail',
-      // about: 'getUserAbout',
-      // avatar: 'getUserAvatarData',
-      // type: 'Messenger/personalRouterType',
-      contactInfo: 'Messenger/getCurrentContact'
-    }),
-  },
-  methods: {
-    ...mapMutations({
-      openMessenger: 'Messenger/openMessenger',
-      routerBack: 'Messenger/ToolsScene/routerBack'
-    }),
-    sendContactMessage(){
-      this.$core.execViaComponent('MsgDlg', 'create', this.contactInfo);
-      this.openMessenger()
+ import {mapGetters, mapMutations} from "vuex";
+
+  export default {
+    name: 'Singleton.Messenger.Views.Sidebar.RouterPersonal',
+    components: {
+      Name,
+      ImageAvatar,
+      TextBase,
+      TitleCaption,
+      IconMail,
+      IconPhone,
+      IconLetter,
+      IconCalendar,
+      IconCopy,
+      TextArea,
+      ButtonBase,
+      TitleSub,
+      ModalBase
     },
-    updateRouter(value) {
-      this.$emit('updateRouter', 'search')
+    data() {
+      return {
+        actions: ['Отлючить уведомления'],
+        statusBase: false
+      }
     },
-    copyInfo(){
-      this.$notify({text: 'Данные скопированы', type: 'success', duration: 3000, speed: 500})
+    updated() {
+      console.log('mounted', this.contactInfo)
+    },
+    computed: {
+      ...mapGetters({
+        contactInfo: 'Messenger/getCurrentContact'
+      }),
+    },
+    methods: {
+      ...mapMutations({
+        openMessenger: 'Messenger/openMessenger',
+        routerBack: 'Messenger/ToolsScene/routerBack',
+        setActiveChat: 'Messenger/setActiveChat'
+      }),
+      sendContactMessage(){
+        this.setActiveChat(['searchedContacts', this.contactInfo.id])
+        this.openMessenger()
+      },
+      updateRouter(value) {
+        this.$emit('updateRouter', 'search')
+      },
+      copyInfo(){
+        this.$notify({text: 'Данные скопированы', type: 'success', duration: 3000, speed: 500})
+      },
+      deleteContact(){
+        this.statusBase = false
+        this.$notify({text: 'Контакт удален', type: 'success', duration: 3000, speed: 500})
+        this.routerBack()
+      }
     }
   }
-}
 </script>
 
 <style lang="scss" scoped>
-  .router-personal-view{
+  .router-contact-info-view{
     width: 100%;
     height: 100%;
     padding: 8px 0;
@@ -155,7 +174,6 @@ export default {
           margin-bottom: 20px;
         }
         .facade-input-text-area::v-deep {
-          margin-bottom: 44px;
           .textarea-title{
             font-size: 12px;
           }
@@ -226,7 +244,7 @@ export default {
       }
 
       .button-msg-row{
-        margin-top: 24px;
+        margin-top: 44px;
       }
     }
   }

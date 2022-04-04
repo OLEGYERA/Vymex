@@ -1,7 +1,7 @@
 <template>
   <div class="router-invite-view">
     <div class="main-info">
-      <name :name="'Пригласить в VYMEX'" @onClick="onClose"/>
+      <name :name="'Пригласить в VYMEX'" @onClick="routerBack()"/>
 
       <div class="invitation-box">
         <img src="@/assets/img/vymex/vymex.png" class="invitation-image">
@@ -19,7 +19,7 @@
 
       <div class="invitation-button-group">
         <button-base @onClick="onOk">Пригласить</button-base>
-        <button-secondary @onClick="onClose">Отменить</button-secondary>
+        <button-secondary @onClick="routerBack()">Отменить</button-secondary>
       </div>
     </div>
   </div>
@@ -52,9 +52,6 @@ export default {
       this.routerBack()
       this.$notify({text: 'Ссылка скопирована', type: 'success', duration: 3000, speed: 500})
     },
-    onClose(){
-      this.routerBack()
-    }
   }
 }
 </script>

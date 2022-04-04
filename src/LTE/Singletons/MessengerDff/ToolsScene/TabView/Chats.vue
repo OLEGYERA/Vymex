@@ -13,7 +13,7 @@
       </template>
       <template #content>
         <div class="chats-table">
-          <chat v-for="(dialog, key) in dialogs" :dialog="dialog" :key="key"></chat>
+          <chat v-for="(dialog, key) in dialogs" :dialog="dialog" :key="key" @onClick="openChat"></chat>
         </div>
       </template>
     </tab-view>
@@ -26,7 +26,7 @@
   import Chat from "@/LTE/Singletons/MessengerDff/facade/Chat";
   import ListHeader from "@Facade/Navigation/ListHeader";
   import ModalActionList from '@Facade/Modal/ActionList'
-  import {mapMutations} from "vuex";
+  import {mapGetters, mapMutations} from "vuex";
 
   export default {
     name: 'Singleton.Messenger.ToolsScene.TabView.Chats',
@@ -37,150 +37,27 @@
       return {
         statusAction: false,
         actions: ['Создать чат', 'Создать групповой чат'],
-        dialogs: [
-          {
-            title: 'Корпоративный Движ',
-            name: 'Виталина',
-            message: 'Ок, но ничего не понятно!',
-            time: '04:20',
-            img: './',
-            unread: 2,
-          },
-          {
-            title: 'Поездка в Чернобыль',
-            name: 'Вы',
-            message: 'Ребята, общий сбор в 9:30',
-            time: '04:20',
-            img: './',
-            unread: 3,
-          },
-          {
-            title: 'Татьяна Булатова',
-            message: 'Офигеть, здесь можно переписыват...',
-            time: '04:20',
-            img: './',
-            status: 'sent'
-          },
-          {
-            title: 'Анастасия Куликова',
-            message: 'Рада что все круто)',
-            time: '04:20',
-            img: './'
-          },
-          {
-            title: 'Андрей Вашуленко',
-            message: 'Погнали пилить апку, че его просто...',
-            time: '04:20',
-            img: './',
-            status: 'delivered'
-          },
-          {
-            title: 'Дмитрий Погодин',
-            message: 'Погнали пилить апку, че его просто...',
-            time: '04:20',
-            img: './',
-            status: 'sent'
-          },
-          {
-            title: 'Нина Меркулова',
-            message: 'Норм, а что по задачам?',
-            time: '04:20',
-            img: './',
-            unread: 5,
-          },
-          {
-            title: 'Дария Шевченко',
-            message: 'Офигеть, здесь можно переписыват...',
-            time: '04:20',
-            img: './',
-            status: 'sent'
-          },
-          {
-            title: 'Поездка в Чернобыль',
-            name: 'Вы',
-            message: 'Ребята, общий сбор в 9:30',
-            time: '04:20',
-            img: './',
-            status: 'delivered'
-          },
-          {
-            title: 'Андрей Вашуленко',
-            message: 'Погнали пилить апку, че его просто...',
-            time: '04:20',
-            img: './',
-            status: 'sent'
-          },
-          {
-            title: 'Анастасия Куликова',
-            message: 'Рада что все круто)',
-            time: '04:20',
-            img: './'
-          },
-          {
-            title: 'Андрей Вашуленко',
-            message: 'Погнали пилить апку, че его просто...',
-            time: '04:20',
-            img: './',
-            status: 'delivered'
-          },
-          {
-            title: 'Дмитрий Погодин',
-            message: 'Погнали пилить апку, че его просто...',
-            time: '04:20',
-            img: './',
-            status: 'sent'
-          },
-          {
-            title: 'Нина Меркулова',
-            message: 'Норм, а что по задачам?',
-            time: '04:20',
-            img: './',
-            unread: 5,
-          },
-          {
-            title: 'Дария Шевченко',
-            message: 'Офигеть, здесь можно переписыват...',
-            time: '04:20',
-            img: './',
-            status: 'sent'
-          },
-          {
-            title: 'Поездка в Чернобыль',
-            name: 'Вы',
-            message: 'Ребята, общий сбор в 9:30',
-            time: '04:20',
-            img: './',
-            status: 'delivered'
-          },
-          {
-            title: 'Андрей Вашуленко',
-            message: 'Погнали пилить апку, че его просто...',
-            time: '04:20',
-            img: './',
-            status: 'sent'
-          },
-          {
-            "id": 1,
-            "avatar": null,
-            "type": "dialog",
-            "title": "Андрей test_lastname",
-            "userId": 1,
-            "unread": 0,
-            "status": "unread",
-            "accessHash": "57f288f1394975e47b58165ebf8a2788ee60eb9d26f425f6d5a588f9134c2e5c",
-            "isMuted": 0
-          },
-        ],
       }
+    },
+    computed: {
+      ...mapGetters({
+        dialogs: 'Messenger/chats',
+      }),
     },
     methods: {
       ...mapMutations({
-        routerNext: 'Messenger/ToolsScene/routerNext'
+        routerNext: 'Messenger/ToolsScene/routerNext',
+        openMessenger: 'Messenger/openMessenger',
+        setActiveChat: 'Messenger/setActiveChat'
       }),
       makeAction(id){
         if(id === 1) {
           this.routerNext({name: 'create-group-chat'})
         }
+      },
+      openChat(id){
+        this.openMessenger()
+        this.setActiveChat(['chats', id])
       }
     }
   }

@@ -9,7 +9,7 @@
         <title-caption>@{{data.alias}}</title-caption>
       </div>
     </div>
-    <img v-if="data.pk.slice(0, 1) === '1' || data.pk.slice(0, 1) === '2'" src="@/assets/img/my/hands.svg">
+    <img src="@/assets/img/my/crown.svg">
   </div>
 </template>
 

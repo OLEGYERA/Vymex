@@ -16,7 +16,7 @@
     </div>
 
     <div class="button-next">
-      <button-base @onClick="onConfirm">Далее</button-base>
+      <button-base :disable="contacts.every(contact => contact.details.checked === false)" @onClick="onConfirm">Далее</button-base>
     </div>
   </div>
 </template>
@@ -43,19 +43,21 @@
     },
     computed: {
       ...mapGetters({
-        contacts: 'Messenger/ToolsScene/contactsAll',
+        contacts: 'Messenger/contactsAll',
       }),
     },
     methods: {
       ...mapMutations({
         routerNext: 'Messenger/ToolsScene/routerNext',
         routerBack: 'Messenger/ToolsScene/routerBack',
-        selectContacts: 'Messenger/ToolsScene/selectContacts',
-        chooseUser: 'Messenger/ToolsScene/chooseUser'
+        selectContacts: 'Messenger/selectContacts',
+        chooseUser: 'Messenger/chooseUser'
       }),
       onConfirm() {
-        this.routerNext({name: 'create-group-chat'})
+        this.routerBack()
         this.selectContacts()
+        this.$notify({text: 'Участники добавлены', type: 'success', duration: 3000, speed: 500})
+
       }
     },
     created() {

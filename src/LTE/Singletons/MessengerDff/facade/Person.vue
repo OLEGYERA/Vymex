@@ -26,6 +26,7 @@
   import PointsVertical from '@Icon/PointsVertical'
   import ImageAvatar from '@Facade/Image/Avatar'
   import ModalActionList from '@Facade/Modal/ActionList'
+  import {mapMutations} from "vuex";
 
   export default {
     name: 'Singleton.Messenger.Facades.Person',
@@ -57,10 +58,18 @@
       modalDelete: String
     },
     methods: {
+      ...mapMutations({
+        openMessenger: 'Messenger/openMessenger',
+        setActiveChat: 'Messenger/setActiveChat'
+      }),
       makeAction(id){
         console.log(id, 'data id', this.data.id)
         if (id === 0) {
           this.$emit('openProfile', this.data.id)
+        }
+        if (id === 1){
+          this.openMessenger()
+          this.setActiveChat(['searchedContacts', this.data.id])
         }
         if(id === 2){
           this.$notify({text: 'Уведомления отключены', type: 'success', duration: 3000, speed: 500})

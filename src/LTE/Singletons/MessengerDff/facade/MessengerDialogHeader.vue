@@ -6,13 +6,17 @@
             :actions="actions"
             :status="statusAction"
             @onClose="statusAction = false"
-            @onDelete="modalStatus = true">
+            @onDelete="modalStatus = true"
+            @onList="chooseAction"
+        >
           <template #del-title>Удалить чат</template>
         </modal-action-list>
       </transition>
-      <div class="dialog-image"></div>
+      <div class="dialog-avatar">
+        <image-avatar :logo="$core.traits.ImageLogo(chat.avatar , chat.name || chat.title, chat.lastname || chat.title.split(' ')[1])" :color-code="$core.traits.ImageColorCode(chat.id)"/>
+      </div>
       <div class="info-text">
-        <text-base><slot>Илон Маск зовет на Марс</slot></text-base>
+        <text-base>{{ title }}</text-base>
       </div>
       <div class="menu-button" @click="statusAction = true">
         <points-vertical :class="{active: statusAction}"/>
@@ -34,7 +38,10 @@
   import IconError from '@Icon/Error'
   import ModalActionList from "@Facade/Modal/ActionList";
   import ModalBase from '@Facade/Modal/Base'
+  import ImageAvatar from '@Facade/Image/Avatar'
+
   import {mapMutations} from "vuex";
+
   export default {
     name: 'Singleton.Messenger.Facades.MessengerHeader',
     components: {
@@ -42,7 +49,8 @@
       PointsVertical,
       IconError,
       ModalActionList,
-      ModalBase
+      ModalBase,
+      ImageAvatar
     },
     data() {
       return {
@@ -51,19 +59,39 @@
         modalStatus: false,
       }
     },
+    props:{
+      chat: {
+        type: Object,
+        required: true
+      }
+    },
+    computed:{
+      title(){
+        return this.chat.title ? this.chat.title : `${this.chat.name} ${this.chat.lastname}`
+      }
+    },
     methods: {
       handlePressOk() {
+        this.routerNull()
         this.$notify({text: 'Чат удален', type: 'success', duration: 3000, speed: 500})
         this.modalStatus = false
+        this.closeMessenger()
       },
       ...mapMutations({
-        closeMessenger: 'Messenger/closeMessenger'
+        closeMessenger: 'Messenger/closeMessenger',
+        routerNext: 'Messenger/ToolsScene/routerNext',
+        routerNull: 'Messenger/ToolsScene/routerNull'
       }),
-      // makeAction(id){
-      //   if(id === 0){
-      //
-      //   }
-      // }
+      chooseAction(id){
+        console.log(id)
+        if(id === 0){
+          this.$core.execViaComponent('MsgUser', 'full', this.chat.id);
+          this.routerNext({name: 'contact-info'})
+        }
+        if(id === 1){
+          this.$notify({text: 'Уведомления отключены', type: 'success', duration: 3000, speed: 500})
+        }
+      }
     }
   }
 </script>
@@ -82,14 +110,13 @@
       position: relative;
       display: inherit;
       align-items: center;
-      .dialog-image {
+      .dialog-avatar {
         margin-right: 12px;
         height: 40px;
         width: 40px;
-        border-radius: 50%;
-        background-color: #fff;
       }
       .facade-text-base {
+        min-width: 180px;
         margin-right: 24px;
         color: #fff;
       }
@@ -106,7 +133,7 @@
       .facade-modal-action-list::v-deep {
         .action-list-body{
           top: 46px;
-          left: 274px; /// говно
+          left: 266px; /// говно
         }
       }
     }

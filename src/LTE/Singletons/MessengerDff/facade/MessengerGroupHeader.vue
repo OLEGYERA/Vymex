@@ -1,21 +1,26 @@
 <template>
-  <div class="facade-messenger-header">
+  <div class="facade-messenger-header" @click="$emit('onClick')">
     <div class="private-info">
       <transition name="fade">
         <modal-action-list
             :actions="actions"
             :status="statusAction"
             @onClose="statusAction = false"
-            @onDelete="modalStatus = true">
-          <template #del-title>Удалить чат</template>
+            @onDelete="deleteChat"
+            @onList="chooseAction"
+            :disable-delete="disable"
+            >
+          <template v-if="!disable" #del-title>Выйти из чата</template>
         </modal-action-list>
       </transition>
-      <div class="dialog-image"></div>
-      <div class="info-text">
-        <text-base><slot>Илон Маск зовет на Марс</slot></text-base>
-        <title-caption><slot>4 участника</slot></title-caption>
+      <div class="dialog-avatar">
+        <image-avatar :logo="$core.traits.ImageLogo(chat.avatar, chat.title)" :color-code="$core.traits.ImageColorCode(chat.id)"/>
       </div>
-      <div class="menu-button" @click="statusAction = true">
+      <div class="info-text">
+        <text-base>{{chat.title}}</text-base>
+        <title-caption><slot>{{members}}</slot></title-caption>
+      </div>
+      <div class="menu-button" @click.stop="statusAction = true">
         <points-vertical :class="{active: statusAction}"/>
       </div>
     </div>
@@ -36,7 +41,10 @@
   import IconError from '@Icon/Error'
   import ModalActionList from "@Facade/Modal/ActionList";
   import ModalBase from '@Facade/Modal/Base'
-  import {mapMutations} from "vuex";
+  import ImageAvatar from '@Facade/Image/Avatar'
+
+  import {mapGetters, mapMutations} from "vuex";
+
   export default {
     name: 'Singleton.Messenger.Facades.MessengerHeader',
     components: {
@@ -45,27 +53,74 @@
       PointsVertical,
       IconError,
       ModalActionList,
-      ModalBase
+      ModalBase,
+      ImageAvatar
     },
     data() {
       return {
-        actions: ['Профиль', 'Отключить уведомления'],
+        actionsOwner: ['Отключить уведомления', 'Отметить непрочитанным', 'Редактировать'],
+        actionsUser: ['Отключить уведомление', 'Отметить непрочитанным'],
         statusAction: false,
         modalStatus: false,
       }
     },
+    props:{
+      chat: {
+        type: Object,
+        required: true
+      }
+    },
+    computed:{
+      ...mapGetters({
+        id: 'getUserID',
+      }),
+      actions(){
+        if(this.id === this.chat.owner.id){
+          return this.actionsOwner
+        }
+        return this.actionsUser
+      },
+      disable(){
+        return this.id === this.chat.owner.id
+      },
+      members(){
+        const usersAmount = this.chat.users.length + 1
+        if(usersAmount >4 && usersAmount < 21){
+          return `${usersAmount} участников`
+        }
+        if (Number(String(usersAmount).slice(-1)) === 1) {
+          return `${usersAmount} участник`
+        }
+        if (Number(String(usersAmount).slice(-1)) < 5){
+          return `${usersAmount} участника`
+        }
+        return `${usersAmount} участников`
+      }
+    },
+
     methods: {
       handlePressOk() {
         this.modalStatus = false
       },
       ...mapMutations({
-        closeMessenger: 'Messenger/closeMessenger'
+        closeMessenger: 'Messenger/closeMessenger',
+        routerNext: 'Messenger/ToolsScene/routerNext',
       }),
-      // makeAction(id){
-      //   if(id === 0){
-      //
-      //   }
-      // }
+      chooseAction(id) {
+        if(id === 0){
+          this.$notify({text: 'Уведомления отключены', type: 'success', duration: 3000, speed: 500})
+        }
+        if (id === 1){
+          this.$notify({text: 'Отмечено как не прочитанное', type: 'success', duration: 3000, speed: 500})
+        }
+        if (id === 2){
+          this.routerNext({name: 'edit-group'})
+        }
+      },
+      deleteChat(){
+        this.closeMessenger()
+        this.$notify({text: 'Групповой чат был удален', type: 'success', duration: 3000, speed: 500})
+      }
     }
   }
 </script>
@@ -80,18 +135,18 @@
     box-sizing: border-box;
     background-color: $grey-scale-500;
     border-bottom: $grey-scale-700 solid 1px;
+    cursor: pointer;
     .private-info {
       position: relative;
       display: inherit;
       align-items: center;
-      .dialog-image {
+      .dialog-avatar {
         margin-right: 12px;
         height: 40px;
         width: 40px;
-        border-radius: 50%;
-        background-color: #fff;
       }
       .facade-text-base {
+        min-width: 180px;
         margin-right: 24px;
         color: #fff;
       }

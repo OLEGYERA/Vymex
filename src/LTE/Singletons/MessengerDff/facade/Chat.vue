@@ -1,8 +1,8 @@
 <template>
-  <div class="facade-messenger-chat" @click="openMessenger()">
+  <div class="facade-messenger-chat" @click="$emit('onClick', dialog.id)" @click.right.prevent="status = true">
     <div class="dialog-image">
-      <image-avatar :logo="logo" :colorCode="color"/>
-      <span v-if="dialog.name"><icon-group/></span>
+      <image-avatar :logo="$core.traits.ImageLogo(dialog.avatar, dialog.title, dialog.title.split(' ')[1])" :color-code="$core.traits.ImageColorCode(dialog.id)"/>
+      <span v-if="dialog.type === 'group'"><icon-group/></span>
     </div>
     <div class="info-text">
       <div class="top-part">
@@ -16,63 +16,77 @@
         </div>
       </div>
       <title-caption class="name">{{dialog.name}}</title-caption>
-      <title-caption>{{dialog.message}}</title-caption>
+      <title-caption v-if="dialog.message">{{dialog.message}}</title-caption>
     </div>
     <template v-if="dialog.unread">
       <info-amount>{{dialog.unread}}</info-amount>
     </template>
+    <modal-action-list :status="status" :actions="actions" @onClose="status = false" @onList="chooseAction" @onDelete="deleteChat">
+      <template #del-title>Выйти из чата</template>
+    </modal-action-list>
   </div>
 </template>
 
 <script>
-import TitleCaption from '@Facade/Title/Caption'
-import TextBase from '@Facade/Text/Base'
-import IconDoubleCheck from "@Icon/DoubleCheck"
-import IconGroup from "@Icon/Group"
-import ImageAvatar from '@Facade/Image/Avatar'
-import IconSingleCheck from '@Icon/SingleCheck'
-import InfoAmount from "@/LTE/Singletons/facades/InfoAmount";
-import {mapMutations} from "vuex";
+  import TitleCaption from '@Facade/Title/Caption'
+  import TextBase from '@Facade/Text/Base'
+  import IconDoubleCheck from "@Icon/DoubleCheck"
+  import IconGroup from "@Icon/Group"
+  import ImageAvatar from '@Facade/Image/Avatar'
+  import IconSingleCheck from '@Icon/SingleCheck'
+  import InfoAmount from "@/LTE/Singletons/facades/InfoAmount";
+  import ModalActionList from "@Facade/Modal/ActionList";
 
-export default {
-  name: 'Singleton.Messenger.Facades.Chat',
-  components: {
-    TitleCaption,
-    TextBase,
-    IconDoubleCheck,
-    IconGroup,
-    ImageAvatar,
-    IconSingleCheck,
-    InfoAmount
-  },
-  data() {
-    return {
-      color: '1'
-    }
-  },
-  props: {
-    dialog: {
-      type: Object,
-      required: true,
+  export default {
+    name: 'Singleton.Messenger.Facades.Chat',
+    components: {
+      TitleCaption,
+      TextBase,
+      IconDoubleCheck,
+      IconGroup,
+      ImageAvatar,
+      IconSingleCheck,
+      InfoAmount,
+      ModalActionList
     },
-  },
-  computed: {
-    logo: function () {
-      let initials = ''
-      for (const char of this.dialog.title) {
-        if (char === char.toUpperCase() && char !== ' ') {
-          initials += char
-        }
+    data() {
+      return {
+        color: '1',
+        status: false,
+        actions: ['Отключить уведомления', 'Отметить не прочитанным']
       }
-      return initials.slice(0, 2);
     },
-  },
-  methods: {
-    ...mapMutations({
-      openMessenger: 'Messenger/openMessenger'
-    }),
+    props: {
+      dialog: {
+        type: Object,
+        required: true,
+      },
+    },
+    computed: {
+      logo: function () {
+        let initials = ''
+        for (const char of this.dialog.title) {
+          if (char === char.toUpperCase() && char !== ' ') {
+            initials += char
+          }
+        }
+        return initials.slice(0, 2);
+      },
+    },
+    methods: {
+      chooseAction(id){
+        if(id === 0){
+          this.$notify({text: 'Уведомления отключены', type: 'success', duration: 3000, speed: 500})
+        }
+        if (id === 1){
+          this.$notify({text: 'Чат отмечен как прочитанный', type: 'success', duration: 3000, speed: 500})
+        }
+      },
+      deleteChat(){
+        this.$notify({text: 'Групповой чат был удален', type: 'success', duration: 3000, speed: 500})
+      }
+    }
   }
-}
 </script>
 
 <style lang="scss" scoped>
@@ -140,6 +154,12 @@ export default {
       position: absolute;
       right: 12px;
       bottom: 16px;
+    }
+    .facade-modal-action-list::v-deep {
+      .action-list-body{
+        left: 90px;
+        top: 40px;
+      }
     }
   }
 </style>

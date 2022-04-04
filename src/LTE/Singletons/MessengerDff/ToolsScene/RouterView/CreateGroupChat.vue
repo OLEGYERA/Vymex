@@ -1,10 +1,10 @@
 <template>
   <div class="router-create-group-chat-view">
     <div class="main-info">
-      <name :name="'Групповой чат'" @onClick="routerBack()"/>
+      <name :name="'Групповой чат'" @onClick="onClick"/>
       <div class="group-chat-main-info">
         <div class="group-chat-avatar">
-          <image-avatar :logo="newGroupChat.avatar" :color-code="$core.traits.ImageColorCode(id)"/>
+          <image-avatar :logo="newGroupChat.avatar || ''" :color-code="$core.traits.ImageColorCode(id)"/>
           <div class="avatar-camera">
             <img src="@/assets/img/my/camera.svg">
           </div>
@@ -12,7 +12,7 @@
 
         <input-base :model="newGroupChat.title" :placeholder="'Название группового чата'" labeled @onInput="newGroupChat.title = $event"/>
 
-        <text-area :model="newGroupChat.description" :placeholder="'Информация о групповом чате'" labeled :max-length="250"/>
+        <text-area :model="newGroupChat.description" @onInput="newGroupChat.description = $event" :placeholder="'Информация о групповом чате'" labeled :max-length="250"/>
 
         <div class="button-next" v-if="contacts.length===0">
           <button-base @onClick="routerNext({name: 'add-users'})" :disable="!newGroupChat.title.trim()">Далее</button-base>
@@ -23,6 +23,7 @@
             участники чата
             <span class="list-title-counter">{{ contacts.length }}</span>
           </title-caps>
+
           <div class="chat-chosen-users">
             <person v-for="(contact, key) in contacts"
                     :data="contact" :key="key"
@@ -31,8 +32,8 @@
             />
           </div>
 
-          <button-secondary @onClick="routerBack()">Добавить участников</button-secondary>
-          <button-base>Создать чат</button-base>
+          <button-secondary @onClick="routerNext({name: 'add-users'})">Добавить участников</button-secondary>
+          <button-base @onClick="createChat">Создать чат</button-base>
         </div>
 
       </div>
@@ -51,7 +52,7 @@
   import Person from "../../facade/Person";
   import ButtonSecondary from '@Facade/Button/Secondary'
 
-  import {mapGetters, mapMutations} from "vuex";
+  import {mapGetters, mapMutations, mapActions} from "vuex";
 
   export default {
     name: 'Singleton.Messenger.Views.Sidebar.RouterPersonal',
@@ -72,19 +73,35 @@
     computed: {
       ...mapGetters({
         id: 'getUserID',
-        contacts: 'Messenger/ToolsScene/chosenContacts',
-        newGroupChat: 'Messenger/ToolsScene/newGroupChat'
+        contacts: 'Messenger/chosenContacts',
+        newGroupChat: 'Messenger/newGroupChat',
+        user: 'getUser',
+        alias: 'getUserAlias'
       }),
     },
     methods: {
       ...mapMutations({
         routerBack: 'Messenger/ToolsScene/routerBack',
         routerNext: 'Messenger/ToolsScene/routerNext',
-        deleteSelectedContact: 'Messenger/ToolsScene/deleteSelectedContact'
+        deleteSelectedContact: 'Messenger/deleteSelectedContact',
+        clearNewGroupChat: 'Messenger/clearNewGroupChat',
+        addNewChat: 'Messenger/addNewChat',
+        openMessenger: 'Messenger/openMessenger',
       }),
+      ...mapActions ({create: 'Messenger/create'}),
       deleteContact(id){
         this.deleteSelectedContact(id)
+        this.$notify({text: 'Участник удален', type: 'success', duration: 3000, speed: 500})
       },
+      onClick(){
+        this.routerBack()
+        this.clearNewGroupChat()
+      },
+      createChat(){
+        this.create({...this.user, alias: this.alias})
+        this.routerBack()
+        this.openMessenger()
+      }
     },
   }
 </script>
@@ -140,9 +157,6 @@
       }
       .button-next{
         margin-top: 44px;
-      }
-      .facade-button-base{
-
       }
       .group-chat-contacts-block{
         .facade-button-secondary{

@@ -1,7 +1,7 @@
 <template>
   <div class="sender-scene-app" v-if="messengerStatus">
-    <messenger-group-header/>
-    <messenger-dialog-header/>
+    <messenger-group-header v-if="chat.type === 'group'" :chat="chat" @onClick="routerNext({name: 'group-info'})"/>
+    <messenger-dialog-header v-else :chat="chat"/>
     <main class="messenger-main-plate" ref="messageArea">
       <messenger-date/>
       <message v-for="(message, key) in messages" :message="message" :key="key"/>
@@ -16,7 +16,7 @@
   import Message from "@/LTE/Singletons/Messenger/facades/Message";
   import MessengerDate from "@/LTE/Singletons/Messenger/facades/MessengerDate";
   import InputArea from "@/LTE/Singletons/Messenger/views/messenger/InputArea";
-  import {mapGetters} from "vuex";
+  import {mapGetters, mapMutations} from "vuex";
 
   export default {
     name: 'Singleton.Messenger.Views.Messenger.MessengerMain',
@@ -118,11 +118,14 @@
       }
     },
     methods: {
+      ...mapMutations({
+        routerNext: 'Messenger/ToolsScene/routerNext'
+      }),
       sendMessage(text) {
         const time = new Date().toLocaleTimeString().slice(0,-3)
         const newMessage = {
           type: 'owner',
-          time : time,
+          time,
           status: 'sent',
           text: text,
         }
@@ -131,11 +134,11 @@
     },
     computed: {
       ...mapGetters({
-        messengerStatus: 'Messenger/messengerStatus'
+        messengerStatus: 'Messenger/messengerStatus',
+        chat: 'Messenger/activeChat'
       })
     },
     updated() {
-      // this.$refs.messageArea.style.scrollBehavior = 'smooth'
       this.$refs.messageArea.scrollBy(0, this.$refs.messageArea.scrollHeight);
     },
     mounted() {

@@ -6,65 +6,50 @@
     </div>
     <points-vertical v-if="type==='user'" @click.native="statusAction = true"/>
     <modal-action-list :status="statusAction"
+                       v-if="actions || disableDelete"
                        :actions="actions"
-                       @onList="$notify({text: 'Уведомления отключены', type: 'success', duration: 3000, speed: 500})"
+                       :disable-delete="disableDelete"
+                       @onList="chooseAction"
                        @onClose="statusAction = false"
-                       @onDelete="statusBase = true">
-      <template #del-title>Удалить из контактов</template>
+                       @onDelete="$emit('onDelete')">
+      <template v-if="delTitle" #del-title>{{delTitle}}</template>
     </modal-action-list>
-    <modal-base :status="statusBase" @onClose="statusBase = false" @onOk="deleteContact">
-      <template #title>Удалить из контактов?</template>
-      <template #description>
-        Контакт будет удален вместе со всеми медиа данными без возможности восстановления
-      </template>
-      <template #button-accept>Удалить</template>
-    </modal-base>
   </div>
 </template>
 
 <script>
-import ArrowLeft from '@Icon/ArrowLeftBold'
-import PointsVertical from '@Icon/PointsVertical'
-import ModalActionList from '@Facade/Modal/ActionList'
-import ModalBase from '@Facade/Modal/Base'
-import {mapMutations} from "vuex";
+  import ArrowLeft from '@Icon/ArrowLeftBold'
+  import PointsVertical from '@Icon/PointsVertical'
+  import ModalActionList from '@Facade/Modal/ActionList'
 
-export default {
-  name: 'Singleton.Messenger.Facades.Name',
-  components: {
-    ArrowLeft,
-    PointsVertical,
-    ModalActionList,
-    ModalBase
-  },
-  data(){
-    return{
-      statusAction: false,
-      actions: ['Отлючить уведомления'],
-      statusBase: false
-    }
-  },
-  props: {
-    name: {
-      type: String,
-      required: true
+  export default {
+    name: 'Singleton.Messenger.Facades.Name',
+    components: {
+      ArrowLeft,
+      PointsVertical,
+      ModalActionList,
     },
-    type: String
-  },
-  methods: {
-    ...mapMutations({
-      routerBack: 'Messenger/ToolsScene/routerBack',
-    }),
-    deleteContact(){
-      this.statusBase = false
-      this.$notify({text: 'Контакт удален', type: 'success', duration: 3000, speed: 500})
-      this.routerBack()
+    data(){
+      return{
+        statusAction: false,
+      }
+    },
+    props: {
+      name: {
+        type: String,
+        required: true
+      },
+      type: String,
+      actions: Array,
+      delTitle: String,
+      disableDelete: Boolean
+    },
+    methods: {
+      chooseAction(id) {
+        this.$emit('onList', id)
+      }
     }
-  },
-  mounted() {
-    console.log(1111111)
   }
-}
 </script>
 
 <style lang="scss" scoped>

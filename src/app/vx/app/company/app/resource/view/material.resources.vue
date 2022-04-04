@@ -83,9 +83,6 @@
       ...mapMutations({
         showSidebar: 'Resources/showSidebar',
       }),
-      // makeAction(id){
-      //
-      // }
     },
     computed: {
       ...mapGetters({
@@ -94,24 +91,13 @@
         materialResources: 'Resources/materialResources',
         userID: 'getUserID'
       }),
-    //   buttonDisable(){
-    //     let status = true
-    //     this.levels.every(el => {
-    //       if (el.data.every(a => a.checked === false)) {
-    //         status = true
-    //       } else {
-    //         status = false
-    //       }
-    //     })
-    //     return status
-    //   }
     },
     created() {
       this.$core.execViaComponent('Resources', 'getMaterialResources', this.userID);
-      // if(this.$route.params.resourceId){
-      //   this.materialObjects.splice(this.materialObjects.findIndex(el => el.id === this.$route.params.resourceId), 1)
-      // }
     },
+    updated() {
+      this.$core.execViaComponent('Resources', 'getMaterialResources', this.userID);
+    }
   }
 </script>
 

@@ -52,6 +52,8 @@
   import RouterViewInvite from "./RouterView/Invite"
   import RouterViewCreateGroupChat from "./RouterView/CreateGroupChat"
   import RouterViewAddUsers from "./RouterView/AddUsers"
+  import RouterViewGroupInfo from "./RouterView/GroupInfo"
+  import RouterViewEditGroup from "./RouterView/EditGroup"
 
 
   export default {
@@ -61,7 +63,7 @@
       ImageAvatar, TitleCaption, TextBase, InfoAmount,
       TabViewContacts, TabViewChats, TabViewVolumes,
       RouterViewSearch, RouterViewContact, RouterViewPersonalInfo, RouterViewContactInfo, RouterViewInvite,
-      RouterViewCreateGroupChat, RouterViewAddUsers
+      RouterViewCreateGroupChat, RouterViewAddUsers, RouterViewGroupInfo, RouterViewEditGroup
     },
     computed: {
       ...mapGetters({
