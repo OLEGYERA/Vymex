@@ -6,8 +6,15 @@
 			<div class="blur-content">
 				<div class="blur-content-head">
 					<title-caps>Получатель доли</title-caps>
-					<button-add @click.native="show()" />
+					<button-add v-if="!shareRecipients.id" @click.native="show()" />
 				</div>
+				<person
+					v-if="shareRecipients.id"
+					class="blue-person"
+          :contact="shareRecipients"
+					user
+					@click.native="deleteUser()"
+				/>
 				<div class="blur-content-item">
 					<icon-process />
 					<title-caption class="title-caption">Распоряжение долей компании</title-caption>
@@ -27,8 +34,28 @@
 		</div>
 		<div class="blur-resource-buttons">
 			<button-secondary class="blur-resource-button">Отмена</button-secondary>
-			<button-base class="blur-resource-button" :disable="true">Выдать долю</button-base>
+			<button-base 
+				@click.native="showModal = true"
+				class="blur-resource-button" 
+				:disable="validIssueShare"
+			>
+				Выдать долю
+			</button-base>
 		</div>
+		<modal :status="showModal" @onClose="showModal = false" @onOk="addUser">
+			<template #title>Подтвердите передачу доли</template>
+			<template #content>
+				<attention />
+				<title-caps class="modal-caps">Получит доли</title-caps>
+				<person
+					class="blue-person"
+          :contact="shareRecipients"
+					user
+				/>
+				<info-card-share :share="share" />
+			</template>
+			<template #button-accept>Подтвердить</template>
+		</modal>
 	</div>
 </template>
 
@@ -44,7 +71,11 @@ import InputBase from '@Facade/Input/Base'
 import ButtonSecondary from "@Facade/Button/Secondary"
 import ButtonBase from "@Facade/Button/Base"
 
-import {mapMutations} from 'vuex'
+import {mapGetters, mapMutations} from 'vuex'
+import Person from '@/LTE/Singletons/Messenger/facades/Person'
+import Modal from "@Facade/Modal/Base";
+import Attention from '@/LTE/Singletons/Users/facades/Attention'
+import InfoCardShare from '@/LTE/Singletons/Users/facades/InfoCardShare'
 
 export default {
 	name: 'vx.co.founder.blur',
@@ -58,23 +89,49 @@ export default {
 		TitleSemi,
 		InputBase,
 		ButtonSecondary,
-		ButtonBase
+		ButtonBase,
+		Person,
+		Modal,
+		Attention,
+		InfoCardShare
 	},
 	data() {
 		return {
 			available: 74,
-			share: null
+			share: null,
+			showModal: false
 		}
 	},
 	methods: {
 		...mapMutations({
 			show: 'Users/show',
-		})
+			deleteUser: 'Users/deleteUser',
+			setIssuedShares: 'Users/setIssuedShares'
+		}),
+		addUser() {
+			console.log('add');
+			this.showModal = false
+			this.deleteUser
+			this.$router.push({name: 'vx.co.founder'})
+			this.setIssuedShares({
+				...this.shareRecipients,
+				share: this.share
+			})
+		}
 	},
 	computed: {
+		...mapGetters({
+			shareRecipients: 'Users/shareRecipients'
+		}),
 		remainder() {
 			let result = this.available - this.share
 			return result < 0 ? 0 : result
+		},
+		validIssueShare() {
+			return !this.shareRecipients.id
+				|| !this.share
+				|| this.share == 0
+				|| this.share > this.available
 		}
 	}
 }
@@ -85,6 +142,10 @@ export default {
 		padding: 15px;
 		max-width: 795px;
 		margin: 10px auto;
+
+		& .modal-caps {
+			margin: 28px 0 16px 0 ;
+		}
 
 		& .facade-title-base {
 			text-align: center;
@@ -121,6 +182,13 @@ export default {
 				padding: 12px;
 				text-align: left;
 				margin-bottom: 4px;
+			}
+
+			& .blue-person {
+				transition: .3s;
+				&:hover {
+					filter: brightness(0.6);
+				}
 			}
 
 			.icon-process {

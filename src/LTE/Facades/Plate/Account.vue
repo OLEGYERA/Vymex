@@ -17,13 +17,7 @@
       </div>
     </div>
     <div class="plate-account-content" v-show="isShow">
-      <level-ui 
-        v-for="l in ['co-founder', 'one', 'two', 'four']" 
-        :key="l" 
-        :level="l"
-        :tiny="tiny"
-        @click.native="routerPush(l)"
-      />
+      <slot />
     </div>
   </div>
 </template>
@@ -34,7 +28,6 @@
   import TitleSub from '@Facade/Title/Sub'
   import TextBase from '@Facade/Text/Base'
   import IconDropdownArrow from '@Icon/DropdownArrow'
-  import {LevelUi} from '@Providers'
 
   import {mapGetters, mapMutations} from "vuex";
 
@@ -51,7 +44,6 @@
       },
       data: Object,
       active: Boolean,
-      router: Object,
     },
     components: {
       IconAdd,
@@ -59,7 +51,6 @@
       TitleSub,
       TextBase,
       IconDropdownArrow,
-      LevelUi
     },
     created() {
 
@@ -92,13 +83,6 @@
     },
     methods: {
       ...mapMutations(['setOpenCompany']),
-      routerPush(level) {
-        if (level === 'co-founder') {
-          this.$router.push({name: 'vx.co.founder'}).catch(() => {})
-        } else {
-          this.$router.push(this.router).catch(() => {})
-        }
-      },
       toggleCompany() {
         if(this.category === 'company') {
           let status = this.data.id !== this.openCompany.id 

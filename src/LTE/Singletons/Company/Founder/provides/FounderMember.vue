@@ -6,10 +6,10 @@
 			class="founder-member-card"
 		>
 			<image-avatar
-				:logo="coFounder.avatar || (coFounder.name.substr(0, 1) + coFounder.lastname.substr(0, 1))"
+				:logo="logo(coFounder)"
 				:color-code="String(coFounder.id).substr(coFounder.id.length - 1, 1)"
 			/>
-			<title-sub>{{`${coFounder.name} ${coFounder.lastname}`}}</title-sub>
+			<title-sub>{{coFounder.title}}</title-sub>
 			<div class="card-share">
 				<share card :value="coFounder.share" />
 				<title-caption>Доля в компании</title-caption>
@@ -32,7 +32,14 @@ export default {
       type: Array,
       default: () => []
     }
-  }
+  },
+	methods: {
+		logo(founder) {
+			let res = ''
+			founder.title.split(' ').forEach(l => res += l[0])
+			return res
+		}
+	}
 }
 </script>
 

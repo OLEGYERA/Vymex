@@ -7,6 +7,10 @@
     <div class="layout-share">
       <share-company v-for="(v, idx) in [74, 0, 33]" :key="idx" :value="v"/>
     </div>
+    <div v-if="issuedShares.length">
+      <title-caps>Вы выдали доли <span class="founder-counter">{{issuedShares.length}}</span></title-caps>
+      <founder-member :coFounders="issuedShares" />
+    </div>
     <title-caps>Соучредители <span class="founder-counter">{{ coFounders.length }}</span></title-caps>
 		<founder-member :coFounders="coFounders" />
   </div>
@@ -20,6 +24,7 @@ import InputSearch from "@Facade/Input/Search";
 import ShareCompany from './provides/ShareCompany';
 import TitleCaps from '@Facade/Title/Caps'
 import FounderMember from './provides/FounderMember';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'vx.co.founder.view',
@@ -35,14 +40,19 @@ export default {
   data() {
 		return {
 			coFounders: [
-				{name: 'Александр', lastname: 'Ким', share: 74, id: 0},
-				{name: 'Виктор', lastname: 'Лещак', share: 1, id: 1},
-				{name: 'Анна', lastname: 'Кучеряш', share: 5, id: 2},
-				{name: 'Анатолий', lastname: 'Кукловод', share: 3, id: 3},
-				{name: 'Анатолий', lastname: 'Толий', share: 0.1, id: 4}
+				{title: 'Александр Ким', share: 74, id: 0},
+				{title: 'Виктор Лещак', share: 1, id: 1},
+				{title: 'Анна Кучеряш', share: 5, id: 2},
+				{title: 'Анатолий Кукловод', share: 3, id: 3},
+				{title: 'Анатолий Толий', share: 0.1, id: 4}
 			]
 		}
 	},
+  computed: {
+    ...mapGetters({
+      issuedShares: 'Users/issuedShares'
+    })
+  },
   methods: {
     closeCreatorCompany() {
       this.$router.push({name: 'vx'})

@@ -1,5 +1,5 @@
 <template>
-	<div class="level" :class="[level, {'tiny': tiny}]">
+	<div class="level" :class="[levelText.className, {'tiny': tiny}]">
 		<title-caps v-if="!tiny" class="color-level">{{levelText.name}}</title-caps>
 		<title-caps v-if="!tiny" class="color-level">{{levelText.number}}</title-caps>
 	</div>
@@ -12,8 +12,8 @@ export default {
 	components: {TitleCaps},
 	props: {
 		level: {
-			type: String,
-			default: 'four'
+			type: Number,
+			default: 4
 		},
 		tiny: {
 			type: Boolean,
@@ -24,24 +24,29 @@ export default {
 		levelText() {
 			let result = {
 				name: '',
-				number: ''
+				number: '',
+				className: ''
 			};
 			switch(this.level) {
-				case 'one': 
+				case 1: 
 					result.name = 'СЕО'; 
 					result.number = '1 УР.';
+					result.className = 'one';
 					break;
-				case 'two': 
+				case 2: 
 					result.name = 'СМО';
 					result.number = '2 УР.';
+					result.className = 'two';
 					break;
-				case 'four': 
+				case 4: 
 					result.name = 'Исполнитель'
 					result.number = '4 УР.';
+					result.className = 'four';
 					break;
-				case 'co-founder': 
+				case 100: 
 					result.name = 'Cоучредитель'
 					result.number = '100%';
+					result.className = 'co-founder';
 			}
 			return result
 		}

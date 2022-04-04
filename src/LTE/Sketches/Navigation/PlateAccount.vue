@@ -2,12 +2,28 @@
   <div class="sketch-navigation-plate-account">
     <transition name="vx-center-right">
       <div class="navigation-plate-body" v-if="tiny">
-        <plate-account tiny :category="category" :data="data" :active="active" :router="router" />
+        <plate-account tiny :category="category" :data="data" :active="active">
+          <level-ui 
+            v-for="l in [100, 1, 2, 4]" 
+            :key="l" 
+            :level="l"
+            :tiny="tiny"
+            @click.native="routerPush(l)"
+          />
+        </plate-account>
       </div>
     </transition>
     <transition name="vx-center-left">
       <div class="navigation-plate-body" v-if="!tiny">
-        <plate-account :category="category" :data="data" :active="active" :router="router" />
+        <plate-account :category="category" :data="data" :active="active">
+          <level-ui 
+            v-for="l in [100, 1, 2, 4]" 
+            :key="l" 
+            :level="l"
+            :tiny="tiny"
+            @click.native="routerPush(l)"
+          />
+        </plate-account>
       </div>
     </transition>
   </div>
@@ -15,6 +31,7 @@
 
 <script>
   import PlateAccount from '@Facade/Plate/Account'
+  import {LevelUi} from '@Providers'
 
   export default {
     name: 'Sketch.Navigation.PlateAccount',
@@ -35,8 +52,18 @@
       active: Boolean
     },
     components: {
-      PlateAccount
+      PlateAccount,
+      LevelUi
     },
+    methods: {
+      routerPush(level) {
+        if (level === 100) {
+          this.$router.push({name: 'vx.co.founder'}).catch(() => {})
+        } else {
+          this.$router.push(this.router).catch(() => {})
+        }
+      },
+    }
   }
 </script>
 
