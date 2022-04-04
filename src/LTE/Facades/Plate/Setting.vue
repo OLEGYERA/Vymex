@@ -41,6 +41,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      cursor: pointer;
       border-bottom: 1px solid rgba($grey-scale-400, .5);
       .setting-left-group{
         display: inherit;
@@ -77,7 +78,6 @@
           }
         }
       }
-
     }
   }
 </style>

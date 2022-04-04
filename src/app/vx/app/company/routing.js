@@ -3,6 +3,8 @@ import Co from "./app";
 import Dashboard from "./app/dashboard/app";
 
 import Task from './app/task/routing'
+import ControlCenter from "./app/control-center/routing";
+
 // import Profile from './view/profile'
 import Resources from './app/resource/routing'
 
@@ -23,7 +25,8 @@ export default [
         component: Dashboard
       },
       ...Task,
-      ...Resources
+      ...Resources,
+      ...ControlCenter,
     ]
   },
 ]
