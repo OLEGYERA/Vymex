@@ -18,7 +18,7 @@ class Resources extends Binder{
         super();
     }
 
-    async createMaterial(id){
+    async createMaterial(){
         const CreatorData = this.$store.name('Resources').get('CreatorMaterialResource');
 
         // const WorkerID = CreatorData.workerId ? numberToArray(CreatorData.workerId) : null;
@@ -27,7 +27,7 @@ class Resources extends Binder{
             utf8ToArray(String(CreatorData.name)),
             utf8ToArray(String(CreatorData.description || '')),
             utf8ToArray(String(CreatorData.identifier)),
-            numberToArray(id), //нужно вытягивать по пользователю его текущий воркер компании CreatorData.workerId
+            numberToArray(CreatorData.workerId), //нужно вытягивать по пользователю его текущий воркер компании
             objectToArray([]),
             utf8ToArray(CreatorData.currency),
             numberToArray(200),

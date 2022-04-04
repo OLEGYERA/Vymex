@@ -89,10 +89,12 @@
         sidebarFilterStatus: 'Resources/sidebarFilterStatus',
         levels: 'Resources/levels',
         materialResources: 'Resources/materialResources',
-        userID: 'getUserID'
+        userID: 'getUserID',
+        user: 'getUser'
       }),
     },
     created() {
+      console.log('this.user', this.user)
       this.$core.execViaComponent('Resources', 'getMaterialResources', this.userID);
     },
     updated() {
