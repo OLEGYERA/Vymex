@@ -6,7 +6,7 @@ Vue.use(Vuex);
 export default {
     state: {
         messages: [
-            // {
+            //{
             //     text: 'Длинное название процесса которое занимает 2, а то и все 3 строки. Больше - троеточие, но здесь его нет.',
             //     calendarIcon: true, date: '15 янв. 2021', regular: true, sortIcon: true, activePeriod: 'Каждый день'
             // },

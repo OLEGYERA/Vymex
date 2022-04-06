@@ -7,7 +7,7 @@
           <title-base>Процессы</title-base>
           <div class="header-container-icons">
             <icon-eye class="header-container-icon"/>
-<!--            <icon-add class="header-container-icon"/>-->
+            <!--            <icon-add class="header-container-icon"/>-->
           </div>
         </div>
         <text-base>Тут храняться все процессы в вашей компании</text-base>
@@ -55,12 +55,12 @@ export default {
     })
   },
   methods: {
-      ...mapMutations({
-        setProcessModel: 'setChangeProcessModel',
-      }),
+    ...mapMutations({
+      setProcessModel: 'setChangeProcessModel',
+    }),
     changePage({id}) {
-        id === 2 ? this.setProcessModel(false) : this.setProcessModel(true)
-        this.$router.push({name: 'vx.process.company.processes'})
+      id === 2 ? this.setProcessModel(false) : this.setProcessModel(true)
+      this.$router.push({name: 'vx.process.company.processes'})
     }
   },
 }
