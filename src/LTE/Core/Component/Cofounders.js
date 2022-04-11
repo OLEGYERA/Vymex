@@ -29,6 +29,7 @@ class Cofounders extends Binder {
 
 	giveShareRes() {
 		this.$core.execViaComponent('Company', 'getUserCompanies');
+		this.$notify({text: 'Доля успешно выдана', type: 'success', duration: 3000, speed: 500})
 	}
 
 	async getShareHistory(companyId) {
