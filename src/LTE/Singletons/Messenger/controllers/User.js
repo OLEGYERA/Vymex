@@ -12,7 +12,7 @@ class User extends Binder{
   }
 
   searchRes(response){
-    console.log(response)
+    this.$store.name('Users').set('Users', response)
   }
 
 

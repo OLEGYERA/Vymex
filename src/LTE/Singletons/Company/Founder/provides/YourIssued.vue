@@ -1,13 +1,15 @@
 <template>
   <div class="share-company">
-		<title-sub>Ваша доля в компании</title-sub>
+		<title-sub v-if="!share">Вы пока не выдали свою долю</title-sub>
+		<title-sub v-else>Вы выдали свою долю</title-sub>
 		<title-caption>{{activeCompany.name}}</title-caption>
 		<div class="company-content">
-			<div v-if="value" class="memory-plot">
+			<div v-if="100 - share" class="memory-plot">
 				<div class="plot"
-					:style="{background: `conic-gradient(#1890FF 0% ${value}%, #4A5A6A ${value}% 100%)`}"></div>
+					:style="{background: `conic-gradient(#1890FF 0% ${100 - share}%, #4A5A6A ${100 - share}% 100%)`}"></div>
 			</div>
-			<share :value="value" />
+			<share :value="100 - share" />
+			<text-base @click.native="routerPush" :class="{'disabled': !share}">Размыть свою долю</text-base>
 		</div>
 	</div>
 </template>
@@ -16,15 +18,16 @@
 import TitleSub from '@Facade/Title/Sub'
 import TitleCaption from '@Facade/Title/Caption'
 import Share from '../facades/Share'
+import TextBase from '@Facade/Text/Base'
 import { mapGetters } from 'vuex'
 
 export default {
-	name: 'Singleton.Company.Provides.ShareCompany',
-	components: {TitleSub, TitleCaption, Share},
+	name: 'Singleton.Company.Provides.YourIssued',
+	components: {TitleSub, TitleCaption, Share, TextBase},
 	computed: {
 		...mapGetters({
 			activeCompany: 'Company/getActiveCompany',
-			value: 'Company/getShare'
+			share: 'Company/getShare'
 		})
 	},
 	methods: {
@@ -74,6 +77,10 @@ export default {
 		&:hover {
       color: #fff;
 		}
+	}
+	.facade-text-base.disabled {
+		opacity: 0.5;
+		pointer-events: none;
 	}
 }
 </style>

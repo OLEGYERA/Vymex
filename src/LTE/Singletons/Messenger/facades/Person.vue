@@ -5,7 +5,9 @@
         <avatar :logo="logo" :colorCode="color"/>
       </div>
       <div class="info-text">
-        <div class="name">{{contact.title}}</div>
+        <div class="name">
+          {{contact.title || `${contact.name} ${contact.lastname}`}}
+        </div>
         <title-caption>{{contact.alias}}</title-caption>
       </div>
     </div>
@@ -44,12 +46,20 @@ export default {
   computed: {
     logo: function () {
       let initials = ''
-      for (const char of this.contact.title) {
-        if (char === char.toUpperCase() && char !== ' ') {
-          initials += char
+      if (this.contact.avatar) {
+        return this.contact.avatar
+      } else if (this.contact.title) {
+        for (const char of this.contact.title) {
+          if (char === char.toUpperCase() && char !== ' ') {
+            initials += char
+          }
         }
+        return initials.slice(0, 2);
+      } else if (this.contact.name && this.contact.lastname) {
+        return this.contact.name[0]+this.contact.lastname[0]
+      } else {
+        return ''
       }
-      return initials.slice(0, 2);
     },
   },
   methods: {
