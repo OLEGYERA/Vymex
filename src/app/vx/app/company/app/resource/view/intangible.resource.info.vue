@@ -1,9 +1,9 @@
-<template>
+\<template>
   <div class="resource-intangible-info-view">
-    <comeback @onClick="$router.push({name: 'vx.resource.intangible.resources'})"/>
+    <comeback @onClick="exit"/>
     <div class="info-header-group">
 
-      <title-base>{{object.name}}</title-base>
+      <title-base>{{resource.name}}</title-base>
       <icon-points-vertical @click.native="actionListStatus = !actionListStatus" ref="list"/>
 
       <modal-action-list
@@ -14,29 +14,30 @@
           @onDelete="modalStatus = true"
       />
 
-      <modal-base :status="modalStatus" @onClose="modalStatus=false" @onOk="$router.push({name: 'vx.resource.intangible.resources'})">
+      <modal-base :status="modalStatus" @onClose="modalStatus=false" @onOk="deleteResource">
         <template #title>Удалить ресурс?</template>
         <template #description>Это действие необратимо</template>
         <template #content>
           <title-caps class="modal-subtitle">Ресурс</title-caps>
-          <intangible-object-ui :object="object"/>
+          <intangible-object-ui :object="resource"/>
         </template>
         <template #button-accept>Удалить</template>
       </modal-base>
     </div>
 
-    <title-caption class="resource-url">{{object.url}}</title-caption>
-    <text-base>{{object.description}}</text-base>
+    <title-caption class="resource-url">{{resource.url}}</title-caption>
+    <text-base>{{resource.description}}</text-base>
 
     <div class="resource-password-plate">
-      <div class="hidden-password">
-        <div class="password-unit" v-for="(letter, key) in object.password" :letter="letter" :key="key"></div>
+      <div class="resource-password">
+        <div v-if="showPassword" class="password-open">{{resource.password}}</div>
+        <div v-else class="password-hidden" v-for="(letter, key) in resource.password" :letter="letter" :key="key"></div>
       </div>
-      <title-sub>Показать пароль</title-sub>
+      <title-sub @click.native="showPassword = !showPassword">Показать пароль</title-sub>
     </div>
 
     <div class="buttons-group">
-      <button-secondary>Скопировать в буфер</button-secondary>
+      <button-secondary @onClick="$notify({text: 'Данные скопированы', type: 'success', duration: 3000, speed: 500})">Скопировать в буфер</button-secondary>
       <button-base>Перейти на ресурс</button-base>
     </div>
   </div>
@@ -54,6 +55,7 @@
   import ButtonSecondary from "@Facade/Button/Secondary"
   import ModalBase from "@Facade/Modal/Base"
   import {IntangibleObjectUi} from "@Providers"
+  import {mapGetters, mapMutations} from "vuex";
 
   export default {
     name: 'vx.resource.intangible.info',
@@ -74,34 +76,32 @@
       return{
         actionListStatus: false,
         modalStatus: false,
-        object: null,
         actions: ['Редактировать'],
-        resources: [
-          {
-            id: 1,
-            name: 'facebook account',
-            url: 'facebook.com/29kadgdbsi9a_21g3_1%_ab',
-            login: 'jerronvymex@vymex.com',
-            password: 'Abra_Kadabra',
-            description: 'Тестовый аккаунт для рекламных сайтов, что бы мы лучше понимали рынок земли и продажи алюминия, радости вам и хорошего настроения',
-          }
-        ]
+        showPassword: false,
       }
     },
-    created() {
-      this.object = this.resources.find(el => el.id === this.$route.params.id)
-    },
-    mounted() {
-      this.object = this.resources[0]
+    computed: {
+      ...mapGetters({
+        resource: 'Resources/getChosenIntangibleResource',
+      }),
     },
     methods: {
+      ...mapMutations({
+        clearChosenIntangibleResource: 'Resources/clearChosenIntangibleResource',
+      }),
       performAction() {
-      this.$router.push({name: 'vx.resource.intangible.resource.editing', params: {resourceId: this.$route.params.id || 0}});
+        this.$router.push({name: 'vx.resource.intangible.resource.editing', params: {resourceId: this.$route.params.id || 0}});
+      },
+      deleteResource(){
+        this.$core.execViaComponent('Resources', 'deleteIntangible', this.resource.id)
+        this.$router.push({name: 'vx.resource.intangible.resources'})
+        this.$notify({text: 'Данные удалены', type: 'success', duration: 3000, speed: 500})
+      },
+      exit() {
+        this.$router.back()
+        this.clearChosenIntangibleResource()
       }
     },
-    updated() {
-      console.log(this.modalStatus)
-    }
   }
 </script>
 
@@ -155,11 +155,17 @@
       text-align: center;
       border-radius: 12px;
       background-color: $grey-scale-400;
-      .hidden-password{
+      .resource-password{
         display: flex;
         justify-content: center;
         margin-bottom: rem(12);
-        .password-unit{
+        .password-open{
+          line-height: 12px;
+          font-weight: bold;
+          letter-spacing: 0.05rem;
+          color: #fff;
+        }
+        .password-hidden{
           background-color: #fff;
           height: 12px;
           width: 12px;

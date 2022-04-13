@@ -36,6 +36,7 @@ import {MessengerStore as Messenger} from '@Singletons'
 import {NotificationsStore as Notifications} from '@Singletons'
 import Dashboard from '@/models/Dashboard'
 import Resources from "@/models/Resources";
+import WareHouse from "@/models/WareHouse"
 
 
 export default new Vuex.Store({
@@ -54,12 +55,13 @@ export default new Vuex.Store({
     Notifications,
     Resources,
     Company,
-    Dashboard
+    Dashboard,
+    WareHouse
   },
   plugins: [
     createPersistedState({
       key: 'vymex_session',
-      paths: ['Countries', 'Crypto', 'UserProfile', 'VxInfo', 'History', 'Company', 'Resources'],
+      paths: ['Countries', 'Crypto', 'UserProfile', 'VxInfo', 'History', 'Company', 'Resources', 'WareHouse'],
       storage: {
         getItem: (key) => {
           return Secure.get(key)

@@ -14,7 +14,7 @@
         v-model="baseModel"
         v-mask="bindInputMask"
         :placeholder="placeholder"
-        :type="type || 'text'"
+        type="number"
         ref="facade-input-base-ref"
         :disabled="disable === true || hide === true"
         @focus="$emit('onFocus')"
@@ -198,6 +198,18 @@
         color: $grey-scale-200;
         cursor: not-allowed;;
       }
+    }
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type="number"] {
+      -moz-appearance: textfield;
+    }
+    input[type="number"]:hover,
+    input[type="number"]:focus {
+      -moz-appearance: number-input;
     }
   }
 </style>

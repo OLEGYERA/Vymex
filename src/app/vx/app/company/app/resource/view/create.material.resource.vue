@@ -5,19 +5,17 @@
 
     <div class="resource-main-plate">
       <input-base :model="newResource.name" labeled :placeholder="'Название'" @onInput="setCreatorMaterial(['name', $event])"/>
-      <input-base :model="newResource.number" labeled :placeholder="'Серийный номер'" @onInput="setCreatorMaterial(['number', $event])"/>
+      <input-base :model="newResource.identifier" labeled :placeholder="'Серийный номер'" @onInput="setCreatorMaterial(['identifier', $event])"/>
       <input-textarea :model="newResource.description" :max-length="1000" placeholder="Описание" labeled @onInput="setCreatorMaterial(['description', $event])"/>
       <title-caps class="resource-price">Стоимость ресурса</title-caps>
       <input-price :model="newResource.cost" @onInput="setCreatorMaterial(['cost', $event])"/>
 
-      <header-add class="user" @create="showSidebar()">
-        <template #header-title>Пользователь</template>
-      </header-add>
+      <list-header title="Пользователь" :title-count="newResource.workerId ? 1 : ''" @onAction="showSidebar()" :add="!newResource.workerId"/>
       <div class="resource-user">
-        <unit-setting-ui v-if="Object.keys(user).length !== 0" :unit-level="user.unitLevel" :unit-data="user.unitData" :unit-position="user.unitPosition"/>
+        <unit-setting-ui v-if="Object.keys(user).length" :unit-level="user.unitLevel" :unit-data="user" :unit-position="user.unitName"/>
       </div>
 
-      <assign-user-ui :levels="levels" :status="assignStatus" @chooseUser="setWorker"/>
+      <assign-user-ui :status="assignStatus" :structure="structure" @chooseUser="setWorker"/>
 
       <modal-base :status="modalStatus" @onClose="cancelUser" @onOk="confirmWorker">
         <template #title>
@@ -30,25 +28,22 @@
           <title-caps class="modal-subtitle">Ресурс</title-caps>
           <div class="resource-plate">
             <title-sub>{{ newResource.name }}</title-sub>
-            <title-caps>{{newResource.number}}</title-caps>
+            <title-caps>{{newResource.identifier}}</title-caps>
           </div>
           <title-caps class="modal-subtitle">Пользователь</title-caps>
-          <unit-ui :unit-level="selectedUser.unitLevel" :unit-data="selectedUser.unitData" :unit-position="selectedUser.unitPosition"/>
+          <unit-ui :unit-level="selectedUser.unitLevel" :unit-data="selectedUser" :unit-position="selectedUser.unitName"/>
         </template>
         <template #button-accept>
           Подтвердить
         </template>
       </modal-base>
 
-      <header-add class="owner">
-        <template #header-title>Владелец</template>
-        <template #header-amount>{{currentCompany ? '1' : ''}}</template>
-      </header-add>
+      <list-header title="Владелец" :title-count="1" :add="false"/>
       <company-ui :company="currentCompany.base"/>
 
-      <header-add class="" @create="modalDownload=true">
-        <template #header-title>изображения</template>
-      </header-add>
+      <list-header title="изображения"
+                   :title-count="newResource.fileIds.length + newResource.imageIds.length || ''"
+                   @onAction="modalDownload=true"/>
 
       <modal-base :status="modalDownload" @onClose="modalDownload=false" class="modal-download" @onOk="modalDownload=false">
         <template #title>
@@ -74,10 +69,10 @@
     </div>
 
     <div class="create-resource-buttons">
-      <button-secondary class="create-resource-button" @click.native="saveChanges">
+      <button-secondary class="create-resource-button" @onClick="saveChanges">
         Отмена
       </button-secondary>
-      <button-base class="create-resource-button" @onClick="createResource()">
+      <button-base class="create-resource-button" :disable="buttonDisable" @onClick="createResource">
         Создать ресурс
       </button-base>
     </div>
@@ -96,7 +91,7 @@
         <title-caps class="modal-subtitle">Ресурс</title-caps>
         <div class="save-resource-plate">
           <title-sub>{{newResource.name}}</title-sub>
-          <title-caption>{{newResource.number}}</title-caption>
+          <title-caption>{{newResource.identifier}}</title-caption>
         </div>
       </template>
       <template #button-cancel>
@@ -114,7 +109,7 @@
   import TitleBase from "@Facade/Title/Base";
   import InputBase from "@Facade/Input/Base"
   import TitleCaps from "@Facade/Title/Caps"
-  import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd"; /// костыль
+  import ListHeader from "@Facade/Navigation/ListHeader";
   import ButtonSecondary from "@Facade/Button/Secondary"
   import ButtonBase from "@Facade/Button/Base"
   import InputPrice from "@Facade/Input/Price"
@@ -136,7 +131,6 @@
       TitleBase,
       InputBase,
       TitleCaps,
-      HeaderAdd,
       CompanyUi,
       ButtonSecondary,
       ButtonBase,
@@ -149,7 +143,8 @@
       TitleCaption,
       InputTextarea,
       UnitUi,
-      UnitSettingUi
+      UnitSettingUi,
+      ListHeader
     },
     data() {
       return{
@@ -161,7 +156,6 @@
     },
     computed:{
       ...mapGetters({
-        levels: 'Resources/levels',
         assignStatus: 'Resources/sidebarAssignStatus',
         newResource: 'Resources/getCreatorMaterialResource',
         currentCompany: 'Company/getCurrentCompany',
@@ -169,6 +163,12 @@
         user: 'Resources/chosenUser',
         userID: 'getUserID',
       }),
+      buttonDisable(){
+        if (!this.newResource.name || !this.newResource.identifier) {
+          return true
+        }
+        return false
+      }
     },
     methods: {
       ...mapMutations({
@@ -177,15 +177,8 @@
         clear: 'Resources/clear',
         getConfirmedUser: 'Resources/getConfirmedUser'
       }),
-      setValue(stage, data){
-        if(data) {
-          this.newResource[`${stage}`] = data
-        } else {
-          this.newResource[`${stage}`] = null
-        }
-      },
       saveChanges(){
-        if(this.newResource.name && this.newResource.number){
+        if(this.newResource.name && this.newResource.identifier){
           this.modalSaveStatus=true
         } else{
           this.clear()
@@ -197,14 +190,20 @@
         this.$core.execViaComponent('Resources', 'createMaterial', this.userID);
         this.clear()
         this.getConfirmedUser({})
+       // this.$core.execViaComponent('Resources', 'getMaterialResources', 7);
         this.$router.push({name: 'vx.resource.material.resources'})
       },
-      setWorker(unitKey, personKey){
-        this.selectedUser = this.levels[unitKey].data[personKey]
+      setWorker(id){
+        for (const level in this.structure) {
+          if (this.structure[level].some(unit => unit.id === id)){
+            this.selectedUser = this.structure[level].find(unit => unit.id === id)
+          }
+        }
+        console.log(Object.values(this.structure), 'this.selectedUser')
         this.modalStatus = true
       },
       confirmWorker(){
-        this.setCreatorMaterial(['workerId', this.selectedUser.unitData.id])
+        this.setCreatorMaterial(['workerId', this.selectedUser.id])
         this.getConfirmedUser(this.selectedUser)
         this.modalStatus = false
       },
@@ -218,14 +217,15 @@
         this.$router.push({name: 'vx.resource.material.resources'})
       },
       onOk() {
+        this.$notify({text: 'Ресурс успешно создан', type: 'success', duration: 3000, speed: 500})
         this.$core.execViaComponent('Resources', 'createMaterial');
+        this.$core.execViaComponent('Resources', 'getMaterialResources', 7);
         this.clear()
         this.getConfirmedUser({})
         this.$router.push({name: 'vx.resource.material.resources'})
-      }
+      },
     },
     created() {
-      this.$core.execViaComponent('Resources', 'getStructure', this.currentCompany.base.id);
       this.setCreatorMaterial(['companyId', this.currentCompany.base.id])
     },
 
@@ -261,11 +261,6 @@
       .facade-input-text-area::v-deep {
         margin-bottom: rem(16);
 
-        .textarea-title{
-          font-weight: 400;
-          font-size: 14px;
-          line-height: 16px;
-        }
         .textarea-container{
           min-height: 96px;
           border-width: 1px;
@@ -297,18 +292,12 @@
           }
         }
       }
-      .user {
+      .facade-navigation-list-header{
+        padding: 8px 0;
         margin-bottom: 4px;
       }
       .resource-user{
         margin-bottom: 24px;
-      }
-      .owner.facade-header-add::v-deep {
-        padding: rem(8) 0;
-        margin-bottom: rem(4);
-        .icon-add {
-          display: none;
-        }
       }
       .resource-company-ui {
         margin-bottom: rem(24);

@@ -1,16 +1,13 @@
 <template>
   <div class="resource-worker-files-view">
-    <comeback @onClick="$router.push({name: 'vx.resource'})"/>
+    <comeback @onClick="$router.back()"/>
     <div class="header-text-group">
       <title-base>Рабочие файлы</title-base>
       <icon-points-vertical/>
     </div>
     <input-search :placeholder="'Поиск'"/>
 
-    <header-add @create="modalCreateStatus=true">
-      <template #header-title>папки</template>
-      <template #header-amount>{{folders.length}}</template>
-    </header-add>
+    <list-header title="папки" :title-count="workFolder.folders.length" @onAction="modalCreateStatus=true"/>
 
     <modal-base :status="modalCreateStatus"
                 @onClose="modalCreateStatus=false"
@@ -23,7 +20,7 @@
         В поле ниже укажите название папки
       </template>
       <template #content>
-        <input-base :model="newFolder.title" @onInput="saveFolderName($event)" labeled :placeholder="'Название папки'"/>
+        <input-base :model="newFolder.name" @onInput="newFolder.name = $event" labeled :placeholder="'Название папки'"/>
       </template>
       <template #button-accept>
         Сохранить
@@ -32,15 +29,13 @@
 
     <div class="resource-folders">
       <folder-ui
-          v-for="(folder, folderKey) in folders"
+          v-for="(folder, folderKey) in workFolder.folders"
           :folder="folder"
           :key="folderKey"
-          @onClick="changePage"/>
+          @onClick="changePage(folder.id)"/>
     </div>
-    <header-add sort @sortFiles="modalStatus= true">
-      <template #header-title>Файлы</template>
-      <template #header-amount>{{files.length}}</template>
-    </header-add>
+
+    <list-header :sort="!!workFolder.files.length" title="Файлы" :title-count="workFolder.files.length || ''" @onSort="modalStatus=true"/>
 
     <modal-base :status="modalStatus" @onClose="modalStatus=false" @onOk="sortFiles">
       <template #title>Сортировка</template>
@@ -55,35 +50,42 @@
       <template #button-accept>Применить</template>
     </modal-base>
 
-    <file-ui v-for="(file, key) in files" :file="file" :key="key" :actions="actions" @getActiveValue="actionListChange"/>
+    <div v-if="!!workFolder.files.length" >
+      <file-ui v-for="(file, key) in workFolder.files" :file="file" :key="key" :actions="actions" @getActiveValue="actionListChange"/>
+    </div>
+    <div v-else class="background-plate">
+      <img class="image" src="@/assets/img/my/empty-file.svg">
+      Файлов нет
+    </div>
   </div>
 </template>
 
 <script>
   import Comeback from "@Facade/Navigation/Comeback";
-  import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd"; //// костыль
   import InputSearch from "@Facade/Input/Search";
   import TitleBase from "@Facade/Title/Base"
   import ModalBase from "@Facade/Modal/Base"
   import ButtonCheckbox from "@Facade/Button/Checkbox"
   import InputBase from "@Facade/Input/Base";
+  import ListHeader from "@Facade/Navigation/ListHeader";
+
   import {FileUi, FolderUi} from '@Providers'
   // import ModalActionList from "@Facade/Modal/ActionList"
 
-  import {mapMutations} from "vuex";
+  import {mapGetters} from "vuex";
 
   export default {
     name: 'vx.resource.worker.files',
     components: {
       FolderUi,
       Comeback,
-      HeaderAdd,
       FileUi,
       TitleBase,
       InputSearch,
       ModalBase,
       ButtonCheckbox,
       InputBase,
+      ListHeader
       // ModalActionList
     },
     data() {
@@ -93,81 +95,22 @@
         modalValues: ['По дате (сначала новое)', 'По дате (сначала старое)', 'По размеру файлов'],
         activeButton: 2,
         actions: ['Редактировать', 'Открыть доступ', 'Переместить'],
-        folders: [
-          {
-            id: 1,
-            title: 'Новая папка',
-            content: {
-              folders: 3,
-              files: 2
-            }
-          },
-        ],
-        files: [
-          {
-            title : 'doc.vmx',
-            content: {
-              size: '3,4',
-              date: '15.10.2019'
-            },
-            type: null,
-            group: true,
-          },
-          {
-            title : 'doc.vmx',
-            content: {
-              size: '2,1',
-              date: '02.09.2000'
-            },
-            type: null,
-            group: true,
-          },
-          {
-            title : 'doc.zip',
-            content: {
-              size: '4',
-              date: '14.12.2022'
-            },
-            type: 'zip',
-            group: true,
-          },
-          {
-            title : 'doc.vmx',
-            content: {
-              size: '5,6',
-              date: '01.04.2019'
-            },
-            type: null,
-            group: true,
-          },
-          {
-            title : 'doc.zip',
-            content: {
-              size: '0,9',
-              date: '30.09.2016'
-            },
-            type: 'zip',
-            group: true,
-          },
-        ],
+        files: [],
         newFolder: {
-          id: null,
-          title: null,
-          content: {
-            folders: null,
-            files: null,
-          }
+          name: '',
+          workerId: 7,
+          parent: null
         }
       }
     },
-    methods:{
-      ...mapMutations({
-        showSidebar: 'Resources/showSidebarFolderAccess',
+    computed: {
+      ...mapGetters({
+        workFolder: 'Resources/getWorkFolder'
       }),
-      changePage({id}) {
-        if(id === 1){
-          this.$router.push({name: 'vx.resource.new.folder'})
-        }
+    },
+    methods:{
+      changePage(id) {
+          this.$router.push({name: 'vx.resource.new.folder', params: {id: id}})
       },
       actionListChange(key) {
         console.log(key)
@@ -192,22 +135,19 @@
         }
       },
       createFolder(){
-        this.modalCreateStatus = false
-        // let newFolders = 0;
-        if(!this.newFolder.title){
-          // this.folders.forEach(folder => {
-          //   if(folder.includes('Новая папка')){
-          //     newFolders++
-          //   }
-          // })
-          this.newFolder.title = `Новая папка`
+        if(!this.newFolder.name) {
+          this.newFolder.name = 'Новая папка'
         }
-        this.folders.push(this.newFolder)
+        this.$core.execViaComponent('Resources', 'createFolder', this.newFolder)
+        this.$notify({text: 'Папка успешно создана', type: 'success', duration: 3000, speed: 500})
+        this.$core.execViaComponent('Resources', 'getWorkFolder', 7)
+        this.modalCreateStatus = false
+        this.newFolder.name = ''
       },
-      saveFolderName(data){
-        this.newFolder.title = data
-      }
     },
+    created(){
+      this.$core.execViaComponent('Resources', 'getWorkFolder', 7)
+    }
   }
 </script>
 
@@ -232,7 +172,7 @@
     .resource-folders{
       margin-bottom: rem(20);
     }
-    .facade-header-add {
+    .facade-navigation-list-header {
       padding: rem(8) 0;
       margin-bottom: 4px;
     }
@@ -242,6 +182,25 @@
     .modal-create-folder{
       .facade-input-base{
         margin-bottom: 12px;
+      }
+    }
+    .background-plate {
+      height: 160px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: $grey-scale-500;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 17px;
+      line-height: 22px;
+      color: $grey-scale-300;
+      &-folder {
+        margin-bottom: rem(20);
+      }
+      .image {
+        margin-bottom: 8px;
       }
     }
   }

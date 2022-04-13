@@ -1,17 +1,17 @@
 <template>
   <div class="resource-create-intangible-resource-view">
-    <comeback @onClick="$router.push({name: 'vx.resource.intangible.resources'})"/>
+    <comeback @onClick="onExit"/>
     <title-base>Создать ресурс</title-base>
     <div class="resource-main-plate">
-      <input-base :model="newResource.name" labeled :placeholder="'Название'" @onInput="setValue('name', $event)"/>
-      <input-base :model="newResource.url" labeled :placeholder="'URL'" @onInput="setValue('url', $event)"/>
-      <input-base :model="newResource.login" labeled :placeholder="'Логин'" @onInput="setValue('login', $event)"/>
-      <input-password :model="newResource.password" labeled :placeholder="'Пароль'" @onInput="setValue('password', $event)"/>
-      <text-area :model="newResource.description" labeled :placeholder="'Описание (не обязательно)'" :max-length="1000" @onInput="setValue('description', $event)" />
+      <input-base :model="newResource.name" labeled :placeholder="'Название'" @onInput="setCreatorIntangible(['name', $event])"/>
+      <input-base :model="newResource.url" labeled :placeholder="'URL'" @onInput="setCreatorIntangible(['url', $event])"/>
+      <input-base :model="newResource.login" labeled :placeholder="'Логин'" @onInput="setCreatorIntangible(['login', $event])"/>
+      <input-password :model="newResource.password" labeled :placeholder="'Пароль'" @onPassword="setCreatorIntangible(['password', $event])"/>
+      <text-area :model="newResource.description" labeled :placeholder="'Описание (не обязательно)'" :max-length="1000" @onInput="setCreatorIntangible(['description', $event])" />
     </div>
     <div class="create-resource-buttons">
-      <button-secondary class="create-resource-button">Отмена</button-secondary>
-      <button-base class="create-resource-button" :disable="buttonDisable" @click.native="addResource">
+      <button-secondary class="create-resource-button" @onClick="onExit">Отмена</button-secondary>
+      <button-base class="create-resource-button" :disable="buttonDisable" @onClick="addResource">
         Создать ресурс
       </button-base>
     </div>
@@ -26,6 +26,7 @@
   import ButtonSecondary from "@Facade/Button/Secondary"
   import ButtonBase from "@Facade/Button/Base"
   import InputPassword from "@Facade/Input/Password"
+  import {mapGetters, mapMutations} from "vuex";
 
   export default {
     name: 'vx.resource.intangible.create',
@@ -40,35 +41,34 @@
     },
     data() {
       return{
-        newResource: {
-          name: null,
-          url: null,
-          login: null,
-          password: null,
-          description: null,
-        }
       }
     },
     methods: {
-      setValue(stage, data){
-        if(data) {
-          this.newResource[`${stage}`] = data
-        } else {
-          this.newResource[`${stage}`] = null
-        }
-      },
+      ...mapMutations({
+        setCreatorIntangible: 'Resources/setCreatorIntangibleResource',
+        clearIntangible: 'Resources/clearIntangible',
+      }),
       addResource(){
-        if (!this.buttonDisable){
-          this.$router.push({name: 'vx.resource.intangible.resources'})
-        }
+        this.$core.execViaComponent('Resources', 'createIntangible', 7)
+        this.$core.execViaComponent('Resources', 'getWorkerIntangible', 7)
+        this.$notify({text: 'Ресурс успешно создан', type: 'success', duration: 3000, speed: 500})
+        this.clearIntangible()
+        this.$router.push({name: 'vx.resource.intangible.resources'})
+      },
+      onExit(){
+        this.$router.back()
+        this.clearIntangible()
       }
     },
     computed:{
+      ...mapGetters({
+        newResource: 'Resources/getCreatorIntangibleResource',
+      }),
       buttonDisable(){
-        if(this.newResource.name && this.newResource.url && this.newResource.login){
-          return false
+        if(!this.newResource.name || !this.newResource.url || !this.newResource.login || !this.newResource.password){
+          return true
         }
-        return true
+        return false
       }
     }
   }
@@ -98,35 +98,12 @@
           border-width: 1px;
         }
       }
-      .facade-text-area::v-deep {
-        margin-bottom: rem(16);
+      .facade-input-text-area::v-deep {
 
-        .textarea-title{
-          font-size: 15px;
-          line-height: 20px;
-        }
         .textarea-container{
-          min-height: 96px;
+          min-height: 106px;
+          border-bottom-width: 1px;
         }
-      }
-      .facade-title-caps {
-        margin-bottom: rem(16);
-      }
-      .facade-input-price {
-        margin-bottom: rem(24);
-      }
-      .user {
-        margin-bottom: 24px;
-      }
-      .owner.facade-header-add::v-deep {
-        padding: rem(8) 0;
-        margin-bottom: rem(4);
-        .icon-add {
-          display: none;
-        }
-      }
-      .facade-resource-company {
-        margin-bottom: rem(24);
       }
     }
     .create-resource-buttons {

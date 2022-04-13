@@ -1,61 +1,40 @@
 <template>
   <div class="resource-material-resources-view">
-    <comeback @onClick="$router.push({name: 'vx.resource.structural.units'})"/>
+    <comeback @onClick="$router.back()"/>
     <div class="header-text-group">
       <title-base>Материальные ресурсы</title-base>
       <icon-points-vertical/>
     </div>
     <input-search :placeholder="'Поиск'"/>
 
-    <header-add setting-slider @onClick="showSidebar()" @create="$router.push({name: 'vx.resource.create.resource'})">
-      <template #header-title>объекты</template>
-      <template #header-amount>{{materialResources.length ? `${materialResources.length}` : ''}}</template>
-    </header-add>
+    <list-header title="объекты"
+                 :title-count="materialResources.length || ''"
+                 @onAction="$router.push({name: 'vx.resource.create.resource'})"
+                 @onSetting="showSidebar()"
+                 @onReset="chosenUnits = []"
+                 setting
+                 :setting-count="chosenUnits.length || ''"
+    />
 
     <material-object-ui
-        v-for="(resource, index) in materialResources"
+        v-for="(resource, index) in resources"
         :resource-identifier="resource.identifier"
         :resource-name="resource.name"
         :worker="resource.worker"
         :key="index"
-        @onDelete="modalStatus=true"
-        @click.native="$router.push({name: 'vx.resource.info', params: {id: resource.id}})"
+        :id="resource.id"
+        @onClick="getResourceInfo(resource.id)"
     />
-    <sidebar-filter-ui :status="sidebarFilterStatus" :levels="levels" disable/>
+    <sidebar-filter-ui :status="sidebarFilterStatus" :chosen-units="chosenUnits" :disable="!chosenUnits.length" @onClick="filterResources"/>
 
-    <modal-base :status="modalStatus"
-                @onClose="modalStatus=false"
-                class="modal-delete"
-                @onOk="$router.push({name: 'vx.resource.material.resources'})">
-      <template #title>
-        Сохранить изменения?
-      </template>
-      <template #description>
-        Данные не сохраняются автоматически
-      </template>
-      <template #content>
-        <title-caps class="modal-subtitle">Ресурс</title-caps>
-        <div class="delete-resource-plate">
-          <title-sub>{{materialObjects[0].name}}</title-sub>
-          <title-caption>{{materialObjects[0].number}}</title-caption>
-        </div>
-      </template>
-      <template #button-accept>
-        Удалить
-      </template>
-    </modal-base>
   </div>
 </template>
 
 <script>
   import Comeback from "@Facade/Navigation/Comeback";
-  import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd";  //// костыль
   import InputSearch from "@Facade/Input/Search";
   import TitleBase from "@Facade/Title/Base"
-  import ModalBase from "@Facade/Modal/Base"
-  import TitleCaption from "@Facade/Title/Caption"
-  import TitleSub from "@Facade/Title/Sub"
-  import TitleCaps from "@Facade/Title/Caps"
+  import ListHeader from "@Facade/Navigation/ListHeader";
 
   import {mapGetters, mapMutations} from "vuex";
   import {SidebarFilterUi, MaterialObjectUi} from '@Providers'
@@ -64,42 +43,50 @@
     name: 'vx.resource.material.resources',
     components: {
       Comeback,
-      HeaderAdd,
       MaterialObjectUi,
       SidebarFilterUi,
       InputSearch,
       TitleBase,
-      ModalBase,
-      TitleCaption,
-      TitleSub,
-      TitleCaps
+      ListHeader
     },
     data() {
       return{
-        modalStatus: false,
+        chosenUnits: []
       }
     },
     methods: {
       ...mapMutations({
         showSidebar: 'Resources/showSidebar',
+        closeSidebar: 'Resources/closeSidebar',
       }),
+      getResourceInfo(id) {
+        this.$core.execViaComponent('Resources', 'getMaterial', id);
+        this.$router.push({name: 'vx.resource.info'})
+      },
+      filterResources(){
+        this.closeSidebar()
+      }
     },
     computed: {
       ...mapGetters({
         sidebarFilterStatus: 'Resources/sidebarFilterStatus',
-        levels: 'Resources/levels',
-        materialResources: 'Resources/materialResources',
+        materialResources: 'Resources/getMaterialResources',
         userID: 'getUserID',
-        user: 'getUser'
+        user: 'getUser',
+        currentCompany: 'Company/getCurrentCompany'
       }),
+      resources(){
+        if(this.chosenUnits.length) {
+          return this.materialResources.filter(resource => this.chosenUnits.includes(resource.worker.id))
+        }
+
+        return this.materialResources
+      }
     },
     created() {
-      console.log('this.user', this.user)
-      this.$core.execViaComponent('Resources', 'getMaterialResources', this.userID);
+      this.$core.execViaComponent('Resources', 'getMaterialResources', 7);
+      this.$core.execViaComponent('Resources', 'getStructure', 4);
     },
-    updated() {
-      this.$core.execViaComponent('Resources', 'getMaterialResources', this.userID);
-    }
   }
 </script>
 
@@ -121,25 +108,11 @@
     .facade-input-search {
       margin-bottom: rem(16);
     }
-    .facade-header-add {
+    .facade-navigation-list-header {
       padding: rem(8) 0;
       margin-bottom: 4px;
     }
-    .modal-delete{
-      .delete-resource-plate{
-        padding: rem(8) rem(16);
-        border-radius: 8px;
-        background-color: $grey-scale-400;
-        margin-bottom: 12px;
-        .facade-title-sub{
-          margin-bottom: 4px;
-        }
-      }
-      .facade-title-caps{
-        padding: rem(8) 0;
-        margin-bottom: 4px;
-      }
-    }
+
     .resource-material-object-ui {
       margin-bottom: 8px;
     }

@@ -1,35 +1,91 @@
 <template>
   <div class="navigation-sidebar-structure-ui">
-    <div class="level-plate" v-for="(unit, unitKey) in levels" :key="unitKey">
-
-      <div class="sidebar-level-header" v-if="unit.level === 1">
+    <div class="level-plate-grp" v-if="structure.level1.length">
+      <div class="sidebar-level-header">
         <title-caps><slot>Для себя</slot></title-caps>
-        <input-checkbox v-if="multiply" :model="unit.levelChecked" :view-type="viewType" @onClick="checkLevel(unitKey)"/>
+        <input-checkbox v-if="multiply" @onClick="checkLevel('1')" :model="multiply1" :view-type="viewType"/>
       </div>
-      <div class="sidebar-level-header header-arrow" v-else>
-        <div class="title-right-part" @click="onClick(unitKey)">
+      <unit-checkbox-ui
+          v-for="(unit, unitKey) in structure.level1"
+          :key="unitKey"
+          :model="chosenUnits.includes(unit.id)"
+          :view-type="viewType"
+          :unit-level="unit.unitLevel"
+          :unit-data="unit"
+          :unit-position="unit.unitName"
+          @onClick="choosePerson(unit.id)"/>
+    </div>
+
+    <div class="level-plate-grp">
+      <div class="sidebar-level-header header-arrow" v-if="structure.level2.length" >
+        <div class="title-right-part" @click="onClick('2')">
           <div class="level-title-arrow">
-            <arrow-right :class="{'open-units': !unit.disable}"/>
+            <arrow-right :class="{'open-units': open2}"/>
           </div>
-          <title-caps>{{ unit.level }} уровень</title-caps>
+          <title-caps>2 уровень</title-caps>
         </div>
-        <input-checkbox v-if="multiply" :model="unit.levelChecked" :view-type="viewType" @onClick="checkLevel(unitKey)"/>
+        <input-checkbox v-if="multiply" @onClick="checkLevel('2')" :model="multiply2" :view-type="viewType"/>
       </div>
 
-      <transition name="fade">
-        <div class="sidebar-level-units" v-if="!unit.disable">
-          <unit-checkbox-ui
-              v-for="(person, personKey) in unit.data"
-              :key="personKey"
-              :view-type="viewType"
-              :model="person.unitChecked"
-              :unit-data="person.unitData"
-              :unit-level="person.unitLevel"
-              :unit-position="person.unitPosition"
-              @onClick="choosePerson(unitKey, personKey)"
-          />
+      <div class="sidebar-level-units" v-if="open2">
+        <unit-checkbox-ui
+            v-for="(unit, unitKey) in structure.level2"
+            :key="unitKey"
+            :model="chosenUnits.includes(unit.id)"
+            :view-type="viewType"
+            :unit-level="unit.unitLevel"
+            :unit-data="unit"
+            :unit-position="unit.unitName"
+            @onClick="choosePerson(unit.id)"/>
+      </div>
+    </div>
+
+    <div class="level-plate-grp">
+      <div class="sidebar-level-header header-arrow" v-if="structure.level3.length">
+        <div class="title-right-part" @click="onClick('3')">
+          <div class="level-title-arrow">
+            <arrow-right :class="{'open-units': open3}"/>
+          </div>
+          <title-caps>3 уровень</title-caps>
         </div>
-      </transition>
+        <input-checkbox v-if="multiply" @onClick="checkLevel('3')" :model="multiply3" :view-type="viewType"/>
+      </div>
+
+      <div class="sidebar-level-units" v-if="open3">
+        <unit-checkbox-ui
+            v-for="(unit, unitKey) in structure.level3"
+            :key="unitKey"
+            :model="chosenUnits.includes(unit.id)"
+            :view-type="viewType"
+            :unit-level="unit.unitLevel"
+            :unit-data="unit"
+            :unit-position="unit.unitName"
+            @onClick="choosePerson(unit.id)"/>
+      </div>
+    </div>
+
+    <div class="level-plate-grp">
+      <div class="sidebar-level-header header-arrow" v-if="structure.level4.length">
+        <div class="title-right-part" @click="onClick('4')">
+          <div class="level-title-arrow">
+            <arrow-right :class="{'open-units': open4}"/>
+          </div>
+          <title-caps>4 уровень</title-caps>
+        </div>
+        <input-checkbox v-if="multiply" @onClick="checkLevel('4')" :model="multiply4" :view-type="viewType"/>
+      </div>
+
+      <div class="sidebar-level-units" v-if="open4">
+        <unit-checkbox-ui
+            v-for="(unit, unitKey) in structure.level4"
+            :key="unitKey"
+            :model="!!chosenUnits.includes(unit.id)"
+            :view-type="viewType"
+            :unit-level="unit.unitLevel"
+            :unit-data="unit"
+            :unit-position="unit.unitName"
+            @onClick="choosePerson(unit.id)"/>
+      </div>
     </div>
   </div>
 </template>
@@ -41,6 +97,7 @@
   import UnitCheckboxUi from "@/LTE/Providers/Company/Structure/unit-checkbox.ui";
   import InputCheckbox from "@Facade/Input/Checkbox"
 
+
   export default {
     name: 'Providers.Navigation.Sidebar.Structure.Ui',
     components:{
@@ -49,28 +106,64 @@
       ArrowRight,
       InputCheckbox
     },
+    data(){
+      return{
+        open2: false,
+        open3: false,
+        open4: false,
+        multiply1: false,
+        multiply2: false,
+        multiply3: false,
+        multiply4: false,
+      }
+    },
     props:{
-      levels: {
-        type: Array,
+      structure: {
+        type: Object,
         required: true
       },
       viewType: Number,
-      multiply: Boolean
+      multiply:{
+        type: Boolean,
+        default:() => false
+      },
+      chosenUnits: Array
+    },
+    computed: {
+      // model(){
+      //   if(this.structure)
+      //   return id.includes(this.chosenUnits)
+      // }
     },
     methods:{
       onClick(key){
-        this.levels[key].disable = !this.levels[key].disable
+        this[`open${key}`] = !this[`open${key}`]
       },
       checkLevel(key){
-        this.levels[key].levelChecked = !this.levels[key].levelChecked
-        if(this.levels[key].levelChecked === true){
-          this.levels[key].data.map(el => el.unitChecked = true)
+        this[`multiply${key}`] = !this[`multiply${key}`]
+
+        if (this[`multiply${key}`] === true) {
+          this[`open${key}`] = true
+          this.structure[`level${key}`].map(unit => {
+            if (!this.chosenUnits.includes(unit.id)) {
+              this.chosenUnits.push(unit.id)
+            }
+          })
         } else {
-          this.levels[key].data.map(el => el.unitChecked = false)
+          this[`open${key}`] = false
+          this.structure[`level${key}`].map(unit => {
+              this.chosenUnits.splice(this.chosenUnits.indexOf(unit.id), 1)
+          })
         }
+
       },
-      choosePerson(personKey, unitKey){
-        this.$emit('onClick', personKey, unitKey)
+      choosePerson(id){
+        this.$emit('onClick', id)
+        if (!this.chosenUnits.includes(id)) {
+          this.chosenUnits.push(id)
+        } else {
+          this.chosenUnits.splice(this.chosenUnits.indexOf(id), 1)
+        }
       }
     }
   }
@@ -82,45 +175,79 @@
     overflow-y: scroll;
     padding: 0 0 20px;
     box-sizing: border-box;
-    .level-plate{
+
+    .level-plate-grp{
       margin-bottom: 12px;
-      .sidebar-level-header{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        height: 28px;
-        padding-right: rem(8);
-        margin-bottom: 8px;
-        align-items: center;
-        .title-right-part{
-          display: inherit;
-          align-items: inherit;
-          .level-title-arrow{
-            border-right: 1px solid $grey-scale-200;
-            margin-right: 8px;
-            .icon-arrow-right{
-              display: flex;
-              color: $grey-scale-200;
-              height: 16px;
-              margin-right: 12px;
-              transition: transform .2s;
-              svg {
-                align-self: center;
-                height: 14px;
-              }
+    }
+
+    .sidebar-level-header{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 28px;
+      padding-right: rem(8);
+      margin-bottom: 8px;
+      align-items: center;
+      .title-right-part{
+        display: inherit;
+        align-items: inherit;
+        .level-title-arrow{
+          border-right: 1px solid $grey-scale-200;
+          margin-right: 8px;
+          .icon-arrow-right{
+            display: flex;
+            color: $grey-scale-200;
+            height: 16px;
+            margin-right: 12px;
+            transition: transform .2s;
+            svg {
+              align-self: center;
+              height: 14px;
             }
-            .open-units{
-              transform: rotate(90deg);
-            }
+          }
+          .open-units{
+            transform: rotate(90deg);
           }
         }
       }
-      .header-arrow{
-        cursor: pointer;
-      }
-      .structure-unit-ui{
-        margin-bottom: 8px;
-      }
+    }
+    .header-arrow{
+      cursor: pointer;
+    }
+    .structure-unit-ui{
+      margin-bottom: 8px;
     }
   }
 </style>
+
+<!--<div class="level-plate" v-for="(unit, unitKey) in levels" :key="unitKey">-->
+
+<!--<div class="sidebar-level-header" v-if="unit.level === 1">-->
+<!--  <title-caps><slot>Для себя</slot></title-caps>-->
+<!--  <input-checkbox v-if="multiply" :model="unit.levelChecked" :view-type="viewType" @onClick="checkLevel(unitKey)"/>-->
+<!--</div>-->
+<!--<div class="sidebar-level-header header-arrow" v-else>-->
+<!--  <div class="title-right-part" @click="onClick(unitKey)">-->
+<!--    <div class="level-title-arrow">-->
+<!--      <arrow-right :class="{'open-units': !unit.disable}"/>-->
+<!--    </div>-->
+<!--    <title-caps>{{ unit.level }} уровень</title-caps>-->
+<!--  </div>-->
+<!--  <input-checkbox v-if="multiply" :model="unit.levelChecked" :view-type="viewType" @onClick="checkLevel(unitKey)"/>-->
+<!--</div>-->
+
+<!--<transition name="fade">-->
+<!--  <div class="sidebar-level-units" v-if="!unit.disable">-->
+<!--    <unit-checkbox-ui-->
+<!--        v-for="(person, personKey) in unit.data"-->
+<!--        :key="personKey"-->
+<!--        :view-type="viewType"-->
+<!--        :model="person.unitChecked"-->
+<!--        :unit-data="person.unitData"-->
+<!--        :unit-level="person.unitLevel"-->
+<!--        :unit-position="person.unitPosition"-->
+<!--        @onClick="choosePerson(unitKey, personKey)"-->
+<!--    />-->
+<!--  </div>-->
+<!--</transition>-->
+<!--</div>-->

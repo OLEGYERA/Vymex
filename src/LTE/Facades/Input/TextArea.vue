@@ -17,7 +17,7 @@
       <label class="textarea-title" v-if="labeled">{{ placeholder }}</label>
     </div>
     <title-caption v-if="maxLength" class="textarea-text-length">
-      <span :class="{'textarea-count': baseModel}">{{baseModel.length}}</span>/{{maxLength}}
+      <span :class="{'textarea-count': baseModel}">{{baseModel.length || 0}}</span>/{{maxLength}}
     </title-caption>
   </div>
 </template>

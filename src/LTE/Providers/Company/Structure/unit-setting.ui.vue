@@ -21,7 +21,8 @@
     mixins: [Mixin],
     data: () => ({
       modalSettingList: false
-    })
+    }),
+
   }
 </script>
 

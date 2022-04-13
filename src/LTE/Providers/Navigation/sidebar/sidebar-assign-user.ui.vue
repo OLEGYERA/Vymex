@@ -13,7 +13,7 @@
             </title-caps>
             <search :placeholder="'Поиск'"/>
           </div>
-          <sidebar-structure-ui :view-type="2" :levels="levels" @onClick="chooseUser"/>
+          <sidebar-structure-ui :view-type="2" :structure="structure" :chosen-units="[]" @onClick="chooseUser"/>
         </div>
       </template>
     </sidebar-right>
@@ -40,8 +40,8 @@
       }
     },
     props:{
-      levels: {
-        type: Array,
+      structure: {
+        type: Object,
         required: true,
       },
       status: {
@@ -53,9 +53,8 @@
       ...mapMutations({
         closeSidebar: 'Resources/closeSidebarAssign',
       }),
-      chooseUser(unitKey, personKey){
-        this.$emit('chooseUser', unitKey, personKey)
-        // this.levels[unitKey].data[personKey].unitChecked = !this.levels[unitKey].data[personKey].unitChecked
+      chooseUser(id){
+        this.$emit('chooseUser', id)
         this.closeSidebar()
       }
     },

@@ -33,7 +33,7 @@
         </div>
 
         <button-secondary @onClick="statusBase = true">Удалить чат</button-secondary>
-        <button-base>Сохранить</button-base>
+        <button-base @onClick="routerNull()">Сохранить</button-base>
 
         <modal-base :status="statusBase" @onClose="statusBase = false" @onOk="deleteChat">
           <template #title>Удалить чат без возможности востановления?</template>

@@ -1,5 +1,5 @@
 <template>
-  <div class="facade-messenger-header">
+  <div class="facade-messenger-header" @click="routerNext({name: 'contact-info'})">
     <div class="private-info">
       <transition name="fade">
         <modal-action-list
@@ -18,7 +18,7 @@
       <div class="info-text">
         <text-base>{{ title }}</text-base>
       </div>
-      <div class="menu-button" @click="statusAction = true">
+      <div class="menu-button" @click.stop="statusAction = true">
         <points-vertical :class="{active: statusAction}"/>
       </div>
     </div>
@@ -106,6 +106,7 @@
     box-sizing: border-box;
     background-color: $grey-scale-500;
     border-bottom: $grey-scale-700 solid 1px;
+    cursor: pointer;
     .private-info {
       position: relative;
       display: inherit;

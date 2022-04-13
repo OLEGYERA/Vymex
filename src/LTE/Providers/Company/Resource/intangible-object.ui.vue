@@ -1,5 +1,5 @@
 <template>
-  <div class="resource-intangible-object-ui">
+  <div class="resource-intangible-object-ui" @click="$emit('onClick')">
     <div class="object-main-plate">
       <div class="object-icon">
         <img src="@/assets/img/my/notion.svg">

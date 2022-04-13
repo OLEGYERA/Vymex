@@ -1,15 +1,26 @@
 <template>
-  <div class="resource-material-object-ui" @click.stop="$emit('onClick')">
-    <div class="object-main-plate">
-      <div class="object-text-group">
-        <text-base>{{resourceName}}</text-base>
-        <title-caption>{{resourceIdentifier}}</title-caption>
-      </div>
-      <div class="object-user-name" :class="`su-level-${worker.unitLevel}`">
-         {{worker.name ? `${worker.name} ${worker.lastname}` : 'Нет пользователя'}}
-      </div>
+  <div class="resource-warehouse-object-ui" @click.stop="$emit('onClick')">
+
+    <div class="object-text-group">
+      <text-base>{{resourceName}}</text-base>
+      <title-caption>{{resourceIdentifier}}</title-caption>
     </div>
-    <icon-points-vertical @click.native.stop="actionListStatus=true"/>
+
+    <div class="object-right-part">
+      <div class="object-request" v-if="countRequests">
+        <img class="image-user" src="@/assets/img/my/user-single.svg">
+        <title-caption>{{requests}}</title-caption>
+      </div>
+
+      <div class="object-cost">
+        <img class="image-cost" src="@/assets/img/my/money.svg">
+        <title-caption>₴{{cost}}</title-caption>
+      </div>
+
+      <icon-points-vertical @click.native.stop="actionListStatus=true"/>
+    </div>
+
+
     <modal-action-list
         :actions="actions"
         :status="actionListStatus"
@@ -68,16 +79,31 @@
       },
       resourceIdentifier: {
         type: String,
-        required: true
+        // required: true
       },
-      worker: Object,
-      id: Number,
+      cost: Number,
+      countRequests: Number || null,
+      // id: Number,
     },
     data(){
       return{
-        actions: ['Назначить ресурс', 'Редактировать'],
+        actions: ['Отправить на склад', 'Редактировать'],
         actionListStatus: false,
         modalStatus: false,
+      }
+    },
+    computed: {
+      requests() {
+        if(this.countRequests >4 && this.countRequests < 21){
+          return `${this.countRequests} запросов`
+        }
+        if (Number(String(this.countRequests).slice(-1)) === 1) {
+          return `${this.countRequests} запрос`
+        }
+        if (Number(String(this.countRequests).slice(-1)) < 5){
+          return `${this.countRequests} запроса`
+        }
+        return `${this.countRequests} запросов`
       }
     },
     methods: {
@@ -97,7 +123,7 @@
 </script>
 
 <style lang="scss" scoped>
-  .resource-material-object-ui {
+  .resource-warehouse-object-ui {
     position: relative;
     height: 64px;
     padding: 12px 6px 12px 16px;
@@ -111,48 +137,46 @@
     &:hover{
       background-color: $grey-scale-500;
     }
-    .object-main-plate {
+    .object-text-group{
+      .facade-text-base {
+        color: #fff;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+    }
+    .object-right-part{
       display: inherit;
-      .object-text-group{
-        width: 232px;
-        margin-right: 12px;
-        .facade-text-base {
-          color: #fff;
-          font-weight: 600;
-          margin-bottom: 4px;
+      .facade-title-caption{
+        color: #fff;
+      }
+      .object-request{
+        position: absolute;
+        left: 541px;
+        display: inherit;
+        .image-user{
+          width: 14px;
+          height: 15px;
+          margin-right: 8px;
         }
       }
-      .object-user-name{
-        font-size: 11px;
-        line-height: 12px;
-        height: max-content;
-        color: $grey;
-        padding: 2px 8px;
-        border-radius: 8px;
-        &.su-level{
-          &-0{
-            background-color: $grey-scale-400; //уточнить
-          }
-          &-1{
-            background-color: $su-level-1; //уточнить
-          }
-          &-2{
-            background-color: $su-level-2; //уточнить
-          }
-          &-3{
-            background-color: $su-level-3; //уточнить
-          }
-          &-4{
-            background-color: $su-level-4; //уточнить
-          }
+      .object-cost{
+        display: inherit;
+        position: absolute;
+        left: 646px;
+        .image-cost{
+          width: 12px;
+          height: 15px;
+          margin-right: 10px;
         }
       }
+      .icon-points-vertical {
+        padding: 4px 10px 10px;
+        color: #fff;
+        cursor: pointer;
+      }
     }
-    .icon-points-vertical {
-      padding: 4px 10px 10px;
-      color: #fff;
-      cursor: pointer;
-    }
+
+
     .facade-modal-action-list::v-deep {
       right: 10px;
       .action-list-body{

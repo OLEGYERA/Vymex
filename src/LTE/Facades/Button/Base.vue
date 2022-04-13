@@ -1,5 +1,5 @@
 <template>
-  <div class="facade-button-base" :disable="disable" @click="buttonBaseClick"><slot/></div>
+  <div class="facade-button-base" :disable="disable" @click.stop="buttonBaseClick"><slot/></div>
 </template>
 
 <script>

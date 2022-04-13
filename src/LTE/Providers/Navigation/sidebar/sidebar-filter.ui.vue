@@ -24,8 +24,8 @@
             </title-caps>
             <input-search :placeholder="'Поиск'"/>
           </div>
-          <sidebar-structure-ui multiply :levels="levels">1 уровень</sidebar-structure-ui>
-          <button-base :disable="disable" @onClick="getChosenUnits()">Применить</button-base>
+          <sidebar-structure-ui multiply :structure="structure" :chosen-units="chosenUnits">1 уровень</sidebar-structure-ui>
+          <button-base :disable="disable" @onClick="$emit('onClick')">Применить</button-base>
         </div>
       </template>
     </sidebar-right>
@@ -36,7 +36,7 @@
   import SidebarRight from "@Facade/Navigation/SidebarRight";
   import InputSearch from "@Facade/Input/Search";
   import ButtonBase from "@Facade/Button/Base";
-  import {mapMutations} from "vuex";
+  import {mapGetters, mapMutations} from "vuex";
   import TitleCaps from "@Facade/Title/Caps";
 
   import SidebarHeaderAtom from "./sidebar-header.atom";
@@ -50,7 +50,7 @@
     data() {
       return{
         buttons: ['Все', 'Локальные', 'Глобальные'],
-        activeButton: 0
+        activeButton: 0,
       }
     },
     props: {
@@ -58,18 +58,19 @@
         type: Boolean,
         required: true,
       },
-      levels: {
-        type: Array,
-        required: true,
-      },
       disable: Boolean,
+      chosenUnits: Array
     },
-    methods: {
-      ...mapMutations({
-        closeSidebar: 'Resources/closeSidebar',
-        getChosenUnits: 'Resources/getChosenUnits'
+    computed: {
+      ...mapGetters({
+        structure: 'Resources/getStructure',
       }),
     },
+    methods:{
+      ...mapMutations({
+        closeSidebar: 'Resources/closeSidebar',
+      })
+    }
   }
 </script>
 
@@ -129,3 +130,34 @@
 
   }
 </style>
+
+
+<sidebar-right
+    class="sidebar-filter-container" @onClose="closeSidebar()">
+<template #main-header>
+  <sidebar-header-atom>Фильтры</sidebar-header-atom>
+</template>
+<template #main-content>
+  <div class="sidebar-main-plate">
+    <div class="header-text-group">
+      <title-caps>Расположение</title-caps>
+      <div class="sidebar-filter-buttons-group">
+        <div
+            class="button-location"
+            :class="{active: activeButton === buttonKey}"
+            v-for="(button, buttonKey) in buttons"
+            @click="activeButton = buttonKey"
+            :key="buttonKey">
+          {{button}}
+        </div>
+      </div>
+      <title-caps class="sidebar-view-header-title">
+        пользователь
+      </title-caps>
+      <input-search :placeholder="'Поиск'"/>
+    </div>
+    <sidebar-structure-ui multiply :structure="structure">1 уровень</sidebar-structure-ui>
+    <button-base :disable="disable" @onClick="getChosenUnits()">Применить</button-base>
+  </div>
+</template>
+</sidebar-right>

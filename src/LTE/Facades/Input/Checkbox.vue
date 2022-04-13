@@ -1,7 +1,7 @@
 <template>
   <div class="facade-input-checkbox" tabindex="0" v-if="viewType === 1"
        :checked="model" :disable="disable"
-       @click="inputCheckboxClick">
+       @click ="inputCheckboxClick">
     <icon-success v-if="model"/>
   </div>
   <div class="facade-input-checkbox checkbox-round" tabindex="0" v-else-if="viewType === 2"

@@ -1,6 +1,6 @@
 <template>
   <div class="resource-trash-folder-view">
-    <comeback @onClick="$router.push({name: 'vx.resource'})"/>
+    <comeback @onClick="$router.back()"/>
     <div class="header-text-group">
       <title-base>Корзина</title-base>
       <title-caps class="clear-trash-button" @click.native="modalStatusDeleteTrash=true">Очистить корзину</title-caps>
@@ -11,21 +11,22 @@
         <template #button-accept>Удалить</template>
       </modal-base>
     </div>
+
     <input-search :placeholder="'Поиск'"/>
 
-    <div class="trash-main-content" v-if="folders || files">
-      <header-add>
-        <template #header-title>папки</template>
-        <template #header-amount>{{folders.length}}</template>
-      </header-add>
+    <div class="trash-main-content" v-if="trash.folders.length || trash.files.length">
+
+      <list-header :add="false" title="папки" :title-count="trash.folders.length || ''"/>
+
       <div class="resources-folders">
-        <folder-ui v-for="(folder, folderKey) in folders" :folder="folder" :key="folderKey"/>
+        <folder-ui v-for="(folder, folderKey) in trash.folders"
+                   :folder="folder"
+                   :key="folderKey"
+                   @onClick="$router.push({name: 'vx.resource.new.folder', params: {id: folder.id}})"
+        />
       </div>
 
-      <header-add sort class="files-header" @sortFiles="modalStatusSort= true">
-        <template #header-title>Файлы</template>
-        <template #header-amount>{{files.length}}</template>
-      </header-add>
+      <list-header :add="false" :sort="trash.files.length > 1" class="files-header" @onSort="modalStatusSort= true" title="Файлы" :title-count="trash.files.length || ''"/>
 
       <modal-base :status="modalStatusSort" @onClose="modalStatusSort=false" @onOk="sortFiles">
         <template #title>Сортировка</template>
@@ -41,7 +42,7 @@
       </modal-base>
 
       <file-ui
-          v-for="(file, fileKey) in files"
+          v-for="(file, fileKey) in trash.files"
           :file="file" :key="fileKey"
           :actions="actions"
           @getActiveValue="actionListChange"
@@ -49,30 +50,31 @@
           @getChosenFile="activeFile = fileKey">
         <template>Удалить безвозвратно</template>
       </file-ui>
-      <modal-base :status="modalStatusRestoreYourself" @onClose="modalStatusRestoreYourself=false" @onOk="modalStatusRestoreYourself=false">
-        <template #title>Восстановление файла</template>
-        <template #description>Файлы будет востановлен и доступен вам</template>
-        <template #content>
-          <file :file="files[activeFile]"/>
-        </template>
-        <template #button-accept>Востановить</template>
-      </modal-base>
-      <modal-base :status="modalStatusRestoreOwner" @onClose="modalStatusRestoreOwner=false" @onOk="modalStatusRestoreOwner=false">
-        <template #title>Восстановление файла</template>
-        <template #description>Файлы будет востановлен и доступен вам и владельцу</template>
-        <template #content>
-          <file :file="files[activeFile]"/>
-        </template>
-        <template #button-accept>Востановить</template>
-      </modal-base>
-      <modal-base :status="modalStatusDeleteFile" @onClose="modalStatusDeleteFile=false" @onOk="modalStatusDeleteFile=false">
-        <template #title>Удаление файла</template>
-        <template #description>Файл будет удален, это действие безвозвратно</template>
-        <template #content>
-          <file :file="files[activeFile]"/>
-        </template>
-        <template #button-accept>Удалить</template>
-      </modal-base>
+
+<!--      <modal-base :status="modalStatusRestoreYourself" @onClose="modalStatusRestoreYourself=false" @onOk="modalStatusRestoreYourself=false">-->
+<!--        <template #title>Восстановление файла</template>-->
+<!--        <template #description>Файлы будет востановлен и доступен вам</template>-->
+<!--        <template #content>-->
+<!--          <file :file="files[activeFile]"/>-->
+<!--        </template>-->
+<!--        <template #button-accept>Востановить</template>-->
+<!--      </modal-base>-->
+<!--      <modal-base :status="modalStatusRestoreOwner" @onClose="modalStatusRestoreOwner=false" @onOk="modalStatusRestoreOwner=false">-->
+<!--        <template #title>Восстановление файла</template>-->
+<!--        <template #description>Файлы будет востановлен и доступен вам и владельцу</template>-->
+<!--        <template #content>-->
+<!--          <file :file="files[activeFile]"/>-->
+<!--        </template>-->
+<!--        <template #button-accept>Востановить</template>-->
+<!--      </modal-base>-->
+<!--      <modal-base :status="modalStatusDeleteFile" @onClose="modalStatusDeleteFile=false" @onOk="modalStatusDeleteFile=false">-->
+<!--        <template #title>Удаление файла</template>-->
+<!--        <template #description>Файл будет удален, это действие безвозвратно</template>-->
+<!--        <template #content>-->
+<!--          <file :file="files[activeFile]"/>-->
+<!--        </template>-->
+<!--        <template #button-accept>Удалить</template>-->
+<!--      </modal-base>-->
     </div>
 
     <div class="empty-trash" v-else>
@@ -87,26 +89,28 @@
 
 <script>
   import Comeback from "@Facade/Navigation/Comeback";
-  import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd"; //// костыль
   import InputSearch from "@Facade/Input/Search";
   import TitleBase from "@Facade/Title/Base"
   import TitleCaps from '@Facade/Title/Caps'
   import ModalBase from "@Facade/Modal/Base"
   import ButtonCheckbox from "@Facade/Button/Checkbox"
+  import ListHeader from "@Facade/Navigation/ListHeader";
+
   import {FileUi, FolderUi} from '@Providers'
+  import {mapGetters} from "vuex";
 
   export default {
     name: 'vx.resource.trash.folder',
     components: {
       Comeback,
-      HeaderAdd,
       InputSearch,
       TitleBase,
       TitleCaps,
       FolderUi,
       FileUi,
       ModalBase,
-      ButtonCheckbox
+      ButtonCheckbox,
+      ListHeader
     },
     data(){
       return{
@@ -119,86 +123,12 @@
         activeButton: 2,
         activeFile: null,
         actions: ['Восстановить (себе)', 'Восстановить (владельцу)'],
-        folders: [
-          {
-            id: 1,
-            title: 'Новая папка',
-            content: {
-              folders: null,
-              files: null
-            },
-            group: null,
-            trash: null
-          },
-          {
-            id: 2,
-            title: 'Новая папка (2)',
-            content: {
-              folders: null,
-              files: null,
-            },
-            group: null,
-            trash: null
-          },
-          {
-            id: 3,
-            title: 'Новая папка (3)',
-            content: {
-              folders: null,
-              files: null
-            },
-            group: null,
-            trash: null,
-          },
-        ],
-        files: [
-          {
-            title : 'doc.vmx',
-            content: {
-              size: '3,4',
-              date: '15.10.2019'
-            },
-            type: null,
-            group: true,
-          },
-          {
-            title : 'doc.vmx',
-            content: {
-              size: '2,1',
-              date: '02.09.2000'
-            },
-            type: null,
-            group: true,
-          },
-          {
-            title : 'doc.zip',
-            content: {
-              size: '4',
-              date: '14.12.2022'
-            },
-            type: 'zip',
-            group: true,
-          },
-          {
-            title : 'doc.vmx',
-            content: {
-              size: '5,6',
-              date: '01.04.2019'
-            },
-            type: null,
-            group: true,
-          },
-          {
-            title : 'doc.zip',
-            content: {
-              size: '0,9',
-              date: '30.09.2016'
-            },
-            type: 'zip',
-            group: true,
-          },
-        ],
       }
+    },
+    computed: {
+      ...mapGetters({
+        trash: 'Resources/getTrash'
+      }),
     },
     methods:{
       setNewValue(id) {
@@ -230,10 +160,13 @@
         }
       },
       clearTrash(){
+        this.$core.execViaComponent('Resources', 'clearWorkerTrash', 7)
         this.modalStatusDeleteTrash = false
-        this.files = null;
-        this.folders = null
-      }
+        this.$notify({text: 'Файлы удалены!', type: 'success', duration: 3000, speed: 500})
+      },
+    },
+    created() {
+      this.$core.execViaComponent('Resources', 'getTrash', [7])
     }
   }
 </script>
@@ -258,9 +191,9 @@
       margin-bottom: rem(16);
     }
     .trash-main-content{
-      .facade-header-add {
-        padding: rem(8) 0;
-        margin-bottom: rem(4);
+      .facade-navigation-list-header{
+        padding: 8px 0;
+        margin-bottom: 4px;
       }
       .resources-folders {
         margin-bottom: 20px;

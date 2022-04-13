@@ -1,5 +1,5 @@
 <template>
-  <div class="facade-button-secondary" @click="buttonSecondaryClick">
+  <div class="facade-button-secondary" @click.stop="buttonSecondaryClick">
     <title-sub><slot/></title-sub>
   </div>
 </template>

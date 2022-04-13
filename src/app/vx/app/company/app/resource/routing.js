@@ -30,7 +30,7 @@ export default [
             name: 'vx.resource.worker.files',
         },
         {
-            path: 'new-folder',
+            path: 'new-folder/:id',
             component: NewFolder,
             name: 'vx.resource.new.folder',
         },
@@ -91,5 +91,4 @@ export default [
         },
         ]
     },
-
 ]

@@ -1,73 +1,56 @@
 <template>
   <div class="resource-structural-units-view">
-    <comeback @onClick="$router.push({name: 'vx.resource'})"/>
+    <comeback @onClick="$router.back()"/>
     <div class="header-text-group">
       <title-base>Ресурсы С.Е.</title-base>
       <icon-points-vertical/>
     </div>
     <input-search :placeholder="'Поиск'"/>
-    <header-add>
-      <template #header-title>папки</template>
-      <template #header-amount>{{folders.length}}</template>
-    </header-add>
-    <folder-ui v-for="(folder, folderKey) in folders" :folder="folder" :key="folderKey" @onClick="changePage"/>
+
+    <list-header title="папки" :title-count="2"/>
+
+    <!--    <folder-ui v-for="(folder, folderKey) in folders" :folder="folder" :key="folderKey" @onClick="changePage"/>-->
+    <folder-ui :folder="{name: 'Материальные ресурсы', objects: materialResources.length}"
+               @onClick="$router.push({name: 'vx.resource.material.resources'})"/>
+    <folder-ui :folder="{name: 'Нематериальные ресурсы', objects: intangibleResources.length}"
+               @onClick="$router.push({name: 'vx.resource.intangible.resources'})"/>
   </div>
 </template>
 
 <script>
   import Comeback from "@Facade/Navigation/Comeback";
-  import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd"; //// костыль
   import InputSearch from "@Facade/Input/Search";
   import TitleBase from "@Facade/Title/Base"
+  import ListHeader from "@Facade/Navigation/ListHeader";
+
   import {FolderUi} from '@Providers'
+  import {mapGetters} from "vuex";
 
   export default {
     name: 'vx.resource.structural.units',
     components: {
       FolderUi,
       Comeback,
-      HeaderAdd,
       InputSearch,
-      TitleBase
+      TitleBase,
+      ListHeader
     },
     data() {
       return{
-        folders: [
-          {
-            id: 1,
-            title: 'Материальные ресурсы ',
-            content: {
-              folders: null,
-              files: null,
-              objects: 2,
-            },
-            group: null,
-            trash: null
-          },
-          {
-            id: 2,
-            title: 'Нематериальные ресурсы ',
-            content: {
-              folders: null,
-              files: null,
-              objects: 15,
-            },
-            group: null,
-            trash: null
-          }
-        ]
       }
     },
+    computed: {
+      ...mapGetters({
+        materialResources: 'Resources/getMaterialResources',
+        intangibleResources: 'Resources/getIntangibleResources'
+      }),
+    },
     methods: {
-      changePage({id}) {
-        if(id === 1) {
-          this.$router.push({name: 'vx.resource.material.resources'})
-        }
-        if(id === 2){
-          this.$router.push({name: 'vx.resource.intangible.resources'})
-        }
-      }
-    }
+    },
+    beforeCreate() {
+      this.$core.execViaComponent('Resources', 'getMaterialResources', 7);
+      this.$core.execViaComponent('Resources', 'getWorkerIntangible', 7)
+    },
   }
 </script>
 

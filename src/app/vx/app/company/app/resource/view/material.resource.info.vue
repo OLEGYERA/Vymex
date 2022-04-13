@@ -1,15 +1,39 @@
 <template>
   <div class="resource-material-info-view">
-    <comeback @onClick="$router.push({name: 'vx.resource.material.resources'})"/>
+    <comeback @onClick="exit"/>
     <div class="info-header-group">
       <title-base>{{selectedResource.name}}</title-base>
-      <icon-points-vertical @click.native="infoActionListStatus = true" ref="list"/>
+      <icon-points-vertical @click.native="actionStatus = true" ref="list"/>
+
       <modal-action-list
-          :status="infoActionListStatus"
+          :status="actionStatus"
           :actions="actions"
           @onList="performAction"
-          @onClose="infoActionListStatus=false"
+          @onClose="actionStatus=false"
+          @onDelete="modalBaseStatus = true"
       />
+
+      <modal-base :status="modalBaseStatus"
+                  @onClose="modalBaseStatus=false"
+                  class="modal-delete"
+                  @onOk="deleteResource">
+        <template #title>
+          Удалить ресурс?
+        </template>
+        <template #description>
+          Это действие необратимо
+        </template>
+        <template #content>
+          <title-caps class="modal-subtitle">Ресурс</title-caps>
+          <div class="delete-resource-plate">
+            <title-sub>{{selectedResource.name}}</title-sub>
+            <title-caption>{{selectedResource.identifier}}</title-caption>
+          </div>
+        </template>
+        <template #button-accept>
+          Удалить
+        </template>
+      </modal-base>
     </div>
     <title-caption class="resource-number">{{selectedResource.identifier}}</title-caption>
     <text-base>{{selectedResource.description}}</text-base>
@@ -18,25 +42,22 @@
       <title-caption>Стоимость ресурса</title-caption>
     </div>
     <div class="resource-main-info">
+
       <div class="resource-owner">
-        <header-add>
-          <template #header-title>Владелец</template>
-          <template #header-amount>1</template>
-        </header-add>
-        <company-ui :data="selectedResource.company"/>
+        <list-header title="Владелец" :add="false" :title-count="1"/>
+        <company-ui :company="selectedResource.company"/>
       </div>
+
       <div class="resource-user">
-        <header-add>
-          <template #header-title>Пользователь</template>
-          <template #header-amount>1</template>
-        </header-add>
+        <list-header title="Пользователь" :add="false" :title-count="1"/>
         <unit-ui :unit-level="selectedResource.worker.unitLevel" :unit-position="selectedResource.worker.unitName" :unit-data="selectedResource.worker"/>
       </div>
     </div>
-    <header-add>
-      <template #header-title>изображения</template>
-      <template #header-amount>{{selectedResource.files.length}}</template>
-    </header-add>
+
+    <list-header v-if="selectedResource.files.length + selectedResource.images.length"
+                 title="изображения"
+                 :add="false"
+                 :title-count="selectedResource.files.length + selectedResource.images.length"/>
     <file-ui v-for="(file, key) in selectedResource.files" :file="file" :key="key" :actions="fileActionList"/>
   </div>
 </template>
@@ -48,10 +69,14 @@
   import TitleCaption from "@Facade/Title/Caption"
   import TextBase from "@Facade/Text/Base"
   import TitleSemi from "@Facade/Title/Semi"
-  import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd";
   import ModalActionList from "@Facade/Modal/ActionList";
+  import ModalBase from "@Facade/Modal/Base"
+  import TitleSub from "@Facade/Title/Sub"
+  import TitleCaps from "@Facade/Title/Caps"
+  import ListHeader from "@Facade/Navigation/ListHeader";
+
   import {UnitUi, FileUi, CompanyUi} from '@Providers'
-  import {mapGetters} from "vuex";
+  import {mapGetters, mapMutations} from "vuex";
 
   export default {
     name: 'vx.resource.material.info',
@@ -61,36 +86,50 @@
       TitleCaption,
       TextBase,
       TitleSemi,
-      HeaderAdd,
       CompanyUi,
       ModalActionList,
       FileUi,
-      UnitUi
+      UnitUi,
+      ModalBase,
+      TitleSub,
+      TitleCaps,
+      ListHeader
     },
     data() {
       return{
-        infoActionListStatus: false,
+        actionStatus: false,
         fileActionList: ['Редактировать', 'Открыть доступ', 'Переместить'],
         actions: ['Редактировать', 'Отправить на склад'],
+        modalBaseStatus: false
       }
     },
     computed: {
       ...mapGetters({
-        materialResources: 'Resources/materialResources'
+        materialResources: 'Resources/materialResources',
+        selectedResource: 'Resources/getChosenMaterialResource'
       }),
-      selectedResource(){
-        return this.materialResources.find(el => el.id === this.$route.params.id)
-      }
     },
     methods: {
+      ...mapMutations({
+        clearChosenMaterialResource: 'Resources/clearChosenMaterialResource',
+      }),
       performAction(key) {
-        switch (key) {
-        case 0: this.$router.push({name: 'vx.resource.editing', params: {resourceId: this.$route.params.id}});
-        break;
-        case 1:
-          this.$router.push({name: 'vx.resource.material.resources', params: {resourceId: this.$route.params.id}})
-                this.materialResources.splice(+this.$route.params.id, 1)
+        if(key === 0) {
+          this.$router.push({name: 'vx.resource.editing'});
         }
+        if(key === 1) {
+          this.$core.execViaComponent('Resources', 'moveToWarehouse', this.selectedResource.id)
+          this.$router.push({name: 'vx.resource.material.resources'})
+        }
+      },
+      deleteResource(){
+        this.modalBaseStatus = false
+        this.$core.execViaComponent('Resources', 'deleteMaterial', this.selectedResource.id)
+        this.$router.push({name: 'vx.resource.material.resources'})
+      },
+      exit() {
+        this.$router.back()
+        this.clearChosenMaterialResource()
       }
     },
   }
@@ -147,19 +186,29 @@
         width: 100%;
       }
     }
-    .facade-header-add::v-deep {
+    .facade-navigation-list-header {
       margin-bottom: rem(4);
       padding: rem(8) 0;
-      .icon-add {
-        display: none;
-      }
     }
     .resource-file-ui {
       margin-bottom: rem(8);
     }
-    .container-sidebar-structure-unit::v-deep{
-      .facade-input-checkbox {
-        display: none;
+
+    .modal-delete{
+      .delete-resource-plate{
+        padding: rem(8) rem(16);
+        border-radius: 8px;
+        height: 56px;
+        box-sizing: border-box;
+        background-color: $grey-scale-400;
+        margin-bottom: 12px;
+        .facade-title-sub{
+          margin-bottom: 4px;
+        }
+      }
+      .facade-title-caps{
+        padding: rem(8) 0;
+        margin-bottom: 4px;
       }
     }
   }

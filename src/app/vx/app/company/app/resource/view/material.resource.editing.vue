@@ -1,34 +1,30 @@
 <template>
   <div class="resource-editing-material-view">
-    <comeback @onClick="$router.push({name: 'vx.resource.info'})"/>
+    <comeback @onClick="exit"/>
     <title-base>Редактирование ресурса</title-base>
     <div class="main-plate">
-      <input-base labeled :placeholder="'Название'" :model="object.name"></input-base>
-      <input-base labeled :placeholder="'Серийный номер'" :model="object.number"/>
-      <text-area labeled :placeholder="'Описание'" :max-length="1000" :text-area-value="object.description"/>
+      <input-base labeled :placeholder="'Название'" :model="resource.name" @onInput="editResource(['name', $event])"/>
+      <input-base labeled :placeholder="'Серийный номер'" :model="resource.identifier" @onInput="editResource(['identifier', $event])"/>
+      <text-area labeled :placeholder="'Описание'" :max-length="1000" :model="resource.description" @onInput="editResource(['description', $event])"/>
       <title-caps>Стоимость ресурса</title-caps>
-      <input-price :model="object.price"/>
+      <input-price :model="resource.cost" @onInput="editResource(['cost', $event])"/>
+
       <div class="user">
-        <header-add class="user" @create="showSidebar()">
-          <template #header-title>Пользователь</template>
-          <template #header-amount>1</template>
-        </header-add>
-        <structural-unit :user="object.user"><icon-points-vertical/></structural-unit>
+        <list-header title="Пользователь" :title-count="resource.worker.id ? 1 : ''" @onAction="showSidebar()" :add="!resource.worker.id"/>
+        <unit-setting-ui :unit-level="resource.worker.unitLevel" :unit-data="resource.worker" :unit-position="resource.worker.unitName"/>
       </div>
-      <assign-user-ui/>
-      <header-add class="owner">
-        <template #header-title>Владелец</template>
-        <template #header-amount>1</template>
-      </header-add>
-      <company-ui :company="object.owner"/>
-      <header-add class="">
-        <template #header-title>изображения</template>
-      </header-add>
+<!--      <assign-user-ui/>-->
+
+      <list-header title="Владелец" :title-count="1" :add="false"/>
+      <company-ui :company="resource.company"/>
+
+      <list-header title="изображения" />
       <file-ui/>
     </div>
+
     <div class="create-resource-buttons">
-      <button-secondary class="create-resource-button">Отмена</button-secondary>
-      <button-base class="create-resource-button" :disable="buttonDisable" @onClick="$router.push({name: 'vx.resource.material.resources'})">
+      <button-secondary @onClick="exit" class="create-resource-button">Отмена</button-secondary>
+      <button-base class="create-resource-button" :disable="buttonDisable" @onClick="editMaterialResource">
         Сохранить
       </button-base>
     </div>
@@ -41,14 +37,13 @@
   import InputBase from "@Facade/Input/Base"
   import TextArea from "@Facade/Input/TextArea"
   import TitleCaps from "@Facade/Title/Caps"
-  import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd"; //// костыль
   import ButtonSecondary from "@Facade/Button/Secondary"
   import ButtonBase from "@Facade/Button/Base"
   import InputPrice from "@Facade/Input/Price"
-  import StructuralUnit from "@/LTE/Singletons/Dashboard/facades/StructuralUnit"; //// костыль
-  import {AssignUserUi, CompanyUi, FileUi} from '@Providers'
-
-  import {mapMutations} from "vuex";
+  import ListHeader from "@Facade/Navigation/ListHeader";
+  import {CompanyUi, FileUi, UnitSettingUi} from '@Providers'
+///AssignUserUi,
+  import {mapGetters, mapMutations} from "vuex";
 
   export default {
     name: 'vx.resource.editing',
@@ -58,167 +53,39 @@
       InputBase,
       TextArea,
       TitleCaps,
-      HeaderAdd,
       CompanyUi,
       ButtonSecondary,
       ButtonBase,
       InputPrice,
-      StructuralUnit,
       FileUi,
-      AssignUserUi,
+      // AssignUserUi,
+      UnitSettingUi,
+      ListHeader
     },
     data() {
       return{
-        object: null,
         buttonDisable: false,
-        materialObjects: [
-          {
-            id: 1,
-            name : 'Монитор HP Horus 27 inc.',
-            number: 'ABK2921BDSFLBS',
-            description: 'Простой для понимания документ - документ, не требующий усилий для чтения и понимания, т.е. при изложении материала не используются сложные предложения',
-            user: {
-              name: 'Дмитрий Соколов',
-              position: 'Космонавт',
-              level: 1,
-              avatar: require('@/assets/img/my/process.svg')
-            },
-            owner: {
-              name: 'Sharashkina Kontora',
-              avatar: require('@/assets/img/my/process.svg')
-            },
-            price: 3000
-          },
-          {
-            id: 2,
-            name : 'iMac 27 inch. 2015',
-            number: 'ABK2921BDSFLBS',
-            description: 'Простой для понимания документ - документ, не требующий усилий для чтения и понимания, т.е. при изложении материала не используются сложные предложения',
-            user: {
-              name: 'Дмитрий Соколов',
-              position: 'Космонавт',
-              level: 2,
-              avatar: require('@/assets/img/my/process.svg')
-            },
-            owner: {
-              name: 'Sharashkina Kontora',
-              avatar: require('@/assets/img/my/process.svg'),
-            },
-            price: 3000
-          },
-          {
-            id: 3,
-            name : 'Молоток',
-            number: 'ABK2921BDSFLBS',
-            description: 'Простой для понимания документ - документ, не требующий усилий для чтения и понимания, т.е. при изложении материала не используются сложные предложения',
-            user: {
-              name: 'Дмитрий Соколов',
-              position: 'Космонавт',
-              level: 4,
-              avatar: require('@/assets/img/my/process.svg')
-            },
-            owner: {
-              name: 'Sharashkina Kontora',
-              avatar: require('@/assets/img/my/process.svg'),
-            },
-            price:300
-          },
-          {
-            id: 4,
-            name : 'Монитор HP Horus 27 inc.',
-            number: 'ABK2921BDSFLBS',
-            description: 'Простой для понимания документ - документ, не требующий усилий для чтения и понимания, т.е. при изложении материала не используются сложные предложения',
-            user: {
-              name: 'Дмитрий Соколов',
-              position: 'Космонавт',
-              level: 1,
-              avatar: require('@/assets/img/my/process.svg')
-            },
-            owner: {
-              name: 'Sharashkina Kontora',
-              avatar: require('@/assets/img/my/process.svg'),
-            },
-            price:300
-          },
-          {
-            id: 5,
-            name : 'iMac 27 inch. 2015',
-            number: 'ABK2921BDSFLBS',
-            description: 'Простой для понимания документ - документ, не требующий усилий для чтения и понимания, т.е. при изложении материала не используются сложные предложения',
-            user: {
-              name: 'Дмитрий Соколов',
-              position: 'Космонавт',
-              level: 3,
-              avatar: require('@/assets/img/my/process.svg')
-            },
-            owner: {
-              name: 'Sharashkina Kontora',
-              avatar: require('@/assets/img/my/process.svg')
-            },
-            price: 3000
-          },
-          {
-            id: 6,
-            name : 'Монитор HP Horus 27 inc.',
-            number: 'ABK2921BDSFLBS',
-            description: 'Простой для понимания документ - документ, не требующий усилий для чтения и понимания, т.е. при изложении материала не используются сложные предложения',
-            user: {
-              name: 'Дмитрий Соколов',
-              position: 'Космонавт',
-              level: 3,
-              avatar: require('@/assets/img/my/process.svg')
-            },
-            owner: {
-              name: 'Sharashkina Kontora',
-              avatar: require('@/assets/img/my/process.svg')
-            },
-            price: 3000
-          },
-          {
-            id: 7,
-            name : 'iMac 27 inch. 2015',
-            number: 'ABK2921BDSFLBS',
-            description: 'Простой для понимания документ - документ, не требующий усилий для чтения и понимания, т.е. при изложении материала не используются сложные предложения',
-            user: {
-              name: 'Дмитрий Соколов',
-              position: 'Космонавт',
-              level: 2,
-              avatar: require('@/assets/img/my/process.svg')
-            },
-            owner: {
-              name: 'Sharashkina Kontora',
-              avatar: require('@/assets/img/my/process.svg')
-            },
-            price: 3000
-          },
-          {
-            id: 8,
-            name : 'Монитор HP Horus 27 inc.',
-            number: 'ABK2921BDSFLBS',
-            description: 'Простой для понимания документ - документ, не требующий усилий для чтения и понимания, т.е. при изложении материала не используются сложные предложения',
-            user: {
-              name: 'Дмитрий Соколов',
-              position: 'Космонавт',
-              level: 4,
-              img: require('@/assets/img/my/process.svg')
-            },
-            owner: {
-              name: 'Sharashkina Kontora',
-              avatar: require('@/assets/img/my/process.svg')
-            },
-            price: 3000
-          },
-        ]
       }
+    },
+    computed: {
+      ...mapGetters({
+        resource: 'Resources/getChosenMaterialResource'
+      }),
     },
     methods: {
       ...mapMutations({
         showSidebar: 'Resources/showSidebarAssign',
+        editResource: 'Resources/editResource',
       }),
+      editMaterialResource(){
+        this.$core.execViaComponent('Resources', 'editMaterial')
+        this.$router.push({name: 'vx.resource.material.resources'})
+      },
+      exit() {
+        this.$router.back()
+        this.clearChosenMaterialResource()
+      }
     },
-    created() {
-      this.object = this.materialObjects.find(el => el.id === this.$route.params.resourceId)
-    }
   }
 </script>
 
@@ -238,10 +105,10 @@
       border-radius: 16px;
       .facade-input-base {
         border-width: 1px;
-        margin-bottom: rem(16);
+        margin-bottom: rem(24);
       }
       .facade-input-text-area{
-        margin-bottom: rem(16);
+        margin-bottom: rem(24);
       }
       .facade-title-caps {
         margin-bottom: rem(16);
@@ -251,21 +118,12 @@
       }
       .user {
         margin-bottom: 24px;
-        .icon-points {
-          height: 16px;
-          padding: 0 rem(10);
-          color: $grey-scale-300;
-        }
       }
-      .user.facade-header-add::v-deep,
-      .owner.facade-header-add::v-deep {
+      .facade-navigation-list-header {
         padding: rem(8) 0;
         margin-bottom: rem(4);
-        .icon-add {
-          display: none;
-        }
       }
-      .facade-resource-company {
+      .resource-company-ui {
         margin-bottom: rem(24);
       }
     }

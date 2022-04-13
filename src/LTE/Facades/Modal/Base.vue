@@ -1,5 +1,5 @@
 <template>
-  <div class="facade-modal-base" v-if="status">
+  <div class="facade-modal-base" v-if="status" @click.stop>
     <div class="modal-base-body">
       <button-close @onClick="$emit('onClose')"/>
       <div class="modal-base-header">

@@ -4,7 +4,9 @@
       <navigation-panel/>
     </div>
     <div class="app-company-main">
-      <router-view class="app-company-router-view"/>
+      <keep-alive>
+        <router-view class="app-company-router-view"/>
+      </keep-alive>
     </div>
   </div>
 </template>
@@ -38,7 +40,7 @@
       width: 100%;
       height: 100%;
       .app-company-router-view{ //// сделать логику передачи саб-кдасов как для задач
-        padding-top: 24px;
+        padding: 24px 0;
         max-width: 796px;
         margin: 0 auto;
       }

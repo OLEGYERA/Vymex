@@ -7,6 +7,7 @@ import ControlCenter from "./app/control-center/routing";
 
 // import Profile from './view/profile'
 import Resources from './app/resource/routing'
+import WareHouse from './app/warehouse/routing'
 
 
 export default [
@@ -27,6 +28,7 @@ export default [
       ...Task,
       ...Resources,
       ...ControlCenter,
+      ...WareHouse
     ]
   },
 ]

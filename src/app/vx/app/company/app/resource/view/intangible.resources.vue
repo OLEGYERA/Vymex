@@ -1,15 +1,13 @@
 <template>
   <div class="resource-intangible-resources-view">
-    <comeback @onClick="$router.push({name: 'vx.resource.structural.units'})"/>
+    <comeback @onClick="$router.back()"/>
     <div class="header-text-group">
       <title-base>Нематериальные ресурсы</title-base>
       <icon-points-vertical/>
     </div>
     <input-search :placeholder="'Поиск'"/>
-    <header-add @create="$router.push({name: 'vx.resource.create.intangible.resource'})">
-      <template #header-title>Объекты</template>
-      <template #header-amount>{{resources.length}}</template>
-    </header-add>
+
+    <list-header title="Объекты" :title-count="resources.length || ''" @onAction="$router.push({name: 'vx.resource.create.intangible.resource'})"/>
     <div class="background-plate" v-if="!resources.length">
       <img class="image" src="@/assets/img/my/empty-file.svg">
       Файлов нет
@@ -19,40 +17,46 @@
           v-for="(object, objectKey) in resources"
           :object="object"
           :key="objectKey"
-          @click.native="$router.push({name: 'vx.resource.intangible.resource.info', params: {id: object.id}})"/>
+          @onClick="getResourceInfo(object.id)"/>
     </div>
   </div>
 </template>
 
 <script>
   import Comeback from "@Facade/Navigation/Comeback";
-  import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd"; //// костыль
   import InputSearch from "@Facade/Input/Search";
   import TitleBase from "@Facade/Title/Base"
+  import ListHeader from "@Facade/Navigation/ListHeader";
+
   import {IntangibleObjectUi} from "@Providers"
+  import {mapGetters} from "vuex";
 
   export default {
     name: 'vx.resource.intangible.resources',
     components: {
       Comeback,
-      HeaderAdd,
       InputSearch,
       TitleBase,
-      IntangibleObjectUi
+      IntangibleObjectUi,
+      ListHeader
     },
-    data(){
-      return{
-        resources: [
-          {
-            id: 1,
-            name: 'facebook account',
-            url: 'facebook.com/29kadgdbsi9a_21g3_1%_ab',
-            login: 'jerronvymex@vymex.com',
-            password: 'Abra_Kadabra',
-            description: 'Тестовый аккаунт для рекламных сайтов, что бы мы лучше понимали рынок земли и продажи алюминия, радости вам и хорошего настроения',
-          }
-        ]
+    // data(){
+    //   return{
+    //   }
+    // },
+    computed: {
+      ...mapGetters({
+        resources: 'Resources/getIntangibleResources',
+      }),
+    },
+    methods:{
+      getResourceInfo(id) {
+        this.$core.execViaComponent('Resources', 'getIntangible', id)
+        this.$router.push({name: 'vx.resource.intangible.resource.info'})
       }
+    },
+    created() {
+      this.$core.execViaComponent('Resources', 'getWorkerIntangible', 7)
     }
   }
 </script>
@@ -75,9 +79,13 @@
     .facade-input-search {
       margin-bottom: rem(16);
     }
-    .facade-header-add {
+    .facade-navigation-list-header {
       padding: rem(8) 0;
       margin-bottom: rem(4);
+    }
+
+    .resource-intangible-object-ui {
+      margin-bottom: 8px;
     }
     .background-plate {
       height: 160px;

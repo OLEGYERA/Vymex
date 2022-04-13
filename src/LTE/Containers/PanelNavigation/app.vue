@@ -56,6 +56,9 @@ export default {
       if(i === 2){
         this.$router.push({name: 'vx.resource'})
       }
+      if(i === 11){
+        this.$router.push({name: 'vx.warehouse'})
+      }
     }
     // changeStatus(i) {
     //   this.sections.map(el => el.isActive = false)

@@ -64,9 +64,6 @@ export default {
         color: #fff;
         background-color: $grey-scale-400;
         cursor: pointer;
-        .icon-setting-slider {
-          //height: 10px;
-        }
         .numb {
           margin-right: 7px;
         }

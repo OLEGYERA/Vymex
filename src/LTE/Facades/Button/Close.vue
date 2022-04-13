@@ -1,5 +1,5 @@
 <template>
-  <div class="facade-button-close" @click="$emit('onClick')">
+  <div class="facade-button-close" @click.stop="$emit('onClick')">
     <icon-error/>
   </div>
 </template>
