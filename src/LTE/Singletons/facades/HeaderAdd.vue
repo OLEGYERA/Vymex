@@ -13,7 +13,7 @@
     </div>
     <div class="right-part">
       <icon-sort v-if="sort" @click.native="$emit('sortFiles')"/>
-      <icon-add @click.native="$emit('create')"/>
+      <icon-add v-if="add" @click.native="$emit('create')"/>
     </div>
   </div>
 </template>
@@ -30,6 +30,10 @@ export default {
   props: {
     sort: Boolean,
     settingSlider: Boolean,
+    add: {
+      type: Boolean,
+      default: true
+    }
   }
 }
 </script>

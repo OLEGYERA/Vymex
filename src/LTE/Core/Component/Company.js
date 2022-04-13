@@ -62,6 +62,11 @@ class Company extends Binder{
   }
   getUserCompaniesRes(companies) {
     this.$store.name('Company').set('All', companies)
+
+    let activeCompany = this.$store.name('Company').get('ActiveCompany')
+    if (activeCompany.id) {
+      this.$store.name('Company').set('ActiveCompany', activeCompany.id)
+    }
   }
 }
 

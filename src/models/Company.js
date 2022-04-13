@@ -21,6 +21,7 @@ export default {
       {isActive: false, icon: require('@/assets/img/my/costs.svg')},
       {isActive: false, icon: require('@/assets/img/my/result-c-e.svg')},
     ],
+    activeCompany: {},
 
     //for career
     currentCompany: {
@@ -32,6 +33,10 @@ export default {
     getAll: (state) => state.all,
     getCurrentCompany: (state) => state.currentCompany,
     getSections: (state) => state.sections,
+    getActiveCompany: state => state.activeCompany,
+    getShare: state => state.activeCompany.cofounder && state.activeCompany.cofounder.length
+      ? state.activeCompany.cofounder[0].share
+      : 0
   },
   mutations: {
     setNew: (state, payload) => state.all.push(payload),
@@ -42,6 +47,9 @@ export default {
       state.sections.map(el => el.isActive = false)
       state.sections[i].isActive = !state.sections[i].isActive
     },
+    setActiveCompany: (state, id) => {
+      state.activeCompany = state.all.filter(comp => comp.id === id)[0]
+    }
   },
   modules: {
     CompanyCreate

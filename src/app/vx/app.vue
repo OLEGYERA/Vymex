@@ -14,6 +14,7 @@
     <section class="vx-other-apps">
       <notifications-app/>
       <messenger-app/>
+      <users-app/>
     </section>
   </div>
 </template>
@@ -33,6 +34,7 @@
       VxHeader,
       MessengerApp: async () => (await import('@Singletons')).MessengerApp,
       NotificationsApp: async () => (await import('@Singletons')).NotificationsApp,
+      UsersApp: async () => (await import('@Singletons')).UsersApp,
     },
     created() {
       // for (let i=0; i<5000; i++) {
