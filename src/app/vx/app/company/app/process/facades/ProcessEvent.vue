@@ -1,9 +1,9 @@
 <template>
   <div class="container-process-event">
     <div class="panel-date">
-      <icon-calendar class="panel-date-icons" v-if="message.calendarIcon"/>
-      <span>{{ message.date }}</span>
-      <icon-sort class="panel-date-icons" v-if="message.sortIcon"/>
+      <icon-calendar class="panel-date-icons"/>
+      <span>{{ message.repeatDate }}</span>
+      <icon-sort class="panel-date-icons" v-if="message.isRegular === 1" :style="{marginRight: 0}"/>
     </div>
   </div>
 </template>
@@ -17,7 +17,7 @@ export default {
     message: Object
   },
   components: {
-    IconSort
+   IconSort
   },
 }
 </script>
@@ -25,8 +25,6 @@ export default {
 .container-process-event {
   display: flex;
   flex-wrap: wrap;
-  width: rem(120);
-
   .panel-date {
     height: rem(16);
     display: inherit;
@@ -34,7 +32,7 @@ export default {
     font-size: rem(11);
     line-height: rem(20);
     border-radius: 14px;
-    padding: 0 5px;
+    padding: 0 8px 0 4px;
     color: #FFF;
     background: $grey-scale-300;
     margin-bottom: 15px;

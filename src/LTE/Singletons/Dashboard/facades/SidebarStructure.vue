@@ -5,7 +5,7 @@
     </title-caps>
     <div v-for="(level, index) in levels"
          :key="index">
-      <div class="sidebar-structure-level" v-if="processModel">
+      <div class="sidebar-structure-level" v-if="processModel === 'official-processes'">
         <div class="sidebar-structure-level-main">
           <div v-if="index !== 0" class="level-main-items">
             <img v-if="!level.showContext"

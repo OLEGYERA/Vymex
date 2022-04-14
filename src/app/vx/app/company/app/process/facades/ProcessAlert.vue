@@ -29,14 +29,26 @@ import PeriodicityProcesses from "../view/PeriodicityProcesses";
 
 export default {
   name: 'vx.process.facade.process.alert',
+  props:{
+    currentAlertWorker: Number || null
+  },
+  created(){
+    if(this.currentAlertWorker <= 1 || this.currentAlertWorker === null){
+      this.currentPeriod = 'За день до начала'
+    } else if(this.currentAlertWorker === 2){
+      this.currentPeriod = 'За неделю до начала'
+    } else if(this.currentAlertWorker === 3) {
+      this.currentPeriod = 'За две недели до начала'
+    }
+  },
   data() {
     return {
       status: false,
-      currentPeriod: 'За 10 минут до начала',
+      currentPeriod: 'За день до начала',
       items: [
-        {title: 'За 10 минут до начала', checked: true},
-        {title: 'За 30 минут до начала', checked: false},
-        {title: 'За час до начала', checked: false}
+        {title: 'За день до начала', checked: true},
+        {title: 'За неделю до начала', checked: false},
+        {title: 'За две недели до начала', checked: false}
       ]
     }
   },
@@ -49,12 +61,12 @@ export default {
     changeStatus() {
       this.status = !this.status
     },
-    onList(id){
+    onList(i){
       this.items.map(el => el.checked = false)
-      this.items[id].checked = !this.items[id].checked
-      this.currentPeriod = this.items[id].title
+      this.items[i].checked = !this.items[i].checked
+      this.currentPeriod = this.items[i].title
+      this.$emit('alert-worker', i + 1)
       this.status = !this.status
-
     }
   }
 }

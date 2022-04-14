@@ -90,7 +90,7 @@ import Modal from "@Facade/Modal/Base";
 import Folder from "@/LTE/Singletons/Resources/facades/Folder";
 
 export default {
-  name: 'vx.process.create.process',
+  name: 'vx.process.create.process.modals',
   components: {
     HeaderAdd,
     File,

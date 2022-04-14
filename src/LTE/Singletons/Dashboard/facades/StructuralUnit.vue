@@ -15,14 +15,19 @@
           <div v-else class="context-main-num">{{ men.numberPeople }}</div>
           <span class="context-main-position">{{ men.position }}</span>
         </div>
+      </div>
+      <div v-else class="level-context-main">
+        <image-avatar class="context-main-avatar"
+                      :logo="$core.traits.ImageLogo(men.avatar, men.name)"
+                      :color-code="$core.traits.ImageColorCode(men.id)"/>
+        <div v-if="men.position" class="level-context-main-description">
+          <span class="main-description-name">{{ men.name }}</span>
+          <span class="main-description-position">{{ men.position }}</span>
         </div>
-        <div v-else class="level-context-main">
-          <img :src="men.avatar"/>
-          <div class="level-context-main-description">
-            <span class="main-description-name">{{ men.name }}</span>
-            <span class="main-description-position">{{ men.position }}</span>
-          </div>
+        <div v-else>
+          <span class="context-main-position">{{ men.name }}</span>
         </div>
+      </div>
       <div>
         <checkbox :viewType="men.checkboxType"
                   :model="men.checkedPosition"
@@ -35,6 +40,7 @@
 <script>
 import Checkbox from '@Facade/Input/Checkbox';
 import {mapMutations, mapGetters} from "vuex";
+import ImageAvatar from "@Facade/Image/Avatar"
 
 export default {
   name: "StructuralUnit",
@@ -43,30 +49,33 @@ export default {
     level: Number
   },
   components: {
-    Checkbox
+    Checkbox,
+    ImageAvatar
   },
-    computed: {
+  computed: {
     ...mapGetters({
       levels: 'getLevels',
       disableStatusCount: 'getDisableStatusCount'
     }),
   },
   methods: {
-        ...mapMutations({
-          setDisableStatusCount: 'setCheckDisableStatusCount',
-          setLevels: 'setWidgetLevels'
-        }),
+    ...mapMutations({
+      setDisableStatusCount: 'setCheckDisableStatusCount',
+      setLevels: 'setWidgetLevels'
+    }),
     changeStatusPosition(index) {
-      if(this.data[index].checkboxType === 2){
+      if (this.data[index].checkboxType === 2) {
         let newLevels = this.levels.map(el => ({...el, data: el.data.map(el => ({...el, checkedPosition: false}))}))
         this.setLevels(newLevels)
       }
       let newLevels = this.levels.map((el, i) => i === this.level - 1
-            ? ({...el, data: el.data.map((el, i) => i === index
-                  ? ({...el, checkedPosition: !el.checkedPosition})
-                  : el)})
-            : el)
-        this.setLevels(newLevels)
+          ? ({
+            ...el, data: el.data.map((el, i) => i === index
+                ? ({...el, checkedPosition: !el.checkedPosition})
+                : el)
+          })
+          : el)
+      this.setLevels(newLevels)
       this.data[index].checkedPosition === true
           ? this.setDisableStatusCount(this.disableStatusCount + 1)
           : this.setDisableStatusCount(this.disableStatusCount - 1)
@@ -91,6 +100,12 @@ export default {
 
     .level-context-main {
       display: inherit;
+
+      .context-main-avatar {
+        width: 26px;
+        height: 26px;
+        margin-right: rem(12);
+      }
 
       .level-context-main-description {
         display: inherit;

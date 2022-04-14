@@ -1,18 +1,17 @@
 <template>
   <div class="container-selected-process">
-    <comeback @onClick="$router.push({name: 'vx.process.company.processes'})"/>
+    <comeback @onClick="goBack"/>
     <div class="selected-process-header">
       <div class="header-events-panel">
-        <process-event v-if="messages[indexProcess].regular"
-                       :message="messages[indexProcess]"/>
-        <div v-if="messages[indexProcess].regular" class="panel-day">
-          <span>{{messages[indexProcess].activePeriod}}</span>
+        <process-event :message="selectedProcess"/>
+        <div v-if="selectedProcess.isRegular" class="panel-day">
+          <span>{{ activePeriod }}</span>
         </div>
       </div>
       <icon-points-vertical/>
     </div>
-    <div class="selected-process-text">{{ messages[indexProcess].text }}</div>
-    <div class="selected-process-description">{{messages[indexProcess].description}}</div>
+    <div class="selected-process-text">{{ selectedProcess.title }}</div>
+    <div class="selected-process-description">{{ selectedProcess.description }}</div>
     <div class="selected-process-body">
       <div class="body-performers">
         <header-add>
@@ -49,21 +48,45 @@ export default {
     File,
     ProcessPerformer
   },
+  mounted(){
+    console.log(this.performers, 'performers')
+  },
   methods: {
     ...mapMutations({
-      setPerformerCount: 'setNewPerformerCount'
-    })
+      setPerformerCount: 'setNewPerformerCount',
+      setSelectedProcess: 'setClickedSelectedProcess',
+      setPerformers: 'setCurrentPerformers'
+    }),
+    goBack(){
+      this.$router.push({name: 'vx.process.company.processes'})
+      this.setSelectedProcess({})
+      this.setPerformers([])
+    }
   },
   computed: {
     ...mapGetters({
-      messages: 'getMessages',
-      indexProcess: 'getProcessIndex',
       files: 'getFiles',
       performers: 'getPerformers',
       periods: 'getPeriods',
-      performerCount: 'getPerformerCount'
+      performerCount: 'getPerformerCount',
+      selectedProcess: 'getSelectedProcess',
+      processModel: 'getProcessModel',
+      levels: 'getLevels'
     }),
-  },
+    activePeriod() {
+      if (this.selectedProcess.repeatFrequency.interval === "P1D") {
+        return 'Каждый день'
+      } else if(this.selectedProcess.repeatFrequency.interval === "P1W"){
+        return 'Каждую неделю'
+      } else if(this.selectedProcess.repeatFrequency.interval === "P1M"){
+        return 'Каждый месяц'
+      } else if(this.selectedProcess.repeatFrequency.interval === "P1Y") {
+        return 'Каждый год'
+      } else {
+        return ''
+      }
+      }
+    },
 }
 </script>
 <style lang="scss" scoped>
@@ -84,11 +107,11 @@ export default {
         flex-wrap: wrap;
         align-items: center;
         justify-content: center;
-        width: rem(91);
         height: rem(16);
         font-size: rem(11);
         color: #FFF;
         margin: 0 8px;
+        padding: 0 8px;
         background: $blue;
         border-radius: 14px;
       }

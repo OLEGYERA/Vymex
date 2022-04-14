@@ -11,6 +11,10 @@
          }">
       <div class="performer-context-main">
         <img v-if="performer.avatar" :src="performer.avatar" class="context-main-avatar"/>
+        <image-avatar v-else-if="performer.numberPeople === 1 && processModel === 'official-processes'"
+                       class="context-main-avatar"
+                      :logo="$core.traits.ImageLogo(performer.avatar, performer.position)"
+                      :color-code="$core.traits.ImageColorCode(performer.id)"/>
         <div v-else class="context-main-num">
           {{ performer.numberPeople }}
         </div>
@@ -28,14 +32,16 @@
           />
         </transition>
       </div>
-<!--          <div class="action-list-outside" v-if="performer.actionListStatus"-->
-<!--               @click="performer.actionListStatus = false"></div>-->
+      <div class="action-list-outside" v-if="performer.actionListStatus"
+           @click="performer.actionListStatus = false"></div>
     </div>
   </div>
 </template>
 
 <script>
 import ActionList from "@Facade/Modal/ActionList"
+import ImageAvatar from "@Facade/Image/Avatar"
+import {mapGetters} from "vuex";
 
 export default {
   name: 'vx.process.facade.process.performer',
@@ -44,13 +50,18 @@ export default {
   },
   data() {
     return {
-      actionListStatus: false,
       items: ['Заменить']
     }
   },
   components: {
-    ActionList
+    ActionList,
+    ImageAvatar
   },
+  computed: {
+    ...mapGetters({
+      processModel: 'getProcessModel'
+    })
+  }
 }
 </script>
 
@@ -75,6 +86,8 @@ export default {
 
       .context-main-avatar {
         margin-right: rem(12);
+        width: 24px;
+        height: 24px;
       }
 
       .context-main-num {
@@ -124,7 +137,6 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 1;
   cursor: auto;
 }
 </style>

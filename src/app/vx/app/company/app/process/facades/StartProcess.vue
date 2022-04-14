@@ -21,20 +21,46 @@ import {mapGetters, mapMutations} from "vuex";
 
 export default {
   name: 'vx.process.facade.start.process',
+  mounted() {
+    this.periods.map(el => el.isActive = false)
+    let periodFromProcess
+    let currentInterval = this.selectedProcess.repeatFrequency
+        ? this.selectedProcess.repeatFrequency.interval
+        : null
+    if(currentInterval){
+      if (currentInterval === "P1D") {
+        periodFromProcess = 1
+      } else if(currentInterval === "P1W"){
+        periodFromProcess = 2
+      } else if(currentInterval === "P1M"){
+        periodFromProcess = 3
+      } else if(currentInterval === "P1Y") {
+        periodFromProcess = 4
+      }
+    }
+    if(!periodFromProcess) periodFromProcess = 1
+    const periodsDefault = this.periods.map(el => el.id === periodFromProcess ? ({...el, isActive: true}) : el)
+    this.setPeriods(periodsDefault)
+  },
   methods: {
-    ...mapMutations({
-      setChoosePeriod: 'setNewChoosePeriod'
-    }),
+     ...mapMutations({
+       setPeriods: 'setNewPeriods'
+     }),
     choosePeriod(i) {
       this.periods.map(el => el.isActive = false)
       this.periods[i].isActive = !this.periods[i].isActive
-      this.setChoosePeriod(this.periods[i].title)
     }
   },
   computed: {
     ...mapGetters({
       periods: 'getPeriods',
+      selectedProcess: 'getSelectedProcess'
     }),
+  },
+  beforeDestroy(){
+    this.periods.map(el => el.isActive = false)
+    const periodsDefault = this.periods.map(el => el.id === 1 ? ({...el, isActive: true}) : el)
+    this.setPeriods(periodsDefault)
   },
 }
 </script>

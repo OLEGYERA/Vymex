@@ -5,57 +5,111 @@ class Processes extends Binder {
     constructor() {
         super();
     }
-    async edit() {
-        let data = serialize(
-            utf8ToArray('Test title edited'),
-            utf8ToArray('Test description edited'),
-            numberToArray(31),
-            numberToArray(1),
-            numberToArray(31),
-            numberToArray(31),
-            numberToArray(31),
-            utf8ToArray('2022-04-05 19:21:30'),
-            numberToArray(1),
-            numberToArray(2),
-            objectToArray(numberToArray(7), numberToArray(8)),
-            numberToArray(31),
+
+    async edit(data) {
+        let dataCreator = serialize(
+            utf8ToArray(data.title),
+            utf8ToArray(data.description),
+            numberToArray(data.isRegular),
+            numberToArray(data.isExecutor),
+            numberToArray(data.creatorId),
+            numberToArray(data.unitId),
+            objectToArray(data.level),
+            utf8ToArray(data.repeatDate),
+            numberToArray(data.alertWorker),
+            numberToArray(data.repeatInterval),
+            objectToArray(data.fileIds),
+            numberToArray(data.id),
         );
-        this.$socket.emit('listener', await encrypt(...arguments[1], data));
+        this.$socket.emit('listener', await encrypt(...arguments[1], dataCreator));
     }
 
-    editRes(creator) {
-        console.log('edit--res', creator)
+    editRes(editor) {
+        this.$store.set('ClickedSelectedProcess', editor);
     }
 
-    async create() {
-        let data = serialize(
-            utf8ToArray('Test title'),
-            utf8ToArray('Test description'),
-            numberToArray(31),
-            numberToArray(1),
-            numberToArray(340),
-            numberToArray(32),
-            numberToArray(31),
-            utf8ToArray('2022-04-05 18:37:30'),
-            numberToArray(1),
-            numberToArray(2),
-            objectToArray(numberToArray(15)),
-            numberToArray(31),
+    async create(data) {
+        let dataCreator = serialize(
+            utf8ToArray(data.title),
+            utf8ToArray(data.description),
+            numberToArray(data.isRegular),
+            numberToArray(data.isExecutor),
+            numberToArray(data.creatorId),
+            numberToArray(data.unitId),
+            objectToArray(data.level),
+            utf8ToArray(data.repeatDate),
+            numberToArray(data.alertWorker),
+            numberToArray(data.repeatInterval),
+            objectToArray(data.fileIds),
+            numberToArray(data.companyId),
         );
-        this.$socket.emit('listener', await encrypt(...arguments[1], data));
+        this.$socket.emit('listener', await encrypt(...arguments[1], dataCreator));
     }
 
     createRes(creator) {
-        console.log('create--res', creator)
+        this.$store.set('ClickedSelectedProcess', creator);
     }
 
-     async getUnits(unitId) {
-         this.$socket.emit('listener', await encrypt(...arguments[1], numberToArray(unitId)));
-     }
+    async getUnits(unitId) {
+        this.$socket.emit('listener', await encrypt(...arguments[1], numberToArray(unitId)));
+    }
 
     getUnitsRes(units) {
-       // this.$store.set('NewMessages', units);
-        console.log('get--Units--Res', units)
+        let currentProcessStatus = this.$store.get('CurrentWorkerId');
+        let currentProcessModel = this.$store.get('ProcessModel');
+        let currentLevel = currentProcessStatus.levelId
+        let arrayLevels = Object.values(units)
+        if(currentProcessModel === 'official-processes') {
+            let ceo = {}
+            let currentUnits = []
+            if (currentLevel === 1) {
+                ceo = {
+                    level: 1, showContext: true, data: [{
+                        avatar: units.self.avatar,
+                        id: units.self.id,
+                        name: units.self.unitName,
+                        checkedPosition: false,
+                        checkboxType: 2,
+                        actionListStatus: false
+                    }]
+                }
+                arrayLevels = arrayLevels.slice(1, 4)
+                currentUnits = arrayLevels.map((level, index) => ({
+                    level: index + 2, showContext: level.length && true, data: level.map(el => ({
+                        numberPeople: el.workersCount,
+                        id: el.id,
+                        position: el.unitName,
+                        checkedPosition: false,
+                        checkboxType: 2,
+                        actionListStatus: false
+                    }))
+                }))
+                currentUnits.unshift(ceo)
+            } else {
+                currentUnits = arrayLevels.map((lvl, i) => currentLevel < i + 1 ? ({
+                    level: i + 1, showContext: lvl.length && true, data: lvl.map(el => ({
+                        numberPeople: el.workersCount,
+                        id: el.id,
+                        position: el.unitName,
+                        checkedPosition: false,
+                        checkboxType: 2,
+                        actionListStatus: false
+                    }))
+                }) : lvl = {level: i + 1, data: []})
+            }
+            this.$store.set('WidgetLevels', currentUnits);
+        } else {
+            if(currentLevel === 1 || currentLevel === 2){
+                let levels = this.$store.get('LevelsStructure');
+                let curLevels = levels.map((el, i) => ({...el, data: [{...el.data[0],
+                        numberPeople: arrayLevels[i].length && currentLevel < i + 1
+                            ? arrayLevels[i].length
+                            : 0}]}))
+                this.$store.set('WidgetLevels', curLevels);
+            } else {
+                this.$store.set('WidgetLevels', []);
+            }
+        }
     }
 
     async get(processId) {
@@ -63,8 +117,29 @@ class Processes extends Binder {
     }
 
     getRes(process) {
-        console.log(process, 'get--res')
-        // this.$store.set('CurrentPerformers', processes);
+        this.$store.set('ClickedSelectedProcess', process);
+        let currentProcessModel = this.$store.get('ProcessModel');
+        let levels = this.$store.get('Levels')
+        if(currentProcessModel === 'company-processes'){
+            let lvlCount = Object.values(process.structureLevels)
+            let curLevels = levels.map((el, i) => ({...el,
+                numberPeople: lvlCount[i],
+                position: el.data[0].position}))
+            let filteredLevels = curLevels.filter(el => el.numberPeople > 0)
+            this.$store.set('CurrentPerformers', filteredLevels);
+            this.$store.set('ChooseSubdivisions', filteredLevels);
+        } else {
+            let structureUnit = process.structureUnit
+            let newPerformer = [{
+                avatar: structureUnit.avatar,
+                position: structureUnit.name,
+                level: structureUnit.levelId,
+                actionListStatus: false,
+                numberPeople: structureUnit.workerCount,
+            }]
+            this.$store.set('CurrentPerformers', newPerformer);
+            this.$store.set('ChooseSubdivisions', newPerformer);
+        }
     }
 
     async delete(processId) {
@@ -73,47 +148,51 @@ class Processes extends Binder {
 
     deleteRes(process) {
         console.log(process, 'delete--res')
-        // this.$store.set('CurrentPerformers', processes);
     }
 
-    async count() {
-        let data = serialize(
-            numberToArray(7),
-            numberToArray(7),
-            numberToArray(4),
-            numberToArray(4),
+    async count(data) {
+        let dataCreator = serialize(
+            numberToArray(data.creatorId),
+            numberToArray(data.unitId),
+            numberToArray(data.levelId),
+            numberToArray(data.companyId)
         );
-        this.$socket.emit('listener', await encrypt(...arguments[1], data));
+        this.$socket.emit('listener', await encrypt(...arguments[1], dataCreator));
     }
 
-    countRes(processes) {
-        console.log(processes, 'count--res')
-        // this.$store.set('CurrentPerformers', processes);
+    countRes(count) {
+        this.$store.set('NumCountProcesses', count);
+        let folders = this.$store.get('Folders');
+        let updatedFolders = folders.map(el => el.id === 1
+            ? ({...el, content: {folders: 1, processes: count.unit}})
+            : ({...el, content: {folders: 1, processes: count.company}}))
+        this.$store.set('UpdateFolders', updatedFolders);
     }
 
-    async getUnit() {
-        let data = serialize(
-            numberToArray(8),
-            numberToArray(8),
+    async getUnit(data) {
+        let dataCreator = serialize(
+            numberToArray(data.creatorId),
+            numberToArray(data.unitId),
+            numberToArray(data.search),
         );
-        this.$socket.emit('listener', await encrypt(...arguments[1], data));
+        this.$socket.emit('listener', await encrypt(...arguments[1], dataCreator));
     }
 
     getUnitRes(unit) {
-        console.log('get--Unit--Res', unit)
+        this.$store.set('NewMessages', unit);
     }
 
-    async getLevel() {
-        let data = serialize(
-            numberToArray(9),
-            numberToArray(4),
-            numberToArray(4),
+    async getLevel(data) {
+        let dataCreator = serialize(
+            numberToArray(data.creatorId),
+            numberToArray(data.levelId),
+            numberToArray(data.companyId),
         );
-        this.$socket.emit('listener', await encrypt(...arguments[1], data));
+        this.$socket.emit('listener', await encrypt(...arguments[1], dataCreator));
     }
 
-    getLevelRes(unit) {
-        console.log('get--Level--Res', unit)
+    getLevelRes(level) {
+        this.$store.set('NewMessages', level);
     }
 }
 

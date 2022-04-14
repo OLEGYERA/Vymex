@@ -5,22 +5,8 @@ Vue.use(Vuex);
 
 export default {
     state: {
-        messages: [
-            //{
-            //     text: 'Длинное название процесса которое занимает 2, а то и все 3 строки. Больше - троеточие, но здесь его нет.',
-            //     calendarIcon: true, date: '15 янв. 2021', regular: true, sortIcon: true, activePeriod: 'Каждый день'
-            // },
-            // {
-            //     text: 'Длинное название процесса которое занимает 2, а то и все 3 строки. Больше - троеточие, но здесь его нет.',
-            //     regular: true, sortIcon: true, activePeriod: 'Каждый день'
-            // },
-            // {text: 'Длинное название процесса которое занимает 2, а то и все 3 строки.', regular: false},
-            // {
-            //     text: 'Длинное название процесса которое занимает 2, а то и все 3 строки. Больше - троеточие, но здесь его нет.',
-            //     calendarIcon: true, date: '15 янв. 2021', regular: true, sortIcon: true, activePeriod: 'Каждый день'
-            // },
-        ],
-        folders: [
+        messages: [],
+        processFolders: [
             {
                 id: 1,
                 title: 'Процессы должностного лица',
@@ -42,37 +28,23 @@ export default {
                 trash: null
             }
         ],
-        files: [
-            // {
-            //     title: 'Документы.jpg',
-            //     content: {
-            //         size: '2,1',
-            //         date: '02.03.2020'
-            //     },
-            //     type: null,
-            //     group: true,
-            // },
-        ],
+        files: [],
         performers: [
-            // {avatar: require('@/assets/img/icons/avatar.svg'), position: 'Должность', level: 2},
-            // {avatar: require('@/assets/img/icons/avatar.svg'), position: 'Должность', level: 3},
-            // {numberPeople: 8, position: 'Должность', level: 4},
         ],
         periods: [
-            {title: 'Каждый день', isActive: true},
-            {title: 'Каждый месяц', isActive: false},
-            {title: 'Каждую неделю', isActive: false},
-            {title: 'Каждый год', isActive: false},
+            {id: 1, title: 'Каждый день', isActive: true},
+            {id: 2, title: 'Каждую неделю', isActive: false},
+            {id: 3, title: 'Каждый месяц', isActive: false},
+            {id: 4, title: 'Каждый год', isActive: false},
         ],
         subdivisions: [
-            //{numberPeople: 4, position: 'Рекрутеры', level: 4}
         ],
+        processModel: '',
         processIndex: 0,
-        editMode: false,
+        countProcesses: {},
         disableStatusCount: 0,
-        choosePeriod: 'Каждый день',
-        processModel: true,
         performerCount: 0,
+        currentWorkerId: {},
         resourceFolders: [
             {
                 id: 1,
@@ -138,138 +110,103 @@ export default {
             //     group: true,
             //     checked: true
             // },
-            {
-                title : 'doc.vmx',
-                content: {
-                    size: '2,1',
-                    date: '02.03.2020'
-                },
-                type: null,
-                group: null,
-                checked: false
-            },
-            {
-                title : 'doc.zip',
-                content: {
-                    size: '2,1',
-                    date: '02.03.2020'
-                },
-                type: 'zip',
-                group: true,
-                checked: false
-            },
-            {
-                title : 'doc.vmx',
-                content: {
-                    size: '2,1',
-                    date: '02.03.2020'
-                },
-                type: null,
-                group: null,
-                checked: false
-            },
-            {
-                title : 'doc.zip',
-                content: {
-                    size: '2,1',
-                    date: '02.03.2020'
-                },
-                type: 'zip',
-                group: true,
-                checked: false
-            },
+            // {
+            //     title : 'doc.vmx',
+            //     content: {
+            //         size: '2,1',
+            //         date: '02.03.2020'
+            //     },
+            //     type: null,
+            //     group: null,
+            //     checked: false
+            // },
+            // {
+            //     title : 'doc.zip',
+            //     content: {
+            //         size: '2,1',
+            //         date: '02.03.2020'
+            //     },
+            //     type: 'zip',
+            //     group: true,
+            //     checked: false
+            // },
+            // {
+            //     title : 'doc.vmx',
+            //     content: {
+            //         size: '2,1',
+            //         date: '02.03.2020'
+            //     },
+            //     type: null,
+            //     group: null,
+            //     checked: false
+            // },
+            // {
+            //     title : 'doc.zip',
+            //     content: {
+            //         size: '2,1',
+            //         date: '02.03.2020'
+            //     },
+            //     type: 'zip',
+            //     group: true,
+            //     checked: false
+            // },
         ],
-        levelsProcess: [
-            {
-                level: 1, showContext: true, data: [
-                    {
-                        avatar: require('@/assets/img/icons/avatar.svg'),
-                        position: "CEO", checkedPosition: false, checkboxType: 2,
-                        actionListStatus: false
-                    },
-                ]
-            },
-            { level: 2, data: [] },
-            {
-                level: 3, showContext: true, data: [
-                    {
-                        avatar: require('@/assets/img/icons/avatar.svg'),
-                        position: "TTFO", checkedPosition: false, checkboxType: 2,
-                        actionListStatus: false
-                    },
-                ]
-            },
-            {
-                level: 4, showContext: true, data: [
-                    {
-                        position: "Должность", checkedPosition: false, checkboxType: 2, numberPeople: 2,
-                        actionListStatus: false
-                    },
-                    {
-                        position: "Должность", checkedPosition: false, checkboxType: 2, numberPeople: 4,
-                        actionListStatus: false
-                    },
-                    {
-                        position: "Должность", checkedPosition: false, checkboxType: 2, numberPeople: 7,
-                        actionListStatus: false
-                    },
-                    {
-                        position: "Должность", checkedPosition: false, checkboxType: 2, numberPeople: 2,
-                        actionListStatus: false
-                    }
-                ]
-            },
-        ],
+        levelsProcess: [],
         levelsStructure: [
             { level: 1, showContext: true, data: [
                 {position: "1 Уровень", checkedPosition: false, checkboxType: 1,
-                    numberPeople: 1, actionListStatus: false},
+                    numberPeople: 0, actionListStatus: false},
                 ] },
             { level: 2, showContext: true, data: [
                     {position: "2 Уровень", checkedPosition: false, checkboxType: 1,
-                        numberPeople: 2, actionListStatus: false},
+                        numberPeople: 0, actionListStatus: false},
                 ] },
             { level: 3, showContext: true, data: [
                     {position: "3 Уровень", checkedPosition: false, checkboxType: 1,
-                        numberPeople: 8, actionListStatus: false},
+                        numberPeople: 0, actionListStatus: false},
                 ] },
             { level: 4, showContext: true, data: [
                     {position: "4 Уровень", checkedPosition: false, checkboxType: 1,
-                        numberPeople: 2, actionListStatus: false},
+                        numberPeople: 0, actionListStatus: false},
                 ] },
-        ]
+        ],
+        selectedProcess: {}
     },
     getters: {
         getMessages: (state) => state.messages,
-        getFolders: (state) => state.folders,
+        getFolders: (state) => state.processFolders,
         getFiles: (state) => state.files,
         getProcessIndex: (state) => state.processIndex,
         getPerformers: (state) => state.performers,
         getPeriods: (state) => state.periods,
         getSubdivisions: (state) => state.subdivisions,
-        getEditMode: (state) => state.editMode,
         getResourceFolders: (state) => state.resourceFolders,
         getNewFolder: (state) => state.newFolder,
         getFilesToUpload: (state) => state.filesToUpload,
         getLevelsProcess: (state) => state.levelsProcess,
         getDisableStatusCount: (state) => state.disableStatusCount,
-        getChoosePeriod: (state) => state.choosePeriod,
         getLevelsStructure: (state) => state.levelsStructure,
         getProcessModel: (state) => state.processModel,
         getPerformerCount: (state) => state.performerCount,
+        getSelectedProcess: (state) => state.selectedProcess,
+        getCountProcesses: (state) => state.countProcesses,
+        getCurrentWorkerId: (state) => state.currentWorkerId,
     },
     mutations: {
         setChooseProcessIndex: (state, payload) => state.processIndex = payload,
         setNewMessages: (state, payload) => state.messages = payload,
-        setIsEditMode: (state, payload) => state.editMode = payload,
+        setUpdateFolders: (state, payload) => state.processFolders = payload,
         setNewFilesToUpload: (state, payload) => state.filesToUpload = payload,
         setNewFiles: (state, payload) => state.files = payload,
         setCheckDisableStatusCount: (state, payload) => state.disableStatusCount = payload,
         setCurrentPerformers: (state, payload) => state.performers = payload,
-        setNewChoosePeriod: (state, payload) => state.choosePeriod = payload,
         setChooseSubdivisions: (state, payload) => state.subdivisions = payload,
         setChangeProcessModel: (state, payload) => state.processModel = payload,
         setNewPerformerCount: (state, payload) => state.performerCount = payload,
+        setClickedSelectedProcess: (state, payload) => state.selectedProcess = payload,
+        setNumCountProcesses: (state, payload) => state.countProcesses = payload,
+        setNumCurrentWorkerId: (state, payload) => state.currentWorkerId = payload,
+        setNewPeriods: (state, payload) => state.periods = payload,
     },
 
 }

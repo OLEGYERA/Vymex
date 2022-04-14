@@ -3,6 +3,7 @@ import Main from "./view/Main";
 import CompanyProcesses from "./view/CompanyProcesses";
 import SelectedProcess from "./view/SelectedProcess";
 import CreateProcess from "./view/CreateProcess";
+import EditProcess from "./view/EditProcess";
 
 export default [
     {
@@ -28,6 +29,11 @@ export default [
                 path: 'create-process',
                 component: CreateProcess,
                 name: 'vx.process.create.process',
+            },
+             {
+                path: 'edit-process',
+                component: EditProcess,
+                name: 'vx.process.edit.process',
             },
          ]
     },
