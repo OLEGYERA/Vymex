@@ -3,11 +3,11 @@
     <profile-faq/>
 
     <navigation-tabs class="profile-career-navigation"
-                     :tabs="[{title: 'Карьера', count: companies.length}, {title: 'Оплата'}]" :current-tab="currentNavigationTab" @onTab="currentNavigationTab = $event">
+                     :tabs="[{title: 'Карьера', count: companies.length}, {title: 'Оплата'},{title: 'Резюме'}]" :current-tab="currentNavigationTab" @onTab="currentNavigationTab = $event">
 
       <template #tab-content-0>
         <div class="career-space" v-if="companies.length === 0">
-          <stub-triple icon="company-empty" title="Для начала работы <br> создайте компанию" description="Дальше система автоматически <br> настроит вашу новую рабочую зону"/>
+          <stub-triple icon="company-empty.svg" title="Для начала работы <br> создайте компанию" description="Дальше система автоматически <br> настроит вашу новую рабочую зону"/>
           <button-base @onClick="$root.pushOverlapRoute({name: 'vx.co.create'})">Создать компанию</button-base>
         </div>
         <div class="career-full-space" v-if="companies.length !== 0">
@@ -34,6 +34,13 @@
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab, accusantium amet et eveniet facilis fugit obcaecati, odit rerum saepe sit temporibus veniam veritatis. A cupiditate dolor explicabo nemo numquam ullam?
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab, accusantium amet et eveniet facilis fugit obcaecati, odit rerum saepe sit temporibus veniam veritatis. A cupiditate dolor explicabo nemo numquam ullam?
         </div>
+      </template>
+      <template #tab-content-2>
+        <stub-triple 
+          icon="suitcase.png" 
+          title="Этот раздел в разработке" 
+          description="В дальнейшем тут можно будет создать резюме и найти работу. Будет доступно в апреле 2022."
+        />
       </template>
     </navigation-tabs>
   </div>
