@@ -29,22 +29,21 @@ export default {
             }
         ],
         files: [],
-        performers: [
-        ],
+        performers: [],
         periods: [
             {id: 1, title: 'Каждый день', isActive: true},
             {id: 2, title: 'Каждую неделю', isActive: false},
             {id: 3, title: 'Каждый месяц', isActive: false},
             {id: 4, title: 'Каждый год', isActive: false},
         ],
-        subdivisions: [
-        ],
+        subdivisions: [],
         processModel: '',
         processIndex: 0,
         countProcesses: {},
         disableStatusCount: 0,
         performerCount: 0,
         currentWorkerId: {},
+        fileIds:[],
         resourceFolders: [
             {
                 id: 1,
@@ -90,46 +89,46 @@ export default {
             }
         ],
         filesToUpload: [
-            // {
-            //     title : 'doc.vmx',
-            //     content: {
-            //         size: '2,1',
-            //         date: '02.03.2020'
-            //     },
-            //     type: null,
-            //     group: true,
-            //     checked: false
-            // },
-            // {
-            //     title : 'doc.vmx',
-            //     content: {
-            //         size: '2,1',
-            //         date: '02.03.2020'
-            //     },
-            //     type: null,
-            //     group: true,
-            //     checked: true
-            // },
-            // {
-            //     title : 'doc.vmx',
-            //     content: {
-            //         size: '2,1',
-            //         date: '02.03.2020'
-            //     },
-            //     type: null,
-            //     group: null,
-            //     checked: false
-            // },
-            // {
-            //     title : 'doc.zip',
-            //     content: {
-            //         size: '2,1',
-            //         date: '02.03.2020'
-            //     },
-            //     type: 'zip',
-            //     group: true,
-            //     checked: false
-            // },
+             {
+                title : 'doc.vmx',
+                content: {
+                    size: '2,1',
+                    date: '02.03.2020'
+                },
+                type: null,
+                group: true,
+                checked: false
+            },
+            {
+                title : 'doc.vmx',
+                content: {
+                    size: '2,1',
+                    date: '02.03.2020'
+                },
+                type: null,
+                group: true,
+                checked: true
+            },
+            {
+                title : 'doc.vmx',
+                content: {
+                    size: '2,1',
+                    date: '02.03.2020'
+                },
+                type: null,
+                group: null,
+                checked: false
+            },
+            {
+                title : 'doc.zip',
+                content: {
+                    size: '2,1',
+                    date: '02.03.2020'
+                },
+                type: 'zip',
+                group: true,
+                checked: false
+            },
             // {
             //     title : 'doc.vmx',
             //     content: {
@@ -191,6 +190,7 @@ export default {
         getSelectedProcess: (state) => state.selectedProcess,
         getCountProcesses: (state) => state.countProcesses,
         getCurrentWorkerId: (state) => state.currentWorkerId,
+        getFileIds: (state) => state.fileIds,
     },
     mutations: {
         setChooseProcessIndex: (state, payload) => state.processIndex = payload,
@@ -207,6 +207,7 @@ export default {
         setNumCountProcesses: (state, payload) => state.countProcesses = payload,
         setNumCurrentWorkerId: (state, payload) => state.currentWorkerId = payload,
         setNewPeriods: (state, payload) => state.periods = payload,
+        setNewFileIds: (state, payload) => state.fileIds = payload,
     },
 
 }

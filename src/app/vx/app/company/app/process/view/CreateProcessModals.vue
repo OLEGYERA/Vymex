@@ -10,12 +10,10 @@
           <template #header-title>приложение</template>
         </header-add>
         <process-performer
-            @onClick="changeModal"
+            @onClick="modalUploadResource = !modalUploadResource"
             class="upload-files-recourse"
             :performers="uploadResource"/>
-        <process-performer
-            class="upload-files-local"
-            :performers="uploadFromDevice"/>
+        <upload-files @onUpload="handleUploadFile"/>
       </template>
       <template #button-accept>Загрузить</template>
     </modal>
@@ -73,7 +71,7 @@
           <template #header-title>файлы</template>
           <template #header-amount>{{ images.length }}</template>
         </header-add>
-        <file class="upload-from-app-file" v-for="(file, fileKey) in images" :file="file" :key="fileKey"/>
+        <file-shower class="upload-from-app-file" v-for="(file, fileKey) in images" :file="file" :key="fileKey"/>
       </template>
       <template #button-accept>Сохранить</template>
     </modal>
@@ -84,20 +82,22 @@
 import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd";
 import FileCheckbox from "../facades/FileCheckbox";
 import {mapGetters, mapMutations} from "vuex";
-import File from "@/LTE/Singletons/Resources/facades/File";
+import FileShower from "@/LTE/Singletons/Resources/facades/File";
 import ProcessPerformer from "@/app/vx/app/company/app/process/facades/ProcessPerformer";
 import Modal from "@Facade/Modal/Base";
 import Folder from "@/LTE/Singletons/Resources/facades/Folder";
+import UploadFiles from "@/app/vx/app/company/app/process/facades/UploadFiles";
 
 export default {
   name: 'vx.process.create.process.modals',
   components: {
     HeaderAdd,
-    File,
+    FileShower,
     ProcessPerformer,
     Modal,
     Folder,
-    FileCheckbox
+    FileCheckbox,
+    UploadFiles
   },
   props: {
     modalUpload: Boolean,
@@ -108,11 +108,9 @@ export default {
   data() {
     return {
       images: [],
+      uploadDevice: false,
       uploadResource: [
         {avatar: require('@/assets/img/my/resource.svg'), position: 'Ресурсы'},
-      ],
-      uploadFromDevice: [
-        {avatar: require('@/assets/img/icons/add-file.svg'), position: 'Загрузить с локального устройсва'},
       ],
     }
   },
@@ -121,6 +119,8 @@ export default {
       resourceFolders: 'getResourceFolders',
       newFolder: 'getNewFolder',
       filesToUpload: 'getFilesToUpload',
+      files: 'getFiles',
+      fileIds: 'getFileIds'
     }),
     checkedFile() {
       let isCheck = this.filesToUpload.filter(el => el.checked)
@@ -133,10 +133,8 @@ export default {
       setEditMode: 'setIsEditMode',
       setFilesToUpload: 'setNewFilesToUpload',
       setFiles: 'setNewFiles',
+      setFileIds: 'setNewFileIds'
     }),
-    changeModal() {
-      this.modalUploadResource = !this.modalUploadResource
-    },
     changePage(key) {
       if (key.id === 1) {
         this.modalUploadResource = !this.modalUploadResource
@@ -163,6 +161,41 @@ export default {
       this.modalChooseFiles = !this.modalChooseFiles
       this.modalUploadResourceFolder = !this.modalUploadResourceFolder
     },
+    async handleUploadFile(newFileData) {
+      let file = newFileData.name.split('.')
+      let yyyy = new Date().getFullYear();
+      let mm = String(new Date().getMonth() + 1).padStart(2, '0');
+      let dd = String(new Date().getDate()).padStart(2, '0');
+      let date = dd + '.' + mm + '.' + yyyy
+
+      const newFile = new File([newFileData.result], `${newFileData.name}.png`,
+          {type: file[1], lastModified: new Date()});
+
+      this.$core.execViaComponent('Uploader', 'init', [
+        newFile,
+        this.handleUploadOnprogress, null,
+        this.handleUploaderOnload
+      ])
+
+      this.setFiles([...this.files, {
+        title: file[0],
+        content: {
+          size: (newFileData.size/1000000).toFixed(3),
+          date
+        },
+        type: file[1],
+        group: false,
+        checked: false
+      }])
+      this.$emit('closeModalUpload')
+    },
+    handleUploadOnprogress(progress) {
+      console.log(progress)
+    },
+    handleUploaderOnload(fileId) {
+      let newFileIds = [...this.fileIds, fileId]
+      this.setFileIds(newFileIds)
+    }
   }
 }
 </script>
@@ -221,7 +254,6 @@ export default {
     .modal-base-body {
       width: 632px;
       height: auto;
-      //height: 805px;
       justify-content: space-between;
       padding-bottom: rem(43);
     }
@@ -303,5 +335,9 @@ export default {
   .upload-from-app-file {
     margin-top: 8px;
   }
+}
+
+.upload-input {
+  display: none;
 }
 </style>

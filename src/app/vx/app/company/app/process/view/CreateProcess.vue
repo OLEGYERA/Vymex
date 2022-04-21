@@ -4,11 +4,11 @@
     <title-base>Создать процесс</title-base>
     <div class="create-process-view-main">
       <radio-slot :model="processModel === 'official-processes'"
-                  :disable="!processDisable" @onClick="changeStatusProcess">
+                  :disable="processModel === 'company-processes'" @onClick="changeStatusProcess">
         <template #title>Процессы должностного лица</template>
       </radio-slot>
       <radio-slot :model="processModel === 'company-processes'"
-                  :disable="processDisable" @onClick="changeStatusProcess">
+                  :disable="processModel === 'official-processes'" @onClick="changeStatusProcess">
         <template #title>Процессы для уровней компании</template>
       </radio-slot>
       <text-area
@@ -40,7 +40,7 @@
                   :disable="regularDisable" @onClick="changeStatusRegular">
         <template #title>Регулярный</template>
       </radio-slot>
-      <start-process v-if="regularModel"/>
+      <start-process @onDate="onDate" :regularModel="regularModel"/>
       <radio-slot :model="!regularModel"
                   :disable="!regularDisable" @onClick="changeStatusRegular">
         <template #title>Не регулярный</template>
@@ -48,14 +48,15 @@
       <process-alert @alert-worker="alertWorker = $event"/>
       <header-add
           @create="isOfficialProcesses = !isOfficialProcesses"
-          :class="processModel && subdivisions[0] ? 'hide-add-icon' : ''
-          || !processModel && subdivisions.length > 3 ? 'hide-add-icon' : ''">
+          :class="processModel === 'official-processes' && subdivisions[0] ? 'hide-add-icon' : ''
+          || processModel === 'company-processes' && subdivisions.length > 3 ? 'hide-add-icon' : ''">
         <template #header-title>исполнители</template>
         <template #header-amount>{{ subdivisions[0] ? performersCounter : '' }}</template>
       </header-add>
       <process-performer class="view-main-performer"
                          @show-sidebar="isOfficialProcesses = !isOfficialProcesses"
-                         :performers="subdivisions"/>
+                         :performers="subdivisions"
+                          @onDelete="deletePerformer"/>
     </div>
     <div class="create-resource-buttons">
       <button-secondary class="create-resource-button"
@@ -115,7 +116,6 @@ export default {
   },
   data() {
     return {
-      processDisable: true,
       regularModel: true,
       regularDisable: true,
       modalUpload: false,
@@ -125,11 +125,27 @@ export default {
       isOfficialProcesses: false,
       textAreaDescription: '',
       textAreaTitle: '',
-      alertWorker: 0
+      alertWorker: 0,
+      selectedDate: '',
     }
   },
-  mounted(){
+  mounted() {
+    if (this.processModel === 'company-processes') {
+      this.$core.execViaComponent('Processes', 'getLevel',
+          {
+            creatorId: this.currentWorkerId.userId,
+            levelId: this.currentWorkerId.levelId ? this.currentWorkerId.levelId : 1,
+            companyId: this.currentCompany.base.id
+          });
+    } else {
+      this.$core.execViaComponent('Processes', 'getUnit',
+          {creatorId: this.currentWorkerId.userId, unitId: this.currentWorkerId.unitId, search: ''});
+    }
+    this.$core.execViaComponent('Processes', 'getUnits', this.currentWorkerId.unitId);
     this.setSubdivisions([])
+    this.setFiles([])
+    this.setFileIds([])
+
   },
   computed: {
     ...mapGetters({
@@ -148,6 +164,7 @@ export default {
       periods: 'getPeriods',
       currentCompany: 'Company/getCurrentCompany',
       selectedProcess: 'getSelectedProcess',
+      fileIds: 'getFileIds'
     }),
     performersCounter() {
       let count = 0
@@ -168,14 +185,15 @@ export default {
       setPerformerCount: 'setNewPerformerCount',
       setDisableStatusCount: 'setCheckDisableStatusCount',
       setSelectedProcess: 'setClickedSelectedProcess',
+      setFiles: 'setNewFiles',
+      setFileIds: 'setNewFileIds'
     }),
     changeStatusProcess() {
-      if(this.processModel === 'official-processes'){
+      if (this.processModel === 'official-processes') {
         this.setProcessModel('company-processes')
       } else {
         this.setProcessModel('official-processes')
       }
-      this.processDisable = !this.processDisable
     },
     changeStatusRegular() {
       this.regularModel = !this.regularModel
@@ -191,30 +209,40 @@ export default {
       let hh = String(today.getHours()).padStart(2, '0');
       let minmin = String(today.getMinutes()).padStart(2, '0');
       let ss = String(today.getSeconds()).padStart(2, '0');
-      today = yyyy + '-' + mm + '-' + dd + ' ' + hh + ':' + minmin + ':' + ss;
-        this.$core.execViaComponent('Processes', 'create', {
-          title: this.textAreaTitle,
-          description: this.textAreaDescription,
-          isRegular: this.regularModel ? 1 : 0,
-          isExecutor: this.processModel === 'official-processes' ? 1 : 0,
-          creatorId: this.currentWorkerId.userId,
-          unitId: this.processModel === 'official-processes' ? this.subdivisions[0].id : this.currentWorkerId.unitId,
-          level: this.subdivisions.length ? arrayLevelsWorkers : [1],
-          repeatDate: today,
-          alertWorker: this.alertWorker,
-          repeatInterval: currentPeriod.id,
-          fileIds: [],
-          companyId: this.currentCompany.base.id
-        });
-        if(this.textAreaDescription && this.textAreaTitle){
-          this.$notify({text: 'Процесс успешно создан!', type: 'success', duration: 3000, speed: 500})
-          this.$router.push({name: 'vx.process.selected.process'})
-          this.setPerformers(this.subdivisions)
-        }
+        today = this.selectedDate
+            ? this.selectedDate  + ' ' + hh + ':' + minmin + ':' + ss
+            : yyyy + '-' + mm + '-' + dd + ' ' + hh + ':' + minmin + ':' + ss;
+      this.$core.execViaComponent('Processes', 'create', {
+        title: this.textAreaTitle,
+        description: this.textAreaDescription,
+        isRegular: this.regularModel ? 1 : 0,
+        isExecutor: this.processModel === 'official-processes' ? 1 : 0,
+        creatorId: this.currentWorkerId.userId,
+        unitId: this.processModel === 'official-processes' ? this.subdivisions[0] && this.subdivisions[0].id : null,
+        level: this.processModel === 'company-processes' ? arrayLevelsWorkers : null,
+        repeatDate: !this.regularModel && !this.selectedDate ? '' : today,
+        alertWorker: this.alertWorker,
+        repeatInterval: currentPeriod.isActive ? currentPeriod.id : null,
+        fileIds: this.fileIds,
+        companyId: this.currentCompany.base.id
+      });
+      if (this.textAreaDescription && this.textAreaTitle && this.subdivisions.length) {
+        this.$notify({text: 'Процесс успешно создан!', type: 'success', duration: 3000, speed: 500})
+        this.$router.push({name: 'vx.process.selected.process'})
+        this.setPerformers(this.subdivisions)
+      }
+      if(!this.textAreaTitle) this.$notify({
+        text: 'Введите название процесса!', type: 'error', duration: 3000, speed: 500})
+      if(!this.textAreaDescription) this.$notify({
+        text: 'Введите описание процесса!', type: 'error', duration: 3000, speed: 500})
+      if(!this.subdivisions.length && this.processModel === 'official-processes') this.$notify({
+        text: 'Назначте исполнителя процесса!', type: 'error', duration: 3000, speed: 500})
+      if(!this.subdivisions.length && this.processModel === 'company-processes') this.$notify({
+        text: 'Выберете уровень С.Е для которого назначен процесс!', type: 'error', duration: 3000, speed: 500})
     },
     handleAccessOfficial() {
       this.isOfficialProcesses = !this.isOfficialProcesses
-      if(this.processModel === 'official-processes'){
+      if (this.processModel === 'official-processes') {
         let newSubdivisions = []
         for (let i = 0; i < this.levels.length; i++) {
           for (let j = 0; j < this.levels[i].data.length; j++) {
@@ -234,6 +262,13 @@ export default {
         this.setSubdivisions(newSubdivisions)
         this.setDisableStatusCount(0)
       }
+    },
+    onDate(date) {
+      this.selectedDate = date
+    },
+    deletePerformer(e){
+      let newSubdivisions = this.subdivisions.filter(el => el.level !== e)
+      this.setSubdivisions(newSubdivisions)
     }
   }
 }

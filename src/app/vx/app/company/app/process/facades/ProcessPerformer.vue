@@ -13,12 +13,13 @@
         <img v-if="performer.avatar" :src="performer.avatar" class="context-main-avatar"/>
         <image-avatar v-else-if="performer.numberPeople === 1 && processModel === 'official-processes'"
                        class="context-main-avatar"
-                      :logo="$core.traits.ImageLogo(performer.avatar, performer.position)"
+                      :logo="$core.traits.ImageLogo(performer.avatar,
+                      performer.name ? performer.name : performer.position)"
                       :color-code="$core.traits.ImageColorCode(performer.id)"/>
         <div v-else class="context-main-num">
           {{ performer.numberPeople }}
         </div>
-        <span class="context-main-position">{{ performer.position }}</span>
+        <span class="context-main-position">{{ performer.name ? performer.name : performer.position }}</span>
       </div>
       <div @click="performer.actionListStatus = !performer.actionListStatus">
         <icon-points-vertical/>
@@ -26,6 +27,7 @@
           <action-list
               class="process-alert-context"
               @onList="$emit('show-sidebar')"
+              @onDelete="$emit('onDelete', performer.level)"
               :status="performer.actionListStatus"
               :actions="items"
               v-if="performer.actionListStatus"
@@ -86,8 +88,9 @@ export default {
 
       .context-main-avatar {
         margin-right: rem(12);
-        width: 24px;
-        height: 24px;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
       }
 
       .context-main-num {

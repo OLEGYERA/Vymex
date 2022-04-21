@@ -24,8 +24,8 @@
           <span class="main-description-name">{{ men.name }}</span>
           <span class="main-description-position">{{ men.position }}</span>
         </div>
-        <div v-else>
-          <span class="context-main-position">{{ men.name }}</span>
+        <div v-else class="level-context-main-description">
+          <span class="main-description-name" :style="{marginTop: '7px'}">{{ men.name }}</span>
         </div>
       </div>
       <div>
@@ -102,18 +102,18 @@ export default {
       display: inherit;
 
       .context-main-avatar {
-        width: 26px;
-        height: 26px;
+        width: 36px;
+        height: 36px;
         margin-right: rem(12);
       }
 
       .level-context-main-description {
         display: inherit;
         flex-direction: column;
-        margin-left: 12px;
+        //margin-left: 12px;
 
         .main-description-name {
-          font-weight: 600;
+         // font-weight: 600;
           font-size: rem(15);
           line-height: rem(20);
           color: #212A33;
@@ -168,5 +168,4 @@ export default {
     margin-right: 8px;
   }
 }
-
 </style>

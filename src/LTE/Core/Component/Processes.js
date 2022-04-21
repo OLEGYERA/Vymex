@@ -59,14 +59,16 @@ class Processes extends Binder {
         let currentProcessModel = this.$store.get('ProcessModel');
         let currentLevel = currentProcessStatus.levelId
         let arrayLevels = Object.values(units)
-        if(currentProcessModel === 'official-processes') {
+        if (currentProcessModel === 'official-processes') {
             let ceo = {}
             let currentUnits = []
             if (currentLevel === 1) {
                 ceo = {
                     level: 1, showContext: true, data: [{
                         avatar: units.self.avatar,
+                        numberPeople: 1,
                         id: units.self.id,
+                        // position: units.self.unitName,
                         name: units.self.unitName,
                         checkedPosition: false,
                         checkboxType: 2,
@@ -99,12 +101,16 @@ class Processes extends Binder {
             }
             this.$store.set('WidgetLevels', currentUnits);
         } else {
-            if(currentLevel === 1 || currentLevel === 2){
+            if (currentLevel === 1 || currentLevel === 2) {
                 let levels = this.$store.get('LevelsStructure');
-                let curLevels = levels.map((el, i) => ({...el, data: [{...el.data[0],
+                let curLevels = levels.map((el, i) => ({
+                    ...el, data: [{
+                        ...el.data[0],
                         numberPeople: arrayLevels[i].length && currentLevel < i + 1
                             ? arrayLevels[i].length
-                            : 0}]}))
+                            : 0
+                    }]
+                }))
                 this.$store.set('WidgetLevels', curLevels);
             } else {
                 this.$store.set('WidgetLevels', []);
@@ -117,14 +123,18 @@ class Processes extends Binder {
     }
 
     getRes(process) {
+        console.log(process, 'process')
         this.$store.set('ClickedSelectedProcess', process);
         let currentProcessModel = this.$store.get('ProcessModel');
         let levels = this.$store.get('Levels')
-        if(currentProcessModel === 'company-processes'){
+        if (currentProcessModel === 'company-processes') {
             let lvlCount = Object.values(process.structureLevels)
-            let curLevels = levels.map((el, i) => ({...el,
+            let curLevels = levels.map((el, i) => ({
+                ...el,
+                id: i,
                 numberPeople: lvlCount[i],
-                position: el.data[0].position}))
+                position: el.data[0].position
+            }))
             let filteredLevels = curLevels.filter(el => el.numberPeople > 0)
             this.$store.set('CurrentPerformers', filteredLevels);
             this.$store.set('ChooseSubdivisions', filteredLevels);
@@ -134,12 +144,24 @@ class Processes extends Binder {
                 avatar: structureUnit.avatar,
                 position: structureUnit.name,
                 level: structureUnit.levelId,
+                id: structureUnit.id,
                 actionListStatus: false,
                 numberPeople: structureUnit.workerCount,
             }]
             this.$store.set('CurrentPerformers', newPerformer);
             this.$store.set('ChooseSubdivisions', newPerformer);
         }
+        let currentFiles = process.files.map(el => ({
+            title: el.label.split('.')[0],
+            content: {
+                size: (el.size / 1000000).toFixed(3),
+                date: el.updatedAt.split(' ')[0]
+            },
+            type: el.extension,
+            group: false,
+            checked: false
+        }))
+        this.$store.set('NewFiles', currentFiles);
     }
 
     async delete(processId) {

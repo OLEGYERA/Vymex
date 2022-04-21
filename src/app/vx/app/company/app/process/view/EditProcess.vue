@@ -4,11 +4,11 @@
     <title-base>Редактировать процесс</title-base>
     <div class="create-process-view-main">
       <radio-slot :model="processModel === 'official-processes'"
-                  :disable="!processDisable" @onClick="changeStatusProcess">
+                  :disable="processModel === 'company-processes'" @onClick="changeStatusProcess">
         <template #title>Процессы должностного лица</template>
       </radio-slot>
       <radio-slot :model="processModel === 'company-processes'"
-                  :disable="processDisable" @onClick="changeStatusProcess">
+                  :disable="processModel === 'official-processes'" @onClick="changeStatusProcess">
         <template #title>Процессы для уровней компании</template>
       </radio-slot>
       <text-area
@@ -42,7 +42,7 @@
                   :disable="selectedProcess.isRegular === 1" @onClick="changeStatusRegular">
         <template #title>Регулярный</template>
       </radio-slot>
-      <start-process v-if="selectedProcess.isRegular === 1"/>
+      <start-process @onDate="onDate" :regularModel="selectedProcess.isRegular === 1"/>
       <radio-slot :model="selectedProcess.isRegular === 0"
                   :disable="selectedProcess.isRegular === 0" @onClick="changeStatusRegular">
         <template #title>Не регулярный</template>
@@ -57,7 +57,8 @@
       </header-add>
       <process-performer class="view-main-performer"
                          @show-sidebar="isOfficialProcesses = !isOfficialProcesses"
-                         :performers="subdivisions"/>
+                         :performers="subdivisions"
+                         @onDelete="deletePerformer"/>
     </div>
     <div class="create-resource-buttons">
       <button-secondary class="create-resource-button"
@@ -117,7 +118,6 @@ export default {
   },
   data() {
     return {
-      processDisable: true,
       regularModel: true,
       regularDisable: true,
       modalUpload: false,
@@ -127,8 +127,8 @@ export default {
       isOfficialProcesses: false,
       textAreaTitle: '',
       textAreaDescription: '',
-      alertWorker: 0
-
+      alertWorker: 0,
+      selectedDate: ''
     }
   },
   computed: {
@@ -148,6 +148,7 @@ export default {
       periods: 'getPeriods',
       currentCompany: 'Company/getCurrentCompany',
       selectedProcess: 'getSelectedProcess',
+      fileIds: 'getFileIds'
     }),
     performersCounter() {
       let count = 0
@@ -157,6 +158,22 @@ export default {
       this.setPerformerCount(count)
       return count
     },
+  },
+  mounted() {
+    this.setFiles([])
+    this.setFileIds([])
+    if (this.processModel === 'company-processes') {
+      this.$core.execViaComponent('Processes', 'getLevel',
+          {
+            creatorId: this.currentWorkerId.userId,
+            levelId: this.currentWorkerId.levelId ? this.currentWorkerId.levelId : 1,
+            companyId: this.currentCompany.base.id
+          });
+    } else {
+      this.$core.execViaComponent('Processes', 'getUnit',
+          {creatorId: this.currentWorkerId.userId, unitId: this.currentWorkerId.unitId, search: ''});
+    }
+    this.$core.execViaComponent('Processes', 'getUnits', this.currentWorkerId.unitId);
   },
   destroyed() {
     this.setSubdivisions([])
@@ -172,6 +189,8 @@ export default {
       setPerformerCount: 'setNewPerformerCount',
       setDisableStatusCount: 'setCheckDisableStatusCount',
       setSelectedProcess: 'setClickedSelectedProcess',
+      setFiles: 'setNewFiles',
+      setFileIds: 'setNewFileIds'
     }),
     changeStatusProcess() {
       if (this.processModel === 'official-processes') {
@@ -179,7 +198,6 @@ export default {
       } else {
         this.setProcessModel('official-processes')
       }
-      this.processDisable = !this.processDisable
     },
     changeStatusRegular() {
       if (this.selectedProcess.isRegular === 1) {
@@ -192,25 +210,22 @@ export default {
       const arrayLevelsWorkers = this.subdivisions.map(el => el.level)
       const currentPeriod = this.periods.find(el => el.isActive)
       let today = new Date();
-      let yyyy = today.getFullYear();
-      let mm = String(today.getMonth() + 1).padStart(2, '0');
-      let dd = String(today.getDate()).padStart(2, '0');
       let hh = String(today.getHours()).padStart(2, '0');
       let minmin = String(today.getMinutes()).padStart(2, '0');
       let ss = String(today.getSeconds()).padStart(2, '0');
-      today = yyyy + '-' + mm + '-' + dd + ' ' + hh + ':' + minmin + ':' + ss;
+      today = this.selectedDate + ' ' + hh + ':' + minmin + ':' + ss;
       this.$core.execViaComponent('Processes', 'edit', {
         title: this.textAreaTitle ? this.textAreaTitle : this.selectedProcess.title,
         description: this.textAreaDescription ? this.textAreaDescription : this.selectedProcess.description,
         isRegular: this.selectedProcess.isRegular,
         isExecutor: this.processModel === 'official-processes' ? 1 : 0,
         creatorId: this.currentWorkerId.userId,
-        unitId: this.processModel === 'official-processes' ? this.subdivisions[0].id : this.currentWorkerId.unitId,
-        level: this.subdivisions.length ? arrayLevelsWorkers : [1],
-        repeatDate: today,
-        alertWorker: this.alertWorker,  //пока так, позже исправлю
+        unitId: this.processModel === 'official-processes' ? this.subdivisions[0].id : null,
+        level: this.processModel === 'company-processes' ? arrayLevelsWorkers : null,
+        repeatDate: this.selectedDate ? today : this.selectedProcess.repeatDate,
+        alertWorker: this.selectedProcess.alertWorker,
         repeatInterval: currentPeriod.id,
-        fileIds: [],
+        fileIds: this.fileIds,
         id: this.processIndex
       });
       this.$notify({text: 'Изменения сохранены!', type: 'success', duration: 3000, speed: 500})
@@ -239,6 +254,13 @@ export default {
         this.setSubdivisions(newSubdivisions)
         this.setDisableStatusCount(0)
       }
+    },
+    onDate(date) {
+      this.selectedDate = date
+    },
+    deletePerformer(e){
+      let newSubdivisions = this.subdivisions.filter(el => el.level !== e)
+      this.setSubdivisions(newSubdivisions)
     }
   }
 }

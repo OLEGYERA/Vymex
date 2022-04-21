@@ -48,9 +48,6 @@ export default {
     File,
     ProcessPerformer
   },
-  mounted(){
-    console.log(this.performers, 'performers')
-  },
   methods: {
     ...mapMutations({
       setPerformerCount: 'setNewPerformerCount',

@@ -1,6 +1,6 @@
 <template>
   <div class="container-process-event">
-    <div class="panel-date">
+    <div class="panel-date" v-if="message.repeatDate">
       <icon-calendar class="panel-date-icons"/>
       <span>{{ message.repeatDate }}</span>
       <icon-sort class="panel-date-icons" v-if="message.isRegular === 1" :style="{marginRight: 0}"/>
