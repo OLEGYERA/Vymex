@@ -1,5 +1,5 @@
 <template>
-  <div class="facade-messenger-person" :class="{'user': user}" @click="onClick">
+  <div class="facade-messenger-person" :class="{'user': user}">
     <div class="private-info">
       <div class="dialog-image">
         <avatar :logo="logo" :colorCode="color"/>
@@ -19,7 +19,7 @@
 import TitleCaption from '@Facade/Title/Caption'
 import PointsVertical from '@Icon/PointsVertical'
 import Avatar from '@Facade/Image/Avatar'
-import {mapMutations} from "vuex";
+
 export default {
   name: 'Facade.Plate.Person',
   components: {
@@ -60,16 +60,6 @@ export default {
         return ''
       }
     },
-  },
-  methods: {
-    ...mapMutations({
-      setRouterName: 'Messenger/setRouterName',
-      changePersonalRouterType: 'Messenger/changePersonalRouterType'
-    }),
-    onClick() {
-      this.setRouterName('personal')
-      this.changePersonalRouterType('user')
-    }
   },
 }
 </script>

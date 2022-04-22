@@ -1,7 +1,7 @@
 <template>
   <div class="router-personal-view">
     <div class="main-info">
-<!--      <name :name="`${activeUser.name} ${activeUser.lastname}`" @updateRouter="clearUser" />-->
+      <name :name="`${activeUser.name} ${activeUser.lastname}`" @onClick="clearUser" />
       <div class="photo">
         <avatar :logo="logo" colorCode="4" />
       </div>
@@ -25,7 +25,7 @@
 <script>
 /*eslint-disable*/
 
-// import Name from "@/LTE/Singletons/Messenger/facades/Name"; //syswar-r3we22
+import Name from "./facades/Name";
 import Avatar from "@Facade/Image/Avatar";
 import TextBase from "@Facade/Text/Base";
 import TitleCaption from "@Facade/Title/Caption";
@@ -38,7 +38,7 @@ import { mapGetters, mapMutations } from "vuex";
 export default {
   name: "Singleton.Messenger.Views.Sidebar.RouterPersonal",
   components: {
-    //Name, syswar-r3we22
+    Name,
     Avatar,
     TextBase,
     TitleCaption,
