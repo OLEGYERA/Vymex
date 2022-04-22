@@ -25,7 +25,7 @@
           <template #header-title>файлы</template>
           <template #header-amount>{{ files.length }}</template>
         </header-add>
-        <file v-for="(file, key) in files" :file="file" :key="key"/>
+<!--        <file v-for="(file, key) in files" :file="file" :key="key"/>-->
       </div>
     </div>
   </div>
@@ -37,7 +37,7 @@ import {mapGetters, mapMutations} from "vuex";
 import ProcessEvent from "../facades/ProcessEvent"
 import ProcessPerformer from "../facades/ProcessPerformer"
 import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd";
-import File from "@/LTE/Singletons/Resources/facades/File";
+// import File from "@/LTE/Singletons/Resources/facades/File"; syswar-r3we21
 
 export default {
   name: 'vx.process.selected.process',
@@ -45,7 +45,7 @@ export default {
     Comeback,
     ProcessEvent,
     HeaderAdd,
-    File,
+    // File,
     ProcessPerformer
   },
   methods: {

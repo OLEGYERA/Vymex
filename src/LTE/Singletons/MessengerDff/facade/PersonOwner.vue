@@ -23,6 +23,8 @@
   import PointsVertical from '@Icon/PointsVertical'
   import ImageAvatar from '@Facade/Image/Avatar'
 
+  import {mapMutations} from 'vuex'
+
   export default {
     name: 'Singleton.Messenger.Facades.Person',
     components: {

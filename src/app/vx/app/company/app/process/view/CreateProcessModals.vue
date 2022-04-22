@@ -45,7 +45,7 @@
           <template #header-title>папки</template>
           <template #header-amount>{{ newFolder.length }}</template>
         </header-add>
-        <folder v-for="(folder, folderKey) in newFolder" :folder="folder" :key="folderKey" @getId="changePage"/>
+<!--        <folder v-for="(folder, folderKey) in newFolder" :folder="folder" :key="folderKey" @getId="changePage"/>-->
         <header-add class="hide-add-icon" :style="{margin: '13px 0'}">
           <template #header-title>Файлы</template>
           <template #header-amount>{{ filesToUpload.length }}</template>
@@ -71,7 +71,7 @@
           <template #header-title>файлы</template>
           <template #header-amount>{{ images.length }}</template>
         </header-add>
-        <file-shower class="upload-from-app-file" v-for="(file, fileKey) in images" :file="file" :key="fileKey"/>
+<!--        <file class="upload-from-app-file" v-for="(file, fileKey) in images" :file="file" :key="fileKey"/>-->
       </template>
       <template #button-accept>Сохранить</template>
     </modal>
@@ -82,20 +82,20 @@
 import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd";
 import FileCheckbox from "../facades/FileCheckbox";
 import {mapGetters, mapMutations} from "vuex";
-import FileShower from "@/LTE/Singletons/Resources/facades/File";
+// import FileShower from "@/LTE/Singletons/Resources/facades/File";
 import ProcessPerformer from "@/app/vx/app/company/app/process/facades/ProcessPerformer";
 import Modal from "@Facade/Modal/Base";
-import Folder from "@/LTE/Singletons/Resources/facades/Folder";
+// import Folder from "@/LTE/Singletons/Resources/facades/Folder";
 import UploadFiles from "@/app/vx/app/company/app/process/facades/UploadFiles";
 
 export default {
   name: 'vx.process.create.process.modals',
   components: {
     HeaderAdd,
-    FileShower,
+    // File, syswar-r3we21
     ProcessPerformer,
     Modal,
-    Folder,
+    //Folder, // syswar-r3we22
     FileCheckbox,
     UploadFiles
   },

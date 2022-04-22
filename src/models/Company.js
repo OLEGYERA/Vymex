@@ -33,8 +33,7 @@ export default {
     getCurrentCompany: (state) => state.currentCompany,
     getActiveCompany: state => state.activeCompany,
     getShare: state => state.activeCompany.cofounder && state.activeCompany.cofounder.length
-      ? state.activeCompany.cofounder[0].share
-      : 0
+      ? state.activeCompany.cofounder[0].share : 0,
     getSections: (state) => state.sections,
   },
   mutations: {
@@ -44,7 +43,7 @@ export default {
     setCurrentCompanyWorkers: (state, payload) => state.currentCompany.workers = payload,
     setActiveCompany: (state, id) => {
       state.activeCompany = state.all.filter(comp => comp.id === id)[0]
-    }
+    },
     changeStatus: (state, i) => {
       state.sections.map(el => el.isActive = false)
       state.sections[i].isActive = !state.sections[i].isActive

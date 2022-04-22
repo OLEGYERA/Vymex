@@ -1,4 +1,4 @@
-<template>
+  <template>
   <div class="messenger-input-area-view">
     <div class="messenger-attach-button" @click="statusAction = true">
       <icon-attach :class="{'attach-button-active': statusAction}"/>

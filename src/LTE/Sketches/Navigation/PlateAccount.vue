@@ -10,7 +10,6 @@
             :tiny="tiny"
             @click.native="routerPush(l)"
           />
-        </plate-account>
       </div>
     </transition>
     <transition name="vx-center-left">

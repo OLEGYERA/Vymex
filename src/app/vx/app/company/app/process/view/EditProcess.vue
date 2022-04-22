@@ -36,7 +36,7 @@
           <template #header-title>файлы</template>
           <template #header-amount>{{ files.length }}</template>
         </header-add>
-        <file class="view-main-files-margin" v-for="(file, key) in files" :file="file" :key="key"/>
+<!--        <file class="view-main-files-margin" v-for="(file, key) in files" :file="file" :key="key"/>-->
       </div>
       <radio-slot :model="selectedProcess.isRegular === 1"
                   :disable="selectedProcess.isRegular === 1" @onClick="changeStatusRegular">
@@ -94,7 +94,7 @@ import StartProcess from "../facades/StartProcess";
 import RadioSlot from "../facades/RadioSlot";
 import ProcessAlert from "../facades/ProcessAlert";
 import {mapGetters, mapMutations} from "vuex";
-import File from "@/LTE/Singletons/Resources/facades/File";
+// import File from "@/LTE/Singletons/Resources/facades/File";
 import ProcessPerformer from "@/app/vx/app/company/app/process/facades/ProcessPerformer";
 import CreateProcessModals from "./CreateProcessModals";
 import Sidebar from "@/LTE/Singletons/Dashboard/views/sidebar/Sidebar";
@@ -109,7 +109,7 @@ export default {
     ButtonSecondary,
     ButtonBase,
     RadioSlot,
-    File,
+    // File,
     ProcessAlert,
     StartProcess,
     ProcessPerformer,

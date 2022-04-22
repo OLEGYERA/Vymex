@@ -17,7 +17,7 @@
       <template #header-amount>{{ processFolders.length }}</template>
     </header-add>
     <main>
-      <folder v-for="(folder, folderKey) in processFolders" :folder="folder" :key="folderKey" @getId="changePage"/>
+<!--      <folder v-for="(folder, folderKey) in processFolders" :folder="folder" :key="folderKey" @getId="changePage"/>-->
     </main>
   </div>
 </template>
@@ -28,7 +28,7 @@ import NavigationClose from '@Facade/Navigation/Close'
 import TitleBase from '@Facade/Title/Base'
 import TextBase from '@Facade/Text/Base'
 import TitleCaption from '@Facade/Title/Caption'
-import Folder from "@/LTE/Singletons/Resources/facades/Folder";
+// import Folder from "@/LTE/Singletons/Resources/facades/Folder"; syswar-r3we21
 import ButtonBase from '@Facade/Button/Base'
 import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd";
 import IconAdd from "@Icon/Add";
@@ -42,7 +42,7 @@ export default {
     TitleBase,
     TextBase,
     TitleCaption,
-    Folder,
+    // Folder,
     ButtonBase,
     HeaderAdd,
     IconAdd,
