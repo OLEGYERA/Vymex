@@ -3,43 +3,72 @@
     <div class="process-alert-container">
       <span class="process-alert-title">Оповещение</span>
       <div class="process-alert-container-view">
-        <span class="process-alert-text">За 10 минут до начала</span>
-        <div class="process-alert-header-menu" @click="actionListStatus = !actionListStatus">
-          <dropdown-arrow
-              class="process-alert-select-icon"
-              :class="{active: actionListStatus}"/>
-          <transition>
-x            <action-list
-                class="process-alert-context"
-                :status="actionListStatus"
-                :actions="items"
-                v-if="actionListStatus"
-            />
-          </transition>
+        <span class="process-alert-text">{{currentPeriod}}</span>
+        <div @click="changeStatus">
+          <dropdown-arrow class="process-alert-dropdown" v-if="!status"/>
+          <up-arrow class="process-alert-up" v-else/>
         </div>
       </div>
     </div>
-    <div class="action-list-outside" v-if="actionListStatus" @click="actionListStatus = false"></div>
     <div class="process-alert-border"></div>
+    <transition>
+      <periodicity-processes
+          @onList="onList"
+          :status="status"
+          :actions="items"
+          v-if="status"
+      />
+    </transition>
   </div>
 </template>
 
 <script>
 import DropdownArrow from "@Icon/DropdownArrow";
-import ActionList from "@Facade/Modal/ActionList"
+import UpArrow from "@Icon/UpArrow";
+import PeriodicityProcesses from "../view/PeriodicityProcesses";
 
 export default {
   name: 'vx.process.facade.process.alert',
+  props:{
+    currentAlertWorker: Number || null
+  },
+  created(){
+    if(this.currentAlertWorker <= 1 || this.currentAlertWorker === null){
+      this.currentPeriod = 'За день до начала'
+    } else if(this.currentAlertWorker === 2){
+      this.currentPeriod = 'За неделю до начала'
+    } else if(this.currentAlertWorker === 3) {
+      this.currentPeriod = 'За две недели до начала'
+    }
+  },
   data() {
     return {
-      actionListStatus: false,
-      items: ['Заменить']
+      status: false,
+      currentPeriod: 'За день до начала',
+      items: [
+        {title: 'За день до начала', checked: true},
+        {title: 'За неделю до начала', checked: false},
+        {title: 'За две недели до начала', checked: false}
+      ]
     }
   },
   components: {
-    DropdownArrow,
-    ActionList
+   DropdownArrow,
+    PeriodicityProcesses,
+    UpArrow
   },
+  methods: {
+    changeStatus() {
+      this.status = !this.status
+    },
+    onList(i){
+      this.items.map(el => el.checked = false)
+      this.items[i].checked = !this.items[i].checked
+      this.currentPeriod = this.items[i].title
+      this.$emit('alert-worker', i + 1)
+      this.status = !this.status
+    }
+  }
 }
 </script>
 
@@ -70,21 +99,13 @@ export default {
         color: #FFFFFF;
         margin: 2px 0;
       }
-
-      .process-alert-select-icon {
+      .process-alert-dropdown {
         color: #FFF;
       }
-
-      .process-alert-header-menu {
-        position: relative;
-
-        .facade-modal-action-list {
-          position: absolute;
-          bottom: 8px;
-          z-index: 1;
-          right: 110px;
-          transform: translateY(100%);
-        }
+      .process-alert-up{
+       position: relative;
+        top: 5px;
+        right: -5px;
       }
     }
   }
@@ -96,13 +117,5 @@ export default {
     margin: 7px 0;
   }
 }
-.action-list-outside {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  cursor: auto;
-}
+
 </style>

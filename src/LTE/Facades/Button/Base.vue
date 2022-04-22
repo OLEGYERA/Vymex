@@ -39,7 +39,7 @@
   
     &[disable]{
       cursor: not-allowed;
-      background-color: $grey-scale-500;
+      background-color: $grey-scale-400;
       color: $grey-scale-300;
     }
   }

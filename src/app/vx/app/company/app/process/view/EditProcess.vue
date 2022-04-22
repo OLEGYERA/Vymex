@@ -1,7 +1,7 @@
 <template>
   <div class="process-create-process-view">
     <comeback @onClick="$router.push({name: 'vx.process.company.processes'})"/>
-    <title-base>Создать процесс</title-base>
+    <title-base>Редактировать процесс</title-base>
     <div class="create-process-view-main">
       <radio-slot :model="processModel === 'official-processes'"
                   :disable="processModel === 'company-processes'" @onClick="changeStatusProcess">
@@ -14,11 +14,13 @@
       <text-area
           @text-area-model="textAreaTitle = $event"
           :max-length="1000"
+          :model="selectedProcess.title"
           placeholder="Название процесса"
           class="text-area-title"
           labeled/>
       <text-area :max-length="1000"
                  @text-area-model="textAreaDescription = $event"
+                 :model="selectedProcess.description"
                  :num-rows="4"
                  placeholder="Описание"
                  labeled
@@ -36,34 +38,34 @@
         </header-add>
         <file class="view-main-files-margin" v-for="(file, key) in files" :file="file" :key="key"/>
       </div>
-      <radio-slot :model="regularModel"
-                  :disable="regularDisable" @onClick="changeStatusRegular">
+      <radio-slot :model="selectedProcess.isRegular === 1"
+                  :disable="selectedProcess.isRegular === 1" @onClick="changeStatusRegular">
         <template #title>Регулярный</template>
       </radio-slot>
-      <start-process @onDate="onDate" :regularModel="regularModel"/>
-      <radio-slot :model="!regularModel"
-                  :disable="!regularDisable" @onClick="changeStatusRegular">
+      <start-process @onDate="onDate" :regularModel="selectedProcess.isRegular === 1"/>
+      <radio-slot :model="selectedProcess.isRegular === 0"
+                  :disable="selectedProcess.isRegular === 0" @onClick="changeStatusRegular">
         <template #title>Не регулярный</template>
       </radio-slot>
-      <process-alert @alert-worker="alertWorker = $event"/>
+      <process-alert @alert-worker="alertWorker = $event" :currentAlertWorker="selectedProcess.alertWorker"/>
       <header-add
           @create="isOfficialProcesses = !isOfficialProcesses"
-          :class="processModel === 'official-processes' && subdivisions[0] ? 'hide-add-icon' : ''
-          || processModel === 'company-processes' && subdivisions.length > 3 ? 'hide-add-icon' : ''">
+          :class="processModel && subdivisions[0] ? 'hide-add-icon' : ''
+          || !processModel && subdivisions.length > 3 ? 'hide-add-icon' : ''">
         <template #header-title>исполнители</template>
         <template #header-amount>{{ subdivisions[0] ? performersCounter : '' }}</template>
       </header-add>
       <process-performer class="view-main-performer"
                          @show-sidebar="isOfficialProcesses = !isOfficialProcesses"
                          :performers="subdivisions"
-                          @onDelete="deletePerformer"/>
+                         @onDelete="deletePerformer"/>
     </div>
     <div class="create-resource-buttons">
       <button-secondary class="create-resource-button"
                         @onClick="this.$router.push({name: 'vx.process.company.processes'})"
       >Отмена
       </button-secondary>
-      <button-base class="create-resource-button" @onClick="createProcess">Создать процесс</button-base>
+      <button-base class="create-resource-button" @onClick="editProcess">Сохранить</button-base>
     </div>
     <create-process-modals @closeModalUpload="modalUpload = !modalUpload"
                            :modalUpload="modalUpload"
@@ -98,7 +100,7 @@ import CreateProcessModals from "./CreateProcessModals";
 import Sidebar from "@/LTE/Singletons/Dashboard/views/sidebar/Sidebar";
 
 export default {
-  name: 'vx.process.create.process',
+  name: 'vx.process.edit.process',
   components: {
     Comeback,
     TitleBase,
@@ -123,29 +125,11 @@ export default {
       modalUploadResourceFolder: false,
       modalChooseFiles: false,
       isOfficialProcesses: false,
-      textAreaDescription: '',
       textAreaTitle: '',
+      textAreaDescription: '',
       alertWorker: 0,
-      selectedDate: '',
+      selectedDate: ''
     }
-  },
-  mounted() {
-    if (this.processModel === 'company-processes') {
-      this.$core.execViaComponent('Processes', 'getLevel',
-          {
-            creatorId: this.currentWorkerId.userId,
-            levelId: this.currentWorkerId.levelId ? this.currentWorkerId.levelId : 1,
-            companyId: this.currentCompany.base.id
-          });
-    } else {
-      this.$core.execViaComponent('Processes', 'getUnit',
-          {creatorId: this.currentWorkerId.userId, unitId: this.currentWorkerId.unitId, search: ''});
-    }
-    this.$core.execViaComponent('Processes', 'getUnits', this.currentWorkerId.unitId);
-    this.setSubdivisions([])
-    this.setFiles([])
-    this.setFileIds([])
-
   },
   computed: {
     ...mapGetters({
@@ -175,6 +159,26 @@ export default {
       return count
     },
   },
+  mounted() {
+    this.setFiles([])
+    this.setFileIds([])
+    if (this.processModel === 'company-processes') {
+      this.$core.execViaComponent('Processes', 'getLevel',
+          {
+            creatorId: this.currentWorkerId.userId,
+            levelId: this.currentWorkerId.levelId ? this.currentWorkerId.levelId : 1,
+            companyId: this.currentCompany.base.id
+          });
+    } else {
+      this.$core.execViaComponent('Processes', 'getUnit',
+          {creatorId: this.currentWorkerId.userId, unitId: this.currentWorkerId.unitId, search: ''});
+    }
+    this.$core.execViaComponent('Processes', 'getUnits', this.currentWorkerId.unitId);
+  },
+  destroyed() {
+    this.setSubdivisions([])
+    this.setSelectedProcess({})
+  },
   methods: {
     ...mapMutations({
       setLevels: 'setWidgetLevels',
@@ -196,49 +200,37 @@ export default {
       }
     },
     changeStatusRegular() {
-      this.regularModel = !this.regularModel
-      this.regularDisable = !this.regularDisable
+      if (this.selectedProcess.isRegular === 1) {
+        this.setSelectedProcess({...this.selectedProcess, isRegular: 0})
+      } else {
+        this.setSelectedProcess({...this.selectedProcess, isRegular: 1})
+      }
     },
-    createProcess() {
+    editProcess() {
       const arrayLevelsWorkers = this.subdivisions.map(el => el.level)
       const currentPeriod = this.periods.find(el => el.isActive)
       let today = new Date();
-      let yyyy = today.getFullYear();
-      let mm = String(today.getMonth() + 1).padStart(2, '0');
-      let dd = String(today.getDate()).padStart(2, '0');
       let hh = String(today.getHours()).padStart(2, '0');
       let minmin = String(today.getMinutes()).padStart(2, '0');
       let ss = String(today.getSeconds()).padStart(2, '0');
-        today = this.selectedDate
-            ? this.selectedDate  + ' ' + hh + ':' + minmin + ':' + ss
-            : yyyy + '-' + mm + '-' + dd + ' ' + hh + ':' + minmin + ':' + ss;
-      this.$core.execViaComponent('Processes', 'create', {
-        title: this.textAreaTitle,
-        description: this.textAreaDescription,
-        isRegular: this.regularModel ? 1 : 0,
+      today = this.selectedDate + ' ' + hh + ':' + minmin + ':' + ss;
+      this.$core.execViaComponent('Processes', 'edit', {
+        title: this.textAreaTitle ? this.textAreaTitle : this.selectedProcess.title,
+        description: this.textAreaDescription ? this.textAreaDescription : this.selectedProcess.description,
+        isRegular: this.selectedProcess.isRegular,
         isExecutor: this.processModel === 'official-processes' ? 1 : 0,
         creatorId: this.currentWorkerId.userId,
-        unitId: this.processModel === 'official-processes' ? this.subdivisions[0] && this.subdivisions[0].id : null,
+        unitId: this.processModel === 'official-processes' ? this.subdivisions[0].id : null,
         level: this.processModel === 'company-processes' ? arrayLevelsWorkers : null,
-        repeatDate: !this.regularModel && !this.selectedDate ? '' : today,
-        alertWorker: this.alertWorker,
-        repeatInterval: currentPeriod.isActive ? currentPeriod.id : null,
+        repeatDate: this.selectedDate ? today : this.selectedProcess.repeatDate,
+        alertWorker: this.selectedProcess.alertWorker,
+        repeatInterval: currentPeriod.id,
         fileIds: this.fileIds,
-        companyId: this.currentCompany.base.id
+        id: this.processIndex
       });
-      if (this.textAreaDescription && this.textAreaTitle && this.subdivisions.length) {
-        this.$notify({text: 'Процесс успешно создан!', type: 'success', duration: 3000, speed: 500})
-        this.$router.push({name: 'vx.process.selected.process'})
-        this.setPerformers(this.subdivisions)
-      }
-      if(!this.textAreaTitle) this.$notify({
-        text: 'Введите название процесса!', type: 'error', duration: 3000, speed: 500})
-      if(!this.textAreaDescription) this.$notify({
-        text: 'Введите описание процесса!', type: 'error', duration: 3000, speed: 500})
-      if(!this.subdivisions.length && this.processModel === 'official-processes') this.$notify({
-        text: 'Назначте исполнителя процесса!', type: 'error', duration: 3000, speed: 500})
-      if(!this.subdivisions.length && this.processModel === 'company-processes') this.$notify({
-        text: 'Выберете уровень С.Е для которого назначен процесс!', type: 'error', duration: 3000, speed: 500})
+      this.$notify({text: 'Изменения сохранены!', type: 'success', duration: 3000, speed: 500})
+      this.$router.push({name: 'vx.process.selected.process'})
+      this.setPerformers(this.subdivisions)
     },
     handleAccessOfficial() {
       this.isOfficialProcesses = !this.isOfficialProcesses

@@ -1,9 +1,26 @@
 <template>
   <div>
-    <modal
-        class="modal-upload-resource"
-        :status="modalUploadResource"
-        @onClose="modalUploadResource = !modalUploadResource">
+    <modal :disable="true"
+           :status="modalUpload"
+           @onClose="$emit('closeModalUpload')">
+      <template #title>Загрузить файлы</template>
+      <template #description>Выберете вариант загрузки файлов</template>
+      <template #content>
+        <header-add class="hide-add-icon">
+          <template #header-title>приложение</template>
+        </header-add>
+        <process-performer
+            @onClick="modalUploadResource = !modalUploadResource"
+            class="upload-files-recourse"
+            :performers="uploadResource"/>
+        <upload-files @onUpload="handleUploadFile"/>
+      </template>
+      <template #button-accept>Загрузить</template>
+    </modal>
+    <modal :disable="true"
+           class="modal-upload-resource"
+           :status="modalUploadResource"
+           @onClose="modalUploadResource = !modalUploadResource">
       <template #title>Загрузить файлы из "Ресурсы"</template>
       <template #description>Файлы которые вы выберете будут прикреплены к ресурсу</template>
       <template #content>
@@ -12,30 +29,11 @@
       </template>
       <template #button-accept>Загрузить</template>
     </modal>
-    <modal
-        :status="modalUpload"
-        @onClose="modalUpload = !modalUpload">
-      <template #title>Загрузить файлы</template>
-      <template #description>Выберете вариант загрузки файлов</template>
-      <template #content>
-        <header-add class="hide-add-icon">
-          <template #header-title>приложение</template>
-        </header-add>
-        <process-performer
-            @onClick="changeModal"
-            class="upload-files-recourse"
-            :performers="uploadResource"/>
-        <process-performer
-            class="upload-files-local"
-            :performers="uploadFromDevice"/>
-      </template>
-      <template #button-accept>Загрузить</template>
-    </modal>
-    <modal
-        @onOk="chooseFiles"
-        class="upload-files-recourse-folder"
-        :status="modalUploadResourceFolder"
-        @onClose="modalUploadResourceFolder = !modalUploadResourceFolder">
+    <modal :disable="checkedFile"
+           @onOk="chooseFiles"
+           class="upload-files-recourse-folder"
+           :status="modalUploadResourceFolder"
+           @onClose="modalUploadResourceFolder = !modalUploadResourceFolder">
       <template #title>Загрузить файлы из "Ресурсы"</template>
       <template #description>Файлы которые вы выберете будут прикреплены к ресурсу</template>
       <template #content>
@@ -65,15 +63,15 @@
         @onOk="saveFiles"
         class="upload-from-app"
         :status="modalChooseFiles"
-        @onClose="modalChooseFiles = !modalChooseFiles">
+        @onClose="modalChooseFilesClose">
       <template #title>Загрузить из приложения</template>
       <template #description>Выбранные файлы будут прикреплены к ресурсу</template>
       <template #content>
-        <header-add>
-          <template #header-title>изображения</template>
+        <header-add @create="modalChooseFilesClose">
+          <template #header-title>файлы</template>
           <template #header-amount>{{ images.length }}</template>
         </header-add>
-        <file class="upload-from-app-file" v-for="(file, fileKey) in images" :file="file" :key="fileKey"/>
+        <file-shower class="upload-from-app-file" v-for="(file, fileKey) in images" :file="file" :key="fileKey"/>
       </template>
       <template #button-accept>Сохранить</template>
     </modal>
@@ -84,20 +82,22 @@
 import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd";
 import FileCheckbox from "../facades/FileCheckbox";
 import {mapGetters, mapMutations} from "vuex";
-import File from "@/LTE/Singletons/Resources/facades/File";
+import FileShower from "@/LTE/Singletons/Resources/facades/File";
 import ProcessPerformer from "@/app/vx/app/company/app/process/facades/ProcessPerformer";
 import Modal from "@Facade/Modal/Base";
 import Folder from "@/LTE/Singletons/Resources/facades/Folder";
+import UploadFiles from "@/app/vx/app/company/app/process/facades/UploadFiles";
 
 export default {
-  name: 'vx.process.create.process',
+  name: 'vx.process.create.process.modals',
   components: {
     HeaderAdd,
-    File,
+    FileShower,
     ProcessPerformer,
     Modal,
     Folder,
-    FileCheckbox
+    FileCheckbox,
+    UploadFiles
   },
   props: {
     modalUpload: Boolean,
@@ -108,11 +108,9 @@ export default {
   data() {
     return {
       images: [],
+      uploadDevice: false,
       uploadResource: [
         {avatar: require('@/assets/img/my/resource.svg'), position: 'Ресурсы'},
-      ],
-      uploadFromDevice: [
-        {avatar: require('@/assets/img/icons/add-file.svg'), position: 'Загрузить с локального устройсва'},
       ],
     }
   },
@@ -120,19 +118,23 @@ export default {
     ...mapGetters({
       resourceFolders: 'getResourceFolders',
       newFolder: 'getNewFolder',
-      filesToUpload: 'getFilesToUpload'
+      filesToUpload: 'getFilesToUpload',
+      files: 'getFiles',
+      fileIds: 'getFileIds'
     }),
+    checkedFile() {
+      let isCheck = this.filesToUpload.filter(el => el.checked)
+      if (isCheck.length) return false
+      else return true
+    }
   },
   methods: {
     ...mapMutations({
       setEditMode: 'setIsEditMode',
       setFilesToUpload: 'setNewFilesToUpload',
-      setFiles: 'setNewFiles'
+      setFiles: 'setNewFiles',
+      setFileIds: 'setNewFileIds'
     }),
-    changeModal() {
-      this.modalUploadResource = !this.modalUploadResource
-      this.modalUpload = !this.modalUpload
-    },
     changePage(key) {
       if (key.id === 1) {
         this.modalUploadResource = !this.modalUploadResource
@@ -140,8 +142,7 @@ export default {
       }
     },
     changeFileStatus(index) {
-      let newData = [...this.filesToUpload,
-        this.filesToUpload[index].checked = !this.filesToUpload[index].checked]
+      let newData = this.filesToUpload.map((el, i) => i === index ? {...el, checked: !el.checked} : el)
       this.setFilesToUpload(newData)
     },
     chooseFiles() {
@@ -151,10 +152,49 @@ export default {
     },
     saveFiles() {
       this.setFiles(this.images)
+      this.$emit('closeModalUpload')
+      if (this.images.length) {
+        this.$notify({text: 'Файл успешно загружен!', type: 'success', duration: 3000, speed: 500})
+      }
+    },
+    modalChooseFilesClose() {
       this.modalChooseFiles = !this.modalChooseFiles
-      this.regularModel = !this.regularModel
-      this.regularDisable = !this.regularDisable
-      this.$notify({text: 'Файл успешно загружен!', type: 'success', duration: 3000, speed: 500})
+      this.modalUploadResourceFolder = !this.modalUploadResourceFolder
+    },
+    async handleUploadFile(newFileData) {
+      let file = newFileData.name.split('.')
+      let yyyy = new Date().getFullYear();
+      let mm = String(new Date().getMonth() + 1).padStart(2, '0');
+      let dd = String(new Date().getDate()).padStart(2, '0');
+      let date = dd + '.' + mm + '.' + yyyy
+
+      const newFile = new File([newFileData.result], `${newFileData.name}.png`,
+          {type: file[1], lastModified: new Date()});
+
+      this.$core.execViaComponent('Uploader', 'init', [
+        newFile,
+        this.handleUploadOnprogress, null,
+        this.handleUploaderOnload
+      ])
+
+      this.setFiles([...this.files, {
+        title: file[0],
+        content: {
+          size: (newFileData.size/1000000).toFixed(3),
+          date
+        },
+        type: file[1],
+        group: false,
+        checked: false
+      }])
+      this.$emit('closeModalUpload')
+    },
+    handleUploadOnprogress(progress) {
+      console.log(progress)
+    },
+    handleUploaderOnload(fileId) {
+      let newFileIds = [...this.fileIds, fileId]
+      this.setFileIds(newFileIds)
     }
   }
 }
@@ -213,9 +253,13 @@ export default {
   &::v-deep {
     .modal-base-body {
       width: 632px;
-      height: 805px;
+      height: auto;
       justify-content: space-between;
       padding-bottom: rem(43);
+    }
+
+    .modal-base-content {
+      margin-bottom: rem(31);
     }
   }
 }
@@ -236,13 +280,6 @@ export default {
     .modal-base-footer {
       margin-top: 16px;
     }
-  }
-}
-
-.view-main-performer.facade-process-performer::v-deep {
-  .context-main-position {
-    color: $grey-scale-500;
-    margin-left: 25px;
   }
 }
 
@@ -298,5 +335,9 @@ export default {
   .upload-from-app-file {
     margin-top: 8px;
   }
+}
+
+.upload-input {
+  display: none;
 }
 </style>

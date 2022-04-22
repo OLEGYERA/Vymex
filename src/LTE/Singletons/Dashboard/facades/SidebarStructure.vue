@@ -1,8 +1,11 @@
 <template>
   <div class="container-sidebar-structure">
+    <title-caps v-if="!processModel" class="title-caps-structure">
+      <template>структура компании</template>
+    </title-caps>
     <div v-for="(level, index) in levels"
          :key="index">
-      <div class="sidebar-structure-level">
+      <div class="sidebar-structure-level" v-if="processModel === 'official-processes'">
         <div class="sidebar-structure-level-main">
           <div v-if="index !== 0" class="level-main-items">
             <img v-if="!level.showContext"
@@ -18,12 +21,14 @@
             <template>{{ level.level }} уровень</template>
           </title-caps>
         </div>
-        <checkbox :model="level.checkedLevel"
+        <checkbox v-if="level.showCheckbox"
+                  :model="level.checkedLevel"
                   class="checkbox"
                   @onClick="changeStatusLevel(index)"/>
       </div>
       <div v-if="level.showContext">
-        <structure-unit :data="level.data"/>
+        <structure-unit :data="level.data"
+                        :level="level.level"/>
       </div>
     </div>
   </div>
@@ -45,6 +50,7 @@ export default {
   computed: {
     ...mapGetters({
       levels: 'getLevels',
+      processModel: 'getProcessModel'
     })
   },
   methods: {
@@ -90,6 +96,9 @@ export default {
         }
       }
     }
+  }
+  .title-caps-structure{
+    margin: 20px 0 16px;
   }
   .checkbox {
     margin-right: 8px;

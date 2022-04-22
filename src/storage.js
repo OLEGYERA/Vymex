@@ -63,7 +63,7 @@ export default new Vuex.Store({
   plugins: [
     createPersistedState({
       key: 'vymex_session',
-      paths: ['Countries', 'Crypto', 'UserProfile', 'VxInfo', 'History', 'Company', 'Resources'],
+      paths: ['Countries', 'Crypto', 'UserProfile', 'VxInfo', 'History', 'Company', 'Processes'],
       storage: {
         getItem: (key) => {
           return Secure.get(key)

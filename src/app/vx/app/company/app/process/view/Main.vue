@@ -7,7 +7,6 @@
           <title-base>Процессы</title-base>
           <div class="header-container-icons">
             <icon-eye class="header-container-icon"/>
-            <icon-add class="header-container-icon"/>
           </div>
         </div>
         <text-base>Тут храняться все процессы в вашей компании</text-base>
@@ -15,10 +14,10 @@
     </header>
     <header-add>
       <template #header-title>папки</template>
-      <template #header-amount>{{ folders.length }}</template>
+      <template #header-amount>{{ processFolders.length }}</template>
     </header-add>
     <main>
-      <folder v-for="(folder, folderKey) in folders" :folder="folder" :key="folderKey" @getId="changePage"/>
+      <folder v-for="(folder, folderKey) in processFolders" :folder="folder" :key="folderKey" @getId="changePage"/>
     </main>
   </div>
 </template>
@@ -34,7 +33,7 @@ import ButtonBase from '@Facade/Button/Base'
 import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd";
 import IconAdd from "@Icon/Add";
 import IconEye from "@Icon/Eye";
-import {mapGetters} from "vuex";
+import {mapGetters, mapMutations} from "vuex";
 
 export default {
   name: 'vx.process.main',
@@ -51,14 +50,50 @@ export default {
   },
   computed: {
     ...mapGetters({
-      folders: 'getFolders'
+      processFolders: 'getFolders',
+      messages: 'getMessages',
+      countProcesses: 'getCountProcesses',
+      currentCompany: 'Company/getCurrentCompany',
+      allCompanies: 'Company/getAll',
     })
   },
+  mounted() {
+    const companyId = this.currentCompany.base.id
+    const currentCompanyAllData = this.allCompanies.find(el => el.id === companyId)
+    const currentWorker = currentCompanyAllData.workers[0]
+    const currentUnitId = currentWorker
+        ? currentWorker.unitId
+        : currentCompanyAllData.cofounder[0].id
+    const currentUserId = currentWorker
+        ? currentWorker.userId
+        : currentCompanyAllData.cofounder[0].userId
+    const currentLevelId = currentWorker
+        ? currentWorker.unitLevel
+        : 1
+    this.setCurrentWorkerId({
+      userId: currentUserId,
+      unitId: currentUnitId,
+      levelId: currentLevelId
+    })
+    this.$core.execViaComponent('Processes', 'count',
+        {
+          creatorId: currentUserId,
+          unitId: currentUnitId,
+          levelId: currentWorker ? currentWorker.unitLevel : 1,
+          companyId
+        });
+  },
   methods: {
+    ...mapMutations({
+      setProcessModel: 'setChangeProcessModel',
+      setFolders: 'setUpdateFolders',
+      setCurrentWorkerId: 'setNumCurrentWorkerId'
+    }),
     changePage({id}) {
-      if (id === 2) {
-        this.$router.push({name: 'vx.process.company.processes'})
-      }
+      id === 2
+          ? this.setProcessModel('company-processes')
+          : this.setProcessModel('official-processes')
+      this.$router.push({name: 'vx.process.company.processes'})
     }
   },
 }

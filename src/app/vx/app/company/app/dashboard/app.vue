@@ -15,7 +15,11 @@
       <sidebar v-if="grantAccess"
                :status="grantAccess"
                @on-close="onClose"
-               @handle-access="handleAccess"/>
+               @handle-access="handleAccess">
+        <template #head-title>Выдать доступ</template>
+        <template #title-caps-parent class="title-caps">пользователь</template>
+        <template #button-title>Выдать доступ</template>
+      </sidebar>
       <modal
           :status="showModal"
           @onClose="onClose"

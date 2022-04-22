@@ -8,7 +8,7 @@
       <textarea
           class="textarea"
           :maxlength="maxLength"
-          rows="1"
+          :rows="numRows ? numRows : 1"
           ref="facade-input-text-area-ref"
           @input="resize($event)"
           v-model="baseModel"
@@ -37,6 +37,7 @@
           return value === null || typeof value === "string" || typeof value === "number";
         }
       },
+      numRows: Number,
       placeholder: String,
       maxLength: Number,
       disable: Boolean,

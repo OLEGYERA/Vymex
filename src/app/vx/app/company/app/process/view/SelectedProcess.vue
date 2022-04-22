@@ -1,33 +1,29 @@
 <template>
   <div class="container-selected-process">
-    <comeback @onClick="$router.push({name: 'vx.process.company.processes'})"/>
+    <comeback @onClick="goBack"/>
     <div class="selected-process-header">
       <div class="header-events-panel">
-        <process-event v-if="messages[indexProcess].panel"
-                       :message="messages[indexProcess]"/>
-        <div v-if="messages[indexProcess].date" class="panel-day">
-          <span>Каждый день</span>
+        <process-event :message="selectedProcess"/>
+        <div v-if="selectedProcess.isRegular" class="panel-day">
+          <span>{{ activePeriod }}</span>
         </div>
       </div>
       <icon-points-vertical/>
     </div>
-    <div class="selected-process-text">{{ messages[indexProcess].text }}</div>
-    <div class="selected-process-description">Простой для понимания документ - документ, не требующий усилий для чтения
-      и понимания,
-      т.е. при изложении материала не используя сложные предложения
-    </div>
+    <div class="selected-process-text">{{ selectedProcess.title }}</div>
+    <div class="selected-process-description">{{ selectedProcess.description }}</div>
     <div class="selected-process-body">
       <div class="body-performers">
         <header-add>
           <template #header-title>исполнители</template>
-          <template #header-amount>{{13}}</template>
+          <template #header-amount>{{ performerCount }}</template>
         </header-add>
         <process-performer :performers="performers"/>
       </div>
       <div class="body-files">
         <header-add>
           <template #header-title>файлы</template>
-          <template #header-amount>{{files.length}}</template>
+          <template #header-amount>{{ files.length }}</template>
         </header-add>
         <file v-for="(file, key) in files" :file="file" :key="key"/>
       </div>
@@ -37,7 +33,7 @@
 
 <script>
 import Comeback from "@Facade/Navigation/Comeback";
-import {mapGetters} from "vuex";
+import {mapGetters, mapMutations} from "vuex";
 import ProcessEvent from "../facades/ProcessEvent"
 import ProcessPerformer from "../facades/ProcessPerformer"
 import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd";
@@ -52,14 +48,42 @@ export default {
     File,
     ProcessPerformer
   },
+  methods: {
+    ...mapMutations({
+      setPerformerCount: 'setNewPerformerCount',
+      setSelectedProcess: 'setClickedSelectedProcess',
+      setPerformers: 'setCurrentPerformers'
+    }),
+    goBack(){
+      this.$router.push({name: 'vx.process.company.processes'})
+      this.setSelectedProcess({})
+      this.setPerformers([])
+    }
+  },
   computed: {
     ...mapGetters({
-      messages: 'getMessages',
-      indexProcess: 'getProcessIndex',
       files: 'getFiles',
       performers: 'getPerformers',
+      periods: 'getPeriods',
+      performerCount: 'getPerformerCount',
+      selectedProcess: 'getSelectedProcess',
+      processModel: 'getProcessModel',
+      levels: 'getLevels'
     }),
-  },
+    activePeriod() {
+      if (this.selectedProcess.repeatFrequency.interval === "P1D") {
+        return 'Каждый день'
+      } else if(this.selectedProcess.repeatFrequency.interval === "P1W"){
+        return 'Каждую неделю'
+      } else if(this.selectedProcess.repeatFrequency.interval === "P1M"){
+        return 'Каждый месяц'
+      } else if(this.selectedProcess.repeatFrequency.interval === "P1Y") {
+        return 'Каждый год'
+      } else {
+        return ''
+      }
+      }
+    },
 }
 </script>
 <style lang="scss" scoped>
@@ -80,11 +104,11 @@ export default {
         flex-wrap: wrap;
         align-items: center;
         justify-content: center;
-        width: rem(91);
         height: rem(16);
         font-size: rem(11);
         color: #FFF;
         margin: 0 8px;
+        padding: 0 8px;
         background: $blue;
         border-radius: 14px;
       }
@@ -115,8 +139,9 @@ export default {
   .selected-process-body {
     display: flex;
     justify-content: space-between;
+
     .body-performers {
-     width: 50%;
+      width: 50%;
       margin-top: rem(26);
     }
 
@@ -127,6 +152,7 @@ export default {
     }
   }
 }
+
 .facade-header-add {
   &::v-deep {
     .right-part {
@@ -134,15 +160,18 @@ export default {
     }
   }
 }
-.facade-resource-file{
+
+.facade-resource-file {
   margin-top: 8px;
+
   &::v-deep {
-    .icon-points-vertical{
+    .icon-points-vertical {
       color: #fff;
     }
   }
 }
-.icon{
+
+.icon {
   color: #fff;
 }
 </style>

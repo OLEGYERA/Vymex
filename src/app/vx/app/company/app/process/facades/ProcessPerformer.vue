@@ -10,18 +10,40 @@
          level4: performer.level === 4
          }">
       <div class="performer-context-main">
-        <img v-if="performer.avatar" :src="performer.avatar"/>
+        <img v-if="performer.avatar" :src="performer.avatar" class="context-main-avatar"/>
+        <image-avatar v-else-if="performer.numberPeople === 1 && processModel === 'official-processes'"
+                       class="context-main-avatar"
+                      :logo="$core.traits.ImageLogo(performer.avatar,
+                      performer.name ? performer.name : performer.position)"
+                      :color-code="$core.traits.ImageColorCode(performer.id)"/>
         <div v-else class="context-main-num">
           {{ performer.numberPeople }}
         </div>
-        <span class="context-main-position">{{ performer.position }}</span>
+        <span class="context-main-position">{{ performer.name ? performer.name : performer.position }}</span>
       </div>
-      <icon-points-vertical @click.native="actionListStatus=true"/>
+      <div @click="performer.actionListStatus = !performer.actionListStatus">
+        <icon-points-vertical/>
+        <transition>
+          <action-list
+              class="process-alert-context"
+              @onList="$emit('show-sidebar')"
+              @onDelete="$emit('onDelete', performer.level)"
+              :status="performer.actionListStatus"
+              :actions="items"
+              v-if="performer.actionListStatus"
+          />
+        </transition>
+      </div>
+      <div class="action-list-outside" v-if="performer.actionListStatus"
+           @click="performer.actionListStatus = false"></div>
     </div>
   </div>
 </template>
 
 <script>
+import ActionList from "@Facade/Modal/ActionList"
+import ImageAvatar from "@Facade/Image/Avatar"
+import {mapGetters} from "vuex";
 
 export default {
   name: 'vx.process.facade.process.performer',
@@ -30,9 +52,18 @@ export default {
   },
   data() {
     return {
-      actionListStatus: false,
+      items: ['Заменить']
     }
   },
+  components: {
+    ActionList,
+    ImageAvatar
+  },
+  computed: {
+    ...mapGetters({
+      processModel: 'getProcessModel'
+    })
+  }
 }
 </script>
 
@@ -48,11 +79,19 @@ export default {
     border-radius: 8px;
     margin-top: 8px;
     padding: 8px;
+    position: relative;
 
     .performer-context-main {
       display: inherit;
       justify-content: center;
       align-items: center;
+
+      .context-main-avatar {
+        margin-right: rem(12);
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+      }
 
       .context-main-num {
         display: inherit;
@@ -69,12 +108,21 @@ export default {
         line-height: rem(16);
         text-align: center;
         text-transform: uppercase;
+        margin-right: rem(22);
       }
 
       .context-main-position {
         font-size: rem(15);
         line-height: rem(20);
       }
+    }
+
+    .facade-modal-action-list {
+      position: absolute;
+      top: -73px;
+      z-index: 1;
+      right: 106px;
+      transform: translateY(100%);
     }
   }
 
@@ -85,5 +133,13 @@ export default {
 
 .icon {
   color: $grey-scale-300;
+}
+.action-list-outside {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  cursor: auto;
 }
 </style>
