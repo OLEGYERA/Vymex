@@ -24,29 +24,19 @@
 
 <script>
 /*eslint-disable*/
-import NavigationClose from '@Facade/Navigation/Close'
-import TitleBase from '@Facade/Title/Base'
-import TextBase from '@Facade/Text/Base'
-import TitleCaption from '@Facade/Title/Caption'
-import Folder from "@/LTE/Singletons/Resources/facades/Folder";
-import ButtonBase from '@Facade/Button/Base'
-import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd";
-import IconAdd from "@Icon/Add";
-import IconEye from "@Icon/Eye";
 import {mapGetters, mapMutations} from "vuex";
 
 export default {
   name: 'vx.process.main',
   components: {
-    NavigationClose,
-    TitleBase,
-    TextBase,
-    TitleCaption,
-    Folder,
-    ButtonBase,
-    HeaderAdd,
-    IconAdd,
-    IconEye
+    NavigationClose: () => import('@Facade/Navigation/Close'),
+    TitleBase: () => import('@Facade/Title/Base'),
+    TextBase: () => import('@Facade/Text/Base'),
+    TitleCaption: () => import('@Facade/Title/Caption'),
+    Folder: () => import('@/LTE/Singletons/Resources/facades/Folder'),
+    ButtonBase: () => import('@Facade/Button/Base'),
+    HeaderAdd: () => import('@/LTE/Singletons/facades/HeaderAdd'),
+    IconEye: () => import('@Icon/Eye')
   },
   computed: {
     ...mapGetters({

@@ -1,6 +1,6 @@
 <template>
-  <div class="facade-upload-files" :class="{'coverBy': isAnimationIncluded}">
-    <label class="upload-files-body" :class="{'shake-animation': isAnimationIncluded}"
+  <div class="facade-upload-files">
+    <label class="upload-files-body"
            for="assetsFieldHandle">
       <process-performer
           class="upload-files-local"
@@ -16,14 +16,14 @@
 </template>
 
 <script>
-import ProcessPerformer from "@/app/vx/app/company/app/process/facades/ProcessPerformer";
 
 export default {
   name: 'vx.process.facade.upload.files',
-  components: {ProcessPerformer},
+  components: {
+    ProcessPerformer: () => import('./ProcessPerformer')
+  },
   data: () => ({
     allowedTypes: '.jpg,.png,.pdf,.txt,.doc,.docx,.rtf',
-    isAnimationIncluded: false,
     uploadFromDevice: [
       {avatar: require('@/assets/img/icons/add-file.svg'), position: 'Загрузить с локального устройсва'},
     ],
@@ -76,18 +76,6 @@ export default {
 
     .upload-files-input {
       display: none;
-    }
-  }
-
-  &.coverBy {
-    position: relative;
-
-    &:before {
-      z-index: 1;
-      content: '';
-      position: absolute;
-      width: 100%;
-      height: 100%;
     }
   }
 }

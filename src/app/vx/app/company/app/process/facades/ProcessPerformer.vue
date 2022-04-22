@@ -41,23 +41,22 @@
 </template>
 
 <script>
-import ActionList from "@Facade/Modal/ActionList"
-import ImageAvatar from "@Facade/Image/Avatar"
 import {mapGetters} from "vuex";
 
 export default {
   name: 'vx.process.facade.process.performer',
   props: {
-    performers: Array
-  },
-  data() {
-    return {
-      items: ['Заменить']
+    performers: {
+      type: Array,
+      required: true
     }
   },
+  data: () => ({
+      items: ['Заменить']
+  }),
   components: {
-    ActionList,
-    ImageAvatar
+    ActionList: () => import('@Facade/Modal/ActionList'),
+    ImageAvatar: () => import('@Facade/Image/Avatar')
   },
   computed: {
     ...mapGetters({

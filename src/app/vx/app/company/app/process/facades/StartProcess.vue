@@ -25,15 +25,17 @@
 <script>
 
 import {mapGetters, mapMutations} from "vuex";
-import {CalendarModalUi} from "@Providers";
 
 export default {
   name: 'vx.process.facade.start.process',
   components: {
-    CalendarModalUi
+    CalendarModalUi: () => import('@Providers')
   },
   props: {
-    regularModel: Boolean
+    regularModel: {
+      type: Boolean,
+      required: true
+    }
   },
   data: () => ({
     calendarModalStatus: false,

@@ -11,16 +11,21 @@
 </template>
 
 <script>
-import CheckboxRound from "@Facade/Input/Checkbox";
 
 export default {
   name: 'vx.process.facade.radio.slot',
-  components: {
-    CheckboxRound
-  },
   props: {
-    model: Boolean,
-    disable: Boolean,
+    model: {
+      type: Boolean,
+      required: true
+    },
+    disable: {
+      type: Boolean,
+      required: true
+    },
+  },
+  components: {
+    CheckboxRound: () => import('@Facade/Input/Checkbox')
   },
 }
 </script>

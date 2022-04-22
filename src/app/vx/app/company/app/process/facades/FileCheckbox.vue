@@ -16,22 +16,24 @@
 </template>
 
 <script>
-import TextBase from '@Facade/Text/Base'
-import TitleCaption from '@Facade/Title/Caption'
-import IconGroup from '@Icon/Group'
-import Checkbox from "@Facade/Input/Checkbox";
 
 export default {
   name: 'Facade.Resource.File.Checkbox',
   components: {
-    TextBase,
-    TitleCaption,
-    IconGroup,
-    Checkbox
+    TextBase: () => import('@Facade/Text/Base'),
+    TitleCaption: () => import('@Facade/Title/Caption'),
+    IconGroup: () => import('@Icon/Group'),
+    Checkbox: () => import('@Facade/Input/Checkbox')
   },
   props: {
-    file: Object,
-    index: Number
+    file: {
+      type: Object,
+      required: true
+    },
+    index: {
+      type: Number,
+      required: true
+    }
   },
   computed: {
     content() {

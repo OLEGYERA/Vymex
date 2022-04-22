@@ -32,21 +32,16 @@
 </template>
 
 <script>
-import Comeback from "@Facade/Navigation/Comeback";
 import {mapGetters, mapMutations} from "vuex";
-import ProcessEvent from "../facades/ProcessEvent"
-import ProcessPerformer from "../facades/ProcessPerformer"
-import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd";
-import File from "@/LTE/Singletons/Resources/facades/File";
 
 export default {
   name: 'vx.process.selected.process',
   components: {
-    Comeback,
-    ProcessEvent,
-    HeaderAdd,
-    File,
-    ProcessPerformer
+    Comeback: () => import('@Facade/Navigation/Comeback'),
+    ProcessEvent: () => import('../facades/ProcessEvent'),
+    HeaderAdd: () => import('@/LTE/Singletons/facades/HeaderAdd'),
+    File: () => import('@/LTE/Singletons/Resources/facades/File'),
+    ProcessPerformer: () => import('../facades/ProcessPerformer')
   },
   methods: {
     ...mapMutations({

@@ -9,15 +9,17 @@
 </template>
 
 <script>
-import IconSort from "@Icon/Sort";
 
 export default {
   name: 'vx.process.facade.process.event',
   props: {
-    message: Object
+    message: {
+      type: Object,
+      required: true
+    }
   },
   components: {
-   IconSort
+   IconSort: () => import('@Icon/Sort')
   },
 }
 </script>

@@ -82,40 +82,26 @@
 </template>
 
 <script>
-import Comeback from "@Facade/Navigation/Comeback";
-import TitleBase from "@Facade/Title/Base";
-import TextArea from "@Facade/Input/TextArea";
-import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd";
-import ButtonSecondary from "@Facade/Button/Secondary";
-import ButtonBase from "@Facade/Button/Base";
-import StartProcess from "../facades/StartProcess";
-import RadioSlot from "../facades/RadioSlot";
-import ProcessAlert from "../facades/ProcessAlert";
 import {mapGetters, mapMutations} from "vuex";
-import File from "@/LTE/Singletons/Resources/facades/File";
-import ProcessPerformer from "@/app/vx/app/company/app/process/facades/ProcessPerformer";
-import CreateProcessModals from "./CreateProcessModals";
-import Sidebar from "@/LTE/Singletons/Dashboard/views/sidebar/Sidebar";
 
 export default {
   name: 'vx.process.create.process',
   components: {
-    Comeback,
-    TitleBase,
-    TextArea,
-    HeaderAdd,
-    ButtonSecondary,
-    ButtonBase,
-    RadioSlot,
-    File,
-    ProcessAlert,
-    StartProcess,
-    ProcessPerformer,
-    CreateProcessModals,
-    Sidebar
+    Comeback: () => import('@Facade/Navigation/Comeback'),
+    TitleBase: () => import('@Facade/Title/Base'),
+    TextArea: () => import('@Facade/Input/TextArea'),
+    HeaderAdd: () => import('@/LTE/Singletons/facades/HeaderAdd'),
+    ButtonSecondary: () => import('@Facade/Button/Secondary'),
+    ButtonBase: () => import('@Facade/Button/Base'),
+    RadioSlot: () => import('../facades/RadioSlot'),
+    File: () => import('@/LTE/Singletons/Resources/facades/File'),
+    ProcessAlert: () => import('../facades/ProcessAlert'),
+    StartProcess: () => import('../facades/StartProcess'),
+    ProcessPerformer: () => import('../facades/ProcessPerformer'),
+    CreateProcessModals: () => import('./CreateProcessModals'),
+    Sidebar: () => import('@/LTE/Singletons/Dashboard/views/sidebar/Sidebar')
   },
-  data() {
-    return {
+  data: () => ({
       regularModel: true,
       regularDisable: true,
       modalUpload: false,
@@ -127,8 +113,7 @@ export default {
       textAreaTitle: '',
       alertWorker: 0,
       selectedDate: '',
-    }
-  },
+  }),
   mounted() {
     if (this.processModel === 'company-processes') {
       this.$core.execViaComponent('Processes', 'getLevel',

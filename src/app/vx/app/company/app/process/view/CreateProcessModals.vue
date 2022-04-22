@@ -79,41 +79,44 @@
 </template>
 
 <script>
-import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd";
-import FileCheckbox from "../facades/FileCheckbox";
 import {mapGetters, mapMutations} from "vuex";
-import FileShower from "@/LTE/Singletons/Resources/facades/File";
-import ProcessPerformer from "@/app/vx/app/company/app/process/facades/ProcessPerformer";
-import Modal from "@Facade/Modal/Base";
-import Folder from "@/LTE/Singletons/Resources/facades/Folder";
-import UploadFiles from "@/app/vx/app/company/app/process/facades/UploadFiles";
 
 export default {
   name: 'vx.process.create.process.modals',
   components: {
-    HeaderAdd,
-    FileShower,
-    ProcessPerformer,
-    Modal,
-    Folder,
-    FileCheckbox,
-    UploadFiles
+    HeaderAdd: () => import('@/LTE/Singletons/facades/HeaderAdd'),
+    FileShower: () => import('@/LTE/Singletons/Resources/facades/File'),
+    ProcessPerformer: () => import('../facades/ProcessPerformer'),
+    Modal: () => import('@Facade/Modal/Base'),
+    Folder: () => import('@/LTE/Singletons/Resources/facades/Folder'),
+    FileCheckbox: () => import('../facades/FileCheckbox'),
+    UploadFiles: () => import('@/app/vx/app/company/app/process/facades/UploadFiles')
   },
   props: {
-    modalUpload: Boolean,
-    modalUploadResource: Boolean,
-    modalUploadResourceFolder: Boolean,
-    modalChooseFiles: Boolean,
+    modalUpload: {
+      type: Boolean,
+      required: true
+    },
+    modalUploadResource: {
+      type: Boolean,
+      required: true
+    },
+    modalUploadResourceFolder: {
+      type: Boolean,
+      required: true
+    },
+    modalChooseFiles: {
+      type: Boolean,
+      required: true
+    },
   },
-  data() {
-    return {
+  data:() => ({
       images: [],
       uploadDevice: false,
       uploadResource: [
         {avatar: require('@/assets/img/my/resource.svg'), position: 'Ресурсы'},
       ],
-    }
-  },
+  }),
   computed: {
     ...mapGetters({
       resourceFolders: 'getResourceFolders',

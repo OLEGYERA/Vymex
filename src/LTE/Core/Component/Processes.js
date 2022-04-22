@@ -68,7 +68,6 @@ class Processes extends Binder {
                         avatar: units.self.avatar,
                         numberPeople: 1,
                         id: units.self.id,
-                        // position: units.self.unitName,
                         name: units.self.unitName,
                         checkedPosition: false,
                         checkboxType: 2,
@@ -123,7 +122,6 @@ class Processes extends Binder {
     }
 
     getRes(process) {
-        console.log(process, 'process')
         this.$store.set('ClickedSelectedProcess', process);
         let currentProcessModel = this.$store.get('ProcessModel');
         let levels = this.$store.get('Levels')

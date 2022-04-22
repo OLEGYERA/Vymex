@@ -11,24 +11,19 @@
 </template>
 
 <script>
-import IconPointsVertical from "@Icon/PointsVertical";
-import ActionList from "@Facade/Modal/ActionList";
 import {mapGetters, mapMutations} from "vuex";
-import ProcessEvent from "@/app/vx/app/company/app/process/facades/ProcessEvent";
 
 export default {
   name: 'vx.process.process.message',
   components: {
-    IconPointsVertical,
-    ActionList,
-    ProcessEvent
+    IconPointsVertical: () => import('@Icon/PointsVertical'),
+    ActionList: () => import('@Facade/Modal/ActionList'),
+    ProcessEvent: () => import('../facades/ProcessEvent')
   },
-  data() {
-    return {
+  data: () => ({
       actionListStatus: false,
       items: ['Редактировать']
-    }
-  },
+  }),
   props: {
     message: Object,
     index: Number

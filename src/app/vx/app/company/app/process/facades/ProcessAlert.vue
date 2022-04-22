@@ -23,14 +23,13 @@
 </template>
 
 <script>
-import DropdownArrow from "@Icon/DropdownArrow";
-import UpArrow from "@Icon/UpArrow";
-import PeriodicityProcesses from "../view/PeriodicityProcesses";
 
 export default {
   name: 'vx.process.facade.process.alert',
-  props:{
-    currentAlertWorker: Number || null
+  props: {
+    currentAlertWorker: {
+      type: Number || null
+    }
   },
   created(){
     if(this.currentAlertWorker <= 1 || this.currentAlertWorker === null){
@@ -41,8 +40,7 @@ export default {
       this.currentPeriod = 'За две недели до начала'
     }
   },
-  data() {
-    return {
+  data: () => ({
       status: false,
       currentPeriod: 'За день до начала',
       items: [
@@ -50,12 +48,11 @@ export default {
         {title: 'За неделю до начала', checked: false},
         {title: 'За две недели до начала', checked: false}
       ]
-    }
-  },
+  }),
   components: {
-   DropdownArrow,
-    PeriodicityProcesses,
-    UpArrow
+   DropdownArrow: () => import('@Icon/DropdownArrow'),
+    PeriodicityProcesses: () => import('@Icon/UpArrow'),
+    UpArrow: () => import('../view/PeriodicityProcesses')
   },
   methods: {
     changeStatus() {

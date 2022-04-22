@@ -13,12 +13,11 @@
   </div>
 </template>
 <script>
-import Checkbox from '@Facade/Input/Checkbox'
 
 export default {
   name: 'processes.periodicity.processes',
   components: {
-    Checkbox
+    Checkbox: () => ('@Facade/Input/Checkbox')
   },
   props: {
     actions: {

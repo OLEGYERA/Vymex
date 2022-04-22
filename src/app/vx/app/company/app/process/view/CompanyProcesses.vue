@@ -39,26 +39,19 @@
 </template>
 
 <script>
-import Comeback from "@Facade/Navigation/Comeback";
-import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd";
-import InputSearch from "@Facade/Input/Search";
-import TitleBase from "@Facade/Title/Base"
-import ProcessMessage from "./ProcessMessage"
 import {mapGetters} from "vuex";
 
 export default {
   name: 'vx.process.company.processes',
-  data() {
-    return {
+  data: () => ({
       createProcess: false
-    }
-  },
+  }),
   components: {
-    Comeback,
-    HeaderAdd,
-    TitleBase,
-    InputSearch,
-    ProcessMessage
+    Comeback: () => import('@Facade/Navigation/Comeback'),
+    HeaderAdd: () => import('@/LTE/Singletons/facades/HeaderAdd'),
+    TitleBase: () => import('@Facade/Title/Base'),
+    InputSearch: () => import('@Facade/Input/Search'),
+    ProcessMessage: () => import('./ProcessMessage')
   },
   mounted() {
     if (this.processModel === 'company-processes') {
