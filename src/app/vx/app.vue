@@ -81,9 +81,9 @@
           overflow-y: scroll;
           .router-view-body{
             width: 100%;
-            max-width: 796px;
+            //max-width: 796px;
             margin: 0 auto;
-            padding-top: 24px;
+            //padding-top: 24px;
           }
           &.not-adapt-styles{
             .router-view-body {

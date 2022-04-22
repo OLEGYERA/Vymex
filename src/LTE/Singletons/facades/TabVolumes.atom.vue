@@ -1,25 +1,28 @@
 <template>
   <div class="facade-volumes-tab-view">
-    <div class="notifications-title">
-      <title-semi>Отключить оповещения</title-semi>
-      <div class="button-switch"
-           :class="{'on': switchNotify}"
-           @click="$emit('change-switch')">
-        <div class="button-round"></div>
-      </div>
-    </div>
-    <transition name="slide">
-      <div v-if="switchNotify">
-        <div class="disable-time"
-             :key="timeKey"
-             :class="{active: timeKey === newTime}"
-             v-for="(timeItem, timeKey) in times"
-             @click="setTime(timeKey)">
-          <text-base>{{ timeItem }}</text-base>
-          <div class="radiobutton"></div>
+<!--    <div>-->
+      <div class="notifications-title">
+        <title-semi>Отключить оповещения</title-semi>
+        <div class="button-switch"
+             :class="{'on': switchNotify}"
+             @click="$emit('change-switch')">
+          <div class="button-round"></div>
         </div>
       </div>
-    </transition>
+      <transition name="slide">
+        <div v-if="switchNotify">
+          <div class="disable-time"
+               :key="timeKey"
+               :class="{active: timeKey === newTime}"
+               v-for="(timeItem, timeKey) in times"
+               @click="setTime(timeKey)">
+            <text-base>{{ timeItem }}</text-base>
+            <div class="radiobutton"></div>
+          </div>
+        </div>
+      </transition>
+<!--    </div>-->
+
   </div>
 </template>
 

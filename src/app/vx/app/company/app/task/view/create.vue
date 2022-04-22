@@ -15,10 +15,19 @@
       </div>
       <div class="perpetual-task">
         <input-checkbox :model="perpetual" @click.native="togglePerpetual"/>
-        <text-base @click.native="togglePerpetual">Безсрочная задача</text-base>
+        <text-base @click.native="togglePerpetual">Бессрочная задача</text-base>
       </div>
 
       <navigation-list-header title="Список" :title-count="countTest" @onAction="countTest++"/>
+      <div class="content-container"></div>
+      <navigation-list-header title="файлы"/>
+      <div class="content-container"></div>
+      <navigation-list-header title="Исполнители"/>
+      <div class="content-container"></div>
+      <navigation-list-header title="Следят"/>
+      <div class="content-container">
+        <unit-setting-ui :unit-data="person.unitData" :unit-level="person.unitLevel" :unit-position="person.unitPosition"/>
+      </div>
 
 
 
@@ -31,10 +40,7 @@
 
     </div>
 
-
-
-
-
+    <sidebar-assign-user-ui :levels="levels" disable/>
   </div>
 </template>
 
@@ -48,15 +54,17 @@
   import InputDate from '@Facade/Input/Date'
   import InputCheckbox from '@Facade/Input/Checkbox'
   import TextBase from '@Facade/Text/Base'
-  import {UnitUi, UnitSettingUi, UnitCheckboxUi} from '@Providers'
+  import {UnitUi, UnitSettingUi, UnitCheckboxUi, SidebarAssignUserUi} from '@Providers'
   import NavigationListHeader from '@Facade/Navigation/ListHeader'
+  // import {SidebarAssignUserUi} from '@Providers'
+
 
   export default {
     name: 'vx.co.task.create.view',
     components: {
       NavigationComeback, TitleBase, InputBase, InputTextArea, TitleCaps, InputDate, InputCheckbox, TextBase,
       UnitUi, UnitSettingUi, UnitCheckboxUi,
-      NavigationListHeader
+      NavigationListHeader, SidebarAssignUserUi
     },
     data: () => ({
       currentNavigationCoTab: 0,
@@ -64,7 +72,120 @@
       dateStart: null,
       dateEnd: null,
       unitCheckboxModel: false,
-      countTest: 0
+      countTest: 0,
+      person: {
+        unitLevel: 1,
+        unitData: {
+          id: 1,
+          name: 'Александр',
+          lastname: 'Ким',
+          avatar: null
+        },
+        unitPosition: 'big boss'
+      },
+      levels: [
+        {
+          level: 1,
+          disable: false,
+          data: [
+            {
+              unitLevel: 1,
+              unitData: {
+                id: 1,
+                name: 'Александр',
+                lastname: 'Ким',
+                avatar: null
+              },
+              unitPosition: 'big boss',
+              checked: false,
+            },
+          ]
+        },
+        {
+          level: 2,
+          disable: true,
+          data: [
+            {
+              unitLevel: 2,
+              unitData: {
+                id: 2,
+                name: 'Александр',
+                lastname: 'Ким',
+                avatar: null
+              },
+              unitPosition: 'big boss',
+              checked: false,
+            },
+            {
+              unitLevel: 2,
+              unitData: {
+                id: 3,
+                name: 'Александр',
+                lastname: 'Ким',
+                avatar: null
+              },
+              unitPosition: 'big boss',
+              checked: false,
+            },
+          ]
+        },
+        {
+          level: 3,
+          disable: true,
+          data: [
+            {
+              unitLevel: 3,
+              unitData: {
+                id: 4,
+                name: 'Александр',
+                lastname: 'Ким',
+                avatar: null
+              },
+              unitPosition: 'big boss',
+              checked: false,
+            },
+            {
+              unitLevel: 3,
+              unitData: {
+                id: 5,
+                name: 'Александр',
+                lastname: 'Ким',
+                avatar: null
+              },
+              unitPosition: 'big boss',
+              checked: false,
+            },
+          ]
+        },
+        {
+          level: 4,
+          disable: true,
+          data: [
+            {
+              unitLevel: 4,
+              unitData: {
+                id: 6,
+                name: 'Александр',
+                lastname: 'Ким',
+                avatar: null
+              },
+              unitPosition: 'big boss',
+              checked: false,
+            },
+            {
+              unitLevel: 4,
+              unitData: {
+                id: 7,
+                name: 'Александр',
+                lastname: 'Ким',
+                avatar: null
+              },
+              unitPosition: 'big boss',
+              checked: false,
+            },
+          ]
+        }
+      ]
     }),
     methods: {
       togglePerpetual(){
@@ -112,6 +233,12 @@
           padding-left: 12px;
           color: #fff;
         }
+      }
+      .facade-navigation-list-header{
+        margin-bottom: 4px;
+      }
+      .content-container{
+        margin-bottom: 24px;
       }
     }
   }

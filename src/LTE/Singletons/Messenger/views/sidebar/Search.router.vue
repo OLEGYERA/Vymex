@@ -18,8 +18,8 @@
 <script>
   /*eslint-disable*/
   import TabView from "../../facades/TabView"
-  import Chat from "@/LTE/Singletons/Messenger/facades/Chat";
-  import Person from "@/LTE/Singletons/Messenger/facades/Person";
+  import Chat from "@/LTE/Singletons/MessengerDff/facade/Chat";
+  import Person from "@/LTE/Singletons/MessengerDff/facade/Person";
   import {mapGetters} from "vuex";
 
   export default {
@@ -50,6 +50,9 @@
         searchedContacts: 'Messenger/getSearchedContacts',
 
       }),
+    },
+    mounted() {
+      console.log('111')
     }
   }
 </script>

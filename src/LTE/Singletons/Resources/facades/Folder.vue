@@ -1,16 +1,3 @@
-<template>
-  <div class="facade-resource-folder" @click="$emit('getId', {id: folder.id})">
-    <div class="folder-image">
-      <img v-if="folder.trash" src="@/assets/img/my/trash.svg">
-      <img v-else src="@/assets/img/my/folder.svg">
-      <icon-group v-if="folder.group"/>
-    </div>
-    <div class="folder-info">
-      <text-base>{{folder.title}}</text-base>
-      <title-caption>{{content}}</title-caption>
-    </div>
-  </div>
-</template>
 
 <script>
 import TextBase from '@Facade/Text/Base'

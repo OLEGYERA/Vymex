@@ -1,11 +1,11 @@
 <template>
   <div class="messenger-input-area-view">
-    <div class="messenger-attach-button" @click="changeStatus">
-      <icon-attach :class="{'attach-button-active': actionListStatus}"/>
-      <transition name="fade">
-        <action-list :items="items" :actionListStatus="actionListStatus" @changeStatus="changeStatus"/>
-      </transition>
+    <div class="messenger-attach-button" @click="statusAction = true">
+      <icon-attach :class="{'attach-button-active': statusAction}"/>
     </div>
+    <transition name="fade">
+      <modal-action-list disableDelete :actions="actions" :status="statusAction" @onClose="statusAction = false"/>
+    </transition>
     <input-message @onInput="handleInputModel" :model="messageInput"/>
     <div class="messenger-send-button" @click="sendMessage">
       <icon-send-message :class="{active: messageInput}"/>
@@ -17,7 +17,7 @@
 import InputMessage from "@Facade/Input/Message";
 import IconAttach from '@Icon/Attach'
 import IconSendMessage from '@Icon/SendMessage'
-import ActionList from "@Facade/Modal/ActionList";
+import ModalActionList from "@Facade/Modal/ActionList";
 
 export default {
   name: 'Singleton.Messenger.Views.Messenger.InputArea',
@@ -25,21 +25,18 @@ export default {
     InputMessage,
     IconAttach,
     IconSendMessage,
-    ActionList,
+    ModalActionList,
   },
   data() {
     return {
       messageInput: '',
-      items: ['Фото или видео', 'Файловое хранилище'],
-      actionListStatus: false,
+      actions: ['Фото или видео', 'Файловое хранилище'],
+      statusAction: false,
     }
   },
   methods: {
     handleInputModel(data) {
       this.messageInput = data
-    },
-    changeStatus() {
-      this.actionListStatus = !this.actionListStatus
     },
     sendMessage() {
       if(this.messageInput) {
@@ -76,6 +73,13 @@ export default {
       color: #fff;
       transition: background-color .2s;
     }
+    .facade-modal-action-list::v-deep{
+      .action-list-body{
+        top: -48px;
+        left: 0;
+        transform: translateY(-100%);
+      }
+    }
     .icon-send-message {
       margin-left: 10px;
       color: $grey-scale-300;
@@ -84,14 +88,6 @@ export default {
     .active {
       color: #fff;
       background-color: $blue;
-    }
-  }
-  .messenger-attach-button {
-    position: relative;
-    .facade-modal-action-list {
-      position: absolute;
-      top: -12px;
-      transform: translateY(-100%);
     }
   }
   .attach-button-active {

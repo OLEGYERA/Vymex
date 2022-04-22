@@ -1,5 +1,5 @@
 <template>
-  <div class="facade-message" :class="{'owner-message': message.type === 'owner'}">
+  <div class="facade-message" :class="{'owner-message': message.type === 'owner'}" @click.right.prevent="status = true">
     <div class="message-header">
       <div class="message-name" v-if="message.type==='response'">{{message.name}}</div>
       <div class="message-time">{{message.time}}</div>
@@ -7,29 +7,56 @@
       <single-check v-if="message.status === 'sent'"/>
     </div>
     <text-base>{{message.text}}</text-base>
+    <modal-action-list
+        :actions="actions"
+        :status="status"
+        @onClose="status = false"
+        @onDelete="$notify({text: 'Сообщение удалено', type: 'success', duration: 3000, speed: 500})"
+        @onList="chooseAction"
+    />
+
   </div>
 </template>
 
 <script>
-import TextBase from '@Facade/Text/Base'
-import DoubleCheck from '@Icon/DoubleCheck'
-import SingleCheck from '@Icon/SingleCheck'
+  import TextBase from '@Facade/Text/Base'
+  import DoubleCheck from '@Icon/DoubleCheck'
+  import SingleCheck from '@Icon/SingleCheck'
+  import ModalActionList from "@Facade/Modal/ActionList";
 
-export default {
-  name: 'Singleton.Messenger.Facades.Message',
-  components: {
-    TextBase,
-    DoubleCheck,
-    SingleCheck
-  },
-  props: {
-    message: Object
+  export default {
+    name: 'Singleton.Messenger.Facades.Message',
+    components: {
+      TextBase,
+      DoubleCheck,
+      SingleCheck,
+      ModalActionList
+    },
+    data(){
+      return{
+        status: false,
+        actions: ['Редактировать ', 'Копировать']
+      }
+    },
+    props: {
+      message: Object
+    },
+    methods:{
+      chooseAction(id){
+        if (id === 0) {
+          this.$notify({text: 'Редактирование невозможно', type: 'error', duration: 3000, speed: 500})
+        }
+        if (id === 1){
+          this.$notify({text: 'Сообщение скопировано', type: 'success', duration: 3000, speed: 500})
+        }
+      }
+    }
   }
-}
 </script>
 
 <style lang="scss" scoped>
   .facade-message {
+    position: relative;
     margin-bottom: 12px;
     padding: rem(12);
     background-color: $grey-scale-400;

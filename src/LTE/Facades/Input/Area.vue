@@ -16,7 +16,7 @@
       <label class="textarea-label" v-if="labeled">{{ placeholder }}</label>
     </div>
     <div class="textarea-counter">
-      <span class="current-area-counter">{{ areaModel.length }}</span>/{{ bound }}
+<!--      <span class="current-area-counter">{{ areaModel.length }}</span>/{{ bound }}-->
     </div>
   </div>
 </template>

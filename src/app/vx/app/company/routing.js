@@ -8,6 +8,8 @@ import Task from './app/task/routing'
 import ControlCenter from "./app/control-center/routing";
 
 // import Profile from './view/profile'
+import Resources from './app/resource/routing'
+
 
 export default [
   {
@@ -35,6 +37,7 @@ export default [
         component: Dashboard
       },
       ...Task,
+      ...Resources,
       ...ControlCenter,
     ]
   },

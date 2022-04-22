@@ -37,7 +37,7 @@ import {NotificationsStore as Notifications} from '@Singletons'
 import {UsersStore as Users} from '@Singletons'
 import Dashboard from '@/models/Dashboard'
 import Processes from '@/models/Processes'
-import Resources from "@/LTE/Singletons/Resources/models/Resources";
+import Resources from "@/models/Resources";
 
 
 export default new Vuex.Store({
@@ -63,7 +63,7 @@ export default new Vuex.Store({
   plugins: [
     createPersistedState({
       key: 'vymex_session',
-      paths: ['Countries', 'Crypto', 'UserProfile', 'VxInfo', 'History', 'Company'],
+      paths: ['Countries', 'Crypto', 'UserProfile', 'VxInfo', 'History', 'Company', 'Resources'],
       storage: {
         getItem: (key) => {
           return Secure.get(key)

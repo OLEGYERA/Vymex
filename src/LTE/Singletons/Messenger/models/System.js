@@ -15,7 +15,7 @@ export default {
     },
     notificationsStatus: false,
     disableTime: 0,
-    messengerStatus: false,
+    // messengerStatus: false,
     personalRouterType: '',
   },
   getters: {
@@ -30,7 +30,7 @@ export default {
     },
     notificationsStatus: (state) => state.notificationsStatus,
     disableTime: (state) => state.disableTime,
-    messengerStatus: (state) => state.messengerStatus,
+    // messengerStatus: (state) => state.messengerStatus,
     personalRouterType: (state) => state.personalRouterType
   },
   mutations: {
@@ -64,8 +64,8 @@ export default {
     changeTime: (state, newTime) => {
       state.disableTime = newTime
     },
-    openMessenger: (state) => state.messengerStatus = true,
-    closeMessenger: (state) => state.messengerStatus = false,
+    // openMessenger: (state) => state.messengerStatus = true,
+    // closeMessenger: (state) => state.messengerStatus = false,
     changePersonalRouterType: (state, type) => {
       state.personalRouterType = type;
     }

@@ -45,7 +45,7 @@
     props: {
       model: {
         validator: function (value) {
-          return value === null || typeof value === "number";
+          return value === null || typeof value === "number" || typeof value === "string" ;
         }
       },
       placeholder: String,
