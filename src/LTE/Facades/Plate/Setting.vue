@@ -2,7 +2,7 @@
   <div class="facade-plate-setting">
     <div class="plate-setting-body">
       <div class="setting-left-group">
-        <div class="setting-avatar">
+        <div class="setting-avatar" :class="{'disable': disable}">
           <slot name="icon"/>
         </div>
         <div class="setting-title">
@@ -24,6 +24,9 @@
   export default {
     /*eslint-disable*/
     name: 'Facade.Plate.Setting',
+    props: {
+      disable: Boolean
+    },
 
     components: {
       TextBase,
@@ -58,6 +61,9 @@
           .icon{
             max-height: 16px;
             color: $blue;
+          }
+          &.disable {
+            background-color: rgba($grey-scale-200, .2);
           }
         }
         .facade-text-base{

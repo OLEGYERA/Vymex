@@ -56,19 +56,6 @@
             vertical-align: middle;
            }
           }
-          &.success{
-            padding: 16px;
-            width: 335px;
-            height: 56px;
-            position: fixed;
-            right: 20px;
-            color: $green;
-            background: linear-gradient(90deg, $green -70%, rgba(33, 42, 51, 0.3) 50.15%), #313D49;
-          :before {
-           // content: url('./assets/img/icons/step-done.svg');
-            margin-right: 12px;
-           }
-          }
         }
         &:first-child{
           margin-top: 30px;

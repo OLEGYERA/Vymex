@@ -13,6 +13,9 @@ export default class Binder{
   get $socket(){
     return CORE.$core.socket;
   }
+  get $core(){
+    return CORE.$core;
+  }
   get $router(){
     return Router;
   }

@@ -12,6 +12,7 @@ class User extends Binder{
   }
 
   searchRes(response){
+    this.$store.name('Users').set('Users', response) //danil
     this.$store.name('Messenger').set('SearchedContacts', response);
   }
 

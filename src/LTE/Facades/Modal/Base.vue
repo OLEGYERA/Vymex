@@ -9,7 +9,7 @@
       <div class="modal-base-content"><slot name="content"/></div>
       <div class="modal-base-footer">
         <button-secondary @onClick="$emit('onClose')"><slot name="button-cancel">Отмена</slot></button-secondary>
-        <button-base @onClick="$emit('onOk')"><slot name="button-accept">Сохранить</slot></button-base>
+        <button-base @onClick="$emit('onOk')" :disable="disable"><slot name="button-accept"/></button-base>
       </div>
     </div>
   </div>
@@ -35,7 +35,8 @@
       status: {
         type: Boolean,
         required: true
-      }
+      },
+      disable: Boolean
     },
     computed: {
 

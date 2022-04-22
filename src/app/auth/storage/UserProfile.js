@@ -28,6 +28,9 @@ export default {
     ShowEmail: false,
     ShowPhone: true,
     Password: null,
+    PhoneCodeConfirm: null,
+    ChangePhone: {},
+    ActiveSessions: []
   },
   getters: {
     getUser: (state) => {
@@ -72,6 +75,11 @@ export default {
     getUserPK: (state) => state.PK,
     getUserEmail: (state) => state.Email,
     getUserTelephone: (state) => state.Telephone,
+    getPhoneCodeConfirm: (state) => state.PhoneCodeConfirm,
+    getChangePhone: (state) => state.ChangePhone,
+    getShowPhone: (state) => state.ShowPhone,
+    getShowEmail: (state) => state.ShowEmail,
+    getActiveSessions: (state) => state.ActiveSessions
   },
   mutations: {
     setPhoneLthNumber: (state, payload) => state.PhoneLthNumber = payload,
@@ -99,11 +107,14 @@ export default {
       state.PK = payload.pk
       state.KEY = payload.key
       state.IsNewDevice = payload.isNewDevice
-      state.ShowEmail = payload.showEmail
-      state.ShowPhone = payload.showPhone
+      state.ShowEmail = payload.privacy.showEmail
+      state.ShowPhone = payload.privacy.showPhone
     },
     setUserAvatar: (state, payload) => state.Avatar = payload,
     setUserBirthday: (state, payload) => state.Birthday = payload,
     setUserAbout: (state, payload) => state.About = payload,
+    setPhoneCodeConfirm: (state, payload) => state.PhoneCodeConfirm = payload,
+    setChangePhone: (state, payload) => state.ChangePhone = payload,
+    setActiveSessions: (state, payload) => state.ActiveSessions = payload
   }
 }

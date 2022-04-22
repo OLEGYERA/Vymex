@@ -9,10 +9,15 @@
     </div>
   </div>
   <div class="facade-plate-account" :class="{'plate-account-tiny': tiny, 'active': active}" v-else>
-    <div class="plate-account-body">
+    <div class="plate-account-body" @click="toggleCompany">
       <image-avatar :logo="accountInfo.logo" :color-code="accountInfo.colorId"/>
       <title-sub v-if="!tiny">{{ accountInfo.name }}</title-sub>
-      <div class="dropdown-box" v-if="category === 'company' && !tiny"><icon-dropdown-arrow /></div>
+      <div class="dropdown-box" v-if="category === 'company' && !tiny" :turned="isShow">
+        <icon-dropdown-arrow />
+      </div>
+    </div>
+    <div class="plate-account-content" v-show="isShow">
+      <slot />
     </div>
   </div>
 </template>
@@ -23,6 +28,8 @@
   import TitleSub from '@Facade/Title/Sub'
   import TextBase from '@Facade/Text/Base'
   import IconDropdownArrow from '@Icon/DropdownArrow'
+
+  import {mapGetters, mapMutations} from "vuex";
 
   export default {
     name: 'Facade.Plate.Account',
@@ -36,19 +43,25 @@
         required: true
       },
       data: Object,
-      active: Boolean
+      active: Boolean,
     },
     components: {
       IconAdd,
       ImageAvatar,
       TitleSub,
       TextBase,
-      IconDropdownArrow
+      IconDropdownArrow,
     },
     created() {
 
     },
     computed: {
+      ...mapGetters({
+        openCompany: 'getOpenCompany'
+      }),
+      isShow() {
+        return this.openCompany.status && this.openCompany.id === this.data.id
+      },
       accountInfo(){
         //все костыль нужно переделывать
         switch (this.category){
@@ -67,8 +80,17 @@
         }
         return {}
       }
+    },
+    methods: {
+      ...mapMutations(['setOpenCompany']),
+      toggleCompany() {
+        if(this.category === 'company') {
+          let status = this.data.id !== this.openCompany.id 
+            ? true : !this.openCompany.status
+          this.setOpenCompany({id: this.data.id, status})
+        }
+      }
     }
-
   }
 </script>
 
@@ -79,8 +101,8 @@
     background-color: $grey-scale-500;
     border-left: 4px solid transparent;
     transition: .2s all linear;
-    cursor: pointer;
     .plate-account-body{
+      cursor: pointer;
       width: 100%;
       display: flex;
       align-items: center;
@@ -102,6 +124,9 @@
       .dropdown-box{
         width: 16px;
         color: #fff;
+        &[turned]{
+          transform: rotate(180deg);
+        }
       }
     }
     &.create{
@@ -153,6 +178,10 @@
       cursor: default;
       border-color: $blue;
       background-color: $grey-scale-500;
+    }
+    & .plate-account-content {
+      padding: 0 12px 12px 8px;
+      cursor: default;
     }
   }
 

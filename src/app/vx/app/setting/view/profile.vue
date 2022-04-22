@@ -38,7 +38,7 @@
             <title-caption>Телефон</title-caption>
             <text-base>+{{phoneIdent.phoneIdent}} {{phoneLth.withMask.replace(/-/g, ' ')}}</text-base>
           </div>
-          <div class="validator-change">
+          <div class="validator-change" @click="$router.push({name: 'vx.setting.phone'})">
             <icon-edit/>
           </div>
         </div>
@@ -47,7 +47,7 @@
             <title-caption>Email</title-caption>
             <text-base>Добавить Email</text-base>
           </div>
-          <div class="validator-change">
+          <div class="validator-change" @click="$router.push({name: 'vx.setting.mail'})">
             <icon-edit/>
           </div>
         </div>
@@ -181,6 +181,7 @@
             }
           }
           .validator-change{
+            cursor: pointer;
             .icon{
               height: 16px;
             }
@@ -188,5 +189,8 @@
         }
       }
     }
+  }
+  .icon-edit {
+    color: $grey-scale-200;
   }
 </style>

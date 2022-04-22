@@ -1,15 +1,18 @@
 <template>
-  <div class="facade-messenger-person" @click="$emit('onClick', data.id)">
+  <div class="facade-messenger-person" :class="{'user': user}" @click="onClick">
+  <div class="facade-messenger-person"  >
     <div class="private-info">
       <div class="dialog-image">
         <image-avatar :logo="$core.traits.ImageLogo(data.avatar, data.name, data.lastname)" :color-code="$core.traits.ImageColorCode(data.id)"/>
       </div>
       <div class="info-text">
-        <div class="name">{{data.name}} {{data.lastname}}</div>
-        <title-caption>@{{data.alias}}</title-caption>
+        <div class="name">
+          {{contact.title || `${contact.name} ${contact.lastname}`}}
+        </div>
+        <title-caption>{{contact.alias}}</title-caption>
       </div>
     </div>
-    <points-vertical/>
+    <points-vertical v-if="!user"/>
   </div>
 </template>
 
@@ -36,6 +39,16 @@
             || (typeof value.avatar === "string" && value.avatar === null)
             || typeof value.details === "string";
         }
+      }
+    },
+    methods: {
+      ...mapMutations({
+        setRouterName: 'Messenger/setRouterName',
+        changePersonalRouterType: 'Messenger/changePersonalRouterType'
+      }),
+      onClick() {
+        this.setRouterName('personal')
+        this.changePersonalRouterType('user')
       }
     },
   }
@@ -70,6 +83,11 @@
       padding: 10px;
       color: #fff;
       cursor: pointer;
+    }
+
+    &.user {
+      margin-bottom: 8px;
+      padding: rem(10) rem(12);
     }
   }
 </style>

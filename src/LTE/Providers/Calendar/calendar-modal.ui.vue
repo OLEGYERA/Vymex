@@ -1,10 +1,11 @@
 <template>
-  <div class="calendar-provider calendar-modal-ui" v-if="status">
+  <div class="calendar-provider calendar-modal-ui" @click.self="$emit('onClose')" v-if="status">
     <div class="calendar-wrapper" v-gesture="{animate, duration: 400}" @gestureStart="gestureStart" @gestureProcess="gestureProcess" @gestureEnd="gestureEnd" :style="{transform: gesture.styleExit}">
       <calendar-header
         :calendar="calendar"
         :calendarReplica="calendarReplica"
-        :gesture="gesture"/>
+        :gesture="gesture"
+        @onClose="$emit('onClose')"/>
       <calendar-main :calendar="calendar" :calendar-replica="calendarReplica" @onChoose="pickDate" :gesture="gesture"/>
     </div>
   </div>

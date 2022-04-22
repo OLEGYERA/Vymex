@@ -70,6 +70,17 @@ export default {
           files = `${this.folder.content.files} файлов`
         }
       }
+      if(this.folder.content.processes) {
+        if (Number(String(this.folder.content.processes).slice(-1)) === 1) {
+          files = `${this.folder.content.processes} процесс`
+        } else if (this.folder.content.processes > 5 && this.folder.content.processes < 21){
+          files = `${this.folder.content.processes} процессов`
+        } else if (Number(String(this.folder.content.processes).slice(-1)) < 5){
+          files = `${this.folder.content.processes} процессa`
+        } else {
+          files = `${this.folder.content.processes} процессов`
+        }
+      }
       return folders && files ? `${folders}, ${files}` : `${folders} ${files}`
     }
   }
