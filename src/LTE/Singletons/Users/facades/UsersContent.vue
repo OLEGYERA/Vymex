@@ -12,13 +12,13 @@
 		</template>
 		<template #content>
       <div v-if="!activeUser.id">
-<!--        <person -->
-<!--          v-for="(user, key) in users" -->
-<!--          :contact="user"-->
-<!--          :key="key" -->
-<!--          user-->
-<!--          @click.native="setActiveUser(user)"-->
-<!--        />-->
+        <person 
+          v-for="(user, key) in users" 
+          :contact="user"
+          :key="key" 
+          user
+          @click.native="setActiveUser(user)"
+        />
       </div>
       <router-personal v-else />
 		</template>
@@ -26,7 +26,7 @@
 </template>
 
 <script>
-// import Person from "@/LTE/Singletons/Messenger/facades/Person"; syswar-r3we22
+import Person from "@Facade/Plate/Person";
 import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd";
 import TabView from '../../Messenger/facades/TabView';
 import RouterPersonal from '../RouterPersonal';
@@ -34,7 +34,7 @@ import {mapMutations, mapGetters} from 'vuex'
 
 export default {
 	name: 'Singleton.Facades.UsersContent',
-	components: {HeaderAdd, TabView, RouterPersonal},
+	components: {HeaderAdd, TabView, RouterPersonal, Person},
 	data() {
 		return {
       usersSearch: '',

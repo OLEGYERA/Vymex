@@ -8,13 +8,13 @@
 					<title-caps>Получатель доли</title-caps>
 					<button-add v-if="!shareRecipients.id" @click.native="show()" />
 				</div>
-<!--				<person-->
-<!--					v-if="shareRecipients.id"-->
-<!--					class="blue-person"-->
-<!--          :contact="shareRecipients"-->
-<!--					user-->
-<!--					@click.native="deleteUser()"-->
-<!--				/>-->
+				<person
+					v-if="shareRecipients.id"
+					class="blue-person"
+					:contact="shareRecipients"
+					user
+					@click.native="deleteUser()"
+				/>
 				<div class="blur-content-item">
 					<icon-process />
 					<title-caption class="title-caption">Распоряжение долей компании</title-caption>
@@ -52,11 +52,11 @@
 			<template #content>
 				<attention />
 				<title-caps class="modal-caps">Получит доли</title-caps>
-<!--				<person-->
-<!--					class="blue-person"-->
-<!--          :contact="shareRecipients"-->
-<!--					user-->
-<!--				/>  syswar-r3we22-->
+				<person
+					class="blue-person"
+          :contact="shareRecipients"
+					user
+				/>
 				<info-card-share :share="share" />
 			</template>
 			<template #button-accept>Подтвердить</template>
@@ -77,7 +77,7 @@ import ButtonSecondary from "@Facade/Button/Secondary"
 import ButtonBase from "@Facade/Button/Base"
 
 import {mapGetters, mapMutations} from 'vuex'
-// import Person from '@/LTE/Singletons/Messenger/facades/Person'
+import Person from "@Facade/Plate/Person";
 import Modal from "@Facade/Modal/Base";
 import Attention from '@/LTE/Singletons/Users/facades/Attention'
 import InfoCardShare from '@/LTE/Singletons/Users/facades/InfoCardShare'
@@ -95,7 +95,7 @@ export default {
 		InputBase,
 		ButtonSecondary,
 		ButtonBase,
-		// Person,
+		Person,
 		Modal,
 		Attention,
 		InfoCardShare
