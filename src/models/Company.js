@@ -2,6 +2,25 @@ import {CompanyCreate} from '@Singletons'
 export default {
   namespaced: true,
   state: {
+    /**
+     * loader: [C] - Company {M} - getUserCompanies
+     *
+     * @returns Array[Objects] - list of User's companies
+     */
+    UserCompanies: [],
+
+    /**
+     * changer: [A] - Plate.Account
+     *
+     * @returns Object - states of the selected company
+     */
+    SelectedCompany: {
+      companyId: null,
+      workerId: null,
+      unitId: null,
+      unitLevel: null
+    },
+
     all: [],
     sections: [
       {isActive: true, icon: require('@/assets/img/my/dashboard.svg')},
@@ -29,6 +48,10 @@ export default {
     }
   },
   getters: {
+    getUserCompanies: (state) => state.UserCompanies,
+    getSelectedCompany: (state) => state.SelectedCompany,
+
+
     getAll: (state) => state.all,
     getCurrentCompany: (state) => state.currentCompany,
     getActiveCompany: state => state.activeCompany,
@@ -37,6 +60,10 @@ export default {
     getSections: (state) => state.sections,
   },
   mutations: {
+    setUserCompanies: (state, companies) => state.UserCompanies = companies,
+    setSelectedCompany: (state, companyData) => state.SelectedCompany = companyData,
+
+
     setNew: (state, payload) => state.all.push(payload),
     setAll: (state, payload) => state.all = payload,
     setCurrentCompanyBase: (state, payload) => state.currentCompany.base = payload,

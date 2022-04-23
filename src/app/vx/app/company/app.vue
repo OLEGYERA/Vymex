@@ -11,11 +11,25 @@
 
 <script>
   import NavigationPanel from "@Container/PanelNavigation/app";
+  import {mapGetters} from 'vuex'
+
+
+
 
   export default {
     name: 'vx.co.app',
     components: {
       NavigationPanel
+    },
+    created() {
+      if(this.getSelectedCompany.unitLevel === 0){
+        this.$router.push({name: 'vx.co.founder'}).catch(() => {})
+      }
+    },
+    computed:{
+      ...mapGetters({
+        getSelectedCompany: 'Company/getSelectedCompany'
+      })
     }
   }
 </script>

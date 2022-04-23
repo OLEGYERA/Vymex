@@ -6,6 +6,41 @@ class Company extends Binder{
     super();
   }
 
+  /**
+   * Makes a request to get user companies
+   * @param req - Client request.
+   * @param res - Client response.
+   * @param options - Additionnal options.
+   */
+
+  /**
+   * Makes a request to get user companies
+   *
+   * @returns void
+   */
+  async getUserCompanies() {
+    this.$socket.emit('listener', await encrypt(...arguments[1]));
+  }
+
+  /**
+   * Gets user companies
+   * @Resolver getUserCompanies
+   * @save [Company] @var {userCompanies}
+   *
+   * @returns void
+   */
+  getUserCompaniesRes(companies) {
+    this.$store.name('Company').set('UserCompanies', companies)
+
+    // let activeCompany = this.$store.name('Company').get('ActiveCompany')
+    // if (activeCompany.id) {
+    //   this.$store.name('Company').set('ActiveCompany', activeCompany.id)
+    // }
+  }
+
+
+
+
   async activities() {
     this.$socket.emit('listener', await encrypt(...arguments[1]))
   }
@@ -57,17 +92,6 @@ class Company extends Binder{
     this.$store.name('Company').set('CurrentCompanyWorkers', workers);
   }
 
-  async getUserCompanies() {
-    this.$socket.emit('listener', await encrypt(...arguments[1]));
-  }
-  getUserCompaniesRes(companies) {
-    this.$store.name('Company').set('All', companies)
-
-    let activeCompany = this.$store.name('Company').get('ActiveCompany')
-    if (activeCompany.id) {
-      this.$store.name('Company').set('ActiveCompany', activeCompany.id)
-    }
-  }
 }
 
 export default new Company();

@@ -39,6 +39,8 @@ import Dashboard from '@/models/Dashboard'
 import Processes from '@/models/Processes'
 import Resources from "@/models/Resources";
 
+import {SynchronizerStore} from "@Core/Synchronizer";
+
 
 export default new Vuex.Store({
   state: {},
@@ -58,12 +60,13 @@ export default new Vuex.Store({
     Company,
     Dashboard,
     Processes,
-    Users
+    Users,
+    SynchronizerStore
   },
   plugins: [
     createPersistedState({
       key: 'vymex_session',
-      paths: ['Countries', 'Crypto', 'UserProfile', 'VxInfo', 'History', 'Company', 'Processes'],
+      paths: ['Countries', 'Crypto', 'UserProfile', 'VxInfo', 'History', 'Company', 'Processes', 'SynchronizerStore'],
       storage: {
         getItem: (key) => {
           return Secure.get(key)

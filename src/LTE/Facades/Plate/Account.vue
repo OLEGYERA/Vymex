@@ -1,6 +1,6 @@
 <template>
-  <div class="facade-plate-account create" :class="{'plate-account-tiny': tiny}"
-       v-if="category === 'create-company'" @click="$root.pushOverlapRoute({name: 'vx.co.create'})">
+  <div class="facade-plate-account create" v-if="category === 'create-company'"
+       :class="{'plate-account-tiny': tiny}" @click="$root.pushOverlapRoute({name: 'vx.co.create'})">
     <div class="plate-account-body">
       <div class="button-add">
         <icon-add/>
@@ -8,16 +8,20 @@
       <text-base v-if="!tiny">Создать компанию</text-base>
     </div>
   </div>
-  <div class="facade-plate-account" :class="{'plate-account-tiny': tiny, 'active': active}" v-else>
-    <div class="plate-account-body" @click="toggleCompany">
-      <image-avatar :logo="accountInfo.logo" :color-code="accountInfo.colorId"/>
-      <title-sub v-if="!tiny">{{ accountInfo.name }}</title-sub>
-      <div class="dropdown-box" v-if="category === 'company' && !tiny" :turned="isShow">
-        <icon-dropdown-arrow />
+  <div class="facade-plate-account" :class="[category, {'plate-account-tiny': tiny, 'active': activeAccount}]" v-else>
+    <div class="plate-account-body" @click="plateAction">
+      <image-avatar :logo="renderLogo" :color-code="this.$core.traits.ImageColorCode(this.data.id)"/>
+      <title-sub v-if="!tiny">{{ data.name }}</title-sub>
+      <div class="dropdown-box" v-if="category === 'company' && !tiny" :turned="showWorkers">
+        <icon-dropdown-arrow/>
       </div>
     </div>
-    <div class="plate-account-content" v-show="isShow">
-      <slot />
+    <div class="plate-account-content" v-if="category === 'company'" v-show="showWorkers">
+      <unit-position-ui v-for="worker in userWorkers" :key="worker.unitId"
+                        :data="worker" :tiny="tiny"
+                        :active="getSelectedCompany.companyId === data.id && getSelectedCompany.workerId === worker.id"
+                        @click.native="selectWorker(data.id, worker)"
+      />
     </div>
   </div>
 </template>
@@ -28,11 +32,20 @@
   import TitleSub from '@Facade/Title/Sub'
   import TextBase from '@Facade/Text/Base'
   import IconDropdownArrow from '@Icon/DropdownArrow'
+  import {UnitPositionUi} from '@Providers'
 
   import {mapGetters, mapMutations} from "vuex";
 
   export default {
     name: 'Facade.Plate.Account',
+    components: {
+      IconAdd,
+      ImageAvatar,
+      TitleSub,
+      TextBase,
+      IconDropdownArrow,
+      UnitPositionUi
+    },
     props: {
       tiny: {
         type: Boolean,
@@ -45,49 +58,91 @@
       data: Object,
       active: Boolean,
     },
-    components: {
-      IconAdd,
-      ImageAvatar,
-      TitleSub,
-      TextBase,
-      IconDropdownArrow,
-    },
-    created() {
+    mounted() {
+      //нужно переделать под авто определение типа аккаунта
+      if(this.category === 'company'){
+        this.userWorkers = this.$core.traits.UserCompanyWorkers(this.data);
 
-    },
-    computed: {
-      ...mapGetters({
-        openCompany: 'getOpenCompany'
-      }),
-      isShow() {
-        return this.openCompany.status && this.openCompany.id === this.data.id
-      },
-      accountInfo(){
-        //все костыль нужно переделывать
-        switch (this.category){
-          case 'company':
-            return  {
-              colorId: this.$core.traits.ImageColorCode(this.data.id),
-              name: this.data.name,
-              logo: this.data?.logo ? this.data.logo : this.data.name.substr(0, 1)
-            }
-          case 'profile':
-            return {
-              colorId: this.data.colorCode,
-              name: this.data.name + ' ' + this.data.lastname,
-              logo: this.data.logo
-            }
+        if(this.getSelectedCompany.companyId === this.data.id) {
+          this.activeAccount = true;
+          this.showWorkers = true;
         }
-        return {}
+      }
+
+      if(this.category === 'profile'){
+        if(this.$route.name === 'vx' || ['vx.setting'].some(route => this.$route.name.indexOf(route) !== -1)){
+          this.activeAccount = true;
+        }
       }
     },
+    data: () => ({
+      userWorkers: [],
+      activeAccount: false,
+      showWorkers: false
+    }),
+    computed: {
+      ...mapGetters({
+        openCompany: 'getOpenCompany',
+        getSelectedCompany: 'Company/getSelectedCompany'
+      }),
+
+      /**
+       * Specifies data for the logo for the tile - initials or image
+       *
+       * @returns {String} logo
+       */
+      renderLogo(){
+        switch (this.category){
+          case 'company':
+            return this.data?.logo ? this.data.logo : this.data.name.substr(0, 1);
+          case 'profile':
+            return this.data.logo;
+        }
+      },
+    },
     methods: {
-      ...mapMutations(['setOpenCompany']),
-      toggleCompany() {
-        if(this.category === 'company') {
-          let status = this.data.id !== this.openCompany.id 
-            ? true : !this.openCompany.status
-          this.setOpenCompany({id: this.data.id, status})
+      ...mapMutations({
+        setSelectedCompany: 'Company/setSelectedCompany'
+      }),
+
+      /**
+       * @if category === 'company' Show/Close the list of workers on the company tile
+       *
+       * @if category === 'profile' Redirect on profile page
+       *
+       * @returns void
+       */
+      plateAction(){
+        if(this.category === 'company'){
+          this.showWorkers = !this.showWorkers;
+        }
+
+        if(this.category === 'profile'){
+          this.$router.push({name: 'vx'}).catch(() => {})
+        }
+      },
+
+      /**
+       * Sets the selected worker with a specific company for further interaction
+       * with them through the vuex {Company/SelectedCompany}
+       *
+       * @param {Number} companyId
+       * @param {Object} workerData
+       *
+       * @returns void
+       */
+      selectWorker(companyId, workerData) {
+        this.setSelectedCompany({
+          companyId: companyId,
+          workerId: workerData.id,
+          unitId: workerData.unitId,
+          unitLevel: workerData.unitLevel
+        })
+
+        if(workerData.unitLevel === 0){
+          this.$router.push({name: 'vx.co.founder', params: {companyID: companyId}}).catch(() => {})
+        } else {
+          this.$router.push({name: 'vx.co', params: {companyID: companyId}}).catch(() => {})
         }
       }
     }
@@ -164,8 +219,11 @@
     }
 
     &:hover{
-      background-color: $grey-scale-400;
+      &.profile{
+        background-color: $grey-scale-400;
+      }
       &.create{
+        background-color: $grey-scale-400;
         .plate-account-body{
           .facade-text-base{
             color: #fff;
@@ -179,7 +237,7 @@
       border-color: $blue;
       background-color: $grey-scale-500;
     }
-    & .plate-account-content {
+    .plate-account-content {
       padding: 0 12px 12px 8px;
       cursor: default;
     }
