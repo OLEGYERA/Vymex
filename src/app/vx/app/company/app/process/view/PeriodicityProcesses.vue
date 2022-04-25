@@ -17,7 +17,7 @@
 export default {
   name: 'processes.periodicity.processes',
   components: {
-    Checkbox: () => ('@Facade/Input/Checkbox')
+    Checkbox: () => import('@Facade/Input/Checkbox')
   },
   props: {
     actions: {

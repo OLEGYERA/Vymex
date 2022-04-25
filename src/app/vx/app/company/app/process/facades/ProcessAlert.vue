@@ -19,6 +19,8 @@
           v-if="status"
       />
     </transition>
+    <div class="action-list-outside" v-if="status"
+         @click="status = false"></div>
   </div>
 </template>
 
@@ -51,8 +53,8 @@ export default {
   }),
   components: {
    DropdownArrow: () => import('@Icon/DropdownArrow'),
-    PeriodicityProcesses: () => import('@Icon/UpArrow'),
-    UpArrow: () => import('../view/PeriodicityProcesses')
+    PeriodicityProcesses: () => import('../view/PeriodicityProcesses'),
+    UpArrow: () => import('@Icon/UpArrow')
   },
   methods: {
     changeStatus() {
@@ -114,5 +116,12 @@ export default {
     margin: 7px 0;
   }
 }
-
+.action-list-outside {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  cursor: auto;
+}
 </style>

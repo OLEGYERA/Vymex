@@ -2,7 +2,9 @@
   <div class="company-processes-files">
     <comeback @onClick="$router.push({name: 'vx.process'})"/>
     <div class="header-text-group">
-      <title-base>Процессы компании</title-base>
+      <title-base>{{processModel === 'official-processes'
+          ? 'Процессы должностного лица'
+          : 'Процессы компании'}}</title-base>
       <icon-points-vertical/>
     </div>
     <input-search :placeholder="'Поиск'"/>

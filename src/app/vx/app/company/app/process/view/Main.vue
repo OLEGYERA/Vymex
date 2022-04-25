@@ -1,6 +1,6 @@
 <template>
   <div class="process-main-view">
-    <navigation-close/>
+    <navigation-close @onClick="$router.push({name: 'vx'})"/>
     <header class="process-main-header">
       <div>
         <div class="header-container">

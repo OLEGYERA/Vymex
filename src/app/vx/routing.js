@@ -7,8 +7,8 @@ import Api from './app/api/routing'
 import Messenger from './app/messenger/routing'
 import Company from './app/company/routing'
 import Resources from './app/resource/routing'
-import Processes from './app/company/app/process/routing';
-
+import Processes from './app/company/app/process/routing'
+import Support from './app/support/routing'
 
 export default [
   {
@@ -31,7 +31,8 @@ export default [
       ...Messenger,
       ...Company,
       ...Resources,
-      ...Processes
+      ...Processes,
+      ...Support
     ]
   }
 ]
