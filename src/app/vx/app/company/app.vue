@@ -4,20 +4,32 @@
       <navigation-panel/>
     </div>
     <div class="app-company-main">
-      <div class="router-view-body">
-        <router-view/>
-      </div>
+      <router-view class="app-company-router-view"/>
     </div>
   </div>
 </template>
 
 <script>
   import NavigationPanel from "@Container/PanelNavigation/app";
+  import {mapGetters} from 'vuex'
+
+
+
 
   export default {
     name: 'vx.co.app',
     components: {
       NavigationPanel
+    },
+    created() {
+      if(this.getSelectedCompany.unitLevel === 0){
+        this.$router.push({name: 'vx.co.founder'}).catch(() => {})
+      }
+    },
+    computed:{
+      ...mapGetters({
+        getSelectedCompany: 'Company/getSelectedCompany'
+      })
     }
   }
 </script>
@@ -39,7 +51,7 @@
     .app-company-main{
       width: 100%;
       height: 100%;
-      .router-view-body{
+      .app-company-router-view{ //// сделать логику передачи саб-кдасов как для задач
         padding-top: 24px;
         max-width: 796px;
         margin: 0 auto;

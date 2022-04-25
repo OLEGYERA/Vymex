@@ -36,14 +36,6 @@
       NotificationsApp: async () => (await import('@Singletons')).NotificationsApp,
       UsersApp: async () => (await import('@Singletons')).UsersApp,
     },
-    created() {
-      // for (let i=0; i<5000; i++) {
-      //   console.log('Тест получения: ' + i);
-      //   this.$core.execViaComponent('Auth', 'user');
-      // }
-      this.$core.execViaComponent('Auth', 'user');
-      this.$core.execViaComponent('Company', 'getUserCompanies');
-    },
     computed: {
       ...mapGetters(['getPage']),
       exceptionalStyle(){

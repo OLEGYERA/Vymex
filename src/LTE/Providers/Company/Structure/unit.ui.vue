@@ -26,8 +26,7 @@
       ImageAvatar,
       TitleSub, TitleCaption
     },
-    mixins: [Mixin]
-
+    mixins: [Mixin],
   }
 </script>
 

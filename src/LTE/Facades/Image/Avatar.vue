@@ -2,7 +2,7 @@
   <div class="facade-image-avatar">
     <div class="avatar-body" :class="getColor">
       <template v-if="logo.length > 2"><img :src="logo"></template>
-      <template v-else>{{logo}}</template>
+      <template v-else>{{logo ? `${logo}` : ''}}</template>
     </div>
   </div>
 </template>

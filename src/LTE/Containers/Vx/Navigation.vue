@@ -9,11 +9,8 @@
               <template #title>Мой профиль</template>
               <template #icon><icon-profile/></template>
             </sketch-title>
-            <sketch-plate-account :tiny="!isFull"
-                                  :router="{name: 'vx'}"
-                                  category="profile"
+            <sketch-plate-account :tiny="!isFull" category="profile"
                                   :data="{name: userName, lastname: userLastname, logo: userAvatar, colorCode: userAvatarColor}"
-                                  active
             />
           </div>
           <div class="company-group">
@@ -21,7 +18,13 @@
               <template #title>Мои компании</template>
               <template #icon><icon-company/></template>
             </sketch-title>
-            <sketch-plate-account :tiny="!isFull" category="company" v-for="(company, companyIndex) in companies" :data="{name: company.name, id: company.id}" :router="{name: 'vx.co', params: {companyID: company.id}}" :key="companyIndex"/>
+            <sketch-plate-account 
+              :tiny="!isFull" 
+              category="company" 
+              v-for="userCompany in userCompanies" :key="userCompany.id"
+              :data="userCompany"
+            />
+<!--              :router="{name: 'vx.co', params: {companyID: userCompany.id}}"-->
             <sketch-plate-account :tiny="!isFull"/>
           </div>
         </div>
@@ -79,11 +82,14 @@
         userAvatar: 'getUserAvatar',
         userAvatarColor: 'getUserAvatarColor',
         isFull: 'getNavigationFull',
-        companies: 'Company/getAll'
+        userCompanies: 'Company/getUserCompanies'
       }),
     },
     methods: {
-      ...mapMutations(['setNavigationFull'])
+      ...mapMutations({
+        setNavigationFull: 'setNavigationFull', 
+        setActiveCompany: 'Company/setActiveCompany'
+      })
     }
   }
 </script>

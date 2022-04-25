@@ -157,7 +157,7 @@
     transition: all .2s linear;
   }
   &-enter-to, &-leave {
-    max-height: 200px;
+    height: max-content;
     overflow: hidden;
   }
   &-enter, &-leave-to {

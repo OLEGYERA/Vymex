@@ -22,7 +22,7 @@ export default {
   components: { Sidebar, UsersHeaders, UsersContent },
   computed: {
     ...mapGetters({
-      status: "Users/status",
+      status: "Users/getStatus",
     }),
   },
 	methods: {

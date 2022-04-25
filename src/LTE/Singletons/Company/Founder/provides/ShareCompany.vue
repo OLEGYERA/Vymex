@@ -1,15 +1,13 @@
 <template>
   <div class="share-company">
-		<title-sub v-if="value">Ваша доля в компании</title-sub>
-		<title-sub v-else>Вы пока не выдали свою долю</title-sub>
-		<title-caption>Arxel</title-caption>
+		<title-sub>Ваша доля в компании</title-sub>
+		<title-caption>{{activeCompany.name}}</title-caption>
 		<div class="company-content">
 			<div v-if="value" class="memory-plot">
 				<div class="plot"
 					:style="{background: `conic-gradient(#1890FF 0% ${value}%, #4A5A6A ${value}% 100%)`}"></div>
 			</div>
 			<share :value="value" />
-			<text-base @click.native="routerPush" v-if="!value">Размыть свою долю</text-base>
 		</div>
 	</div>
 </template>
@@ -18,17 +16,16 @@
 import TitleSub from '@Facade/Title/Sub'
 import TitleCaption from '@Facade/Title/Caption'
 import Share from '../facades/Share'
-import TextBase from '@Facade/Text/Base'
+import { mapGetters } from 'vuex'
 
 export default {
 	name: 'Singleton.Company.Provides.ShareCompany',
-	components: {TitleSub, TitleCaption, Share, TextBase},
-	props: {
-		value: {
-			type: [Number, String],
-			require: true,
-			default: 0
-		}
+	components: {TitleSub, TitleCaption, Share},
+	computed: {
+		...mapGetters({
+			activeCompany: 'Company/getActiveCompany',
+			value: 'Company/getShare'
+		})
 	},
 	methods: {
 		routerPush() {

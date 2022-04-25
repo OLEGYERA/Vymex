@@ -1,5 +1,5 @@
 <template>
-  <div class="facade-radio-slot">
+  <div class="facade-radio-slot" :class="[{'lang': lang}, {'active': model}]" @click="$emit('onClick')">
     <div><slot name="title"/></div>
     <checkbox-round :viewType="2"
                     :model="model"
@@ -23,6 +23,9 @@ export default {
       type: Boolean,
       required: true
     },
+    lang: {
+      type: Boolean
+    }
   },
   components: {
     CheckboxRound: () => import('@Facade/Input/Checkbox')
@@ -43,8 +46,20 @@ export default {
   padding: rem(20) rem(16);
   font-size: rem(15);
   line-height: rem(20);
+  transition: .4s;
   .radio-slot-checkbox{
     margin-right: 4px;
+  }
+
+  &.lang {
+    background: transparent;
+    cursor: pointer;
+    &:hover {
+      background: rgba($color: $grey-scale-400, $alpha: .4);
+    }
+    &.active {
+      background: $grey-scale-400;
+    }
   }
 }
 </style>

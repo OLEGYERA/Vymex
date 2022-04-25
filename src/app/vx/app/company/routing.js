@@ -5,7 +5,11 @@ import Co from "./app";
 import Dashboard from "./app/dashboard/app";
 
 import Task from './app/task/routing'
+import ControlCenter from "./app/control-center/routing";
+
 // import Profile from './view/profile'
+import Resources from './app/resource/routing'
+
 
 export default [
   {
@@ -32,7 +36,9 @@ export default [
         name: 'vx.co',
         component: Dashboard
       },
-      ...Task
+      ...Task,
+      ...Resources,
+      ...ControlCenter,
     ]
   },
 ]

@@ -1,9 +1,11 @@
 <template>
-  <div class="facade-input-message">
+  <div class="facade-input-message" :style="{height: `${height}`}">
     <textarea
         rows="1"
         v-model="baseModel"
         :placeholder="placeholder"
+        ref="textarea"
+        :style="{height: `${textareaHeight}`}"
         @input="resize($event)"
         @focus="onFocus($event)"
         @focusout="onFocusOut($event)"
@@ -24,6 +26,20 @@ export default {
     }
   },
   props: ['model'],
+  computed: {
+    height() {
+      if (this.baseModel){
+        return
+      }
+      return '36px'
+    },
+    textareaHeight(){
+      if (this.baseModel){
+        return
+      }
+      return 'auto'
+    }
+  },
   methods: {
     resize(e) {
       const area = document.querySelector('.facade-input-message')
@@ -49,6 +65,9 @@ export default {
       this.$emit('onInput', this.baseModel)
     }
   },
+  updated() {
+  },
+
   created() {
     this.modelDebounceFunction = debounce(() => this.applicableCopyOfEmit(), this.disableDebounce ? 0 : 200)
   },

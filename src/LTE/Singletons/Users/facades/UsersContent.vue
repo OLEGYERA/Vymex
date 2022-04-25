@@ -1,19 +1,23 @@
 <template>
-	<tab-view :search-placeholder="'Поиск'">
+	<tab-view 
+    :search-placeholder="'Поиск'" 
+    :search-model="usersSearch"
+    @onSearch="usersSearch = $event"
+  >
 		<template #header-add>
-			<header-add v-if="!idUser" :add="false">
+			<header-add v-if="!activeUser.id" :add="false">
 				<template #header-title>результат поиска</template>
-				<template #header-amount>122 000</template>
+				<template #header-amount>{{users.length}}</template>
 			</header-add>
 		</template>
 		<template #content>
-      <div v-if="!idUser">
+      <div v-if="!activeUser.id">
         <person 
-          v-for="(person, key) in persons" 
-          :contact="person"
+          v-for="(user, key) in users" 
+          :contact="user"
           :key="key" 
           user
-          @click.native="setActiveUser(person)"
+          @click.native="setActiveUser(user)"
         />
       </div>
       <router-personal v-else />
@@ -22,7 +26,7 @@
 </template>
 
 <script>
-import Person from "@/LTE/Singletons/Messenger/facades/Person";
+import Person from "@Facade/Plate/Person";
 import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd";
 import TabView from '../../Messenger/facades/TabView';
 import RouterPersonal from '../RouterPersonal';
@@ -30,65 +34,31 @@ import {mapMutations, mapGetters} from 'vuex'
 
 export default {
 	name: 'Singleton.Facades.UsersContent',
-	components: {Person, HeaderAdd, TabView, RouterPersonal},
+	components: {HeaderAdd, TabView, RouterPersonal, Person},
 	data() {
 		return {
-			persons: [
-        {
-          title: 'Андрей Вашуленко',
-          alias: '@lable_kers',
-          avatar: '',
-          id: 1
-        },
-        {
-          title: 'Дария Шевченко',
-          alias: '@lable_kers',
-          avatar: '',
-          id: 2
-        },
-        {
-          title: 'Дмитрий Погодин',
-          alias: '@lable_kers',
-          avatar: '',
-          id: 3
-        },
-        {
-          title: 'Андрей Вашуленко',
-          alias: '@andre_vash',
-          avatar: '',
-          id: 4
-        },
-        {
-          title: 'Дмитрий Погодин',
-          alias: '@dmytr_pogod',
-          avatar: '',
-          id: 5
-        },
-        {
-          title: 'Андрей Вашуленко',
-          alias: '@lable_kers',
-          avatar: '',
-          id: 6
-        },
-        {
-          title: 'Андрей Вашуленко',
-          alias: '@lable_kers',
-          avatar: '',
-          id: 7
-        },
-      ],
+      usersSearch: '',
 		}
 	},
   computed: {
     ...mapGetters({
-      idUser: 'Users/getId',
+      activeUser: 'Users/getActiveUser',
+      users: 'Users/getUsers'
     }),
   },
   methods: {
-      ...mapMutations({
-        setActiveUser: 'Users/setActiveUser',
-      }),
+    ...mapMutations({
+      setActiveUser: 'Users/setActiveUser',
+    }),
+  },
+  watch: {
+    usersSearch: {
+      immediate: true,
+      handler(val) {
+        this.$core.execViaComponent('MsgUser', 'search', val)
+      }
     }
+  }
 }
 </script>
 

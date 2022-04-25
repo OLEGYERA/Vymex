@@ -1,15 +1,15 @@
 <template>
   <div class="router-personal-view">
     <div class="main-info">
-      <name :name="fullName" @updateRouter="clearUser" />
+<!--      <name :name="`${activeUser.name} ${activeUser.lastname}`" @updateRouter="clearUser" />-->
       <div class="photo">
-        <avatar :logo="avatar.logo" :colorCode="avatar.colorCode" />
+        <avatar :logo="logo" colorCode="4" />
       </div>
       <div class="info-block">
         <div class="user-info">
           <div class="icon-info"><icon-mail /></div>
           <div class="info-text-group">
-            <text-base>{{ alias }}</text-base>
+            <text-base>{{ activeUser.alias }}</text-base>
             <title-caption>Имя пользователя VYMEX</title-caption>
           </div>
           <icon-copy />
@@ -25,7 +25,7 @@
 <script>
 /*eslint-disable*/
 
-import Name from "@/LTE/Singletons/Messenger/facades/Name";
+// import Name from "@/LTE/Singletons/Messenger/facades/Name"; //syswar-r3we22
 import Avatar from "@Facade/Image/Avatar";
 import TextBase from "@Facade/Text/Base";
 import TitleCaption from "@Facade/Title/Caption";
@@ -38,7 +38,7 @@ import { mapGetters, mapMutations } from "vuex";
 export default {
   name: "Singleton.Messenger.Views.Sidebar.RouterPersonal",
   components: {
-    Name,
+    //Name, syswar-r3we22
     Avatar,
     TextBase,
     TitleCaption,
@@ -49,11 +49,18 @@ export default {
   },
   computed: {
     ...mapGetters({
-      fullName: "Users/getFullName",
-      alias: "Users/getAlias",
-      avatar: "Users/getUserAvatarData",
-      idUser: "Users/getId",
+      activeUser: "Users/getActiveUser",
+
     }),
+    logo: function () {
+      if (this.activeUser.avatar) {
+        return this.activeUser.avatar
+      } else if (this.activeUser.name && this.activeUser.lastname) {
+        return this.activeUser.name[0]+this.activeUser.lastname[0]
+      } else {
+        return ''
+      }
+    },
   },
   methods: {
     ...mapMutations({
@@ -63,12 +70,7 @@ export default {
     }),
 		addUser() {
 			console.log('addUser');
-			this.setShareRecipients({
-				title: this.fullName,
-				alias: this.alias,
-				avatar: this.avatar,
-				id: this.idUser
-			})
+			this.setShareRecipients(this.activeUser)
 			this.clearUser()
 			this.close()
 		}

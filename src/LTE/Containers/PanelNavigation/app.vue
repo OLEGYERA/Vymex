@@ -1,9 +1,9 @@
 <template>
   <div class="container-navigation-panel">
-    <div v-for="(section, i) in sections"
+    <div v-for="(section, i) in companySections"
          :key="i"
          class="navigation-panel-item"
-         @click="changeStatus(i)"
+         @click="makeSmt(i)"
          :class="section.isActive ? 'panel-active-item' : ''"
          >
       <img :src="section.icon" class="panel-body-icon"/></div>
@@ -13,40 +13,57 @@
 
 <script>
 
+import {mapGetters, mapMutations} from "vuex";
+
 export default {
   name: "NavigationPanel",
   data() {
     return {
-      sections: [
-        {isActive: true, icon: require('@/assets/img/my/dashboard.svg')},
-        {isActive: false, icon: require('@/assets/img/my/process.svg')},
-        {isActive: false, icon: require('@/assets/img/my/resource.svg')},
-        {isActive: false, icon: require('@/assets/img/my/share-management.svg')},
-        {isActive: false, icon: require('@/assets/img/my/team.svg')},
-        {isActive: false, icon: require('@/assets/img/my/task.svg')},
-        {isActive: false, icon: require('@/assets/img/my/structure.svg')},
-        {isActive: false, icon: require('@/assets/img/my/result.svg')},
-        {isActive: false, icon: require('@/assets/img/my/co-queues.svg')},
-        {isActive: false, icon: require('@/assets/img/my/control-center.svg')},
-        {isActive: false, icon: require('@/assets/img/my/calendar.svg')},
-        {isActive: false, icon: require('@/assets/img/my/storage.svg')},
-        {isActive: false, icon: require('@/assets/img/my/settings.svg')},
-        {isActive: false, icon: require('@/assets/img/my/assumptions.svg')},
-        {isActive: false, icon: require('@/assets/img/my/costs.svg')},
-        {isActive: false, icon: require('@/assets/img/my/result-c-e.svg')},
-      ],
+      // sections: [
+      //   {isActive: true, icon: require('@/assets/img/my/dashboard.svg')},
+      //   {isActive: false, icon: require('@/assets/img/my/process.svg')},
+      //   {isActive: false, icon: require('@/assets/img/my/resource.svg')},
+      //   {isActive: false, icon: require('@/assets/img/my/share-management.svg')},
+      //   {isActive: false, icon: require('@/assets/img/my/team.svg')},
+      //   {isActive: false, icon: require('@/assets/img/my/task.svg')},
+      //   {isActive: false, icon: require('@/assets/img/my/structure.svg')},
+      //   {isActive: false, icon: require('@/assets/img/my/result.svg')},
+      //   {isActive: false, icon: require('@/assets/img/my/co-queues.svg')},
+      //   {isActive: false, icon: require('@/assets/img/my/control-center.svg')},
+      //   {isActive: false, icon: require('@/assets/img/my/calendar.svg')},
+      //   {isActive: false, icon: require('@/assets/img/my/storage.svg')},
+      //   {isActive: false, icon: require('@/assets/img/my/settings.svg')},
+      //   {isActive: false, icon: require('@/assets/img/my/assumptions.svg')},
+      //   {isActive: false, icon: require('@/assets/img/my/costs.svg')},
+      //   {isActive: false, icon: require('@/assets/img/my/result-c-e.svg')},
+      // ],
     }
   },
+  computed: {
+    ...mapGetters({
+      companySections: 'Company/getSections'
+    }),
+  },
   methods: {
-    changeStatus(i) {
-      this.sections.map(el => el.isActive = false)
-      this.sections[i].isActive = !this.sections[i].isActive
-      if(this.sections[1].isActive){
-        this.$router.push({name: 'vx.process'})
-      } else if(this.sections[0].isActive){
+    ...mapMutations({
+      changeStatus: 'Company/changeStatus'
+    }),
+    makeSmt(i){
+      this.changeStatus(i)
+      if(i === 0) {
         this.$router.push({name: 'vx.co'})
       }
-    },
+      if(i === 2){
+        this.$router.push({name: 'vx.resource'})
+      }
+    }
+    // changeStatus(i) {
+    //   this.sections.map(el => el.isActive = false)
+    //   this.sections[i].isActive = !this.sections[i].isActive
+    //   if(i === 2){
+    //     this.$router.push({name: 'vx.resource'})
+    //   }
+    // },
   },
 }
 </script>

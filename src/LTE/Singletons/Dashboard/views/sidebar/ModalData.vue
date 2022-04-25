@@ -19,32 +19,32 @@
 </template>
 
 <script>
-import Checkbox from '@Facade/Input/Checkbox';
+  import Checkbox from '@Facade/Input/Checkbox';
 
-export default {
-  name: 'ModalData',
-  components: {
-    Checkbox
-  },
-  data() {
-    return {
-      onOffBrowse: true,
-      onOffEdit: false,
-    }
-  },
-  props: {
-    data: Object
-  },
-   computed: {
-    // eslint-disable-next-line vue/return-in-computed-property
-    backgroundLevel() {
-      if (this.data.level === 1) return '#D5F1C5'
-      if (this.data.level === 2) return '#FEF0BD'
-      if (this.data.level === 3) return '#BAE7FF'
-      if (this.data.level === 4) return '#F2CBF8'
-    }
-   }
-}
+  export default {
+    name: 'ModalData',
+    components: {
+      Checkbox
+    },
+    data() {
+      return {
+        onOffBrowse: true,
+        onOffEdit: false,
+      }
+    },
+    props: {
+      data: Object
+    },
+     computed: {
+      // eslint-disable-next-line vue/return-in-computed-property
+      backgroundLevel() {
+        if (this.data.level === 1) return '#D5F1C5'
+        if (this.data.level === 2) return '#FEF0BD'
+        if (this.data.level === 3) return '#BAE7FF'
+        if (this.data.level === 4) return '#F2CBF8'
+      }
+     }
+  }
 </script>
 
 <style lang="scss" scoped>

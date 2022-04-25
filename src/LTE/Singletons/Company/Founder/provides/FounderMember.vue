@@ -6,10 +6,12 @@
 			class="founder-member-card"
 		>
 			<image-avatar
-				:logo="logo(coFounder)"
-				:color-code="String(coFounder.id).substr(coFounder.id.length - 1, 1)"
+				:logo="coFounder.user.avatar || logo(coFounder)"
+				:color-code="String(coFounder.user.id).substr(coFounder.id.length - 1, 1)"
 			/>
-			<title-sub>{{coFounder.title}}</title-sub>
+			<title-sub>
+				{{coFounder.user.name}} {{coFounder.user.lastname}}
+			</title-sub>
 			<div class="card-share">
 				<share card :value="coFounder.share" />
 				<title-caption>Доля в компании</title-caption>
@@ -34,10 +36,12 @@ export default {
     }
   },
 	methods: {
-		logo(founder) {
-			let res = ''
-			founder.title.split(' ').forEach(l => res += l[0])
-			return res
+		logo(coFounder) {
+			if (coFounder.user.name && coFounder.user.lastname) {
+				return `${coFounder.user.name[0]}${coFounder.user.lastname[0]}`
+			} else {
+				return ''
+			}
 		}
 	}
 }

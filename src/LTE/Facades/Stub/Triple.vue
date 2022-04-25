@@ -1,6 +1,6 @@
 <template>
   <div class="facade-stub-triple">
-    <img :src="require(`@/assets/img/stub/${icon}.svg`)">
+    <img :src="require(`@/assets/img/stub/${icon}`)">
     <title-semi v-html="title"/>
     <text-base v-html="description"/>
   </div>
@@ -26,6 +26,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    max-width: 304px;
+    margin: 0 auto;
     img, .facade-title-semi{
       margin-bottom: 12px;
     }

@@ -52,48 +52,47 @@
     }
   }
 
-  .structure-unit-checkbox{
-    margin-right: 8px;
-  }
-
-
-  &.su-level{
-    &-0{
-      .structure-unit-info{
-        .info-title-group{
-          .facade-title-sub{
-            color: #fff;
-          }
-        }
-      }
-      .structure-unit-setting{
-        .icon-points-vertical {
-          color: #fff;
-          &:hover {
-            .icon {
-              color: $grey-scale-200;
-            }
-          }
-        }
-      }
-
-      background-color: $grey-scale-400; //уточнить
-    }
-    &-1{
-      background-color: $su-level-1; //уточнить
-    }
-    &-2{
-      background-color: $su-level-2; //уточнить
-    }
-    &-3{
-      background-color: $su-level-3; //уточнить
-    }
-    &-4{
-      background-color: $su-level-4; //уточнить
-    }
-  }
+  //.structure-unit-checkbox{
+  //  margin-right: 8px;
+  //}
 
   &.su-checkbox{
     cursor: pointer;
+  }
+}
+
+.su-level{
+  &-0{
+    .structure-unit-info{
+      .info-title-group{
+        .facade-title-sub{
+          color: #fff;
+        }
+      }
+    }
+    .structure-unit-setting{
+      .icon-points-vertical {
+        color: #fff;
+        &:hover {
+          .icon {
+            color: $grey-scale-200;
+          }
+        }
+      }
+    }
+
+    background-color: $grey-scale-400; //уточнить
+  }
+  &-1{
+    background-color: $su-level-1; //уточнить
+  }
+  &-2{
+    background-color: $su-level-2; //уточнить
+  }
+  &-3{
+    background-color: $su-level-3; //уточнить
+  }
+  &-4{
+    background-color: $su-level-4; //уточнить
   }
 }

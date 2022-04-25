@@ -11,7 +11,7 @@
 				<person
 					v-if="shareRecipients.id"
 					class="blue-person"
-          :contact="shareRecipients"
+					:contact="shareRecipients"
 					user
 					@click.native="deleteUser()"
 				/>
@@ -33,9 +33,14 @@
 			</div>
 		</div>
 		<div class="blur-resource-buttons">
-			<button-secondary class="blur-resource-button">Отмена</button-secondary>
+			<button-secondary 
+				class="blur-resource-button" 
+				@onClick="$router.push({name: 'vx.co.founder'})"
+			>
+				Отмена
+			</button-secondary>
 			<button-base 
-				@click.native="showModal = true"
+				@onClick="showModal = true"
 				class="blur-resource-button" 
 				:disable="validIssueShare"
 			>
@@ -72,7 +77,7 @@ import ButtonSecondary from "@Facade/Button/Secondary"
 import ButtonBase from "@Facade/Button/Base"
 
 import {mapGetters, mapMutations} from 'vuex'
-import Person from '@/LTE/Singletons/Messenger/facades/Person'
+import Person from "@Facade/Plate/Person";
 import Modal from "@Facade/Modal/Base";
 import Attention from '@/LTE/Singletons/Users/facades/Attention'
 import InfoCardShare from '@/LTE/Singletons/Users/facades/InfoCardShare'
@@ -97,7 +102,6 @@ export default {
 	},
 	data() {
 		return {
-			available: 74,
 			share: null,
 			showModal: false
 		}
@@ -106,22 +110,22 @@ export default {
 		...mapMutations({
 			show: 'Users/show',
 			deleteUser: 'Users/deleteUser',
-			setIssuedShares: 'Users/setIssuedShares'
+			setIssuedShares: 'Users/setIssuedShares',
+			setActiveCompany: 'Company/setActiveCompany'
 		}),
 		addUser() {
-			console.log('add');
+			this.$core.execViaComponent('Cofounders', 'giveShare', this.share)
+			this.setActiveCompany(this.activeCompany.id)
 			this.showModal = false
-			this.deleteUser
+			this.deleteUser()
 			this.$router.push({name: 'vx.co.founder'})
-			this.setIssuedShares({
-				...this.shareRecipients,
-				share: this.share
-			})
 		}
 	},
 	computed: {
 		...mapGetters({
-			shareRecipients: 'Users/shareRecipients'
+			shareRecipients: 'Users/getShareRecipients',
+			activeCompany: 'Company/getActiveCompany',
+			available: 'Company/getShare'
 		}),
 		remainder() {
 			let result = this.available - this.share

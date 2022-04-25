@@ -79,8 +79,88 @@ class Setting extends Binder{
     this.$socket.emit('listener', await encrypt(...arguments[1], utf8ToArray(about)));
   }
 
+  async codeConfirmPhone() {
+    this.$socket.emit('listener', await encrypt(...arguments[1]));
+  }
 
+  codeConfirmPhoneRes(response) {
+    this.$store.set('PhoneCodeConfirm', response);
+    console.log(response);
+  }
 
+  async codeEditPhone({telephone, phoneIdent, code}) {
+    console.log(telephone, phoneIdent, code);
+    let data = serialize(telephone, phoneIdent, code)
+    this.$socket.emit('listener', await encrypt(...arguments[1], data));
+  }
+
+  codeEditPhoneRes(response) {
+    this.$store.set('PhoneCodeConfirm', response);
+    console.log(response);
+  }
+
+  async editPhone({telephone, code}) {
+    let data = serialize(telephone, code)
+    this.$socket.emit('listener', await encrypt(...arguments[1], data));
+  }
+
+  editPhoneRes(response) {
+    console.log(response);
+    this.$core.execViaComponent('Setting', 'activePhoneChange')
+  }
+
+  async activePhoneChange() {
+    this.$socket.emit('listener', await encrypt(...arguments[1]));
+  }
+
+  activePhoneChangeRes(response) {
+    this.$store.set('ChangePhone', response);
+    console.log(response);
+  }
+
+  async cancelPhoneChange(id) {
+    this.$socket.emit('listener', await encrypt(...arguments[1], id));
+  }
+
+  cancelPhoneChangeRes(response) {
+   console.log(response);
+  }
+
+  async resendCodeEditPhone(telephone) {
+    console.log(telephone, 'telephone');
+    this.$socket.emit('listener', await encrypt(...arguments[1], telephone));
+  }
+
+  resendCodeEditPhoneRes(response) {
+    console.log(response);
+  }
+
+  async phonePrivacy(showPhone) {
+    this.$socket.emit('listener', await encrypt(...arguments[1], numberToArray(showPhone)));
+  }
+
+  phonePrivacyRes() {
+    this.$core.execViaComponent('Auth', 'user');
+    this.$notify({text: 'Изменения сохранены!', type: 'success', duration: 3000, speed: 500})
+  }
+
+  async emailPrivacy(showEmail) {
+    this.$socket.emit('listener', await encrypt(...arguments[1], numberToArray(showEmail)));
+  }
+
+  emailPrivacyRes() {
+    this.$core.execViaComponent('Auth', 'user');
+    this.$notify({text: 'Изменения сохранены!', type: 'success', duration: 3000, speed: 500})
+  }
+
+  async getActiveSessions() {
+    this.$socket.emit('listener', await encrypt(...arguments[1]));
+  }
+
+  getActiveSessionsRes(response) {
+    console.log(response);
+    this.$store.set('ActiveSessions', response);
+  }
 }
 
 export default new Setting();

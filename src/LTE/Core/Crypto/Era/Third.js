@@ -1,4 +1,5 @@
 import Binder from "@/LTE/Core/Helpers/Binder";
+import {SynchronizerController} from '@Core/Synchronizer'
 
 class Third extends Binder{
   restrictedRoutes = ['preload', 'auth'];
@@ -21,6 +22,10 @@ class Third extends Binder{
   }
 
   async bypass(){
+    new SynchronizerController();
+    // тут нужно добавить синхронизацию
+
+
     const foundRoute = this.$router.match(this.$router.history._startLocation),
           lastPage = this.$store.get('Page');
 
