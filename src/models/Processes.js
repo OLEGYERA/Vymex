@@ -42,7 +42,6 @@ export default {
         countProcesses: {},
         disableStatusCount: 0,
         performerCount: 0,
-        currentWorkerId: {},
         fileIds:[],
         resourceFolders: [
             {
@@ -129,26 +128,6 @@ export default {
                 group: true,
                 checked: false
             },
-            // {
-            //     title : 'doc.vmx',
-            //     content: {
-            //         size: '2,1',
-            //         date: '02.03.2020'
-            //     },
-            //     type: null,
-            //     group: null,
-            //     checked: false
-            // },
-            // {
-            //     title : 'doc.zip',
-            //     content: {
-            //         size: '2,1',
-            //         date: '02.03.2020'
-            //     },
-            //     type: 'zip',
-            //     group: true,
-            //     checked: false
-            // },
         ],
         levelsProcess: [],
         levelsStructure: [
@@ -189,7 +168,6 @@ export default {
         getPerformerCount: (state) => state.performerCount,
         getSelectedProcess: (state) => state.selectedProcess,
         getCountProcesses: (state) => state.countProcesses,
-        getCurrentWorkerId: (state) => state.currentWorkerId,
         getFileIds: (state) => state.fileIds,
     },
     mutations: {
@@ -205,7 +183,6 @@ export default {
         setNewPerformerCount: (state, payload) => state.performerCount = payload,
         setClickedSelectedProcess: (state, payload) => state.selectedProcess = payload,
         setNumCountProcesses: (state, payload) => state.countProcesses = payload,
-        setNumCurrentWorkerId: (state, payload) => state.currentWorkerId = payload,
         setNewPeriods: (state, payload) => state.periods = payload,
         setNewFileIds: (state, payload) => state.fileIds = payload,
     },

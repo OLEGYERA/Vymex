@@ -12,14 +12,15 @@
         <template #title>Процессы для уровней компании</template>
       </radio-slot>
       <text-area
-          @text-area-model="textAreaTitle = $event"
-          :max-length="1000"
+          @onInput="textAreaTitle = $event"
+          :model="textAreaTitle"
           placeholder="Название процесса"
           class="text-area-title"
           labeled/>
       <text-area :max-length="1000"
-                 @text-area-model="textAreaDescription = $event"
+                 @onInput="textAreaDescription = $event"
                  :num-rows="4"
+                 :model="textAreaDescription"
                  placeholder="Описание"
                  labeled
                  count/>
@@ -37,12 +38,12 @@
         <file class="view-main-files-margin" v-for="(file, key) in files" :file="file" :key="key"/>
       </div>
       <radio-slot :model="regularModel"
-                  :disable="regularDisable" @onClick="changeStatusRegular">
+                  :disable="!regularDisable" @onClick="changeStatusRegular">
         <template #title>Регулярный</template>
       </radio-slot>
       <start-process @onDate="onDate" :regularModel="regularModel"/>
       <radio-slot :model="!regularModel"
-                  :disable="!regularDisable" @onClick="changeStatusRegular">
+                  :disable="regularDisable" @onClick="changeStatusRegular">
         <template #title>Не регулярный</template>
       </radio-slot>
       <process-alert @alert-worker="alertWorker = $event"/>
@@ -94,7 +95,7 @@ export default {
     ButtonSecondary: () => import('@Facade/Button/Secondary'),
     ButtonBase: () => import('@Facade/Button/Base'),
     RadioSlot: () => import('../facades/RadioSlot'),
-    File: () => import('@/LTE/Singletons/Resources/facades/File'),
+    File: () => import('@/LTE/Providers/Company/Resource/file.ui'),
     ProcessAlert: () => import('../facades/ProcessAlert'),
     StartProcess: () => import('../facades/StartProcess'),
     ProcessPerformer: () => import('../facades/ProcessPerformer'),
@@ -118,15 +119,15 @@ export default {
     if (this.processModel === 'company-processes') {
       this.$core.execViaComponent('Processes', 'getLevel',
           {
-            creatorId: this.currentWorkerId.userId,
-            levelId: this.currentWorkerId.levelId ? this.currentWorkerId.levelId : 1,
-            companyId: this.currentCompany.base.id
+            creatorId: this.selectedCompany.workerId,
+            levelId: this.selectedCompany.unitLevel,
+            companyId: this.selectedCompany.companyId
           });
     } else {
       this.$core.execViaComponent('Processes', 'getUnit',
-          {creatorId: this.currentWorkerId.userId, unitId: this.currentWorkerId.unitId, search: ''});
+          {creatorId: this.selectedCompany.workerId, unitId: this.selectedCompany.unitId, search: ''});
     }
-    this.$core.execViaComponent('Processes', 'getUnits', this.currentWorkerId.unitId);
+    this.$core.execViaComponent('Processes', 'getUnits', this.selectedCompany.unitId);
     this.setSubdivisions([])
     this.setFiles([])
     this.setFileIds([])
@@ -145,11 +146,10 @@ export default {
       processModel: 'getProcessModel',
       performerCount: 'getPerformerCount',
       levels: 'getLevels',
-      currentWorkerId: 'getCurrentWorkerId',
       periods: 'getPeriods',
-      currentCompany: 'Company/getCurrentCompany',
       selectedProcess: 'getSelectedProcess',
-      fileIds: 'getFileIds'
+      fileIds: 'getFileIds',
+      selectedCompany: 'Company/getSelectedCompany'
     }),
     performersCounter() {
       let count = 0
@@ -202,14 +202,14 @@ export default {
         description: this.textAreaDescription,
         isRegular: this.regularModel ? 1 : 0,
         isExecutor: this.processModel === 'official-processes' ? 1 : 0,
-        creatorId: this.currentWorkerId.userId,
+        creatorId: this.selectedCompany.workerId,
         unitId: this.processModel === 'official-processes' ? this.subdivisions[0] && this.subdivisions[0].id : null,
         level: this.processModel === 'company-processes' ? arrayLevelsWorkers : null,
         repeatDate: !this.regularModel && !this.selectedDate ? '' : today,
         alertWorker: this.alertWorker,
         repeatInterval: currentPeriod.isActive ? currentPeriod.id : null,
         fileIds: this.fileIds,
-        companyId: this.currentCompany.base.id
+        companyId: this.selectedCompany.companyId
       });
       if (this.textAreaDescription && this.textAreaTitle && this.subdivisions.length) {
         this.$notify({text: 'Процесс успешно создан!', type: 'success', duration: 3000, speed: 500})

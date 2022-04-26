@@ -97,6 +97,8 @@
             return this.data?.logo ? this.data.logo : this.data.name.substr(0, 1);
           case 'profile':
             return this.data.logo;
+            default:
+              return ''
         }
       },
     },

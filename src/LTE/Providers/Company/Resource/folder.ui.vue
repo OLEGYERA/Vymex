@@ -52,7 +52,7 @@
       content() {
         let folders = '';
         let files = '';
-        if(!this.folder.content.folders && !this.folder.content.files && !this.folder.content.objects){
+        if(!this.folder.content.folders && !this.folder.content.files && !this.folder.content.objects && !this.folder.content.processes){
           return 'Пусто'
         }
         if(this.folder.content.objects) {
@@ -87,6 +87,17 @@
             files = `${this.folder.content.files} файла`
           } else {
             files = `${this.folder.content.files} файлов`
+          }
+        }
+        if(this.folder.content.processes) {
+          if(this.folder.content.processes >4 && this.folder.content.processes < 21) {
+            files = `${this.folder.content.processes} процессов`
+          }else if (Number(String(this.folder.content.processes).slice(-1)) === 1) {
+            files = `${this.folder.content.processes} процесс`
+          } else if (Number(String(this.folder.content.processes).slice(-1)) < 5){
+            files = `${this.folder.content.processes} процесса`
+          } else {
+            files = `${this.folder.content.processes} процессов`
           }
         }
         return folders && files ? `${folders}, ${files}` : `${folders} ${files}`

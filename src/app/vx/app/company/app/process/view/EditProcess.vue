@@ -12,14 +12,13 @@
         <template #title>Процессы для уровней компании</template>
       </radio-slot>
       <text-area
-          @text-area-model="textAreaTitle = $event"
-          :max-length="1000"
+          @onInput="textAreaTitle = $event"
           :model="selectedProcess.title"
           placeholder="Название процесса"
           class="text-area-title"
           labeled/>
       <text-area :max-length="1000"
-                 @text-area-model="textAreaDescription = $event"
+                 @onInput="textAreaDescription = $event"
                  :model="selectedProcess.description"
                  :num-rows="4"
                  placeholder="Описание"
@@ -39,12 +38,12 @@
         <file class="view-main-files-margin" v-for="(file, key) in files" :file="file" :key="key"/>
       </div>
       <radio-slot :model="selectedProcess.isRegular === 1"
-                  :disable="selectedProcess.isRegular === 1" @onClick="changeStatusRegular">
+                  :disable="selectedProcess.isRegular === 0" @onClick="changeStatusRegular">
         <template #title>Регулярный</template>
       </radio-slot>
       <start-process @onDate="onDate" :regularModel="selectedProcess.isRegular === 1"/>
       <radio-slot :model="selectedProcess.isRegular === 0"
-                  :disable="selectedProcess.isRegular === 0" @onClick="changeStatusRegular">
+                  :disable="selectedProcess.isRegular === 1" @onClick="changeStatusRegular">
         <template #title>Не регулярный</template>
       </radio-slot>
       <process-alert @alert-worker="alertWorker = $event" :currentAlertWorker="selectedProcess.alertWorker"/>
@@ -96,7 +95,7 @@ export default {
     ButtonSecondary: () => import('@Facade/Button/Secondary'),
     ButtonBase: () => import('@Facade/Button/Base'),
     RadioSlot: () => import('../facades/RadioSlot'),
-    File: () => import('@/LTE/Singletons/Resources/facades/File'),
+    File: () => import('@/LTE/Providers/Company/Resource/file.ui'),
     ProcessAlert: () => import('../facades/ProcessAlert'),
     StartProcess: () => import('../facades/StartProcess'),
     ProcessPerformer: () => import('../facades/ProcessPerformer'),
@@ -129,11 +128,10 @@ export default {
       processModel: 'getProcessModel',
       performerCount: 'getPerformerCount',
       levels: 'getLevels',
-      currentWorkerId: 'getCurrentWorkerId',
       periods: 'getPeriods',
-      currentCompany: 'Company/getCurrentCompany',
       selectedProcess: 'getSelectedProcess',
-      fileIds: 'getFileIds'
+      fileIds: 'getFileIds',
+      selectedCompany: 'Company/getSelectedCompany'
     }),
     performersCounter() {
       let count = 0
@@ -150,15 +148,15 @@ export default {
     if (this.processModel === 'company-processes') {
       this.$core.execViaComponent('Processes', 'getLevel',
           {
-            creatorId: this.currentWorkerId.userId,
-            levelId: this.currentWorkerId.levelId ? this.currentWorkerId.levelId : 1,
-            companyId: this.currentCompany.base.id
+            creatorId: this.selectedCompany.workerId,
+            levelId: this.selectedCompany.unitLevel,
+            companyId: this.selectedCompany.companyId
           });
     } else {
       this.$core.execViaComponent('Processes', 'getUnit',
-          {creatorId: this.currentWorkerId.userId, unitId: this.currentWorkerId.unitId, search: ''});
+          {creatorId: this.selectedCompany.workerId, unitId: this.selectedCompany.unitId, search: ''});
     }
-    this.$core.execViaComponent('Processes', 'getUnits', this.currentWorkerId.unitId);
+    this.$core.execViaComponent('Processes', 'getUnits', this.selectedCompany.unitId);
   },
   destroyed() {
     this.setSubdivisions([])
@@ -204,7 +202,7 @@ export default {
         description: this.textAreaDescription ? this.textAreaDescription : this.selectedProcess.description,
         isRegular: this.selectedProcess.isRegular,
         isExecutor: this.processModel === 'official-processes' ? 1 : 0,
-        creatorId: this.currentWorkerId.userId,
+        creatorId: this.selectedCompany.workerId,
         unitId: this.processModel === 'official-processes' ? this.subdivisions[0].id : null,
         level: this.processModel === 'company-processes' ? arrayLevelsWorkers : null,
         repeatDate: this.selectedDate ? today : this.selectedProcess.repeatDate,

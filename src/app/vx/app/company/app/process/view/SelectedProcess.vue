@@ -40,7 +40,7 @@ export default {
     Comeback: () => import('@Facade/Navigation/Comeback'),
     ProcessEvent: () => import('../facades/ProcessEvent'),
     HeaderAdd: () => import('@/LTE/Singletons/facades/HeaderAdd'),
-    File: () => import('@/LTE/Singletons/Resources/facades/File'),
+    File: () => import('@/LTE/Providers/Company/Resource/file.ui'),
     ProcessPerformer: () => import('../facades/ProcessPerformer')
   },
   methods: {

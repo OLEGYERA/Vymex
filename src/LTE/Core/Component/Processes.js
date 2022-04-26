@@ -55,9 +55,9 @@ class Processes extends Binder {
     }
 
     getUnitsRes(units) {
-        let currentProcessStatus = this.$store.get('CurrentWorkerId');
+        let currentProcessStatus = this.$store.name('Company').get('SelectedCompany');
         let currentProcessModel = this.$store.get('ProcessModel');
-        let currentLevel = currentProcessStatus.levelId
+        let currentLevel = currentProcessStatus.unitLevel
         let arrayLevels = Object.values(units)
         if (currentProcessModel === 'official-processes') {
             let ceo = {}
@@ -150,14 +150,10 @@ class Processes extends Binder {
             this.$store.set('ChooseSubdivisions', newPerformer);
         }
         let currentFiles = process.files.map(el => ({
-            title: el.label.split('.')[0],
-            content: {
-                size: (el.size / 1000000).toFixed(3),
-                date: el.updatedAt.split(' ')[0]
-            },
-            type: el.extension,
-            group: false,
-            checked: false
+            label: el.label.split('.')[0],
+            extension: el.extension,
+            size: (el.size / 1000000).toFixed(3),
+            date: el.updatedAt.split(' ')[0]
         }))
         this.$store.set('NewFiles', currentFiles);
     }

@@ -53,6 +53,9 @@ export default {
       if(i === 0) {
         this.$router.push({name: 'vx.co'})
       }
+      if(i === 1) {
+        this.$router.push({name: 'vx.process'})
+      }
       if(i === 2){
         this.$router.push({name: 'vx.resource'})
       }

@@ -17,7 +17,7 @@
       <template #header-amount>{{ processFolders.length }}</template>
     </header-add>
     <main>
-      <folder v-for="(folder, folderKey) in processFolders" :folder="folder" :key="folderKey" @getId="changePage"/>
+      <folder v-for="(folder, folderKey) in processFolders" :folder="folder" :key="folderKey" @onClick="changePage"/>
     </main>
   </div>
 </template>
@@ -33,7 +33,7 @@ export default {
     TitleBase: () => import('@Facade/Title/Base'),
     TextBase: () => import('@Facade/Text/Base'),
     TitleCaption: () => import('@Facade/Title/Caption'),
-    Folder: () => import('@/LTE/Singletons/Resources/facades/Folder'),
+    Folder: () => import('@/LTE/Providers/Company/Resource/folder.ui'),
     ButtonBase: () => import('@Facade/Button/Base'),
     HeaderAdd: () => import('@/LTE/Singletons/facades/HeaderAdd'),
     IconEye: () => import('@Icon/Eye')
@@ -43,41 +43,22 @@ export default {
       processFolders: 'getFolders',
       messages: 'getMessages',
       countProcesses: 'getCountProcesses',
-      currentCompany: 'Company/getCurrentCompany',
-      allCompanies: 'Company/getAll',
+      selectedCompany: 'Company/getSelectedCompany'
     })
   },
   mounted() {
-    const companyId = this.currentCompany.base.id
-    const currentCompanyAllData = this.allCompanies.find(el => el.id === companyId)
-    const currentWorker = currentCompanyAllData.workers[0]
-    const currentUnitId = currentWorker
-        ? currentWorker.unitId
-        : currentCompanyAllData.cofounder[0].id
-    const currentUserId = currentWorker
-        ? currentWorker.userId
-        : currentCompanyAllData.cofounder[0].userId
-    const currentLevelId = currentWorker
-        ? currentWorker.unitLevel
-        : 1
-    this.setCurrentWorkerId({
-      userId: currentUserId,
-      unitId: currentUnitId,
-      levelId: currentLevelId
-    })
     this.$core.execViaComponent('Processes', 'count',
         {
-          creatorId: currentUserId,
-          unitId: currentUnitId,
-          levelId: currentWorker ? currentWorker.unitLevel : 1,
-          companyId
+          creatorId: this.selectedCompany.workerId,
+          unitId: this.selectedCompany.unitId,
+          levelId: this.selectedCompany.unitLevel,
+          companyId: this.selectedCompany.companyId
         });
   },
   methods: {
     ...mapMutations({
       setProcessModel: 'setChangeProcessModel',
       setFolders: 'setUpdateFolders',
-      setCurrentWorkerId: 'setNumCurrentWorkerId'
     }),
     changePage({id}) {
       id === 2

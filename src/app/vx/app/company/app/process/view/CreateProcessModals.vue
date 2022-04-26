@@ -85,10 +85,10 @@ export default {
   name: 'vx.process.create.process.modals',
   components: {
     HeaderAdd: () => import('@/LTE/Singletons/facades/HeaderAdd'),
-    FileShower: () => import('@/LTE/Singletons/Resources/facades/File'),
+    FileShower: () => import('@/LTE/Providers/Company/Resource/file.ui'),
     ProcessPerformer: () => import('../facades/ProcessPerformer'),
     Modal: () => import('@Facade/Modal/Base'),
-    Folder: () => import('@/LTE/Singletons/Resources/facades/Folder'),
+    Folder: () => import('@/LTE/Providers/Company/Resource/folder.ui'),
     FileCheckbox: () => import('../facades/FileCheckbox'),
     UploadFiles: () => import('@/app/vx/app/company/app/process/facades/UploadFiles')
   },
@@ -110,12 +110,12 @@ export default {
       required: true
     },
   },
-  data:() => ({
-      images: [],
-      uploadDevice: false,
-      uploadResource: [
-        {avatar: require('@/assets/img/my/resource.svg'), position: 'Ресурсы'},
-      ],
+  data: () => ({
+    images: [],
+    uploadDevice: false,
+    uploadResource: [
+      {avatar: require('@/assets/img/my/resource.svg'), position: 'Ресурсы'},
+    ],
   }),
   computed: {
     ...mapGetters({
@@ -166,36 +166,33 @@ export default {
     },
     async handleUploadFile(newFileData) {
       let file = newFileData.name.split('.')
-      let yyyy = new Date().getFullYear();
-      let mm = String(new Date().getMonth() + 1).padStart(2, '0');
-      let dd = String(new Date().getDate()).padStart(2, '0');
-      let date = dd + '.' + mm + '.' + yyyy
+        let yyyy = new Date().getFullYear();
+        let mm = String(new Date().getMonth() + 1).padStart(2, '0');
+        let dd = String(new Date().getDate()).padStart(2, '0');
+        let date = dd + '.' + mm + '.' + yyyy
 
-      const newFile = new File([newFileData.result], `${newFileData.name}.png`,
-          {type: file[1], lastModified: new Date()});
+        const newFile = new File([newFileData.result], `${newFileData.name}.png`,
+            {type: file[1], lastModified: new Date()});
 
-      this.$core.execViaComponent('Uploader', 'init', [
-        newFile,
-        this.handleUploadOnprogress, null,
-        this.handleUploaderOnload
-      ])
+        this.$core.execViaComponent('Uploader', 'init', [
+          newFile,
+          this.handleUploadOnprogress, null,
+          this.handleUploaderOnload
+        ])
 
-      this.setFiles([...this.files, {
-        title: file[0],
-        content: {
-          size: (newFileData.size/1000000).toFixed(3),
+        this.setFiles([...this.files, {
+          label: file[0],
+          extension: file[1],
+          size: (newFileData.size / 1000000).toFixed(3),
           date
-        },
-        type: file[1],
-        group: false,
-        checked: false
-      }])
+        }])
       this.$emit('closeModalUpload')
     },
     handleUploadOnprogress(progress) {
       console.log(progress)
     },
     handleUploaderOnload(fileId) {
+      console.log(fileId, 'fileId')
       let newFileIds = [...this.fileIds, fileId]
       this.setFileIds(newFileIds)
     }

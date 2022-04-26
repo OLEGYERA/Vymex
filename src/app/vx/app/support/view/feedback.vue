@@ -5,14 +5,14 @@
       <title-base class="feedback-view-main-title">{{ticketType === 'bug' ? bugTitle : recommendationTitle}}</title-base>
       <div class="feedback-view-main-body">
         <span class="main-body-description">{{ticketType === 'bug' ? bugDescription : recommendationDescription}}</span>
-        <div class="main-body-alert">
+        <div class="main-body-alert" @click="status = !status">
           <div class="body-alert-text">
             <span :class="selectedModule ? 'alert-text-title-mini' : 'alert-text-title'">{{
                 ticketType === 'bug'
                 ? bugModule : recommendationModule}}</span>
             <span class="alert-text-selected-module">{{ selectedModule }}</span>
           </div>
-          <div class="body-alert-dropdown" @click="status = !status">
+          <div class="body-alert-dropdown">
             <down-arrow v-if="!status"/>
             <up-arrow class="body-alert-dropdown-up" v-else/>
           </div>
@@ -23,7 +23,8 @@
         <div class="main-body-border"></div>
         <text-area :max-length="1000"
                    class="main-body-text-area"
-                   @text-area-model="textArea = $event"
+                   @onInput="textArea = $event"
+                   :model="textArea"
                    :num-rows="4"
                    :placeholder="ticketType === 'bug' ? bugFeedback : recommendationFeedback"
                    count/>
@@ -78,9 +79,6 @@ export default {
     Comeback: () => import('@Facade/Navigation/Comeback'),
     UpArrow: () => import('@Icon/UpArrow'),
     ModulesContext: () => import('./modules.context')
-  },
-  mounted() {
-    this.$core.execViaComponent('Support', 'getTicket', 7)
   },
   methods: {
     createTicket(){

@@ -50,28 +50,27 @@ export default {
       if (this.processModel === 'company-processes') {
         this.$core.execViaComponent('Processes', 'getLevel',
             {
-              creatorId: this.currentWorkerId.userId,
-              levelId: this.currentWorkerId.levelId ? this.currentWorkerId.levelId : 1,
-              companyId: this.currentCompany.base.id
+              creatorId: this.selectedCompany.workerId,
+              levelId: this.selectedCompany.unitLevel,
+              companyId: this.selectedCompany.companyId
             });
       } else {
         this.$core.execViaComponent('Processes', 'getUnit',
-            {creatorId: this.currentWorkerId.userId, unitId: this.currentWorkerId.unitId, search: ''});
+            {creatorId: this.selectedCompany.workerId, unitId: this.selectedCompany.unitId, search: ''});
       }
       this.$core.execViaComponent('Processes', 'count',
           {
-            creatorId: this.currentWorkerId.userId,
-            unitId: this.currentWorkerId.unitId,
-            levelId: this.currentWorkerId.levelId,
-            companyId: this.currentCompany.base.id
+            creatorId: this.selectedCompany.workerId,
+            unitId: this.selectedCompany.unitId,
+            levelId: this.selectedCompany.unitLevel,
+            companyId: this.selectedCompany.companyId
           });
     }
   },
   computed: {
     ...mapGetters({
-      currentWorkerId: 'getCurrentWorkerId',
       processModel: 'getProcessModel',
-      currentCompany: 'Company/getCurrentCompany'
+      selectedCompany: 'Company/getSelectedCompany'
     }),
     createElipsis() {
       let ArrayCounter = this.message.title.split('')
