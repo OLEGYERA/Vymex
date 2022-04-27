@@ -6,10 +6,11 @@ import FAQ from "./Faq";
 import Uploader from "./Uploader";
 import Company from "./Company";
 import Processes from "./Processes";
+import Resources from "./Resources";
 import Support from "./Support";
 
 import {MessengerControllers} from '@Singletons';
 
 export default Object.assign({
-  Auth, Setting, Api, FAQ, Uploader, Company, Processes, Cofounders, Support
+  Auth, Setting, Api, FAQ, Uploader, Company, Processes, Cofounders, Resources, Support
 }, MessengerControllers)

@@ -8,7 +8,7 @@
       <input class="upload-files-input" ref="uploadedFile"
              type="file" id="assetsFieldHandle"
              @change="onChange"
-             :accept="allowedTypes"
+             :accept="'.jpg,.png,.pdf,.txt,.doc,.docx,.rtf'"
              multiple
       />
     </label>
@@ -17,43 +17,75 @@
 
 <script>
 
+import {mapGetters, mapMutations} from "vuex";
+
 export default {
   name: 'vx.process.facade.upload.files',
   components: {
     ProcessPerformer: () => import('./ProcessPerformer')
   },
   data: () => ({
-    allowedTypes: '.jpg,.png,.pdf,.txt,.doc,.docx,.rtf',
     uploadFromDevice: [
       {avatar: require('@/assets/img/icons/add-file.svg'), position: 'Загрузить с локального устройсва'},
     ],
-    filesData: null
+    c: null
   }),
+  computed: {
+    ...mapGetters({
+      files: 'getFiles',
+      fileIds: 'getFileIds'
+    })
+  },
   methods: {
+    ...mapMutations({
+      setFiles: 'setNewFiles',
+      setFileIds: 'setNewFileIds'
+    }),
     onChange() {
-      const uploadedFiles = Object.values(this.$refs.uploadedFile.files)
-      uploadedFiles.map(el => {
+      this.filesData = Object.values(this.$refs.uploadedFile.files)
+      this.$refs.uploadedFile.value = null
+      this.filesData.map(el => {
         let uploadReader = new FileReader();
-        this.$refs.uploadedFile.value = null
         uploadReader.onload = e => {
-          this.filesData = {result: e.target.result, name: this.getClearName(el), size: el.size};
+          this.handleUploadFile({result: e.target.result, name: el.name, size: el.size})
         }
         uploadReader.readAsDataURL(el);
       })
     },
-    getClearName(file) {
-      let type = file.type.replace('image/', '');
-      return file.name.replace('.' + type, '')
+    async handleUploadFile(newFileData) {
+      this.$emit('onUpload')
+      let file = newFileData.name.split('.')
+      const newFile = new File([newFileData.result], `${newFileData.name}.${file[1]}`,
+          {type: file[1], lastModified: new Date()});
+
+      this.$core.execViaComponent('Uploader', 'init', [
+        newFile,
+        this.handleUploadOnprogress, null,
+        this.handleUploaderOnload
+      ])
+    },
+    handleUploadOnprogress(progress) {
+      console.log(progress)
+    },
+    handleUploaderOnload(fileId) {
+      let file = this.filesData[0].name.split('.')
+      let yyyy = new Date().getFullYear();
+      let mm = String(new Date().getMonth() + 1).padStart(2, '0');
+      let dd = String(new Date().getDate()).padStart(2, '0');
+      let date = dd + '.' + mm + '.' + yyyy
+
+      this.setFiles([...this.files, {
+        label: file[0],
+        extension: file[1],
+        size: (this.filesData[0].size / 1000000).toFixed(3),
+        date
+      }])
+
+      let newFileIds = [...this.fileIds, fileId]
+      this.setFileIds(newFileIds)
+      this.filesData.shift()
     }
   },
-  watch: {
-    filesData(data) {
-      if (data) {
-        this.filesData = null
-        this.$emit('onUpload', data)
-      }
-    }
-  }
 }
 </script>
 

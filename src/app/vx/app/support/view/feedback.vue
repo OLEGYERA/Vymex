@@ -29,14 +29,28 @@
                    :placeholder="ticketType === 'bug' ? bugFeedback : recommendationFeedback"
                    count/>
         <div class="main-body-files">
-          <header-add>
+          <header-add @create="modalUpload = true">
             <template #header-title>файлы</template>
             <template #header-amount></template>
           </header-add>
-<!--          <file class="main-body-files-margin" v-for="(file, key) in files" :file="file" :key="key"/>-->
+          <file class="main-body-files-margin" v-for="(file, key) in files"
+                :file="file"
+                :key="key"
+                :index="key"
+                @deleteFile="onDeleteFile"/>
           <span class="main-body-files-description">JPG, GIF or PNG. Max size of 800KB</span>
         </div>
       </div>
+      <modal :disable="true"
+             :status="modalUpload"
+             @onClose="modalUpload = false">
+        <template #title>Загрузить файлы</template>
+        <template #description>Выберете вариант загрузки файлов</template>
+        <template #content>
+          <upload-files @onUpload="modalUpload = false"/>
+        </template>
+        <template #button-accept>Загрузить</template>
+      </modal>
       <div class="view-main-buttons">
         <button-secondary class="view-main-button"
                           @onClick="$router.push({name: 'vx.support'})"
@@ -51,7 +65,7 @@
 </template>
 
 <script>
-import {mapGetters} from "vuex";
+import {mapGetters, mapMutations} from "vuex";
 
 export default {
   name: 'vx.support.feedback',
@@ -66,41 +80,56 @@ export default {
     recommendationModule: 'Улучшаемый модуль',
     bugModule: 'Модуль с ошибкой',
     recommendationFeedback: 'Ваши рекомендации',
-    bugFeedback: 'Опишите проблему'
+    bugFeedback: 'Опишите проблему',
+    modalUpload: false
   }),
   components: {
     TitleBase: () => import('@Facade/Title/Base'),
     DownArrow: () => import('@Icon/DropdownArrow'),
     TextArea: () => import('@Facade/Input/TextArea'),
-   // File: () => import('@/LTE/Singletons/Resources/facades/File'),
+    File: () => import('@/LTE/Providers/Company/Resource/file.ui'),
     HeaderAdd: () => import('@/LTE/Singletons/facades/HeaderAdd'),
     ButtonSecondary: () => import('@Facade/Button/Secondary'),
     ButtonBase: () => import('@Facade/Button/Base'),
     Comeback: () => import('@Facade/Navigation/Comeback'),
     UpArrow: () => import('@Icon/UpArrow'),
-    ModulesContext: () => import('./modules.context')
+    ModulesContext: () => import('./modules.context'),
+    UploadFiles: () => import('@/app/vx/app/company/app/process/facades/UploadFiles'),
+    Modal: () => import('@Facade/Modal/Base'),
+  },
+  created(){
+    this.setFiles([])
+    this.setFileIds([])
+   // this.$core.execViaComponent('Support', 'getTicket', 15)
   },
   methods: {
+    ...mapMutations({
+      setFiles: 'setNewFiles',
+      setFileIds: 'setNewFileIds'
+    }),
     createTicket(){
-      const companyId = this.currentCompany.base.id
-      const currentCompanyAllData = this.allCompanies.find(el => el.id === companyId)
-      const currentWorker = currentCompanyAllData.workers[0]
-      const currentUserId = currentWorker
-          ? currentWorker.userId
-          : currentCompanyAllData.cofounder[0].userId
+      console.log(this.fileIds, 'this.fileId')
       this.$core.execViaComponent('Support', 'createTicket', {
         description: this.textArea,
-        userId: currentUserId,
+        userId: this.selectedCompany.workerId,
         ticketType: this.ticketType,
-        createJiraIssue: false
+        createJiraIssue: false,
+        fileIds: this.fileIds
       })
+    },
+    onDeleteFile(index){
+      let newFiles = this.files.filter((el, i) => i !== index)
+      this.setFiles(newFiles)
+      let newFileIds = this.fileIds.filter((el, i) => i !== index)
+      this.setFileIds(newFileIds)
     }
   },
   computed: {
     ...mapGetters({
       ticketType: 'getTicketType',
-      currentCompany: 'Company/getCurrentCompany',
-      allCompanies: 'Company/getAll',
+      files: 'getFiles',
+      selectedCompany: 'Company/getSelectedCompany',
+      fileIds: 'getFileIds'
     }),
   }
 }

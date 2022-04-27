@@ -13,12 +13,12 @@ import {
     objectToArray
 } from "@/LTE/Core/Helpers/utilites";
 
-class Resources extends Binder{
+class Resources extends Binder {
     constructor() {
         super();
     }
 
-    async createMaterial(){
+    async createMaterial() {
         const CreatorData = this.$store.name('Resources').get('CreatorMaterialResource');
 
         // const WorkerID = CreatorData.workerId ? numberToArray(CreatorData.workerId) : null;
@@ -40,7 +40,7 @@ class Resources extends Binder{
         this.$socket.emit('listener', await encrypt(...arguments[1], data));
     }
 
-    createMaterialRes(){
+    createMaterialRes() {
         console.log('why not, blyat?')
     }
 
@@ -49,13 +49,13 @@ class Resources extends Binder{
         this.$socket.emit('listener', await encrypt(...arguments[1], numberToArray(workerId)));
     }
 
-    getMaterialResourcesRes(resources){
+    getMaterialResourcesRes(resources) {
         console.log(resources, 'resources')
         this.$store.name('Resources').set('MaterialResources', resources);
     }
 
-    async getStructure(companyId, resourceId){
-        console.log(companyId,'companyId')
+    async getStructure(companyId, resourceId) {
+        console.log(companyId, 'companyId')
         let data = serialize(
             numberToArray(companyId)
         )
@@ -63,9 +63,64 @@ class Resources extends Binder{
         this.$socket.emit('listener', await encrypt(...arguments[1], data));
     }
 
-    getStructureRes(structure){
+    getStructureRes(structure) {
         console.log(structure, 'structure')
         this.$store.name('Resources').set('Structure', structure);
+    }
+
+    async getWorkFolder(workerId) {
+        this.$socket.emit('listener', await encrypt(...arguments[1], numberToArray(workerId)));
+    }
+
+    getWorkFolderRes(workFiles) {
+        let resourceFolders = [
+            {
+                id: 0,
+                title: 'Рабочие файлы',
+                content: {
+                    folders: workFiles.folders.length,
+                    files: workFiles.files.length,
+                },
+                group: null,
+                trash: null
+            }
+        ]
+        this.$store.set('WorkerResourceFolders', resourceFolders);
+        this.$store.set('WorkersWorkFiles', workFiles);
+    }
+
+    async getFolder(folderId) {
+        this.$socket.emit('listener', await encrypt(...arguments[1], numberToArray(folderId)));
+    }
+
+    getFolderRes(folder) {
+        let breadCrumbs = this.$store.get('BreadCrumbs')
+        breadCrumbs.push(folder.name)
+        this.$store.set('WhiteBreadCrumbs', breadCrumbs);
+        let workersFolders = folder.childFolders && folder.childFolders.map(el => ({
+            id: el.id,
+            title: el.name,
+            content: {
+                folders: el.childFolders ? el.childFolders.length : el.childFoldersCount,
+                files: el.files ? el.files.length : el.filesCount
+            },
+            group: el.isShared,
+            trash: null
+        }))
+        this.$store.set('InsideWorkerResourceFolders', workersFolders);
+        let workersFiles = folder.files && folder.files.map(el => ({
+            id: el.id,
+            fileId: el.fileId,
+            label: el.label,
+            extension: el.extension,
+            content: {
+                size: el.size,
+                date: el.createdAt.split(' ')[0]
+            },
+            group: el.isShared,
+            checked: false
+        }))
+        this.$store.set('NewFilesToUpload', workersFiles);
     }
 }
 

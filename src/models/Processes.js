@@ -43,93 +43,11 @@ export default {
         disableStatusCount: 0,
         performerCount: 0,
         fileIds:[],
-        resourceFolders: [
-            {
-                id: 1,
-                title: 'Ресурсы C.Е.',
-                content: {
-                    folders: 2,
-                    files: null
-                },
-                group: null,
-                trash: null
-            },
-            {
-                id: 2,
-                title: 'Рабочие файлы',
-                content: {
-                    folders: 2,
-                    files: 12,
-                },
-                group: null,
-                trash: null
-            },
-            {
-                id: 3,
-                title: 'Доступные мне',
-                content: {
-                    folders: 12,
-                    files: 2
-                },
-                group: true,
-                trash: null,
-            }
-        ],
-        newFolder: [
-            {
-                id: 1,
-                title: 'Новая папка',
-                content: {
-                    folders: 3,
-                    files: 2
-                },
-                group: null,
-                trash: null
-            }
-        ],
-        filesToUpload: [
-             {
-                title : 'doc.vmx',
-                content: {
-                    size: '2,1',
-                    date: '02.03.2020'
-                },
-                type: null,
-                group: true,
-                checked: false
-            },
-            {
-                title : 'doc.vmx',
-                content: {
-                    size: '2,1',
-                    date: '02.03.2020'
-                },
-                type: null,
-                group: true,
-                checked: true
-            },
-            {
-                title : 'doc.vmx',
-                content: {
-                    size: '2,1',
-                    date: '02.03.2020'
-                },
-                type: null,
-                group: null,
-                checked: false
-            },
-            {
-                title : 'doc.zip',
-                content: {
-                    size: '2,1',
-                    date: '02.03.2020'
-                },
-                type: 'zip',
-                group: true,
-                checked: false
-            },
-        ],
-        levelsProcess: [],
+        resourceFolders: [],
+        newFolder: [],
+        filesToUpload: [],
+        workFiles: [],
+        breadCrumbs: [],
         levelsStructure: [
             { level: 1, showContext: true, data: [
                 {position: "1 Уровень", checkedPosition: false, checkboxType: 1,
@@ -161,7 +79,6 @@ export default {
         getResourceFolders: (state) => state.resourceFolders,
         getNewFolder: (state) => state.newFolder,
         getFilesToUpload: (state) => state.filesToUpload,
-        getLevelsProcess: (state) => state.levelsProcess,
         getDisableStatusCount: (state) => state.disableStatusCount,
         getLevelsStructure: (state) => state.levelsStructure,
         getProcessModel: (state) => state.processModel,
@@ -169,6 +86,8 @@ export default {
         getSelectedProcess: (state) => state.selectedProcess,
         getCountProcesses: (state) => state.countProcesses,
         getFileIds: (state) => state.fileIds,
+        getWorkFiles: (state) => state.workFiles,
+        getBreadCrumbs: (state) => state.breadCrumbs,
     },
     mutations: {
         setChooseProcessIndex: (state, payload) => state.processIndex = payload,
@@ -185,6 +104,10 @@ export default {
         setNumCountProcesses: (state, payload) => state.countProcesses = payload,
         setNewPeriods: (state, payload) => state.periods = payload,
         setNewFileIds: (state, payload) => state.fileIds = payload,
+        setWorkerResourceFolders: (state, payload) => state.resourceFolders = payload,
+        setInsideWorkerResourceFolders: (state, payload) => state.newFolder = payload,
+        setWorkersWorkFiles: (state, payload) => state.workFiles = payload,
+        setWhiteBreadCrumbs: (state, payload) => state.breadCrumbs = payload,
     },
 
 }

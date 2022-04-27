@@ -21,6 +21,14 @@ class Processes extends Binder {
         this.$router.push({name: 'vx.support'})
         this.$notify({text: 'Сообщение отправлено!', type: 'success', duration: 3000, speed: 500})
     }
+
+    async getTicket(ticketId) {
+        this.$socket.emit('listener', await encrypt(...arguments[1], numberToArray(ticketId)));
+    }
+
+    getTicketRes(res){
+        console.log(res, 'res')
+    }
 }
 
 export default new Processes();

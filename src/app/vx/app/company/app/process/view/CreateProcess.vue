@@ -35,7 +35,12 @@
           <template #header-title>файлы</template>
           <template #header-amount>{{ files.length }}</template>
         </header-add>
-        <file class="view-main-files-margin" v-for="(file, key) in files" :file="file" :key="key"/>
+        <file class="view-main-files-margin"
+              v-for="(file, key) in files"
+              :file="file"
+              :key="key"
+              :index="key"
+              @deleteFile="onDeleteFile"/>
       </div>
       <radio-slot :model="regularModel"
                   :disable="!regularDisable" @onClick="changeStatusRegular">
@@ -140,7 +145,6 @@ export default {
       messages: 'getMessages',
       processIndex: 'getProcessIndex',
       folders: 'getFolders',
-      levelsProcess: 'getLevelsProcess',
       disableStatusCount: 'getDisableStatusCount',
       levelsStructure: 'getLevelsStructure',
       processModel: 'getProcessModel',
@@ -254,6 +258,12 @@ export default {
     deletePerformer(e){
       let newSubdivisions = this.subdivisions.filter(el => el.level !== e)
       this.setSubdivisions(newSubdivisions)
+    },
+    onDeleteFile(index){
+      let newFiles = this.files.filter((el, i) => i !== index)
+      this.setFiles(newFiles)
+      let newFileIds = this.fileIds.filter((el, i) => i !== index)
+      this.setFileIds(newFileIds)
     }
   }
 }

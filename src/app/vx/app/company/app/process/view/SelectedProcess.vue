@@ -156,7 +156,7 @@ export default {
   }
 }
 
-.facade-resource-file {
+.resource-file-ui {
   margin-top: 8px;
 
   &::v-deep {

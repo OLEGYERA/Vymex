@@ -10,22 +10,23 @@
           <template #header-title>приложение</template>
         </header-add>
         <process-performer
-            @onClick="modalUploadResource = !modalUploadResource"
+            @onClick="openResourcesFolders"
             class="upload-files-recourse"
             :performers="uploadResource"/>
-        <upload-files @onUpload="handleUploadFile"/>
+        <upload-files @onUpload="$emit('closeModalUpload')"/>
       </template>
       <template #button-accept>Загрузить</template>
     </modal>
     <modal :disable="true"
            class="modal-upload-resource"
            :status="modalUploadResource"
-           @onClose="modalUploadResource = !modalUploadResource">
+           @onClose="$emit('closeModalUpload')">
       <template #title>Загрузить файлы из "Ресурсы"</template>
       <template #description>Файлы которые вы выберете будут прикреплены к ресурсу</template>
       <template #content>
         <div class="modal-upload-resource-text">Ресурсы /</div>
-        <folder v-for="(folder, folderKey) in resourceFolders" :folder="folder" :key="folderKey" @getId="changePage"/>
+        <folder v-for="(folder, folderKey) in resourceFolders" :folder="folder" :key="folderKey"
+                @onClick="insideWorkFiles"/>
       </template>
       <template #button-accept>Загрузить</template>
     </modal>
@@ -33,19 +34,23 @@
            @onOk="chooseFiles"
            class="upload-files-recourse-folder"
            :status="modalUploadResourceFolder"
-           @onClose="modalUploadResourceFolder = !modalUploadResourceFolder">
+           @onClose="closeModals">
       <template #title>Загрузить файлы из "Ресурсы"</template>
       <template #description>Файлы которые вы выберете будут прикреплены к ресурсу</template>
       <template #content>
         <div class="modal-upload-resource-text">
-          <span class="modal-upload-resource-text-root">Ресурсы / Ресурсы С.Е. / </span>
-          <span>Новая папка</span>
+          <span class="modal-upload-resource-text-root">Ресурсы / Рабочие файлы </span>
+          <span v-for="(breadCrumb, key) in breadCrumbs"
+                :key="key"
+                :class="breadCrumbs.length - 1 === key ? '' : 'modal-upload-resource-text-root'">
+           / {{breadCrumb}}
+          </span>
         </div>
         <header-add class="hide-add-icon" :style="{margin: '15px 0 12px'}">
           <template #header-title>папки</template>
           <template #header-amount>{{ newFolder.length }}</template>
         </header-add>
-        <folder v-for="(folder, folderKey) in newFolder" :folder="folder" :key="folderKey" @getId="changePage"/>
+        <folder v-for="(folder, folderKey) in newFolder" :folder="folder" :key="folderKey" @onClick="currentFolder"/>
         <header-add class="hide-add-icon" :style="{margin: '13px 0'}">
           <template #header-title>Файлы</template>
           <template #header-amount>{{ filesToUpload.length }}</template>
@@ -117,13 +122,18 @@ export default {
       {avatar: require('@/assets/img/my/resource.svg'), position: 'Ресурсы'},
     ],
   }),
+  destroyed() {
+    },
   computed: {
     ...mapGetters({
       resourceFolders: 'getResourceFolders',
       newFolder: 'getNewFolder',
       filesToUpload: 'getFilesToUpload',
       files: 'getFiles',
-      fileIds: 'getFileIds'
+      fileIds: 'getFileIds',
+      workFiles: 'getWorkFiles',
+      breadCrumbs: 'getBreadCrumbs',
+      selectedCompany: 'Company/getSelectedCompany'
     }),
     checkedFile() {
       let isCheck = this.filesToUpload.filter(el => el.checked)
@@ -136,13 +146,45 @@ export default {
       setEditMode: 'setIsEditMode',
       setFilesToUpload: 'setNewFilesToUpload',
       setFiles: 'setNewFiles',
-      setFileIds: 'setNewFileIds'
+      setFileIds: 'setNewFileIds',
+      setWorkerResourceFolders: 'setInsideWorkerResourceFolders',
+      setBreadCrumbs: 'setWhiteBreadCrumbs'
     }),
-    changePage(key) {
-      if (key.id === 1) {
-        this.modalUploadResource = !this.modalUploadResource
-        this.modalUploadResourceFolder = !this.modalUploadResourceFolder
-      }
+    insideWorkFiles() {
+      this.modalUploadResource = !this.modalUploadResource
+      this.modalUploadResourceFolder = !this.modalUploadResourceFolder
+      let workersFolders = this.workFiles.folders.map(el => ({
+        id: el.id,
+        title: el.name,
+        content: {
+          folders: el.childFoldersCount,
+          files: el.filesCount
+        },
+        group: el.isShared,
+        trash: null
+      }))
+      this.setWorkerResourceFolders(workersFolders)
+      let workersFiles = this.workFiles.files.map(el => ({
+        id: el.id,
+        fileId: el.fileId,
+        label: el.label,
+        extension: el.extension,
+        content: {
+          size: el.size,
+          date: el.createdAt.split(' ')[0]
+        },
+        group: el.isShared,
+        checked: false
+      }))
+      this.setFilesToUpload(workersFiles)
+    },
+    closeModals(){
+      this.modalUploadResourceFolder = !this.modalUploadResourceFolder
+      this.setBreadCrumbs([])
+      this.$emit('closeModalUpload')
+    },
+    currentFolder(data) {
+     this.$core.execViaComponent('Resources', 'getFolder', data.id);
     },
     changeFileStatus(index) {
       let newData = this.filesToUpload.map((el, i) => i === index ? {...el, checked: !el.checked} : el)
@@ -155,6 +197,8 @@ export default {
     },
     saveFiles() {
       this.setFiles(this.images)
+      let filesForUpload = this.images.map(el => el.fileId)
+      this.setFileIds(filesForUpload)
       this.$emit('closeModalUpload')
       if (this.images.length) {
         this.$notify({text: 'Файл успешно загружен!', type: 'success', duration: 3000, speed: 500})
@@ -164,37 +208,10 @@ export default {
       this.modalChooseFiles = !this.modalChooseFiles
       this.modalUploadResourceFolder = !this.modalUploadResourceFolder
     },
-    async handleUploadFile(newFileData) {
-      let file = newFileData.name.split('.')
-        let yyyy = new Date().getFullYear();
-        let mm = String(new Date().getMonth() + 1).padStart(2, '0');
-        let dd = String(new Date().getDate()).padStart(2, '0');
-        let date = dd + '.' + mm + '.' + yyyy
-
-        const newFile = new File([newFileData.result], `${newFileData.name}.png`,
-            {type: file[1], lastModified: new Date()});
-
-        this.$core.execViaComponent('Uploader', 'init', [
-          newFile,
-          this.handleUploadOnprogress, null,
-          this.handleUploaderOnload
-        ])
-
-        this.setFiles([...this.files, {
-          label: file[0],
-          extension: file[1],
-          size: (newFileData.size / 1000000).toFixed(3),
-          date
-        }])
-      this.$emit('closeModalUpload')
-    },
-    handleUploadOnprogress(progress) {
-      console.log(progress)
-    },
-    handleUploaderOnload(fileId) {
-      console.log(fileId, 'fileId')
-      let newFileIds = [...this.fileIds, fileId]
-      this.setFileIds(newFileIds)
+    openResourcesFolders() {
+      this.modalUpload = !this.modalUpload
+      this.modalUploadResource = !this.modalUploadResource
+      this.$core.execViaComponent('Resources', 'getWorkFolder', 7);
     }
   }
 }

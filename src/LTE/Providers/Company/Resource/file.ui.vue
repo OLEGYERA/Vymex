@@ -16,7 +16,7 @@
         :status="actionListStatus"
         :actions="actions"
         @onList="changePage"
-        @onDelete="$emit('deleteFile')"
+        @onDelete="$emit('deleteFile', index)"
         @onClose="actionListStatus=false"
     >
       <template #del-title><slot/></template>
@@ -53,6 +53,7 @@
     props: {
       file: Object,
       actions: Array,
+      index: Number
     },
     computed: {
       title(){

@@ -103,7 +103,6 @@ export default {
     Sidebar: () => import('@/LTE/Singletons/Dashboard/views/sidebar/Sidebar')
   },
   data: () => ({
-      regularModel: true,
       regularDisable: true,
       modalUpload: false,
       modalUploadResource: false,
@@ -122,7 +121,6 @@ export default {
       messages: 'getMessages',
       processIndex: 'getProcessIndex',
       folders: 'getFolders',
-      levelsProcess: 'getLevelsProcess',
       disableStatusCount: 'getDisableStatusCount',
       levelsStructure: 'getLevelsStructure',
       processModel: 'getProcessModel',
