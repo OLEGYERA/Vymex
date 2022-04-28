@@ -94,7 +94,6 @@ export default {
 			PhoneCodeConfirm: 'getPhoneCodeConfirm',
 			clientBlocking: 'getClientBlocking',
 			changePhone: 'getChangePhone',
-			UT: 'getUT',
 		}),
 		isClientBlocking(){
 			return !(this.clientBlocking === null);

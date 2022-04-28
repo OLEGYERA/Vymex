@@ -3,7 +3,7 @@
     <profile-faq/>
 
     <navigation-tabs class="profile-career-navigation"
-                     :tabs="[{title: 'Карьера', count: companies.length}, {title: 'Оплата'},{title: 'Резюме'}]" :current-tab="currentNavigationTab" @onTab="currentNavigationTab = $event">
+                     :tabs="[{title: 'Карьера', count: companies.length},{title: 'Резюме'}]" :current-tab="currentNavigationTab" @onTab="currentNavigationTab = $event">
 
       <template #tab-content-0>
         <div class="career-space" v-if="companies.length === 0">
@@ -28,14 +28,8 @@
           </template>
         </div>
       </template>
-
+      
       <template #tab-content-1>
-        <div style="width: 100%; background-color: #000;">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab, accusantium amet et eveniet facilis fugit obcaecati, odit rerum saepe sit temporibus veniam veritatis. A cupiditate dolor explicabo nemo numquam ullam?
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab, accusantium amet et eveniet facilis fugit obcaecati, odit rerum saepe sit temporibus veniam veritatis. A cupiditate dolor explicabo nemo numquam ullam?
-        </div>
-      </template>
-      <template #tab-content-2>
         <stub-triple 
           icon="suitcase.png" 
           title="Этот раздел в разработке" 

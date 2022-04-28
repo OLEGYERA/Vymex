@@ -68,7 +68,6 @@
   import IconSetting from '@Icon/Setting'
   import TitleCaps from '@Facade/Title/Caps'
   import IconFile from '@Icon/File'
-  import IconConfidential from '@Icon/Confidential'
   import IconInfo from '@Icon/Info'
   import IconExit from '@Icon/Exit'
   import Modal from "@Facade/Modal/Base";
@@ -84,7 +83,6 @@
       IconSetting,
       TitleCaps,
       IconFile,
-      IconConfidential,
       IconInfo,
       IconExit,
       Modal,

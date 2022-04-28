@@ -15,12 +15,12 @@
 				<template #additional><text-base class="contact">Мои контакты</text-base></template>
 			</plate-setting>
 			<title-caps>Пароль</title-caps>
-			<plate-setting>
+			<plate-setting @click.native="$router.push({name: 'vx.setting.confidentiality.change-password'})">
 				<template #icon><icon-edit/></template>
 				<template #title>Изменить пароль</template>
 			</plate-setting>
 			<title-caps>Блокировка</title-caps>
-			<plate-setting disable>
+			<plate-setting @click.native="$router.push({name: 'vx.setting.confidentiality.passcode'})" :disable="!passcodeActive">
 				<template #icon><icon-confidential/></template>
 				<template #title>Код-пароль</template>
 			</plate-setting>
@@ -39,11 +39,16 @@ import TitleBase from '@Facade/Title/Base'
 import TitleCaps from '@Facade/Title/Caps'
 import PlateSetting from '@Facade/Plate/Setting'
 import TextBase from '@Facade/Text/Base'
-import IconConfidential from '@Icon/Confidential'
+import { mapGetters } from 'vuex'
 
 export default {
 	name: 'vx.setting.confidentiality',
-	components: {NavigationComeback, TitleBase, TitleCaps, PlateSetting, TextBase, IconConfidential}
+	components: {NavigationComeback, TitleBase, TitleCaps, PlateSetting, TextBase},
+	computed: {
+		...mapGetters({
+			passcodeActive: 'Users/getPasscodeActive'
+		})
+	}
 }
 </script>
 
@@ -76,9 +81,6 @@ export default {
     }
 		.icon-edit {
 			color: $blue;
-		}
-		.icon-confidential {
-			color: $grey-scale-200 !important;
 		}
 	}
 </style>

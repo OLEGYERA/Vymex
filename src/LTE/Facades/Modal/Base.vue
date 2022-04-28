@@ -1,14 +1,14 @@
 <template>
   <div class="facade-modal-base" v-if="status">
     <div class="modal-base-body">
-      <button-close @onClick="$emit('onClose')"/>
+      <button-close v-if="!block" @onClick="$emit('onClose')"/>
       <div class="modal-base-header">
         <title-semi><slot name="title"/></title-semi>
         <text-base><slot name="description"/></text-base>
       </div>
       <div class="modal-base-content"><slot name="content"/></div>
       <div class="modal-base-footer">
-        <button-secondary @onClick="$emit('onClose')"><slot name="button-cancel">Отмена</slot></button-secondary>
+        <button-secondary v-if="!block" @onClick="$emit('onClose')"><slot name="button-cancel">Отмена</slot></button-secondary>
         <button-base @onClick="$emit('onOk')" :disable="disable"><slot name="button-accept"/></button-base>
       </div>
     </div>
@@ -36,6 +36,7 @@
         type: Boolean,
         required: true
       },
+      block: Boolean,
       disable: Boolean
     },
     computed: {

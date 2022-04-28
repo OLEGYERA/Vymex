@@ -11,7 +11,7 @@
       </div>
       <div class="setting-right-group">
         <span class="setting-additional"><slot name="additional"/></span>
-        <icon-arrow-right/>
+        <icon-arrow-right v-if="!buttonSwitch"/>
       </div>
     </div>
   </div>
@@ -25,7 +25,11 @@
     /*eslint-disable*/
     name: 'Facade.Plate.Setting',
     props: {
-      disable: Boolean
+      disable: Boolean,
+      buttonSwitch: {
+        type: Boolean,
+        default: false
+      }
     },
 
     components: {
@@ -63,6 +67,9 @@
           }
           &.disable {
             background-color: rgba($grey-scale-200, .2);
+            & .icon {
+              color: $grey-scale-200;
+            }
           }
         }
         .facade-text-base{

@@ -7,6 +7,8 @@ import Mail from './view/mail'
 import ConfidentialityPhone from './view/confidentiality/phone'
 import ConfidentialityMail from './view/confidentiality/mail'
 import ConfidentialityActiveSessions from './view/confidentiality/activeSessions'
+import ConfidentialityChangePassword from './view/confidentiality/changePassword'
+import ConfidentialityPasscode from './view/confidentiality/passcode'
 
 export default [
   {
@@ -42,6 +44,16 @@ export default [
         path: 'confidentiality/active-sessions',
         name: 'vx.setting.confidentiality.active-sessions',
         component: ConfidentialityActiveSessions
+      },
+      {
+        path: 'confidentiality/change-password',
+        name: 'vx.setting.confidentiality.change-password',
+        component: ConfidentialityChangePassword
+      },
+      {
+        path: 'confidentiality/passcode',
+        name: 'vx.setting.confidentiality.passcode',
+        component: ConfidentialityPasscode
       },
       {
         path: 'phone',

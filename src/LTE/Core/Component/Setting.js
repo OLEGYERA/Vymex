@@ -104,8 +104,7 @@ class Setting extends Binder{
     this.$socket.emit('listener', await encrypt(...arguments[1], data));
   }
 
-  editPhoneRes(response) {
-    console.log(response);
+  editPhoneRes() {
     this.$core.execViaComponent('Setting', 'activePhoneChange')
   }
 
@@ -115,7 +114,6 @@ class Setting extends Binder{
 
   activePhoneChangeRes(response) {
     this.$store.set('ChangePhone', response);
-    console.log(response);
   }
 
   async cancelPhoneChange(id) {
@@ -158,8 +156,15 @@ class Setting extends Binder{
   }
 
   getActiveSessionsRes(response) {
-    console.log(response);
     this.$store.set('ActiveSessions', response);
+  }
+
+  async editPassword(password) {
+    this.$socket.emit('listener', await encrypt(...arguments[1], utf8ToArray(password)));
+  }
+
+  editPasswordRes() {
+    this.$notify({text: 'Изменения сохранены!', type: 'success', duration: 3000, speed: 500})
   }
 }
 

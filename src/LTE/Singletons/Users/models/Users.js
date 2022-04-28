@@ -11,7 +11,15 @@ export default {
 
 		loadingShares: false,
 		loadingCofounders: false,
-		loadingSearch: false
+		loadingSearch: false,
+
+		passcode: {
+			code: '',
+			active: false
+		},
+		activeAutoLock: 3600000,
+		blockModal: false,
+		finishTime: null
 	},
 	getters: {
 		getStatus: (state) => state.status,
@@ -23,7 +31,11 @@ export default {
 		getSearch: state => state.search,
 		getLoadingShares: state => state.loadingShares,
 		getLoadingCofounders: state => state.loadingCofounders,
-		getLoadingSearch: state => state.loadingSearch
+		getLoadingSearch: state => state.loadingSearch,
+		getPasscode: state => state.passcode.code,
+		getPasscodeActive: state => state.passcode.active,
+		getActiveAutoLock: state => state.activeAutoLock,
+		getBlockModal: state => state.blockModal
 	},
 	mutations: {
 		show: (state) => state.status = true,
@@ -60,6 +72,33 @@ export default {
 		},
 		setLoadingSearch: (state, payload) => {
 			state.loadingSearch = payload
+		},
+		setPasscode: (state, payload) => {
+			state.passcode.code = payload
+		},
+		setPasscodeActive: (state, payload) => {
+			state.passcode.active = payload
+		},
+		setActiveAutoLock: (state, payload) => {
+			state.activeAutoLock = payload
+		},
+		setBlockModal: (state, change) => {
+			if (!state.finishTime || change) {
+				state.finishTime = new Date().getTime() + state.activeAutoLock
+			}
+
+			if (state.passcode.active) {
+				let idInt = setInterval(() => {
+					if (new Date().getTime() > state.finishTime) {
+						state.blockModal = true
+						clearInterval(idInt);
+						state.finishTime = null
+					}
+				}, 1000)
+			}
+		},
+		setCloseBlockModal: state => {
+			state.blockModal = false
 		}
 	}
 }
