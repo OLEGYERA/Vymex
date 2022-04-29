@@ -19,7 +19,8 @@ export default {
 		},
 		activeAutoLock: 3600000,
 		blockModal: false,
-		finishTime: null
+		finishTime: null,
+		idInt: null
 	},
 	getters: {
 		getStatus: (state) => state.status,
@@ -88,10 +89,10 @@ export default {
 			}
 
 			if (state.passcode.active) {
-				let idInt = setInterval(() => {
+				state.idInt = setInterval(() => {
 					if (new Date().getTime() > state.finishTime) {
 						state.blockModal = true
-						clearInterval(idInt);
+						clearInterval(state.idInt);
 						state.finishTime = null
 					}
 				}, 1000)
@@ -99,6 +100,9 @@ export default {
 		},
 		setCloseBlockModal: state => {
 			state.blockModal = false
+		},
+		setClearInterval(state) {
+			clearInterval(state.idInt);
 		}
 	}
 }

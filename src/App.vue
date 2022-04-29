@@ -31,7 +31,8 @@
     methods: {
       ...mapMutations({
         setBlockModal: 'Users/setBlockModal',
-        closeBlockModal: 'Users/setCloseBlockModal'
+        closeBlockModal: 'Users/setCloseBlockModal',
+        setClearInterval: 'Users/setClearInterval'
       }),
       unBlock() {
         this.closeBlockModal()
@@ -45,6 +46,15 @@
         getBlockModal: 'Users/getBlockModal'
       })
     },
+    watch: {
+      passcodeActive(val) {
+        if (val) {
+          this.setBlockModal(true)
+        } else {
+          this.setClearInterval()
+        }
+      }
+    }
   }
 </script>
 
