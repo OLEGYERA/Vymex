@@ -67,6 +67,14 @@ export default {
       this.$router.push({name: 'vx.process.company.processes'})
     }
   },
+  watch: {
+    countProcesses(data){
+      let updatedFolders = this.processFolders.map(el => el.id === 1
+          ? ({...el, content: {folders: 1, processes: data.unit}})
+          : ({...el, content: {folders: 1, processes: data.company}}))
+      this.setFolders(updatedFolders);
+    }
+  }
 }
 </script>
 

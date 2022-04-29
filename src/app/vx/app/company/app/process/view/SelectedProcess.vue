@@ -33,6 +33,7 @@
 
 <script>
 import {mapGetters, mapMutations} from "vuex";
+import ProcessesMixin from "../mixin";
 
 export default {
   name: 'vx.process.selected.process',
@@ -43,13 +44,16 @@ export default {
     File: () => import('@/LTE/Providers/Company/Resource/file.ui'),
     ProcessPerformer: () => import('../facades/ProcessPerformer')
   },
+  mixins: [ProcessesMixin],
   methods: {
     ...mapMutations({
       setPerformerCount: 'setNewPerformerCount',
       setSelectedProcess: 'setClickedSelectedProcess',
-      setPerformers: 'setCurrentPerformers'
+      setPerformers: 'setCurrentPerformers',
+      setSubdivisions: 'setChooseSubdivisions',
+      setFiles: 'setNewFiles'
     }),
-    goBack(){
+    goBack() {
       this.$router.push({name: 'vx.process.company.processes'})
       this.setSelectedProcess({})
       this.setPerformers([])
@@ -68,17 +72,17 @@ export default {
     activePeriod() {
       if (this.selectedProcess.repeatFrequency.interval === "P1D") {
         return 'Каждый день'
-      } else if(this.selectedProcess.repeatFrequency.interval === "P1W"){
+      } else if (this.selectedProcess.repeatFrequency.interval === "P1W") {
         return 'Каждую неделю'
-      } else if(this.selectedProcess.repeatFrequency.interval === "P1M"){
+      } else if (this.selectedProcess.repeatFrequency.interval === "P1M") {
         return 'Каждый месяц'
-      } else if(this.selectedProcess.repeatFrequency.interval === "P1Y") {
+      } else if (this.selectedProcess.repeatFrequency.interval === "P1Y") {
         return 'Каждый год'
       } else {
         return ''
       }
-      }
-    },
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>

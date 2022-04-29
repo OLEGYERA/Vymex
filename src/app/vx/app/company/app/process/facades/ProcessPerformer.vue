@@ -26,7 +26,7 @@
         <transition>
           <action-list
               class="process-alert-context"
-              @onList="$emit('show-sidebar')"
+              @onList="showSidebar(i)"
               @onDelete="$emit('onDelete', performer.level)"
               :status="performer.actionListStatus"
               :actions="items"
@@ -62,6 +62,12 @@ export default {
     ...mapGetters({
       processModel: 'getProcessModel'
     })
+  },
+  methods: {
+    showSidebar(){
+      this.$emit('show-sidebar')
+      this.performers[0].actionListStatus = !this.performers[0].actionListStatus
+    }
   }
 }
 </script>

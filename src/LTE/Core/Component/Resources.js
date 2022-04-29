@@ -73,19 +73,6 @@ class Resources extends Binder {
     }
 
     getWorkFolderRes(workFiles) {
-        let resourceFolders = [
-            {
-                id: 0,
-                title: 'Рабочие файлы',
-                content: {
-                    folders: workFiles.folders.length,
-                    files: workFiles.files.length,
-                },
-                group: null,
-                trash: null
-            }
-        ]
-        this.$store.set('WorkerResourceFolders', resourceFolders);
         this.$store.set('WorkersWorkFiles', workFiles);
     }
 
@@ -94,33 +81,7 @@ class Resources extends Binder {
     }
 
     getFolderRes(folder) {
-        let breadCrumbs = this.$store.get('BreadCrumbs')
-        breadCrumbs.push(folder.name)
-        this.$store.set('WhiteBreadCrumbs', breadCrumbs);
-        let workersFolders = folder.childFolders && folder.childFolders.map(el => ({
-            id: el.id,
-            title: el.name,
-            content: {
-                folders: el.childFolders ? el.childFolders.length : el.childFoldersCount,
-                files: el.files ? el.files.length : el.filesCount
-            },
-            group: el.isShared,
-            trash: null
-        }))
-        this.$store.set('InsideWorkerResourceFolders', workersFolders);
-        let workersFiles = folder.files && folder.files.map(el => ({
-            id: el.id,
-            fileId: el.fileId,
-            label: el.label,
-            extension: el.extension,
-            content: {
-                size: el.size,
-                date: el.createdAt.split(' ')[0]
-            },
-            group: el.isShared,
-            checked: false
-        }))
-        this.$store.set('NewFilesToUpload', workersFiles);
+         this.$store.set('CurrentSelectedFolder', folder);
     }
 }
 

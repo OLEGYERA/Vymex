@@ -2,9 +2,12 @@
   <div class="company-processes-files">
     <comeback @onClick="$router.push({name: 'vx.process'})"/>
     <div class="header-text-group">
-      <title-base>{{processModel === 'official-processes'
-          ? 'Процессы должностного лица'
-          : 'Процессы компании'}}</title-base>
+      <title-base>{{
+          processModel === 'official-processes'
+              ? 'Процессы должностного лица'
+              : 'Процессы компании'
+        }}
+      </title-base>
       <icon-points-vertical/>
     </div>
     <input-search :placeholder="'Поиск'"/>
@@ -41,12 +44,12 @@
 </template>
 
 <script>
-import {mapGetters} from "vuex";
+import {mapGetters, mapMutations} from "vuex";
 
 export default {
   name: 'vx.process.company.processes',
   data: () => ({
-      createProcess: false
+    createProcess: false
   }),
   components: {
     Comeback: () => import('@Facade/Navigation/Comeback'),
@@ -67,23 +70,83 @@ export default {
       this.$core.execViaComponent('Processes', 'getUnit',
           {creatorId: this.selectedCompany.workerId, unitId: this.selectedCompany.unitId, search: ''});
     }
-    this.$core.execViaComponent('Processes', 'count',
-        {
-          creatorId: this.selectedCompany.workerId,
-          unitId: this.selectedCompany.unitId,
-          levelId: this.selectedCompany.unitLevel,
-          companyId: this.selectedCompany.companyId
-        });
-      this.$core.execViaComponent('Processes', 'getUnits', this.selectedCompany.unitId);
+    this.$core.execViaComponent('Processes', 'getUnits', this.selectedCompany.unitId);
   },
   computed: {
     ...mapGetters({
       messages: 'getMessages',
       countProcesses: 'getCountProcesses',
       processModel: 'getProcessModel',
-      selectedCompany: 'Company/getSelectedCompany'
+      selectedCompany: 'Company/getSelectedCompany',
+      unitsRes: 'getUnitsRes',
+      levelsStructure: 'getLevelsStructure'
     })
   },
+  methods: {
+    ...mapMutations({
+      setLevels: 'setWidgetLevels'
+    })
+  },
+  watch: {
+    unitsRes(data) {
+      let arrayLevels = Object.values(data)
+      if (this.processModel === 'official-processes') {
+        let ceo = {}
+        let currentUnits = []
+        if (this.selectedCompany.unitLevel === 1) {
+          ceo = {
+            level: 1, showContext: true, data: [{
+              avatar: data.self.avatar,
+              numberPeople: 1,
+              id: data.self.id,
+              name: data.self.unitName,
+              checkedPosition: false,
+              checkboxType: 2,
+              actionListStatus: false
+            }]
+          }
+          arrayLevels = arrayLevels.slice(1, 4)
+          currentUnits = arrayLevels.map((level, index) => ({
+            level: index + 2, showContext: level.length && true, data: level.map(el => ({
+              numberPeople: el.workersCount,
+              id: el.id,
+              position: el.unitName,
+              checkedPosition: false,
+              checkboxType: 2,
+              actionListStatus: false
+            }))
+          }))
+          currentUnits.unshift(ceo)
+        } else {
+          currentUnits = arrayLevels.map((lvl, i) => this.selectedCompany.unitLevel < i + 1 ? ({
+            level: i + 1, showContext: lvl.length && true, data: lvl.map(el => ({
+              numberPeople: el.workersCount,
+              id: el.id,
+              position: el.unitName,
+              checkedPosition: false,
+              checkboxType: 2,
+              actionListStatus: false
+            }))
+          }) : lvl = {level: i + 1, data: []})
+        }
+        this.setLevels(currentUnits);
+      } else {
+        if (this.selectedCompany.unitLevel === 1 || this.selectedCompany.unitLevel === 2) {
+          let curLevels = this.levelsStructure.map((el, i) => ({
+            ...el, data: [{
+              ...el.data[0],
+              numberPeople: arrayLevels[i].length && this.selectedCompany.unitLevel < i + 1
+                  ? arrayLevels[i].length
+                  : 0
+            }]
+          }))
+          this.setLevels(curLevels);
+        } else {
+          this.setLevels([]);
+        }
+      }
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>
@@ -109,6 +172,7 @@ export default {
     padding: rem(8) 0;
     margin-bottom: 8px;
   }
+
   .empty-processes {
     height: 160px;
     display: flex;
@@ -144,5 +208,4 @@ export default {
     }
   }
 }
-
 </style>

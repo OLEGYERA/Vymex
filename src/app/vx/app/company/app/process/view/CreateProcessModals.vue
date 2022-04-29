@@ -122,8 +122,6 @@ export default {
       {avatar: require('@/assets/img/my/resource.svg'), position: 'Ресурсы'},
     ],
   }),
-  destroyed() {
-    },
   computed: {
     ...mapGetters({
       resourceFolders: 'getResourceFolders',
@@ -133,7 +131,8 @@ export default {
       fileIds: 'getFileIds',
       workFiles: 'getWorkFiles',
       breadCrumbs: 'getBreadCrumbs',
-      selectedCompany: 'Company/getSelectedCompany'
+      selectedCompany: 'Company/getSelectedCompany',
+      selectedFolder: 'getSelectedFolder'
     }),
     checkedFile() {
       let isCheck = this.filesToUpload.filter(el => el.checked)
@@ -147,8 +146,9 @@ export default {
       setFilesToUpload: 'setNewFilesToUpload',
       setFiles: 'setNewFiles',
       setFileIds: 'setNewFileIds',
-      setWorkerResourceFolders: 'setInsideWorkerResourceFolders',
-      setBreadCrumbs: 'setWhiteBreadCrumbs'
+      setNewFolder: 'setWorkerNewFolder',
+      setBreadCrumbs: 'setWhiteBreadCrumbs',
+      setResourceFolders: 'setWorkerResourceFolders'
     }),
     insideWorkFiles() {
       this.modalUploadResource = !this.modalUploadResource
@@ -163,7 +163,7 @@ export default {
         group: el.isShared,
         trash: null
       }))
-      this.setWorkerResourceFolders(workersFolders)
+      this.setNewFolder(workersFolders)
       let workersFiles = this.workFiles.files.map(el => ({
         id: el.id,
         fileId: el.fileId,
@@ -211,7 +211,52 @@ export default {
     openResourcesFolders() {
       this.modalUpload = !this.modalUpload
       this.modalUploadResource = !this.modalUploadResource
-      this.$core.execViaComponent('Resources', 'getWorkFolder', 7);
+     this.$core.execViaComponent('Resources', 'getWorkFolder', this.selectedCompany.workerId);
+    }
+  },
+  watch: {
+    workFiles(data){
+        let resourceFolders = [
+          {
+            title: 'Рабочие файлы',
+            content: {
+              folders: data.folders.length,
+              files: data.files.length,
+            },
+            group: null,
+            trash: null
+          }
+        ]
+        this.setResourceFolders(resourceFolders);
+    },
+    selectedFolder(data) {
+      let breadCrumbs = this.breadCrumbs
+      breadCrumbs.push(data.name)
+      this.setBreadCrumbs(breadCrumbs);
+      let workersFolders = data.childFolders && data.childFolders.map(el => ({
+        id: el.id,
+        title: el.name,
+        content: {
+          folders: el.childFolders ? el.childFolders.length : el.childFoldersCount,
+          files: el.files ? el.files.length : el.filesCount
+        },
+        group: el.isShared,
+        trash: null
+      }))
+      this.setNewFolder(workersFolders);
+      let workersFiles = data.files && data.files.map(el => ({
+        id: el.id,
+        fileId: el.fileId,
+        label: el.label,
+        extension: el.extension,
+        content: {
+          size: el.size,
+          date: el.createdAt.split(' ')[0]
+        },
+        group: el.isShared,
+        checked: false
+      }))
+      this.setFilesToUpload(workersFiles);
     }
   }
 }

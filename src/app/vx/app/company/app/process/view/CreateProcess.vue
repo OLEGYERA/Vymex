@@ -66,7 +66,7 @@
     </div>
     <div class="create-resource-buttons">
       <button-secondary class="create-resource-button"
-                        @onClick="this.$router.push({name: 'vx.process.company.processes'})"
+                        @onClick="$router.push({name: 'vx.process.company.processes'})"
       >Отмена
       </button-secondary>
       <button-base class="create-resource-button" @onClick="createProcess">Создать процесс</button-base>
@@ -79,7 +79,7 @@
     <sidebar v-if="isOfficialProcesses"
              :status="isOfficialProcesses"
              :disable="disableStatusCount === 0"
-             @on-close="handleAccessOfficial"
+             @on-close="closeSidebar"
              @handle-access="handleAccessOfficial">
       <template #head-title>Назначить исполнителя</template>
       <template #button-title>Сохранить</template>
@@ -121,22 +121,9 @@ export default {
       selectedDate: '',
   }),
   mounted() {
-    if (this.processModel === 'company-processes') {
-      this.$core.execViaComponent('Processes', 'getLevel',
-          {
-            creatorId: this.selectedCompany.workerId,
-            levelId: this.selectedCompany.unitLevel,
-            companyId: this.selectedCompany.companyId
-          });
-    } else {
-      this.$core.execViaComponent('Processes', 'getUnit',
-          {creatorId: this.selectedCompany.workerId, unitId: this.selectedCompany.unitId, search: ''});
-    }
-    this.$core.execViaComponent('Processes', 'getUnits', this.selectedCompany.unitId);
     this.setSubdivisions([])
     this.setFiles([])
     this.setFileIds([])
-
   },
   computed: {
     ...mapGetters({
@@ -215,11 +202,7 @@ export default {
         fileIds: this.fileIds,
         companyId: this.selectedCompany.companyId
       });
-      if (this.textAreaDescription && this.textAreaTitle && this.subdivisions.length) {
-        this.$notify({text: 'Процесс успешно создан!', type: 'success', duration: 3000, speed: 500})
-        this.$router.push({name: 'vx.process.selected.process'})
         this.setPerformers(this.subdivisions)
-      }
       if(!this.textAreaTitle) this.$notify({
         text: 'Введите название процесса!', type: 'error', duration: 3000, speed: 500})
       if(!this.textAreaDescription) this.$notify({
@@ -264,6 +247,10 @@ export default {
       this.setFiles(newFiles)
       let newFileIds = this.fileIds.filter((el, i) => i !== index)
       this.setFileIds(newFileIds)
+    },
+    closeSidebar(){
+      this.isOfficialProcesses = !this.isOfficialProcesses
+      this.setDisableStatusCount(0)
     }
   }
 }

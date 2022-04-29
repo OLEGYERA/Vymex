@@ -3,10 +3,12 @@
     <div class="text-group-text" @click="clickedMessage">{{ createElipsis }}</div>
     <div class="text-group-action">
       <process-event :message="message"/>
-      <icon-points-vertical @click.native="actionListStatus = true"/>
+      <icon-points-vertical @click.native="actionListStatus = !actionListStatus"/>
     </div>
-    <div class="action-list-outside" v-if="actionListStatus" @click="actionListStatus = false"></div>
-    <action-list :status="actionListStatus" :actions="items" @onList="editProcess" @onDelete="deleteProcess"/>
+    <action-list :status="actionListStatus" :actions="items"
+                 @onClose="actionListStatus = false"
+                 @onList="editProcess"
+                 @onDelete="deleteProcess"/>
   </div>
 </template>
 
@@ -128,16 +130,6 @@ export default {
 .icon {
   color: #fff;
   margin-right: 10px;
-}
-
-.action-list-outside {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  cursor: auto;
 }
 
 .facade-modal-action-list {

@@ -61,7 +61,7 @@
     </div>
     <div class="create-resource-buttons">
       <button-secondary class="create-resource-button"
-                        @onClick="this.$router.push({name: 'vx.process.company.processes'})"
+                        @onClick="$router.push({name: 'vx.process.company.processes'})"
       >Отмена
       </button-secondary>
       <button-base class="create-resource-button" @onClick="editProcess">Сохранить</button-base>
@@ -74,7 +74,7 @@
     <sidebar v-if="isOfficialProcesses"
              :status="isOfficialProcesses"
              :disable="disableStatusCount === 0"
-             @on-close="handleAccessOfficial"
+             @on-close="closeSidebar"
              @handle-access="handleAccessOfficial">
       <template #head-title>Назначить исполнителя</template>
       <template #button-title>Сохранить</template>
@@ -84,6 +84,7 @@
 
 <script>
 import {mapGetters, mapMutations} from "vuex";
+import ProcessesMixin from '../mixin'
 
 export default {
   name: 'vx.process.edit.process',
@@ -100,8 +101,9 @@ export default {
     StartProcess: () => import('../facades/StartProcess'),
     ProcessPerformer: () => import('../facades/ProcessPerformer'),
     CreateProcessModals: () => import('./CreateProcessModals'),
-    Sidebar: () => import('@/LTE/Singletons/Dashboard/views/sidebar/Sidebar')
+    Sidebar: () => import('@/LTE/Singletons/Dashboard/views/sidebar/Sidebar'),
   },
+  mixins: [ProcessesMixin],
   data: () => ({
       regularDisable: true,
       modalUpload: false,
@@ -140,25 +142,8 @@ export default {
       return count
     },
   },
-  mounted() {
-    this.setFiles([])
-    this.setFileIds([])
-    if (this.processModel === 'company-processes') {
-      this.$core.execViaComponent('Processes', 'getLevel',
-          {
-            creatorId: this.selectedCompany.workerId,
-            levelId: this.selectedCompany.unitLevel,
-            companyId: this.selectedCompany.companyId
-          });
-    } else {
-      this.$core.execViaComponent('Processes', 'getUnit',
-          {creatorId: this.selectedCompany.workerId, unitId: this.selectedCompany.unitId, search: ''});
-    }
-    this.$core.execViaComponent('Processes', 'getUnits', this.selectedCompany.unitId);
-  },
   destroyed() {
     this.setSubdivisions([])
-    this.setSelectedProcess({})
   },
   methods: {
     ...mapMutations({
@@ -191,10 +176,14 @@ export default {
       const arrayLevelsWorkers = this.subdivisions.map(el => el.level)
       const currentPeriod = this.periods.find(el => el.isActive)
       let today = new Date();
+      let yyyy = today.getFullYear();
+      let mm = String(today.getMonth() + 1).padStart(2, '0');
+      let dd = String(today.getDate()).padStart(2, '0');
       let hh = String(today.getHours()).padStart(2, '0');
       let minmin = String(today.getMinutes()).padStart(2, '0');
       let ss = String(today.getSeconds()).padStart(2, '0');
-      today = this.selectedDate + ' ' + hh + ':' + minmin + ':' + ss;
+      if(this.selectedDate) today = this.selectedDate + ' ' + hh + ':' + minmin + ':' + ss;
+      if(!this.selectedDate) today = yyyy + '-' + mm + '-' + dd + ' ' + hh + ':' + minmin + ':' + ss;
       this.$core.execViaComponent('Processes', 'edit', {
         title: this.textAreaTitle ? this.textAreaTitle : this.selectedProcess.title,
         description: this.textAreaDescription ? this.textAreaDescription : this.selectedProcess.description,
@@ -202,15 +191,13 @@ export default {
         isExecutor: this.processModel === 'official-processes' ? 1 : 0,
         creatorId: this.selectedCompany.workerId,
         unitId: this.processModel === 'official-processes' ? this.subdivisions[0].id : null,
-        level: this.processModel === 'company-processes' ? arrayLevelsWorkers : null,
-        repeatDate: this.selectedDate ? today : this.selectedProcess.repeatDate,
+        level: arrayLevelsWorkers,
+        repeatDate: this.selectedProcess.repeatDate ? this.selectedProcess.repeatDate : today,
         alertWorker: this.selectedProcess.alertWorker,
         repeatInterval: currentPeriod.id,
         fileIds: this.fileIds,
         id: this.processIndex
       });
-      this.$notify({text: 'Изменения сохранены!', type: 'success', duration: 3000, speed: 500})
-      this.$router.push({name: 'vx.process.selected.process'})
       this.setPerformers(this.subdivisions)
     },
     handleAccessOfficial() {
@@ -242,8 +229,12 @@ export default {
     deletePerformer(e){
       let newSubdivisions = this.subdivisions.filter(el => el.level !== e)
       this.setSubdivisions(newSubdivisions)
+    },
+    closeSidebar(){
+      this.isOfficialProcesses = !this.isOfficialProcesses
+      this.setDisableStatusCount(0)
     }
-  }
+  },
 }
 </script>
 

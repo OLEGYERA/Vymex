@@ -48,6 +48,8 @@ export default {
         filesToUpload: [],
         workFiles: [],
         breadCrumbs: [],
+        selectedFolder: [],
+        unitsRes: {},
         levelsStructure: [
             { level: 1, showContext: true, data: [
                 {position: "1 Уровень", checkedPosition: false, checkboxType: 1,
@@ -88,6 +90,8 @@ export default {
         getFileIds: (state) => state.fileIds,
         getWorkFiles: (state) => state.workFiles,
         getBreadCrumbs: (state) => state.breadCrumbs,
+        getSelectedFolder: (state) => state.selectedFolder,
+        getUnitsRes: (state) => state.unitsRes,
     },
     mutations: {
         setChooseProcessIndex: (state, payload) => state.processIndex = payload,
@@ -105,9 +109,11 @@ export default {
         setNewPeriods: (state, payload) => state.periods = payload,
         setNewFileIds: (state, payload) => state.fileIds = payload,
         setWorkerResourceFolders: (state, payload) => state.resourceFolders = payload,
-        setInsideWorkerResourceFolders: (state, payload) => state.newFolder = payload,
+        setWorkerNewFolder: (state, payload) => state.newFolder = payload,
         setWorkersWorkFiles: (state, payload) => state.workFiles = payload,
         setWhiteBreadCrumbs: (state, payload) => state.breadCrumbs = payload,
+        setCurrentSelectedFolder: (state, payload) => state.selectedFolder = payload,
+        setCurrentUnitsRes: (state, payload) => state.unitsRes = payload,
     },
 
 }

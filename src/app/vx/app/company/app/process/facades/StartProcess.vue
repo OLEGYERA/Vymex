@@ -23,13 +23,13 @@
 </template>
 
 <script>
-
+import {CalendarModalUi} from '@Providers'
 import {mapGetters, mapMutations} from "vuex";
 
 export default {
   name: 'vx.process.facade.start.process',
   components: {
-    CalendarModalUi: () => import('@Providers')
+    CalendarModalUi
   },
   props: {
     regularModel: {
