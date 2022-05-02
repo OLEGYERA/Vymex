@@ -14,19 +14,24 @@
       <template #title>Конфиденциальность</template>
     </plate-setting>
     <title-caps>Внешние ссылки</title-caps>
-    <plate-setting>
-      <template #icon><icon-file/></template>
-      <template #title>Пользовательское соглашение</template>
-    </plate-setting>
-    <plate-setting>
-      <template #icon><icon-confidential/></template>
-      <template #title>Политика конфиденциальности</template>
-    </plate-setting>
-    <plate-setting>
-      <template #icon><icon-info/></template>
-      <template #title>О приложении</template>
-    </plate-setting>
-
+    <a href="https://vymex.com/en/privacy" target="_blank">
+      <plate-setting>
+        <template #icon><icon-file/></template>
+        <template #title>Пользовательское соглашение</template>
+      </plate-setting>
+    </a>
+    <a href="https://vymex.com/en/privacy" target="_blank">
+      <plate-setting>
+        <template #icon><icon-confidential/></template>
+        <template #title>Политика конфиденциальности</template>
+      </plate-setting>
+    </a>
+    <a href="https://vymex.com/en/privacy" target="_blank">
+      <plate-setting>
+        <template #icon><icon-info/></template>
+        <template #title>О приложении</template>
+      </plate-setting>
+    </a>
     <plate-setting class="plate-exit" @click.native="modalLogout = true">
       <template #icon><icon-exit/></template>
       <template #title>Выйти</template>
@@ -151,5 +156,8 @@
     & img {
       margin-right: 12px;
     }
+  }
+  a {
+    text-decoration: none;
   }
 </style>
