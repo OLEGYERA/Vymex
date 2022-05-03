@@ -5,15 +5,16 @@
         <div class="navigation-tab-item" v-for="(tab, tabIndex) in tabs"
              :key="tabIndex" :ref="`tab-${tab.title}`" @click="$emit('onTab', tabIndex)">
           <title-caps :class="{active: currentTab === tabIndex}">
-            {{tab.title}}
-            <span class="tab-item-counter" v-if="tab.count">{{tab.count}}</span>
+            {{ tab.title }}
+            <span class="tab-item-counter" v-if="tab.count">{{ tab.count }}</span>
           </title-caps>
         </div>
         <div class="railTab" ref="railTab" :style="railTabStyle"></div>
       </div>
     </div>
     <transition :name="tabTransitionName" mode="out-in">
-      <template v-for="(tab, tabIndex) in tabs">
+      <draft-list v-if="userDraftRes.length" :userDraftRes="userDraftRes"/>
+      <template v-else v-for="(tab, tabIndex) in tabs">
         <div class="navigation-tabs-content" :key="tabIndex" v-if="tabIndex === currentTab">
           <slot :name="`tab-content-${tabIndex}`"/>
         </div>
@@ -23,133 +24,157 @@
 </template>
 
 <script>
-  import TitleCaps from '@Facade/Title/Caps'
+import TitleCaps from '@Facade/Title/Caps'
+import DraftList from '@/LTE/Singletons/Company/RegistrationLimits/views/draft.list'
+import {mapGetters} from "vuex"
 
-  export default {
-    name: 'Facades.Navigation.Tabs',
-    components: {
-      TitleCaps
+export default {
+  name: 'Facades.Navigation.Tabs',
+  components: {
+    TitleCaps,
+    DraftList
+  },
+  props: {
+    tabs: {
+      type: Array,
+      required: true,
+      validator: (tabs => tabs.length > 1)
     },
-    props: {
-      tabs: {
-        type: Array,
-        required: true,
-        validator: (tabs => tabs.length > 1)
-      },
-      currentTab: Number
+    currentTab: Number
+  },
+  mounted() {
+    this.updateRailTabStyle();
+    this.$core.execViaComponent('CompanyDraft', 'getUserDraftCompanies', this.selectedCompany.workerId);
+  },
+  data() {
+    return {
+      tabTransitionName: 'tab-slot-left',
+      railTabStyle: {}
+    }
+  },
+  computed: {
+    ...mapGetters({
+      userDraftRes: 'getUserDraftRes',
+      selectedCompany: 'Company/getSelectedCompany'
+    })
+  },
+  methods: {
+    changeTap(tabIndex) {
+      console.log(tabIndex)
     },
-    mounted() {
-      this.updateRailTabStyle();
-    },
-    data(){
-      return {
-        tabTransitionName: 'tab-slot-left',
-        railTabStyle: {}
-      }
-    },
-    methods: {
-      changeTap(tabIndex){
-        console.log(tabIndex)
-      },
-      updateRailTabStyle(){
-        const navigationTab = this.$refs[`tab-${this.tabs[this.currentTab].title}`];
-        if(navigationTab){
-          const railTab = navigationTab[0].getElementsByClassName('facade-title-caps')[0];
-          this.railTabStyle = {width: railTab.offsetWidth + 'px',left: railTab.offsetLeft + 'px'}
-        }
-      }
-    },
-    watch: {
-      currentTab(to, from){
-        this.tabTransitionName = to < from ? 'tab-slot-right' : 'tab-slot-left'
-        this.updateRailTabStyle();
+    updateRailTabStyle() {
+      const navigationTab = this.$refs[`tab-${this.tabs[this.currentTab].title}`];
+      if (navigationTab) {
+        const railTab = navigationTab[0].getElementsByClassName('facade-title-caps')[0];
+        this.railTabStyle = {width: railTab.offsetWidth + 'px', left: railTab.offsetLeft + 'px'}
       }
     }
+  },
+  watch: {
+    currentTab(to, from) {
+      this.tabTransitionName = to < from ? 'tab-slot-right' : 'tab-slot-left'
+      this.updateRailTabStyle();
+    }
   }
+}
 </script>
 
 <style lang="scss" scoped>
-  .facade-navigation-tabs{
-    width: 100%;
-    .navigation-tabs-header{
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px 20px 12px;
-      .rail-active-tab{
-        display: inline-flex;
-        align-items: inherit;
-        justify-content: inherit;
-        position: relative;
-        .navigation-tab-item {
-          padding: 0 6px 10px;
-          cursor: pointer;
-          margin-right: rem(36);
-          .tab-item-counter{
-            color: $blue;
-          }
-          &:last-child{
-            margin-right: 0;
-          }
+.facade-navigation-tabs {
+  width: 100%;
+
+  .navigation-tabs-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 20px 12px;
+
+    .rail-active-tab {
+      display: inline-flex;
+      align-items: inherit;
+      justify-content: inherit;
+      position: relative;
+
+      .navigation-tab-item {
+        padding: 0 6px 10px;
+        cursor: pointer;
+        margin-right: rem(36);
+
+        .tab-item-counter {
+          color: $blue;
         }
-        .railTab{
-          width: 40px;
-          height: 2px;
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          background-color: $blue;
-          transition: $vx-tab-time all ease;
+
+        &:last-child {
+          margin-right: 0;
         }
+      }
+
+      .railTab {
+        width: 40px;
+        height: 2px;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        background-color: $blue;
+        transition: $vx-tab-time all ease;
       }
     }
-    .navigation-tabs-content{
-      width: 100%;
-      height: 100%;
-      padding: 12px 0 24px;
-      overflow: hidden;
-      box-sizing: border-box;
-      &.tab-slot-right{
-        &-enter-active{
-          transform: translateX(-30%);
-          opacity: 0;
-          transition: all 80ms ease;
-        }
-        &-enter-to{
-          transform: translateX(0);
-          opacity: 1;
-        }
-        &-leave-active {
-          transform: translateX(0);
-          opacity: 1;
-          transition: all 80ms ease;
-        }
-        &-leave-to {
-          transform: translateX(30%);
-          opacity: 0;
-        }
+  }
+
+  .navigation-tabs-content {
+    width: 100%;
+    height: 100%;
+    padding: 12px 0 24px;
+    overflow: hidden;
+    box-sizing: border-box;
+
+    &.tab-slot-right {
+      &-enter-active {
+        transform: translateX(-30%);
+        opacity: 0;
+        transition: all 80ms ease;
       }
-      &.tab-slot-left{
-        &-enter-active{
-          transform: translateX(30%);
-          opacity: 0;
-          transition: all 80ms ease;
-        }
-        &-enter-to{
-          transform: translateX(0);
-          opacity: 1;
-        }
-        &-leave-active {
-          transform: translateX(0);
-          opacity: 1;
-          transition: all 80ms ease;
-        }
-        &-leave-to {
-          transform: translateX(-30%);
-          opacity: 0;
-        }
+
+      &-enter-to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+
+      &-leave-active {
+        transform: translateX(0);
+        opacity: 1;
+        transition: all 80ms ease;
+      }
+
+      &-leave-to {
+        transform: translateX(30%);
+        opacity: 0;
       }
     }
 
+    &.tab-slot-left {
+      &-enter-active {
+        transform: translateX(30%);
+        opacity: 0;
+        transition: all 80ms ease;
+      }
+
+      &-enter-to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+
+      &-leave-active {
+        transform: translateX(0);
+        opacity: 1;
+        transition: all 80ms ease;
+      }
+
+      &-leave-to {
+        transform: translateX(-30%);
+        opacity: 0;
+      }
+    }
   }
+}
 </style>

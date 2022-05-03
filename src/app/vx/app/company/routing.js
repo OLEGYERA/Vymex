@@ -1,6 +1,7 @@
 import CoCreate from "./create.app";
 import CoFounder from "./founder.app";
 import Blur from "./blur"
+import RegistrationLimits from "./registration.limits.app"
 import Co from "./app";
 import Dashboard from "./app/dashboard/app";
 
@@ -26,6 +27,11 @@ export default [
     path: 'blur',
     name: 'vx.co.founder.blur',
     component: Blur,
+  },
+  {
+    path: 'co-registration-limits',
+    name: 'vx.co.registration.limits',
+    component: RegistrationLimits,
   },
   {
     path: 'co-:companyID',

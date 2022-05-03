@@ -1,6 +1,6 @@
 <template>
   <div class="facade-plate-account create" v-if="category === 'create-company'"
-       :class="{'plate-account-tiny': tiny}" @click="$root.pushOverlapRoute({name: 'vx.co.create'})">
+       :class="{'plate-account-tiny': tiny}" @click="registrationLimits">
     <div class="plate-account-body">
       <div class="button-add">
         <icon-add/>
@@ -35,6 +35,7 @@
   import {UnitPositionUi} from '@Providers'
 
   import {mapGetters, mapMutations} from "vuex";
+  import CompanyMixin from "@/app/vx/app/company/mixin";
 
   export default {
     name: 'Facade.Plate.Account',
@@ -46,6 +47,7 @@
       IconDropdownArrow,
       UnitPositionUi
     },
+    mixins: [CompanyMixin],
     props: {
       tiny: {
         type: Boolean,

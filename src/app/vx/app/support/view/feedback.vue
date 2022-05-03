@@ -100,7 +100,6 @@ export default {
   created(){
     this.setFiles([])
     this.setFileIds([])
-   // this.$core.execViaComponent('Support', 'getTicket', 15)
   },
   methods: {
     ...mapMutations({
@@ -108,7 +107,6 @@ export default {
       setFileIds: 'setNewFileIds'
     }),
     createTicket(){
-      console.log(this.fileIds, 'this.fileId')
       this.$core.execViaComponent('Support', 'createTicket', {
         description: this.textArea,
         userId: this.selectedCompany.workerId,

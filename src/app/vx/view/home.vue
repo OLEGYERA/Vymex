@@ -8,7 +8,7 @@
       <template #tab-content-0>
         <div class="career-space" v-if="companies.length === 0">
           <stub-triple icon="company-empty.svg" title="Для начала работы <br> создайте компанию" description="Дальше система автоматически <br> настроит вашу новую рабочую зону"/>
-          <button-base @onClick="$root.pushOverlapRoute({name: 'vx.co.create'})">Создать компанию</button-base>
+          <button-base @onClick="registrationLimits">Создать компанию</button-base>
         </div>
         <div class="career-full-space" v-if="companies.length !== 0">
           <template v-for="(company, companyID) in companies">
@@ -53,6 +53,7 @@
   import StubTriple from '@Facade/Stub/Triple'
   import ButtonBase from '@Facade/Button/Base'
 
+  import CompanyMixin from "../app/company/mixin";
   import {mapGetters} from 'vuex'
   //import Dashboard from "@/LTE/Singletons/Dashboard/app";
 
@@ -64,6 +65,7 @@
       StubTriple, ButtonBase,
       // ResourcesApp: async  () => (await import('@Singletons')).ResourcesApp
     },
+    mixins: [CompanyMixin],
     data: () => ({
       currentNavigationTab: 0
     }),

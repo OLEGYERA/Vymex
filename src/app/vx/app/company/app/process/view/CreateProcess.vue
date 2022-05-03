@@ -62,7 +62,7 @@
       <process-performer class="view-main-performer"
                          @show-sidebar="isOfficialProcesses = !isOfficialProcesses"
                          :performers="subdivisions"
-                          @onDelete="deletePerformer"/>
+                         @onDelete="deletePerformer"/>
     </div>
     <div class="create-resource-buttons">
       <button-secondary class="create-resource-button"
@@ -108,17 +108,17 @@ export default {
     Sidebar: () => import('@/LTE/Singletons/Dashboard/views/sidebar/Sidebar')
   },
   data: () => ({
-      regularModel: true,
-      regularDisable: true,
-      modalUpload: false,
-      modalUploadResource: false,
-      modalUploadResourceFolder: false,
-      modalChooseFiles: false,
-      isOfficialProcesses: false,
-      textAreaDescription: '',
-      textAreaTitle: '',
-      alertWorker: 0,
-      selectedDate: '',
+    regularModel: true,
+    regularDisable: true,
+    modalUpload: false,
+    modalUploadResource: false,
+    modalUploadResourceFolder: false,
+    modalChooseFiles: false,
+    isOfficialProcesses: false,
+    textAreaDescription: '',
+    textAreaTitle: '',
+    alertWorker: 0,
+    selectedDate: '',
   }),
   mounted() {
     this.setSubdivisions([])
@@ -185,9 +185,9 @@ export default {
       let hh = String(today.getHours()).padStart(2, '0');
       let minmin = String(today.getMinutes()).padStart(2, '0');
       let ss = String(today.getSeconds()).padStart(2, '0');
-        today = this.selectedDate
-            ? this.selectedDate  + ' ' + hh + ':' + minmin + ':' + ss
-            : yyyy + '-' + mm + '-' + dd + ' ' + hh + ':' + minmin + ':' + ss;
+      today = this.selectedDate
+          ? this.selectedDate + ' ' + hh + ':' + minmin + ':' + ss
+          : yyyy + '-' + mm + '-' + dd + ' ' + hh + ':' + minmin + ':' + ss;
       this.$core.execViaComponent('Processes', 'create', {
         title: this.textAreaTitle,
         description: this.textAreaDescription,
@@ -202,15 +202,21 @@ export default {
         fileIds: this.fileIds,
         companyId: this.selectedCompany.companyId
       });
-        this.setPerformers(this.subdivisions)
-      if(!this.textAreaTitle) this.$notify({
-        text: 'Введите название процесса!', type: 'error', duration: 3000, speed: 500})
-      if(!this.textAreaDescription) this.$notify({
-        text: 'Введите описание процесса!', type: 'error', duration: 3000, speed: 500})
-      if(!this.subdivisions.length && this.processModel === 'official-processes') this.$notify({
-        text: 'Назначте исполнителя процесса!', type: 'error', duration: 3000, speed: 500})
-      if(!this.subdivisions.length && this.processModel === 'company-processes') this.$notify({
-        text: 'Выберете уровень С.Е для которого назначен процесс!', type: 'error', duration: 3000, speed: 500})
+      this.setPerformers(this.subdivisions)
+      if (!this.textAreaTitle) {
+        this.$notify({text: 'Введите название процесса!', type: 'error', duration: 3000, speed: 500})
+      } else if (!this.textAreaDescription) {
+        this.$notify({text: 'Введите описание процесса!', type: 'error', duration: 3000, speed: 500})
+      } else if (!this.subdivisions.length && this.processModel === 'official-processes') {
+        this.$notify({text: 'Назначте исполнителя процесса!', type: 'error', duration: 3000, speed: 500})
+      } else if (!this.subdivisions.length && this.processModel === 'company-processes') {
+        this.$notify({
+          text: 'Выберете уровень С.Е для которого назначен процесс!',
+          type: 'error',
+          duration: 3000,
+          speed: 500
+        })
+      }
     },
     handleAccessOfficial() {
       this.isOfficialProcesses = !this.isOfficialProcesses
@@ -238,17 +244,17 @@ export default {
     onDate(date) {
       this.selectedDate = date
     },
-    deletePerformer(e){
+    deletePerformer(e) {
       let newSubdivisions = this.subdivisions.filter(el => el.level !== e)
       this.setSubdivisions(newSubdivisions)
     },
-    onDeleteFile(index){
+    onDeleteFile(index) {
       let newFiles = this.files.filter((el, i) => i !== index)
       this.setFiles(newFiles)
       let newFileIds = this.fileIds.filter((el, i) => i !== index)
       this.setFileIds(newFileIds)
     },
-    closeSidebar(){
+    closeSidebar() {
       this.isOfficialProcesses = !this.isOfficialProcesses
       this.setDisableStatusCount(0)
     }
