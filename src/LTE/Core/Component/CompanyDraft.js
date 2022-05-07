@@ -23,8 +23,8 @@ class CompanyDraft extends Binder {
         this.$socket.emit('listener', await encrypt(...arguments[1], dataCreator));
     }
 
-    createRegistrationLimitsRes(queueId) {
-        this.$store.set('CurrentQueueId', queueId);
+    createRegistrationLimitsRes(res) {
+        this.$store.set('CurrentQueueId', res.queueId);
     }
 
     async createDraftCompany(data) {
@@ -38,12 +38,7 @@ class CompanyDraft extends Binder {
 
     createDraftCompanyRes(res) {
         if (!res.error) {
-            this.$notify({
-                text: 'Вы записаны в очередь! Мы обязательно уведомим вас об открытой регистрации',
-                type: 'success',
-                duration: 3000,
-                speed: 500
-            })
+            this.$router.push({name: 'vx'})
         }
     }
 

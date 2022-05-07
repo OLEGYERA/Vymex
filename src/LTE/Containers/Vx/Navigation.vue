@@ -38,7 +38,7 @@
               <template #icon><icon-help/></template>
               <template #title>Техническая поддержка</template>
             </sketch-plate-setting>
-            <sketch-plate-setting :tiny="!isFull">
+            <sketch-plate-setting :tiny="!isFull" @click.native="$router.push({name: 'vx.faq'})">
               <template #icon><icon-info/></template>
               <template #title>База знаний</template>
             </sketch-plate-setting>

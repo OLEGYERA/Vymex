@@ -23,8 +23,8 @@
             <div class="left-part-main-right">
               <home-icon :size="24"/>
               <span class="main-left-right-title">{{
-                  registrationLimitsRes.NextQueue
-                      ? '+' + registrationLimitsRes.NextQueue.limit
+                  registrationLimitsRes.nextQueue
+                      ? '+' + registrationLimitsRes.nextQueue.limit
                       : '+300'
                 }}</span>
               <span class="main-left-right-description">Компаний</span>
@@ -39,7 +39,7 @@
               <homes-icon/>
               <span class="users-companies-main-title">Компаний в очереди на регистрацию</span>
             </div>
-            <span class="right-part-users-companies-num">{{ registrationLimitsRes.NextQueue.current - 1 }}</span>
+            <span class="right-part-users-companies-num">{{ registrationLimitsRes.nextQueue.current - 1 }}</span>
           </div>
           <div class="right-part-registered-users">
             <div class="right-part-users-companies-main">
@@ -84,8 +84,8 @@ export default {
     nextMonth() {
       let currentMonth = new Date().getMonth()
       let index
-      if (this.registrationLimitsRes.NextQueue) {
-        if (this.registrationLimitsRes.NextQueue.limit >= this.registrationLimitsRes.NextQueue.current) {
+      if (this.registrationLimitsRes.nextQueue) {
+        if (this.registrationLimitsRes.nextQueue.limit >= this.registrationLimitsRes.nextQueue.current) {
           index = currentMonth < 11 ? currentMonth + 1 : 0
         } else {
           index = currentMonth < 10 ? currentMonth + 2 : currentMonth === 10 ? 0 : 1
@@ -101,9 +101,9 @@ export default {
        if(this.userDraftRes.length <= 3){
          this.isShowModal = !this.isShowModal
          this.$core.execViaComponent('CompanyDraft', 'createRegistrationLimits', {
-           startAt: this.registrationLimitsRes.NextQueue.startAt.split(' ')[0],
-           endAt: this.registrationLimitsRes.NextQueue.endAt.split(' ')[0],
-           limit: this.registrationLimitsRes.NextQueue.limit
+           startAt: this.registrationLimitsRes.nextQueue.startAt.split(' ')[0],
+           endAt: this.registrationLimitsRes.nextQueue.endAt.split(' ')[0],
+           limit: this.registrationLimitsRes.nextQueue.limit
          });
        } else {
          this.$notify({

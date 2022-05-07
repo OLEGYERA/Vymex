@@ -8,6 +8,7 @@ import Api from './app/api/routing'
 import Company from './app/company/routing'
 import Support from './app/support/routing'
 import Processes from './app/company/app/process/routing';
+import Faq from '../faq/routing';
 
 
 export default [
@@ -31,7 +32,8 @@ export default [
       // ...Messenger,
       ...Company,
       ...Processes,
-        ...Support
+        ...Support,
+        ...Faq
     ]
   }
 ]
