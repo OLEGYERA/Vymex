@@ -2,7 +2,9 @@
   <div v-if="userDraftRes.length" class="container-draft-list">
     <div class="draft-list-header">
       <title-caps>Ожидают регистрацию</title-caps>
-      <icon-question @click="$root.pushOverlapRoute({name: 'vx.co.registration.limits'})"/>
+      <div @click="$root.pushOverlapRoute({name: 'vx.co.registration.limits'})">
+        <icon-question/>
+      </div>
     </div>
     <div class="draft-list-body" v-for="(draft, key) in userDraftRes" :key="key" @click="toDraft(draft)">
       <icon-clock/>
@@ -66,6 +68,7 @@ export default {
 <style lang="scss" scoped>
 .container-draft-list {
   margin-top: rem(16);
+  padding-bottom: rem(76);
 
   .draft-list-header {
     display: flex;

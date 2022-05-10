@@ -98,7 +98,7 @@ export default {
   },
   methods: {
      getQueueId(){
-       if(this.userDraftRes.length <= 3){
+       if(this.userDraftRes.length < 3){
          this.isShowModal = !this.isShowModal
          this.$core.execViaComponent('CompanyDraft', 'createRegistrationLimits', {
            startAt: this.registrationLimitsRes.nextQueue.startAt.split(' ')[0],

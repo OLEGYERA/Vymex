@@ -39,15 +39,35 @@ class CompanyDraft extends Binder {
     createDraftCompanyRes(res) {
         if (!res.error) {
             this.$router.push({name: 'vx'})
+            this.$notify({
+                text: 'Вы записаны в очередь! Мы обязательно уведомим вас об открытой регистрации',
+                type: 'success',
+                duration: 3000,
+                speed: 500
+            })
         }
     }
 
-    async getUserDraftCompanies(unitId) {
-        this.$socket.emit('listener', await encrypt(...arguments[1], numberToArray(unitId)));
+    async getUserDraftCompanies(userId) {
+        this.$socket.emit('listener', await encrypt(...arguments[1], numberToArray(userId)));
     }
 
     getUserDraftCompaniesRes(res) {
+        let isCheckedLimits = this.$store.get('IsCheckedLimits');
+        if (isCheckedLimits) {
+            if (res.length < 3) {
+                this.$router.push({name: 'vx.co.registration.limits'})
+            } else {
+                this.$notify({
+                    text: 'Поставить в очередь на регистрацию можно не более 3-х компаний',
+                    type: 'error',
+                    duration: 3000,
+                    speed: 500
+                })
+            }
+        }
         this.$store.set('CurrentUserDraftRes', res);
+        this.$store.set('CurrentIsCheckedLimits', false);
     }
 }
 

@@ -2,6 +2,9 @@
   <div class="container-vx-header" :class="{co: exceptionalStyle}">
     <div class="vx-header-body">
       <div class="header-icons">
+        <div @click="isShowOnboarding(true)">
+          <icon-onboarding/>
+        </div>
         <div @click="notificationsShow()">
           <icon-alarm/>
         </div>
@@ -16,6 +19,7 @@
 <script>
   import IconAlarm from '@Icon/Alarm'
   import IconComments from '@Icon/Comments'
+  import IconOnboarding from '@Icon/Onboarding'
   import {mapMutations} from 'vuex'
 
   export default {
@@ -23,6 +27,7 @@
     components: {
       IconAlarm,
       IconComments,
+      IconOnboarding
     },
     computed: {
       exceptionalStyle(){
@@ -32,7 +37,8 @@
     methods: {
       ...mapMutations({
         messengerShow: 'Messenger/show',
-        notificationsShow: 'Notifications/showNotifications'
+        notificationsShow: 'Notifications/showNotifications',
+        isShowOnboarding: 'setWidgetIsShowOnboarding'
       })
     },
   }
@@ -60,6 +66,10 @@
           color: $grey-scale-200;
         }
         .icon-alarm {
+          width: 16px;
+          margin-right: 12px;
+        }
+        .icon-onboarding {
           width: 16px;
           margin-right: 12px;
         }

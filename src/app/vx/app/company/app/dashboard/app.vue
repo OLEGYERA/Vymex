@@ -20,6 +20,7 @@
         <template #title-caps-parent class="title-caps">пользователь</template>
         <template #button-title>Выдать доступ</template>
       </sidebar>
+      <onboarding-app/>
       <modal
           :status="showModal"
           @onClose="onClose"
@@ -55,6 +56,7 @@
 import Sidebar from "@/LTE/Singletons/Dashboard/views/sidebar/Sidebar";
 import ModalData from "@/LTE/Singletons/Dashboard/views/sidebar/ModalData";
 import Modal from "@Facade/Modal/Base";
+import OnboardingApp from "@/LTE/Singletons/Dashboard/onboarding/app";
 import {mapGetters, mapMutations} from 'vuex';
 
 export default {
@@ -73,7 +75,8 @@ export default {
     ControlCenter: () => import('@/LTE/Singletons/Dashboard/views/widgets/ControlCenter'),
     Sidebar,
     ModalData,
-    Modal
+    Modal,
+    OnboardingApp
   },
   data() {
     return {

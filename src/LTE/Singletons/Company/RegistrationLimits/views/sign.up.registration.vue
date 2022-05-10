@@ -30,7 +30,7 @@
 
 <script>
 
-import {mapGetters, mapMutations} from 'vuex';
+import {mapGetters} from 'vuex';
 
 export default {
   name: 'sign.up.registration.modal',
@@ -54,18 +54,11 @@ export default {
     }),
   },
   methods: {
-    ...mapMutations({}),
     inQueue(){
       this.$core.execViaComponent('CompanyDraft', 'createDraftCompany', {
         name : this.textAreaName,
         employeesCount: this.textAreaCount,
         queueId: this.queueId
-      })
-      this.$notify({
-        text: 'Вы записаны в очередь! Мы обязательно уведомим вас об открытой регистрации',
-        type: 'success',
-        duration: 3000,
-        speed: 500
       })
       this.textAreaName = ''
       this.textAreaCount = null

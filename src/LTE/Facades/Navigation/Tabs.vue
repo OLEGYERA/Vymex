@@ -44,7 +44,7 @@ export default {
   },
   mounted() {
     this.updateRailTabStyle();
-    this.$core.execViaComponent('CompanyDraft', 'getUserDraftCompanies', this.selectedCompany.workerId);
+    this.$core.execViaComponent('CompanyDraft', 'getUserDraftCompanies', this.user.id);
   },
   data() {
     return {
@@ -55,7 +55,7 @@ export default {
   computed: {
     ...mapGetters({
       userDraftRes: 'getUserDraftRes',
-      selectedCompany: 'Company/getSelectedCompany'
+      user: 'getUser'
     })
   },
   methods: {

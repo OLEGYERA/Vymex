@@ -1,6 +1,6 @@
 <template>
   <div class="icon icon-vymex-big">
-    <svg width="796" height="448" viewBox="0 0 796 448" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <svg :width="sizeWidth ? sizeWidth : 796" :height="sizeHeight ? sizeHeight : 448" viewBox="0 0 796 448" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
       <rect width="796" height="448" rx="16" fill="url(#pattern0)"/>
       <defs>
         <pattern id="pattern0" patternContentUnits="objectBoundingBox" width="1" height="1">
@@ -15,6 +15,10 @@
 
 <script>
 export default {
-  name: 'Icons.Vymex.Big'
+  name: 'Icons.Vymex.Big',
+  props: {
+    sizeWidth: Number,
+    sizeHeight: Number
+  }
 }
 </script>

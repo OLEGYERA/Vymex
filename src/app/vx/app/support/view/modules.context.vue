@@ -15,33 +15,18 @@
 </template>
 <script>
 
+import {mapGetters} from 'vuex';
+
 export default {
   name: 'support.modules.context',
-  data: () => ({
-    sections: [
-      {isActive: true, icon: require('@/assets/img/my/dashboard.svg'), title: 'Дашборд'},
-      {isActive: false, icon: require('@/assets/img/my/process.svg'), title: 'Процессы'},
-      {isActive: false, icon: require('@/assets/img/my/resource.svg'), title: 'Склад ресурсов'},
-      {isActive: false, icon: require('@/assets/img/my/structure.svg'), title: 'Структура компании'},
-      {isActive: false, icon: require('@/assets/img/my/share-management.svg'), title: 'Управление долей'},
-      {isActive: false, icon: require('@/assets/img/my/team.svg'), title: 'Команда'},
-      {isActive: false, icon: require('@/assets/img/my/task.svg'), title: 'Задачи'},
-      {isActive: false, icon: require('@/assets/img/my/result.svg'), title: 'Результат компании'},
-      {isActive: false, icon: require('@/assets/img/my/co-queues.svg'), title: 'Соучредители'},
-      {isActive: false, icon: require('@/assets/img/my/control-center.svg'), title: 'Центр управления'},
-      {isActive: false, icon: require('@/assets/img/my/calendar.svg'), title: 'Календарь'},
-      {isActive: false, icon: require('@/assets/img/my/storage.svg'), title: 'Склад ресурсов'},
-      {isActive: false, icon: require('@/assets/img/my/settings.svg'), title: 'Настройки'},
-      {isActive: false, icon: require('@/assets/img/my/assumptions.svg'), title: 'Предположения'},
-      {isActive: false, icon: require('@/assets/img/my/costs.svg'), title: 'Расходы С.Е.'},
-      {isActive: false, icon: require('@/assets/img/my/result-c-e.svg'), title: 'Результаты С.Е.'},
-    ]
-  }),
   props: {
     status: {
       type: Boolean,
       required: true
     }
+  },
+  computed: {
+   ...mapGetters({sections: 'getSections'})
   },
   methods: {
     handleClickOnItem(id) {

@@ -246,7 +246,8 @@ export default {
                 ]
             },
         ],
-        hideWidget: ''
+        hideWidget: '',
+        isShowOnboarding: false
     },
     getters: {
         getComponents: (state) => state.components,
@@ -254,6 +255,7 @@ export default {
         getModalData: (state) => state.modalData,
         getLevels: (state) => state.levels,
         getHideWidget: (state) => state.hideWidget,
+        getIsShowOnboarding: (state) => state.isShowOnboarding,
     },
     mutations: {
         setWidgetComponents: (state, payload) => state.components = payload,
@@ -261,6 +263,7 @@ export default {
         setWidgetModalData: (state, payload) => state.modalData = payload,
         setWidgetLevels: (state, payload) => state.levels = payload,
         setWidgetHideWidget: (state, payload) => state.hideWidget = payload,
+        setWidgetIsShowOnboarding: (state, payload) => state.isShowOnboarding = payload,
     },
 
 }
