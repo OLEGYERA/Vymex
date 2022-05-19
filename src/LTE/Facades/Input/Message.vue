@@ -22,10 +22,19 @@ export default {
   data(){
     return {
       baseModel: this.model,
-      placeholder: 'Введите сообщение'
+      // placeholder: 'Введите сообщение'
     }
   },
-  props: ['model'],
+  props: {
+    model: {
+      type: String,
+      required: true
+    },
+    placeholder: {
+      type: String,
+      default: () => 'Введите сообщение'
+    }
+  },
   computed: {
     height() {
       if (this.baseModel){
@@ -101,7 +110,7 @@ export default {
       color: #fff;
       resize: none;
       max-height: 116px;
-      background-color: $grey;
+      background-color: transparent;
       box-sizing: border-box;
       font-family: Inter, sans-serif;
       outline: none;

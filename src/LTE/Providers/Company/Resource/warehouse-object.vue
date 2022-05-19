@@ -83,11 +83,11 @@
       },
       cost: Number,
       countRequests: Number || null,
-      // id: Number,
+      id: Number,
     },
     data(){
       return{
-        actions: ['Отправить на склад', 'Редактировать'],
+        actions: ['Назначить ресурс', 'Редактировать'],
         actionListStatus: false,
         modalStatus: false,
       }
@@ -114,8 +114,8 @@
       },
       makeAction(id){
         if(id === 1){
-          this.$core.execViaComponent('Resources', 'getMaterial', this.id);
-          this.$router.push({name: 'vx.resource.editing'})
+          // this.$core.execViaComponent('Resources', 'getMaterial', this.id);
+          this.$router.push({name: 'vx.warehouse.edit.resource', params: {id: String(this.id)}})
         }
       }
     },
@@ -132,6 +132,7 @@
     justify-content: space-between;
     border-radius: 12px;
     background-color: $grey-scale-400;
+    margin-bottom: 8px;
     transition: background-color .3s;
     cursor: pointer;
     &:hover{

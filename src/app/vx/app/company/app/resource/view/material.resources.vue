@@ -8,12 +8,12 @@
     <input-search :placeholder="'Поиск'"/>
 
     <list-header title="объекты"
-                 :title-count="materialResources.length || ''"
+                 :title-count="materialResources.length"
                  @onAction="$router.push({name: 'vx.resource.create.resource'})"
                  @onSetting="showSidebar()"
                  @onReset="chosenUnits = []"
                  setting
-                 :setting-count="chosenUnits.length || ''"
+                 :setting-count="chosenUnits.length"
     />
 
     <material-object-ui
@@ -42,16 +42,30 @@
   export default {
     name: 'vx.resource.material.resources',
     components: {
-      Comeback,
-      MaterialObjectUi,
-      SidebarFilterUi,
-      InputSearch,
-      TitleBase,
-      ListHeader
+      Comeback, MaterialObjectUi, SidebarFilterUi, InputSearch,
+      TitleBase, ListHeader
     },
     data() {
       return{
         chosenUnits: []
+      }
+    },
+    props: {
+    },
+    computed: {
+      ...mapGetters({
+        sidebarFilterStatus: 'Resources/sidebarFilterStatus',
+        materialResources: 'Resources/getMaterialResources',
+        // currentCompany: 'Company/getCurrentCompany',
+
+        structure: 'Resources/getStructure', /// говно
+      }),
+      resources(){
+        if(this.chosenUnits.length) {
+          return this.materialResources.filter(resource => this.chosenUnits.includes(resource.worker.id))
+        }
+
+        return this.materialResources
       }
     },
     methods: {
@@ -67,25 +81,9 @@
         this.closeSidebar()
       }
     },
-    computed: {
-      ...mapGetters({
-        sidebarFilterStatus: 'Resources/sidebarFilterStatus',
-        materialResources: 'Resources/getMaterialResources',
-        userID: 'getUserID',
-        user: 'getUser',
-        currentCompany: 'Company/getCurrentCompany'
-      }),
-      resources(){
-        if(this.chosenUnits.length) {
-          return this.materialResources.filter(resource => this.chosenUnits.includes(resource.worker.id))
-        }
-
-        return this.materialResources
-      }
-    },
     created() {
-      this.$core.execViaComponent('Resources', 'getMaterialResources', 7);
-      this.$core.execViaComponent('Resources', 'getStructure', 4);
+      // this.$core.execViaComponent('Resources', 'getStructure', this.currentCompany.base.id);
+      this.$core.execViaComponent('Resources', 'getMaterialResources', this.structure.self[0].id); ///?
     },
   }
 </script>
@@ -109,7 +107,7 @@
       margin-bottom: rem(16);
     }
     .facade-navigation-list-header {
-      padding: rem(8) 0;
+      height: 36px;
       margin-bottom: 4px;
     }
 

@@ -68,14 +68,13 @@
       },
       resourceIdentifier: {
         type: String,
-        required: true
       },
       worker: Object,
       id: Number,
     },
     data(){
       return{
-        actions: ['Назначить ресурс', 'Редактировать'],
+        actions: ['Отправить на склад', 'Редактировать'],
         actionListStatus: false,
         modalStatus: false,
       }
@@ -87,6 +86,9 @@
         this.$core.execViaComponent('Resources', 'deleteMaterial', this.id)
       },
       makeAction(id){
+        if(id === 0) {
+          this.$core.execViaComponent('Resources', 'moveToWarehouse', this.id)
+        }
         if(id === 1){
           this.$core.execViaComponent('Resources', 'getMaterial', this.id);
           this.$router.push({name: 'vx.resource.editing'})

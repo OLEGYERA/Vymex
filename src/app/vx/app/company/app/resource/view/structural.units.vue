@@ -7,9 +7,8 @@
     </div>
     <input-search :placeholder="'Поиск'"/>
 
-    <list-header title="папки" :title-count="2"/>
+    <list-header title="папки" :title-count="2" :add="false"/>
 
-    <!--    <folder-ui v-for="(folder, folderKey) in folders" :folder="folder" :key="folderKey" @onClick="changePage"/>-->
     <folder-ui :folder="{name: 'Материальные ресурсы', objects: materialResources.length}"
                @onClick="$router.push({name: 'vx.resource.material.resources'})"/>
     <folder-ui :folder="{name: 'Нематериальные ресурсы', objects: intangibleResources.length}"
@@ -42,14 +41,18 @@
     computed: {
       ...mapGetters({
         materialResources: 'Resources/getMaterialResources',
-        intangibleResources: 'Resources/getIntangibleResources'
+        intangibleResources: 'Resources/getIntangibleResources',
+
+        structure: 'Resources/getStructure',
+        // currentCompany: 'Company/getCurrentCompany',
       }),
     },
     methods: {
     },
-    beforeCreate() {
-      this.$core.execViaComponent('Resources', 'getMaterialResources', 7);
-      this.$core.execViaComponent('Resources', 'getWorkerIntangible', 7)
+    created() {
+      // this.$core.execViaComponent('Resources', 'getStructure', this.currentCompany.base.id);
+      this.$core.execViaComponent('Resources', 'getMaterialResources', this.structure.self[0].id);
+      this.$core.execViaComponent('Resources', 'getWorkerIntangible', this.structure.self[0].id)
     },
   }
 </script>

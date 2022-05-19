@@ -160,6 +160,9 @@ export default {
       }
     },
   },
+  created(){
+    this.$core.execViaComponent('Company', 'get', this.$route.params.companyID);
+  },
 }
 </script>
 

@@ -84,10 +84,10 @@
 import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd";
 import FileCheckbox from "../facades/FileCheckbox";
 import {mapGetters, mapMutations} from "vuex";
-import File from "@/LTE/Singletons/Resources/facades/File";
+// import File from "@/LTE/Singletons/Resources/facades/File";
 import ProcessPerformer from "@/app/vx/app/company/app/process/facades/ProcessPerformer";
 import Modal from "@Facade/Modal/Base";
-import Folder from "@/LTE/Singletons/Resources/facades/Folder";
+// import Folder from "@/LTE/Singletons/Resources/facades/Folder";
 
 export default {
   name: 'vx.process.create.process',
@@ -96,7 +96,7 @@ export default {
     File,
     ProcessPerformer,
     Modal,
-    Folder,
+    // Folder,
     FileCheckbox
   },
   props: {

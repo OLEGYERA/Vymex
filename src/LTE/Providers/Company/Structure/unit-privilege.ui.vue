@@ -1,5 +1,5 @@
 <template>
-  <unit-ui v-bind="$props">
+  <unit-ui v-bind="$props" @onClick="$emit('onClick')">
     <icon-watcher v-if="privilegeType === 1"/>
     <icon-editor v-if="privilegeType === 2"/>
     <icon-setting v-if="privilegeType === 3"/>

@@ -7,7 +7,7 @@
     </div>
     <input-search :placeholder="'Поиск'"/>
 
-    <list-header title="Объекты" :title-count="resources.length || ''" @onAction="$router.push({name: 'vx.resource.create.intangible.resource'})"/>
+    <list-header title="Объекты" :title-count="resources.length" @onAction="$router.push({name: 'vx.resource.create.intangible.resource'})"/>
     <div class="background-plate" v-if="!resources.length">
       <img class="image" src="@/assets/img/my/empty-file.svg">
       Файлов нет
@@ -40,14 +40,15 @@
       IntangibleObjectUi,
       ListHeader
     },
-    // data(){
-    //   return{
-    //   }
-    // },
     computed: {
       ...mapGetters({
-        resources: 'Resources/getIntangibleResources',
+        intangibleResources: 'Resources/getIntangibleResources',
+
+        structure: 'Resources/getStructure',
       }),
+      resources(){
+        return this.intangibleResources
+      }
     },
     methods:{
       getResourceInfo(id) {
@@ -56,7 +57,7 @@
       }
     },
     created() {
-      this.$core.execViaComponent('Resources', 'getWorkerIntangible', 7)
+      this.$core.execViaComponent('Resources', 'getWorkerIntangible', this.structure.self[0].id)
     }
   }
 </script>
@@ -80,7 +81,7 @@
       margin-bottom: rem(16);
     }
     .facade-navigation-list-header {
-      padding: rem(8) 0;
+      height: 36px;
       margin-bottom: rem(4);
     }
 

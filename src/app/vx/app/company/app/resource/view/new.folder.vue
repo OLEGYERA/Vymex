@@ -7,9 +7,9 @@
       </div>
       <input-search :placeholder="'Поиск'"/>
 
-    <list-header title="папки" :title-count="chosenFolder.childFolders.length || ''" @onAction="ac"/>
+    <list-header title="папки" :title-count="chosenFolder.childFolders.length" @onAction="modalStatus = true"/>
 
-    <modal-base :status="true"
+    <modal-base :status="modalStatus"
                 @onClose="modalStatus = false"
                 class="modal-create-folder"
                 @onOk="createFolder">
@@ -27,10 +27,10 @@
       </template>
     </modal-base>
 
-    <div v-if="!!chosenFolder.childFolders.length" class="resources-folders">
-      <folder-ui v-for="(folder, folderKey) in chosenFolder.childFolders"
+    <div v-if="!!folders.length" class="resources-folders">
+      <folder-ui v-for="(folder, folderKey) in folders"
                  :folder="folder" :key="folderKey"
-                 @onClick="$router.push({name: 'vx.resource.empty.folder'})"/>
+                 @onClick="$core.execViaComponent('Resources', 'getFolder', folder.id)"/>
     </div>
 
     <div v-else class="background-plate background-plate-folder">
@@ -38,9 +38,9 @@
       Папок нет
     </div>
 
-    <list-header :sort="chosenFolder.files.length > 1" title="Файлы" :title-count="chosenFolder.files.length || ''"/>
-    <div  v-if="!!chosenFolder.files.length" class="resource-files">
-      <file-ui v-for="(file, key) in chosenFolder.files" :file="file" :key="key" :actions="actions"/>
+    <list-header :sort="files.length > 1" title="Файлы" :title-count="files.length"/>
+    <div  v-if="!!files.length" class="resource-files">
+      <file-ui v-for="(file, key) in files" :file="file" :key="key" :actions="actions"/>
     </div>
 
     <div v-else class="background-plate">
@@ -77,7 +77,6 @@
         newFolder: {
           name: '',
           workerId: 7,
-          parent: this.chosenFolder.id
         },
         modalStatus: false
       }
@@ -86,6 +85,12 @@
       ...mapGetters({
         chosenFolder: 'Resources/getChosenFolder'
       }),
+      folders(){
+        return this.chosenFolder.childFolders
+      },
+      files(){
+        return this.chosenFolder.files
+      },
     },
     methods: {
       ...mapMutations({
@@ -93,24 +98,22 @@
       }),
       exit(){
         this.$router.back()
-        this.clearChosenFolder()
       },
       createFolder(){
         if(!this.newFolder.name) {
           this.newFolder.name = 'Новая папка'
         }
+        this.newFolder.parent = this.chosenFolder.id
+        this.modalStatus = false
         this.$core.execViaComponent('Resources', 'createFolder', this.newFolder)
-        this.$notify({text: 'Папка успешно создана', type: 'success', duration: 3000, speed: 500})
-        this.modalCreateStatus = false
         this.newFolder.name = ''
       },
-      ac(){
-        this.modalStatus = true
-        console.log(1111112233, this.modalStatus)
-      }
     },
-    beforeCreate() {
-      this.$core.execViaComponent('Resources', 'getFolder', this.$route.params.id)
+    // created() {
+    //   this.$core.execViaComponent('Resources', 'getFolder', this.$route.params.id)
+    // },
+    destroyed() {
+      this.clearChosenFolder()
     }
   }
 </script>

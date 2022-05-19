@@ -64,12 +64,16 @@
     computed: {
       ...mapGetters({
         structure: 'Resources/getStructure',
+        currentCompany: 'Company/getCurrentCompany',
       }),
     },
     methods:{
       ...mapMutations({
         closeSidebar: 'Resources/closeSidebar',
       })
+    },
+    beforeCreate() {
+      this.$core.execViaComponent('Resources', 'getStructure', this.currentCompany.base.id);
     }
   }
 </script>

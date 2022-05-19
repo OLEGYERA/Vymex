@@ -1,5 +1,6 @@
 import Privilege from "./app";
 import AppList from './view/app-list'
+import Structure from "./view/structure";
 
 export default [
   {
@@ -10,6 +11,11 @@ export default [
         path: '/',
         name: 'vx.co.control-center.privilege',
         component: AppList,
+      },
+      {
+        path: 'structure',
+        name: 'vx.co.control-center.privilege.structure',
+        component: Structure,
       },
     ]
   },

@@ -8,11 +8,11 @@
         <template #icon><icon-calendar/></template>
         <template #title>Рабочий календарь</template>
       </plate-setting>
-      <plate-setting>
+      <plate-setting @click.native="$router.push({name: 'vx.co.control-center.account', params: {companyID: $route.params.companyID}})">
         <template #icon><icon-wallet/></template>
         <template #title>Личный кабинет</template>
       </plate-setting>
-      <plate-setting>
+      <plate-setting @click.native="$router.push({name: 'vx.co.control-center.file-storage', params: {companyID: $route.params.companyID}})">
         <template #icon><icon-file-storage/></template>
         <template #title>Файловое хранилище</template>
       </plate-setting>
@@ -20,7 +20,7 @@
         <template #icon><icon-privilege/></template>
         <template #title>Привелегии (Ролирование)</template>
       </plate-setting>
-      <plate-setting>
+      <plate-setting @click.native="$router.push({name: 'vx.co.control-center.company-info', params: {companyID: $route.params.companyID}})">
         <template #icon><icon-info/></template>
         <template #title>Инфо о компании</template>
       </plate-setting>

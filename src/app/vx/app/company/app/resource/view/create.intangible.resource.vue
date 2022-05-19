@@ -43,26 +43,11 @@
       return{
       }
     },
-    methods: {
-      ...mapMutations({
-        setCreatorIntangible: 'Resources/setCreatorIntangibleResource',
-        clearIntangible: 'Resources/clearIntangible',
-      }),
-      addResource(){
-        this.$core.execViaComponent('Resources', 'createIntangible', 7)
-        this.$core.execViaComponent('Resources', 'getWorkerIntangible', 7)
-        this.$notify({text: 'Ресурс успешно создан', type: 'success', duration: 3000, speed: 500})
-        this.clearIntangible()
-        this.$router.push({name: 'vx.resource.intangible.resources'})
-      },
-      onExit(){
-        this.$router.back()
-        this.clearIntangible()
-      }
-    },
     computed:{
       ...mapGetters({
         newResource: 'Resources/getCreatorIntangibleResource',
+
+        structure: 'Resources/getStructure',
       }),
       buttonDisable(){
         if(!this.newResource.name || !this.newResource.url || !this.newResource.login || !this.newResource.password){
@@ -70,6 +55,22 @@
         }
         return false
       }
+    },
+    methods: {
+      ...mapMutations({
+        setCreatorIntangible: 'Resources/setCreatorIntangibleResource',
+        clearIntangible: 'Resources/clearIntangible',
+      }),
+      addResource(){
+        this.$core.execViaComponent('Resources', 'createIntangible', this.structure.self[0].id)
+        this.$router.push({name: 'vx.resource.intangible.resources'})
+      },
+      onExit(){
+        this.$router.back()
+      }
+    },
+    destroyed() {
+      this.clearIntangible()
     }
   }
 </script>

@@ -5,7 +5,7 @@
     <header class="resource-main-header">
       <div class="header-group-text">
         <title-base>Ресурсы</title-base>
-        <text-base>Тут храняться все ваши и доступные вам файлы</text-base>
+        <text-base>Тут хранятся все ваши и доступные вам файлы</text-base>
       </div>
 
       <disk-storage-ui :storage-space="mainInfo.storageSpace"/>
@@ -51,14 +51,14 @@
     },
     computed:{
       ...mapGetters({
-        mainInfo: 'Resources/getMainInfo'
+        mainInfo: 'Resources/getMainInfo',
+
+        currentCompany: 'Company/getCurrentCompany',
+        structure: 'Resources/getStructure',
       }),
       memoryPercentUsed() {
         return Math.round((this.mainInfo.storageSpace.used * 100) / this.mainInfo.storageSpace.total)
       },
-      // sliderWidth(){
-      //
-      // }
     },
     methods: {
       ...mapMutations({
@@ -80,6 +80,9 @@
       }
     },
     beforeCreate() {
+      this.$core.execViaComponent('Resources', 'getStructure', this.currentCompany.base.id);
+    },
+    created() {
       this.$core.execViaComponent('Resources', 'getInfo', 7)
     },
   }

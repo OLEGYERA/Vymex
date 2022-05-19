@@ -9,7 +9,7 @@
       <div class="modal-base-content"><slot name="content"/></div>
       <div class="modal-base-footer">
         <button-secondary @onClick="$emit('onClose')"><slot name="button-cancel">Отмена</slot></button-secondary>
-        <button-base @onClick="$emit('onOk')"><slot name="button-accept">Сохранить</slot></button-base>
+        <button-base :disable="buttonDisable" @onClick="$emit('onOk')"><slot name="button-accept">Сохранить</slot></button-base>
       </div>
     </div>
   </div>
@@ -35,7 +35,11 @@
       status: {
         type: Boolean,
         required: true
-      }
+      },
+      buttonDisable: {
+        type: Boolean,
+        default: () => false
+      },
     },
     computed: {
 
@@ -100,6 +104,11 @@
         .facade-button-secondary{
           padding: 16px 0;
           margin-right: 24px;
+        }
+        .facade-button-base{
+          &[disable] {
+            background-color: $grey-scale-400;
+          }
         }
       }
     }

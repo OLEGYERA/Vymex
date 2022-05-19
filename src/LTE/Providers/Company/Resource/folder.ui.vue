@@ -138,8 +138,7 @@
       },
       deleteFolder(){
         this.$core.execViaComponent('Resources', 'moveToTrashFolder', this.folder.id)
-        this.$core.execViaComponent('Resources', 'getWorkFolder', 7)
-        this.$notify({text: 'Папка удалена', type: 'success', duration: 3000, speed: 500})
+        // this.$core.execViaComponent('Resources', 'getWorkFolder', 7)
       },
       performAction(key){
         if (key === 0) {
@@ -153,7 +152,6 @@
       renameFolder() {
         this.$core.execViaComponent('Resources', 'editFolder', {name: this.folder.name, folderId: this.folder.id})
         this.statusBaseRename = false
-        this.$notify({text: 'Папка переименована', type: 'success', duration: 3000, speed: 500})
       }
     },
 

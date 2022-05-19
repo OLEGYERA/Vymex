@@ -1,5 +1,5 @@
 <template>
-  <div class="structure-unit-ui" :class="`su-level-${unitLevel}`">
+  <div class="structure-unit-ui" :class="`su-level-${unitLevel}`" @click="onClick">
     <div class="structure-unit-info">
       <image-avatar :logo="$core.traits.ImageLogo(unitData.avatar, unitData.name, unitData.lastname)" :color-code="$core.traits.ImageColorCode(unitData.id)"/>
       <div class="info-title-group">
@@ -27,11 +27,17 @@
       TitleSub, TitleCaption
     },
     mixins: [Mixin],
+    methods: {
+      onClick(){
+        this.$emit('onClick')
+      }
+    }
   }
 </script>
 
 <style lang="scss" scoped>
   .structure-unit-ui{
     margin-bottom: 16px;
+    cursor: pointer;
   }
 </style>

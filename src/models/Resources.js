@@ -33,7 +33,9 @@ export default {
         mainInfo: {},
         folderParticipants: [],
         trash: {},
-        chosenFolder: {}
+        chosenFolder: {},
+
+        routerActive: []
     },
     getters: {
         sidebarFilterStatus: (state) => state.sidebarFilterStatus,

@@ -87,7 +87,7 @@
     box-sizing: border-box;
     overflow: hidden;
     border-radius: 30px;
-    background-color: $grey;
+    background-color: transparent;
     transition: border .2s ease-out;
     border: 1px solid $grey-scale-300;
 

@@ -15,7 +15,13 @@
         <slot name="header-content"/>
       </div>
     </div>
-      <slot name="tab-content"/>
+    <transition :name="tabTransitionName" mode="out-in">
+      <template v-for="(tab, tabIndex) in tabs">
+        <div class="navigation-tabs-content" :key="tabIndex" v-if="tabIndex === currentTab">
+          <slot :name="`tab-content-${tabIndex}`"/>
+        </div>
+      </template>
+    </transition>
   </div>
 </template>
 
@@ -40,6 +46,7 @@
     },
     data(){
       return {
+        tabTransitionName: 'tab-slot-left',
         railTabStyle: {}
       }
     },
@@ -56,7 +63,8 @@
       }
     },
     watch: {
-      currentTab(){
+      currentTab(to, from){
+        this.tabTransitionName = to < from ? 'tab-slot-right' : 'tab-slot-left'
         this.updateRailTabStyle();
       }
     }
@@ -104,6 +112,46 @@
       padding: 12px 0 24px;
       overflow: hidden;
       box-sizing: border-box;
+      &.tab-slot-right{
+        &-enter-active{
+          transform: translateX(-30%);
+          opacity: 0;
+          transition: all 80ms ease;
+        }
+        &-enter-to{
+          transform: translateX(0);
+          opacity: 1;
+        }
+        &-leave-active {
+          transform: translateX(0);
+          opacity: 1;
+          transition: all 80ms ease;
+        }
+        &-leave-to {
+          transform: translateX(30%);
+          opacity: 0;
+        }
+      }
+      &.tab-slot-left{
+        &-enter-active{
+          transform: translateX(30%);
+          opacity: 0;
+          transition: all 80ms ease;
+        }
+        &-enter-to{
+          transform: translateX(0);
+          opacity: 1;
+        }
+        &-leave-active {
+          transform: translateX(0);
+          opacity: 1;
+          transition: all 80ms ease;
+        }
+        &-leave-to {
+          transform: translateX(-30%);
+          opacity: 0;
+        }
+      }
     }
 
   }

@@ -2,7 +2,6 @@ import Resources from "./app";
 import Main from "./view/main";
 import WorkerFiles from "./view/worker.files";
 import NewFolder from "./view/new.folder";
-import EmptyFolder from "./view/empty.folder";
 import StructuralUnits from "./view/structural.units";
 import MaterialResources from "./view/material.resources";
 import CreateResource from "./view/create.material.resource";
@@ -30,14 +29,16 @@ export default [
             name: 'vx.resource.worker.files',
         },
         {
-            path: 'new-folder/:id',
+            path: 'new-folder',
             component: NewFolder,
             name: 'vx.resource.new.folder',
-        },
-        {
-            path: 'empty-folder',
-            component: EmptyFolder,
-            name: 'vx.resource.empty.folder',
+            children: [
+                {
+                    path: 'new-folder/:id',
+                    component: NewFolder,
+                    name: 'vx.resource.new.folder',
+                }
+            ]
         },
         {
             path: 'structural-units',

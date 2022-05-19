@@ -43,27 +43,30 @@
       return{
       }
     },
-    methods: {
-      ...mapMutations({
-        editIntangibleResource: 'Resources/editIntangibleResource',
-      }),
-      editResource(){
-        if (!this.buttonDisable){
-          this.$router.push({name: 'vx.resource.intangible.resources'})
-        }
-      }
-    },
     computed:{
       ...mapGetters({
         resource: 'Resources/getChosenIntangibleResource',
+
+        structure: 'Resources/getStructure',
       }),
+
       buttonDisable(){
         if(this.resource.name && this.resource.url && this.resource.login){
           return false
         }
         return true
       }
-    }
+    },
+    methods: {
+      ...mapMutations({
+        editIntangibleResource: 'Resources/editIntangibleResource',
+      }),
+      editResource(){
+        this.$core.execViaComponent('Resources', 'editIntangible', this.structure.self[0].id)
+
+        this.$router.push({name: 'vx.resource.intangible.resources'})
+      }
+    },
   }
 </script>
 

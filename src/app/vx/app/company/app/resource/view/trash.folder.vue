@@ -16,7 +16,7 @@
 
     <div class="trash-main-content" v-if="trash.folders.length || trash.files.length">
 
-      <list-header :add="false" title="папки" :title-count="trash.folders.length || ''"/>
+      <list-header :add="false" title="папки" :title-count="trash.folders.length"/>
 
       <div class="resources-folders">
         <folder-ui v-for="(folder, folderKey) in trash.folders"
@@ -26,7 +26,7 @@
         />
       </div>
 
-      <list-header :add="false" :sort="trash.files.length > 1" class="files-header" @onSort="modalStatusSort= true" title="Файлы" :title-count="trash.files.length || ''"/>
+      <list-header :add="false" :sort="trash.files.length > 1" class="files-header" @onSort="modalStatusSort= true" title="Файлы" :title-count="trash.files.length"/>
 
       <modal-base :status="modalStatusSort" @onClose="modalStatusSort=false" @onOk="sortFiles">
         <template #title>Сортировка</template>
@@ -127,7 +127,9 @@
     },
     computed: {
       ...mapGetters({
-        trash: 'Resources/getTrash'
+        trash: 'Resources/getTrash',
+
+        structure: 'Resources/getStructure',
       }),
     },
     methods:{
@@ -166,7 +168,7 @@
       },
     },
     created() {
-      this.$core.execViaComponent('Resources', 'getTrash', [7])
+      this.$core.execViaComponent('Resources', 'getTrash', [this.structure.self[0].id])
     }
   }
 </script>
@@ -192,24 +194,14 @@
     }
     .trash-main-content{
       .facade-navigation-list-header{
-        padding: 8px 0;
+        height: 36px;
         margin-bottom: 4px;
       }
       .resources-folders {
         margin-bottom: 20px;
       }
-      .facade-modal-base::v-deep {
-        .icon-points-vertical{
-          display: none;
-        }
-      }
       .resource-file-ui {
         margin-bottom: 8px;
-      }
-      .files-header.facade-header-add::v-deep{
-        .icon-add{
-          display: none;
-        }
       }
     }
     .empty-trash{

@@ -15,6 +15,9 @@ export default {
         },
         disableNotifications: false,
         disableTime: 0,
+
+        notifications: [],
+        notificationsCount: null
     },
     getters: {
         statusNotifications: (state) => state.statusNotifications,
@@ -29,6 +32,9 @@ export default {
         tabIndex: (state) => state.sidebarData.tabIndex,
         disableNotifications: (state) => state.disableNotifications,
         disableTime: (state) => state.disableTime,
+
+        getNotifications: (state) => state.notifications,
+        getNotificationsCount: (state) => state.notificationsCount
     },
     mutations: {
         showNotifications: (state) => {
@@ -56,5 +62,8 @@ export default {
         changeTime: (state, newTime) => {
             state.disableTime = newTime
         },
+
+        setNotifications: (state, payload) => state.notifications = payload,
+        setNotificationsCount: (state, payload) => state.notificationsCount = payload.count,
     }
 }

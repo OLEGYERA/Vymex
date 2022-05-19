@@ -25,7 +25,7 @@
 <script>
 /*eslint-disable*/
 
-import Name from "@/LTE/Singletons/Messenger/facades/Name";
+import Name from "@/LTE/Singletons/MessengerDff/facade/Name";
 import Avatar from "@Facade/Image/Avatar";
 import TextBase from "@Facade/Text/Base";
 import TitleCaption from "@Facade/Title/Caption";

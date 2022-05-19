@@ -59,7 +59,11 @@
         return `${this.file.label}.${this.file.extension}`
       },
       content() {
-        return `${this.file.size} MB ${this.file.date}`
+        if (!this.file.createdAt) {
+          return `${this.file.size} MB`
+        } else {
+          return `${this.file.size} MB ${this.file.createdAt.substr(0, 10)}`
+        }
       },
       ...mapGetters({
         sidebarStatus: 'Resources/sidebarFolderAccessStatus',
@@ -80,6 +84,7 @@
 
 <style lang="scss" scoped>
   .resource-file-ui {
+    margin-bottom: 8px;
     position: relative;
     padding: 8px;
     display: flex;

@@ -41,7 +41,7 @@ import {mapGetters} from "vuex";
 import ProcessEvent from "../facades/ProcessEvent"
 import ProcessPerformer from "../facades/ProcessPerformer"
 import HeaderAdd from "@/LTE/Singletons/facades/HeaderAdd";
-import File from "@/LTE/Singletons/Resources/facades/File";
+// import File from "@/LTE/Singletons/Resources/facades/File";
 
 export default {
   name: 'vx.process.selected.process',
@@ -49,7 +49,7 @@ export default {
     Comeback,
     ProcessEvent,
     HeaderAdd,
-    File,
+    // File,
     ProcessPerformer
   },
   computed: {

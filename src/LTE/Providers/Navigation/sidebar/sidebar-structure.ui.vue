@@ -2,7 +2,7 @@
   <div class="navigation-sidebar-structure-ui">
     <div class="level-plate-grp" v-if="structure.level1.length">
       <div class="sidebar-level-header">
-        <title-caps><slot>Для себя</slot></title-caps>
+        <title-caps><slot>1 уровень</slot></title-caps>
         <input-checkbox v-if="multiply" @onClick="checkLevel('1')" :model="multiply1" :view-type="viewType"/>
       </div>
       <unit-checkbox-ui
@@ -130,10 +130,6 @@
       chosenUnits: Array
     },
     computed: {
-      // model(){
-      //   if(this.structure)
-      //   return id.includes(this.chosenUnits)
-      // }
     },
     methods:{
       onClick(key){
@@ -144,27 +140,32 @@
 
         if (this[`multiply${key}`] === true) {
           this[`open${key}`] = true
-          this.structure[`level${key}`].map(unit => {
-            if (!this.chosenUnits.includes(unit.id)) {
-              this.chosenUnits.push(unit.id)
-            }
-          })
+          this.$emit('selectAllLevel', key)
+          // this.structure[`level${key}`].map(unit => {
+          //   if (!this.chosenUnits.includes(unit.id)) {
+          //     this.chosenUnits.push(unit.id)
+          //   }
+          // })
         } else {
           this[`open${key}`] = false
-          this.structure[`level${key}`].map(unit => {
-              this.chosenUnits.splice(this.chosenUnits.indexOf(unit.id), 1)
-          })
+          this.$emit('deleteAllLevel', key)
+          // this.structure[`level${key}`].map(unit => {
+          //     this.chosenUnits.splice(this.chosenUnits.indexOf(unit.id), 1)
+          // })
         }
 
       },
       choosePerson(id){
         this.$emit('onClick', id)
-        if (!this.chosenUnits.includes(id)) {
-          this.chosenUnits.push(id)
-        } else {
-          this.chosenUnits.splice(this.chosenUnits.indexOf(id), 1)
-        }
+        // if (!this.chosenUnits.includes(id)) {
+        //   this.chosenUnits.push(id)
+        // } else {
+        //   this.chosenUnits.splice(this.chosenUnits.indexOf(id), 1)
+        // }
       }
+    },
+    mounted() {
+      console.log(this.structure, 'structure111')
     }
   }
 </script>
@@ -187,7 +188,6 @@
       height: 28px;
       padding-right: rem(8);
       margin-bottom: 8px;
-      align-items: center;
       .title-right-part{
         display: inherit;
         align-items: inherit;
@@ -219,35 +219,3 @@
     }
   }
 </style>
-
-<!--<div class="level-plate" v-for="(unit, unitKey) in levels" :key="unitKey">-->
-
-<!--<div class="sidebar-level-header" v-if="unit.level === 1">-->
-<!--  <title-caps><slot>Для себя</slot></title-caps>-->
-<!--  <input-checkbox v-if="multiply" :model="unit.levelChecked" :view-type="viewType" @onClick="checkLevel(unitKey)"/>-->
-<!--</div>-->
-<!--<div class="sidebar-level-header header-arrow" v-else>-->
-<!--  <div class="title-right-part" @click="onClick(unitKey)">-->
-<!--    <div class="level-title-arrow">-->
-<!--      <arrow-right :class="{'open-units': !unit.disable}"/>-->
-<!--    </div>-->
-<!--    <title-caps>{{ unit.level }} уровень</title-caps>-->
-<!--  </div>-->
-<!--  <input-checkbox v-if="multiply" :model="unit.levelChecked" :view-type="viewType" @onClick="checkLevel(unitKey)"/>-->
-<!--</div>-->
-
-<!--<transition name="fade">-->
-<!--  <div class="sidebar-level-units" v-if="!unit.disable">-->
-<!--    <unit-checkbox-ui-->
-<!--        v-for="(person, personKey) in unit.data"-->
-<!--        :key="personKey"-->
-<!--        :view-type="viewType"-->
-<!--        :model="person.unitChecked"-->
-<!--        :unit-data="person.unitData"-->
-<!--        :unit-level="person.unitLevel"-->
-<!--        :unit-position="person.unitPosition"-->
-<!--        @onClick="choosePerson(unitKey, personKey)"-->
-<!--    />-->
-<!--  </div>-->
-<!--</transition>-->
-<!--</div>-->

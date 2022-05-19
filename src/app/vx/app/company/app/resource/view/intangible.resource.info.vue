@@ -90,7 +90,7 @@
         clearChosenIntangibleResource: 'Resources/clearChosenIntangibleResource',
       }),
       performAction() {
-        this.$router.push({name: 'vx.resource.intangible.resource.editing', params: {resourceId: this.$route.params.id || 0}});
+        this.$router.push({name: 'vx.resource.intangible.resource.editing'});
       },
       deleteResource(){
         this.$core.execViaComponent('Resources', 'deleteIntangible', this.resource.id)

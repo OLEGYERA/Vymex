@@ -78,7 +78,7 @@ import StartProcess from "../facades/StartProcess";
 import RadioSlot from "../facades/RadioSlot";
 import ProcessAlert from "../facades/ProcessAlert";
 import {mapGetters, mapMutations} from "vuex";
-import File from "@/LTE/Singletons/Resources/facades/File";
+// import File from "@/LTE/Singletons/Resources/facades/File";
 import ProcessPerformer from "@/app/vx/app/company/app/process/facades/ProcessPerformer";
 import CreateProcessModals from "./CreateProcessModals"
 
@@ -93,7 +93,7 @@ export default {
     ButtonSecondary,
     ButtonBase,
     RadioSlot,
-    File,
+    // File,
     ProcessAlert,
     StartProcess,
     ProcessPerformer,

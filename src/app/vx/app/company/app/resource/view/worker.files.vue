@@ -7,10 +7,10 @@
     </div>
     <input-search :placeholder="'Поиск'"/>
 
-    <list-header title="папки" :title-count="workFolder.folders.length" @onAction="modalCreateStatus=true"/>
+    <list-header title="папки" :title-count="folders.length" @onAction="modalCreateStatus = true"/>
 
     <modal-base :status="modalCreateStatus"
-                @onClose="modalCreateStatus=false"
+                @onClose="modalCreateStatus = false"
                 class="modal-create-folder"
                 @onOk="createFolder">
       <template #title>
@@ -27,17 +27,22 @@
       </template>
     </modal-base>
 
-    <div class="resource-folders">
+    <div class="resource-folders" v-if="folders.length">
       <folder-ui
-          v-for="(folder, folderKey) in workFolder.folders"
+          v-for="(folder, folderKey) in folders"
           :folder="folder"
           :key="folderKey"
           @onClick="changePage(folder.id)"/>
     </div>
 
-    <list-header :sort="!!workFolder.files.length" title="Файлы" :title-count="workFolder.files.length || ''" @onSort="modalStatus=true"/>
+    <div v-else class="background-plate background-plate-folder">
+      <img class="image" src="@/assets/img/my/empty-folder.svg">
+      Папок нет
+    </div>
 
-    <modal-base :status="modalStatus" @onClose="modalStatus=false" @onOk="sortFiles">
+    <list-header :sort="files.length > 1" title="Файлы" :title-count="files.length" @onSort="modalSortStatus = true"/>
+
+    <modal-base :status="modalSortStatus" @onClose="modalSortStatus = false" @onOk="sortFiles">
       <template #title>Сортировка</template>
       <template #content>
         <button-checkbox
@@ -50,9 +55,10 @@
       <template #button-accept>Применить</template>
     </modal-base>
 
-    <div v-if="!!workFolder.files.length" >
-      <file-ui v-for="(file, key) in workFolder.files" :file="file" :key="key" :actions="actions" @getActiveValue="actionListChange"/>
+    <div v-if="!!files.length">
+      <file-ui v-for="(file, key) in files" :file="file" :key="key" :actions="actions" @getActiveValue="actionListChange"/>
     </div>
+
     <div v-else class="background-plate">
       <img class="image" src="@/assets/img/my/empty-file.svg">
       Файлов нет
@@ -61,6 +67,7 @@
 </template>
 
 <script>
+/*eslint-disable*/
   import Comeback from "@Facade/Navigation/Comeback";
   import InputSearch from "@Facade/Input/Search";
   import TitleBase from "@Facade/Title/Base"
@@ -88,29 +95,40 @@
       ListHeader
       // ModalActionList
     },
+
     data() {
       return{
-        modalStatus: false,
+        modalSortStatus: false,
         modalCreateStatus: false,
         modalValues: ['По дате (сначала новое)', 'По дате (сначала старое)', 'По размеру файлов'],
         activeButton: 2,
         actions: ['Редактировать', 'Открыть доступ', 'Переместить'],
-        files: [],
+        // files: [],
         newFolder: {
           name: '',
           workerId: 7,
           parent: null
-        }
+        },
+
       }
     },
     computed: {
       ...mapGetters({
-        workFolder: 'Resources/getWorkFolder'
+        workFolder: 'Resources/getWorkFolder',
+
+        structure: 'Resources/getStructure',
       }),
+      folders(){
+        return this.workFolder.folders
+      },
+      files() {
+        return this.workFolder.files
+      }
     },
     methods:{
       changePage(id) {
-          this.$router.push({name: 'vx.resource.new.folder', params: {id: id}})
+        this.$core.execViaComponent('Resources', 'getFolder', id)
+        this.$router.push({name: 'vx.resource.new.folder'})
       },
       actionListChange(key) {
         console.log(key)
@@ -138,15 +156,22 @@
         if(!this.newFolder.name) {
           this.newFolder.name = 'Новая папка'
         }
-        this.$core.execViaComponent('Resources', 'createFolder', this.newFolder)
-        this.$notify({text: 'Папка успешно создана', type: 'success', duration: 3000, speed: 500})
-        this.$core.execViaComponent('Resources', 'getWorkFolder', 7)
         this.modalCreateStatus = false
+        this.$core.execViaComponent('Resources', 'createFolder', this.newFolder)
+
         this.newFolder.name = ''
       },
+      // create() {
+      //   console.log(this.modalCreateStatus)
+      //   this.modalCreateStatus = true
+      //   console.log(this.modalCreateStatus)
+      // }
     },
     created(){
       this.$core.execViaComponent('Resources', 'getWorkFolder', 7)
+    },
+    mounted() {
+      console.log(this.modalCreateStatus, this.modalValues)
     }
   }
 </script>
@@ -173,7 +198,7 @@
       margin-bottom: rem(20);
     }
     .facade-navigation-list-header {
-      padding: rem(8) 0;
+      height: 36px;
       margin-bottom: 4px;
     }
     .resource-file-ui {

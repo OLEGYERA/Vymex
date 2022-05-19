@@ -4,43 +4,140 @@
     <title-base class="task-create-title">Создать задачу</title-base>
 
     <div class="task-create-space">
-      <input-base placeholder="Название задачи" labeled/>
-      <input-text-area :model="''" :max-length="1000" placeholder="Описание" labeled count/>
+      <input-base placeholder="Название задачи" labeled :model="newTask.title" @onInput="setNewTask(['title', $event])"/>
+      <input-text-area :model="newTask.description" :max-length="1000" placeholder="Описание" labeled count  @onInput="setNewTask(['description', $event])"/>
 
       <title-caps>Время выполнения</title-caps>
 
       <div class="date-range-box">
-        <input-date :model="dateStart" @onDate="dateStart = $event" placeholder="Начало" :disable="perpetual"/>
-        <input-date :model="dateEnd" @onDate="dateEnd = $event" placeholder="Конец" :disable="perpetual"/>
+        <input-date :model="newTask.start" @onDate="setNewTask(['start', `${$event}`])" placeholder="Начало" :disable="newTask.isTimeless"/>
+        <input-date :model="newTask.finish" @onDate="setNewTask(['finish', `${$event}`])" placeholder="Конец" :disable="newTask.isTimeless"/>
       </div>
       <div class="perpetual-task">
-        <input-checkbox :model="perpetual" @click.native="togglePerpetual"/>
+        <input-checkbox :model="newTask.isTimeless" @click.native="togglePerpetual"/>
         <text-base @click.native="togglePerpetual">Бессрочная задача</text-base>
       </div>
 
-      <navigation-list-header title="Список" :title-count="countTest" @onAction="countTest++"/>
-      <div class="content-container"></div>
-      <navigation-list-header title="файлы"/>
-      <div class="content-container"></div>
-      <navigation-list-header title="Исполнители"/>
-      <div class="content-container"></div>
-      <navigation-list-header title="Следят"/>
-      <div class="content-container">
-        <unit-setting-ui :unit-data="person.unitData" :unit-level="person.unitLevel" :unit-position="person.unitPosition"/>
+
+      <div class="task-checklist-container">
+        <task-checklist v-for="(checklist, checklistKey) in checkList" :key="checklistKey" :checklist-key="checklistKey" :check-list="checklist" @editChecklist="editChecklist"/>
       </div>
 
+      <navigation-list-header class="task-list-title" title="Список" :title-count="checkList.length" @onAction="statusTaskList = true"/>
 
+      <modal-base :status="statusDeleteList"
+                  @onClose="statusDeleteList = false"
+                  class="modal-delete-list"
+                  @onOk="deleteAllList">
+        <template #title>
+          Удалить список?
+        </template>
+        <template #description>
+          Это действие необратимо
+        </template>
+        <template #button-accept>
+          Удалить
+        </template>
+      </modal-base>
 
-<!--      <unit-setting-ui :unit-data="{id: 5, avatar: null, name: 'Олег', lastname: 'Герасименко'}"/>-->
-<!--      <unit-setting-ui :unit-level="3" :unit-data="{id: 5, avatar: null, name: 'Олег', lastname: 'Герасименко'}"/>-->
-<!--      <unit-checkbox-ui :model="unitCheckboxModel" @onClick="unitCheckboxModel = !unitCheckboxModel" :unit-level="2" :unit-data="{id: 5, avatar: null, name: 'Олег', lastname: 'Герасименко'}" unit-position="CTO"/>-->
-<!--      <unit-ui :unit-level="3" :unit-data="{id: 5, avatar: null, name: 'Олег', lastname: 'Герасименко'}" unit-position="Head of Front-End"/>-->
-<!--      <unit-ui :unit-level="4" :unit-data="{id: 5, avatar: null, name: 'Олег', lastname: 'Герасименко'}" unit-position="Front-End Executor"/>-->
+      <navigation-list-header title="файлы" @onAction="modalDownload = true"/>
+      <div class="content-container">
 
+      </div>
 
+      <modal-base :status="modalDownload" @onClose="modalDownload=false" class="modal-download" @onOk="modalDownload=false">
+        <template #title>
+          Загрузить файлы
+        </template>
+        <template #description>
+          Файлы которые вы выберете будут прикреплены к ресурсу
+        </template>
+        <template #content>
+          <title-caps class="modal-subtitle">изображения</title-caps>
+          <input type="file" class="file" ref="uploadedFile4Test" @change="onChange"/>
+          <div class="download-plate">
+            <div class="button-add">
+              <icon-add/>
+            </div>
+            <text-base>Загрузить с локального устройства</text-base>
+          </div>
+        </template>
+        <template #button-accept>
+          Сохранить
+        </template>
+      </modal-base>
+
+      <navigation-list-header title="Исполнители" @onAction="showAppointSidebar()" :add="!newTask.assigneeId"/>
+      <div class="content-container">
+        <unit-setting-ui :unit-data="selectedUser" :unit-level="selectedUser.unitLevel" :unit-position="selectedUser.unitName"/>
+      </div>
+
+      <navigation-list-header title="Следят" @onAction="showAddSidebar()"/>
+      <div class="content-container">
+        <unit-setting-ui v-for="(watcher, watcherKey) in watchers" :key="watcherKey" :unit-data="watcher" :unit-level="watcher.unitLevel" :unit-position="watcher.unitName"/>
+      </div>
     </div>
 
-    <sidebar-assign-user-ui :levels="levels" disable/>
+    <modal-base :status="statusTaskList"
+                @onClose="statusTaskList = false"
+                class="modal-task-list"
+                :button-disable="!title || !(listItems.length || newItemText)"
+                @onOk="addTaskList">
+      <template #title>
+        Список задач
+      </template>
+      <template #description>
+        Создайте список, который будет прикреплен к задаче
+      </template>
+      <template #content>
+        <div class="modal-content-title">
+          <title-caps>Список</title-caps>
+          <icon-trash @click.native="statusDeleteList = true"/>
+        </div>
+        <input-base :model="title" @onInput="title = $event" labeled placeholder="Название списка"/>
+
+        <div class="list-container" v-if="listContainerStatus">
+          <div class="list-item" v-for="(item, itemKey) in listItems" :key="itemKey">
+            <text-base>{{item.text}}</text-base>
+            <icon-error @click.native="listItems.splice(itemKey, 1)"/>
+          </div>
+
+          <div class="input-add-list">
+            <input-base :model="newItemText" @onInput="newItemText = $event"/>
+            <icon-error @click.native="newItemText = ''"/>
+          </div>
+        </div>
+
+        <div class="add-item" @click="addItem">
+          <button-add/>
+          <text-base>Добавить пункт</text-base>
+        </div>
+      </template>
+      <template #button-accept>
+        Сохранить
+      </template>
+    </modal-base>
+
+    <div class="create-buttons-group">
+      <button-secondary @onClick="$router.push({name: 'vx.co.task', params: {companyID: $route.params.companyID}})">
+        Отмена
+      </button-secondary>
+      <button-base @onClick="createTask">Создать задачу</button-base>
+    </div>
+
+    <sidebar-appoint-executor-ui :structure="structure"
+                            :status="sidebarAppointStatus"
+                            :chosen-units="chosenUnitsAppoint"
+                            @chooseUser="chooseUser"
+                            @setUser="setUser"/>
+
+    <sidebar-add-observer :status="sidebarAddStatus"
+                          :structure="structure"
+                          :chosen-units="newTask.watchers"
+                          @selectAllLevel="selectAllLevel"
+                          @deleteAllLevel="deleteLevel"
+                          @chooseUser="addWatchers"
+                          @setUser="setObservers"/>
   </div>
 </template>
 
@@ -54,148 +151,265 @@
   import InputDate from '@Facade/Input/Date'
   import InputCheckbox from '@Facade/Input/Checkbox'
   import TextBase from '@Facade/Text/Base'
-  import {UnitUi, UnitSettingUi, UnitCheckboxUi, SidebarAssignUserUi} from '@Providers'
+  import {UnitUi, UnitSettingUi, UnitCheckboxUi, SidebarAppointExecutorUi, SidebarAddObserver, TaskChecklist} from '@Providers'
   import NavigationListHeader from '@Facade/Navigation/ListHeader'
-  // import {SidebarAssignUserUi} from '@Providers'
-
+  import {mapGetters, mapMutations} from "vuex";
+  import ModalBase from "@Facade/Modal/Base"
+  import ButtonBase from '@Facade/Button/Base'
+  import ButtonSecondary from '@Facade/Button/Secondary'
+  import ButtonAdd from '@Facade/Button/Add'
 
   export default {
     name: 'vx.co.task.create.view',
     components: {
       NavigationComeback, TitleBase, InputBase, InputTextArea, TitleCaps, InputDate, InputCheckbox, TextBase,
-      UnitUi, UnitSettingUi, UnitCheckboxUi,
-      NavigationListHeader, SidebarAssignUserUi
+      UnitUi, UnitSettingUi, UnitCheckboxUi, ButtonBase, ButtonSecondary, TaskChecklist,
+      NavigationListHeader, SidebarAppointExecutorUi, ModalBase, ButtonAdd, SidebarAddObserver
     },
     data: () => ({
       currentNavigationCoTab: 0,
-      perpetual: false,
-      dateStart: null,
-      dateEnd: null,
+      chosenUnitsAppoint: [],
+      chosenUnitsAdd: [],
       unitCheckboxModel: false,
-      countTest: 0,
-      person: {
-        unitLevel: 1,
-        unitData: {
-          id: 1,
-          name: 'Александр',
-          lastname: 'Ким',
-          avatar: null
-        },
-        unitPosition: 'big boss'
-      },
-      levels: [
-        {
-          level: 1,
-          disable: false,
-          data: [
-            {
-              unitLevel: 1,
-              unitData: {
-                id: 1,
-                name: 'Александр',
-                lastname: 'Ким',
-                avatar: null
-              },
-              unitPosition: 'big boss',
-              checked: false,
-            },
-          ]
-        },
-        {
-          level: 2,
-          disable: true,
-          data: [
-            {
-              unitLevel: 2,
-              unitData: {
-                id: 2,
-                name: 'Александр',
-                lastname: 'Ким',
-                avatar: null
-              },
-              unitPosition: 'big boss',
-              checked: false,
-            },
-            {
-              unitLevel: 2,
-              unitData: {
-                id: 3,
-                name: 'Александр',
-                lastname: 'Ким',
-                avatar: null
-              },
-              unitPosition: 'big boss',
-              checked: false,
-            },
-          ]
-        },
-        {
-          level: 3,
-          disable: true,
-          data: [
-            {
-              unitLevel: 3,
-              unitData: {
-                id: 4,
-                name: 'Александр',
-                lastname: 'Ким',
-                avatar: null
-              },
-              unitPosition: 'big boss',
-              checked: false,
-            },
-            {
-              unitLevel: 3,
-              unitData: {
-                id: 5,
-                name: 'Александр',
-                lastname: 'Ким',
-                avatar: null
-              },
-              unitPosition: 'big boss',
-              checked: false,
-            },
-          ]
-        },
-        {
-          level: 4,
-          disable: true,
-          data: [
-            {
-              unitLevel: 4,
-              unitData: {
-                id: 6,
-                name: 'Александр',
-                lastname: 'Ким',
-                avatar: null
-              },
-              unitPosition: 'big boss',
-              checked: false,
-            },
-            {
-              unitLevel: 4,
-              unitData: {
-                id: 7,
-                name: 'Александр',
-                lastname: 'Ким',
-                avatar: null
-              },
-              unitPosition: 'big boss',
-              checked: false,
-            },
-          ]
-        }
-      ]
+      statusTaskList: false,
+      statusDeleteList: false,
+      listContainerStatus: false,
+      modalDownload: false,
+      title: '',
+      listItems: [],
+      newItemText: '',
+      // person: {
+      //   unitLevel: 1,
+      //   unitData: {
+      //     id: 1,
+      //     name: 'Александр',
+      //     lastname: 'Ким',
+      //     avatar: null
+      //   },
+      //   unitPosition: 'big boss'
+      // },
+      // levels: [
+      //   {
+      //     level: 1,
+      //     disable: false,
+      //     data: [
+      //       {
+      //         unitLevel: 1,
+      //         unitData: {
+      //           id: 1,
+      //           name: 'Александр',
+      //           lastname: 'Ким',
+      //           avatar: null
+      //         },
+      //         unitPosition: 'big boss',
+      //         checked: false,
+      //       },
+      //     ]
+      //   },
+      //   {
+      //     level: 2,
+      //     disable: true,
+      //     data: [
+      //       {
+      //         unitLevel: 2,
+      //         unitData: {
+      //           id: 2,
+      //           name: 'Александр',
+      //           lastname: 'Ким',
+      //           avatar: null
+      //         },
+      //         unitPosition: 'big boss',
+      //         checked: false,
+      //       },
+      //       {
+      //         unitLevel: 2,
+      //         unitData: {
+      //           id: 3,
+      //           name: 'Александр',
+      //           lastname: 'Ким',
+      //           avatar: null
+      //         },
+      //         unitPosition: 'big boss',
+      //         checked: false,
+      //       },
+      //     ]
+      //   },
+      //   {
+      //     level: 3,
+      //     disable: true,
+      //     data: [
+      //       {
+      //         unitLevel: 3,
+      //         unitData: {
+      //           id: 4,
+      //           name: 'Александр',
+      //           lastname: 'Ким',
+      //           avatar: null
+      //         },
+      //         unitPosition: 'big boss',
+      //         checked: false,
+      //       },
+      //       {
+      //         unitLevel: 3,
+      //         unitData: {
+      //           id: 5,
+      //           name: 'Александр',
+      //           lastname: 'Ким',
+      //           avatar: null
+      //         },
+      //         unitPosition: 'big boss',
+      //         checked: false,
+      //       },
+      //     ]
+      //   },
+      //   {
+      //     level: 4,
+      //     disable: true,
+      //     data: [
+      //       {
+      //         unitLevel: 4,
+      //         unitData: {
+      //           id: 6,
+      //           name: 'Александр',
+      //           lastname: 'Ким',
+      //           avatar: null
+      //         },
+      //         unitPosition: 'big boss',
+      //         checked: false,
+      //       },
+      //       {
+      //         unitLevel: 4,
+      //         unitData: {
+      //           id: 7,
+      //           name: 'Александр',
+      //           lastname: 'Ким',
+      //           avatar: null
+      //         },
+      //         unitPosition: 'big boss',
+      //         checked: false,
+      //       },
+      //     ]
+      //   }
+      // ],
     }),
-    methods: {
-      togglePerpetual(){
-        this.perpetual = !this.perpetual;
+    mounted() {
+      this.$core.execViaComponent('Tasks', 'getStructure', this.$route.params.companyID);
+    },
+    computed: {
+      ...mapGetters({
+        sidebarAppointStatus: 'Tasks/sidebarAppointStatus',
+        sidebarAddStatus: 'Tasks/sidebarAddStatus',
+        newTask: 'Tasks/getNewTask',
+        structure: 'Tasks/getStructure',
+        selectedUser: 'Tasks/getSelectedUser',
+        checkList: 'Tasks/getChecklist',
+        watchers: 'Tasks/selectedWatchers',
 
-        if(this.perpetual){
-          this.dateStart = null;
-          this.dateEnd = null;
+      }),
+    },
+    methods: {
+      ...mapMutations({
+        showAppointSidebar: 'Tasks/showAppointSidebar',
+        setNewTask: 'Tasks/setNewTask',
+        findExecutor: 'Tasks/findExecutor',
+        cleanNewTask: 'Tasks/cleanNewTask',
+        addTaskChecklist: 'Tasks/addTaskChecklist',
+        changeStatus: 'Tasks/changeStatus',
+        showAddSidebar: 'Tasks/showAddSidebar',
+        findWatchers: 'Tasks/findWatchers',
+        checkAllLevel: 'Tasks/checkAllLevel',
+        deleteAllLevel: 'Tasks/deleteAllLevel',
+        addObservers: 'Tasks/addObservers',
+        addFile: 'Tasks/addFile',
+      }),
+      togglePerpetual(){
+        if(this.newTask.isTimeless === false) {
+          this.setNewTask(['isTimeless', true])
+          this.setNewTask(['start', ''])
+          this.setNewTask(['finish', ''])
+        } else {
+          this.setNewTask(['isTimeless', false])
         }
-      }
+      },
+      chooseUser(id){
+        if (this.chosenUnitsAppoint[0] === id) {
+          this.chosenUnitsAppoint = []
+        } else {
+          this.chosenUnitsAppoint = [id]
+        }
+      },
+      editChecklist(taskKey, itemKey) {
+        this.changeStatus([taskKey, itemKey])
+      },
+      setUser() {
+        this.setNewTask(['assigneeId', this.chosenUnitsAppoint[0]])
+        this.findExecutor()
+      },
+      addTaskList(){
+        if(this.newItemText) {
+          this.listItems.push({text: this.newItemText, status: false})
+        }
+        this.addTaskChecklist({title: this.title, items: this.listItems})
+        console.log(this.checkList, 'this.checkList')
+        this.statusTaskList = false
+        this.title = ''
+        this.newItemText = ''
+        this.listItems = []
+        // this.$core.execViaComponent('Tasks', 'createChecklist', [this.newTask.taskId, this.title, this.listItems]);
+
+      },
+      addItem(){
+        if(this.listContainerStatus === false) {
+          this.listContainerStatus = true
+        } else if (this.newItemText) {
+          this.listItems.push({text: this.newItemText, status: false})
+          this.newItemText = ''
+        }
+      },
+      deleteAllList(){
+        this.statusDeleteList = false
+        this.listItems = []
+        this.newItemText = ''
+      },
+      addWatchers(id) {
+        this.addObservers(id)
+      },
+      setObservers(){
+        this.findWatchers()
+      },
+      selectAllLevel(key) {
+        this.checkAllLevel(key)
+      },
+      deleteLevel(key) {
+        this.deleteAllLevel(key)
+      },
+      createTask() {
+        this.checkList.map(list => {
+          this.$core.execViaComponent('Tasks', 'createChecklist', {list: list, id: this.newTask.taskId});
+
+        })
+        this.$core.execViaComponent('Tasks', 'edit');
+        this.$router.push({name: 'vx.co.task', params: {companyID: this.$route.params.companyID}})
+      },
+      onChange() {
+        this.$core.execViaComponent('Uploader', 'init',[
+          this.$refs.uploadedFile4Test.files[0],
+          this.handleUploadOnprogress, null,
+          this.handleUploaderOnload
+        ])
+      },
+      handleUploadOnprogress(progress){
+        console.log(progress, 'handleUploadOnprogress')
+      },
+      handleUploaderOnload(fileId){
+        console.log(fileId, 'handleUploaderOnload')
+        this.addFile(fileId)
+        // this.setCreator(['logo', fileId])
+        // this.avatarReady = true;
+      },
+    },
+    destroyed() {
+      this.cleanNewTask()
     }
   }
 </script>
@@ -210,18 +424,26 @@
     .task-create-space{
       width: 100%;
       padding: 48px 164px 52px;
+      margin-bottom: 36px;
       box-sizing: border-box;
       border-radius: 16px;
       background-color: $grey-scale-500;
-      .facade-input-base, .facade-input-text-area{
+      .facade-input-base, .facade-input-text-area::v-deep{
         margin-bottom: 16px;
+        border-width: 1px;
+        .textarea-container{
+          border-width: 1px;
+        }
       }
       .date-range-box{
         display: flex;
         justify-content: space-between;
         margin: 16px 0;
-        .facade-input-date{
+        .facade-input-date::v-deep{
           width: 47%;
+          .facade-input-base{
+            border-width: 1px;
+          }
         }
       }
       .perpetual-task{
@@ -237,8 +459,151 @@
       .facade-navigation-list-header{
         margin-bottom: 4px;
       }
+
+      .task-list-title{
+        margin-bottom: 24px;
+      }
       .content-container{
         margin-bottom: 24px;
+      }
+    }
+    .task-checklist-container{
+      margin-bottom: 24px;
+      .company-task-checklist-ui::v-deep{
+        .task-checklist-title{
+          justify-content: space-between;
+        }
+      }
+    }
+    .structure-unit-ui{
+      margin-bottom: 8px;
+    }
+    .create-buttons-group{
+      display: flex;
+      justify-content: space-between;
+      .facade-button-secondary{
+        width: 222px;
+      }
+      .facade-button-base{
+        width: 222px;
+      }
+    }
+    .modal-task-list{
+      .modal-content-title{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+        margin-bottom: 12px;
+
+        .icon-trash{
+          cursor: pointer;
+        }
+      }
+
+      .facade-input-base::v-deep{
+        margin-bottom: 12px;
+        &:focus-within{
+          .input-label{
+            color: $blue;
+          }
+        }
+      }
+
+      .facade-text-base{
+        color: #fff;
+      }
+
+      .list-container{
+        margin-top: 46px;
+
+        .icon{
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 24px;
+          width: 24px;
+          border: 2px solid $grey-scale-300;
+          border-radius: 8px;
+          color: $grey-scale-200;
+          box-sizing: border-box;
+          cursor: pointer;
+        }
+        .list-item{
+          margin-bottom: 12px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .input-add-list{
+          position: relative;
+          .facade-input-base{
+            height: 36px;
+          }
+          .icon-error{
+            position: absolute;
+            top: 0;
+            right: 0;
+          }
+        }
+      }
+
+      .add-item{
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+
+        .facade-button-add{
+          margin-right: 12px;
+        }
+      }
+    }
+
+    .modal-download ::v-deep{
+      .modal-base-content{
+        position: relative;
+        .facade-title-caps{
+          padding: 8px 0;
+          margin-bottom: 8px;
+        }
+        .file{
+          box-sizing: border-box;
+          height: 52px;
+          width: 100%;
+          opacity: 0;
+          position: absolute;
+          cursor: pointer;
+        }
+        .download-plate{
+          display: flex;
+          align-items: center;
+          padding: rem(8);
+          margin-bottom: rem(12);
+          border-radius: 8px;
+          background-color: $grey-scale-400;
+          .facade-text-base {
+            color: #fff;
+          }
+          .button-add{
+            display: inherit;
+            height: 36px;
+            width: 36px;
+            border-radius: 50%;
+            border: 2px solid $grey-scale-300;
+            align-items: inherit;
+            justify-content: center;
+            box-sizing: border-box;
+            margin-right: 12px;
+            .icon-add{
+              color: #fff;
+              svg{
+                height: 12px;
+                width: 14px;
+              }
+            }
+          }
+        }
       }
     }
   }

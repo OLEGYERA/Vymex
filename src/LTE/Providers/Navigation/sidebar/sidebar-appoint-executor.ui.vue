@@ -1,17 +1,17 @@
 <template>
-  <div class="navigation-sidebar-assign-user-ui">
-    <sidebar-right class="sidebar-assign-user-plate">
+  <div class="navigation-sidebar-appoint-executor-ui" v-if="status">
+    <sidebar-right class="sidebar-appoint-executor-plate" @onClose="closeAppointSidebar()">
       <template #main-header>
         <sidebar-header-atom>Назначить исполнителя</sidebar-header-atom>
       </template>
       <template #main-content>
         <div class="sidebar-info-group">
           <div class="sidebar-header-group">
-            <title-caps class="sidebar-assign-user-subtitle">Пользователи</title-caps>
+            <title-caps class="sidebar-appoint-executor-subtitle">Пользователи</title-caps>
             <input-search :placeholder="'Поиск'"/>
           </div>
-          <sidebar-structure-ui :levels="levels" :view-type="2"/>
-          <button-base>Применить</button-base>
+          <sidebar-structure-ui :structure="structure" :view-type="2" :chosen-units="chosenUnits" @onClick="chooseUser"/>
+          <button-base :disable="!chosenUnits.length" @onClick="apply">Применить</button-base>
         </div>
       </template>
     </sidebar-right>
@@ -24,16 +24,16 @@
   import TitleCaps from "@Facade/Title/Caps";
   import {UnitUi, UnitSettingUi} from '@Providers'
   import SidebarRight from "@Facade/Navigation/SidebarRight";
-  // import {SidebarHeaderAtom} from '@Providers'
+  import SidebarHeaderAtom from './sidebar-header.atom'
   import ButtonBase from "@Facade/Button/Base";
-  import SidebarHeaderAtom from "@/LTE/Providers/Navigation/sidebar/sidebar-header.atom";
   import UnitCheckboxUi from "@/LTE/Providers/Company/Structure/unit-checkbox.ui";
   import SidebarStructureUi from "./sidebar-structure.ui";
 
   import ArrowRight from "@Icon/ArrowRight";
+  import {mapMutations} from "vuex";
 
   export default {
-    name: 'Providers.Navigation.Sidebar.AssignUser.Ui',
+    name: 'Providers.Navigation.Sidebar.AppointExecutor.Ui',
     components:{
       TitleCaps,
       InputSearch,
@@ -51,25 +51,40 @@
       }
     },
     props:{
-      levels: {
-        type: Array,
+      structure: {
+        type: Object,
         required: true
       },
-      disable: {
+      // disable: {
+      //   type: Boolean,
+      //   required: true,
+      // },
+      status: {
         type: Boolean,
-        required: true,
-      }
+        required: true
+      },
+      chosenUnits: Array,
     },
     methods:{
+      ...mapMutations({
+        closeAppointSidebar: 'Tasks/closeAppointSidebar',
+      }),
       onClick(key){
         this.levels[key].disable = !this.levels[key].disable
+      },
+      chooseUser(id) {
+        this.$emit('chooseUser', id)
+      },
+      apply() {
+        this.$emit('setUser')
+        this.closeAppointSidebar()
       }
-    }
+    },
   }
 </script>
 
 <style lang="scss" scoped>
-  .navigation-sidebar-assign-user-ui{
+  .navigation-sidebar-appoint-executor-ui{
     top: 0;
     left: 0;
     width: 100%;
@@ -79,7 +94,7 @@
     position: fixed;
     background-color: rgba($grey-scale-700, .8);
     z-index: 4;
-    .sidebar-assign-user-plate::v-deep{
+    .sidebar-appoint-executor-plate::v-deep{
       display: flex;
       height: 100%;
       background-color: $grey;
@@ -95,7 +110,7 @@
           justify-content: space-between;
           .sidebar-header-group{
             margin-bottom: 12px;
-            .sidebar-assign-user-subtitle{
+            .sidebar-appoint-executor-subtitle{
               padding: rem(8) 0;
               margin-bottom: 8px;
             }

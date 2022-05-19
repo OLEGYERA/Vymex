@@ -1,13 +1,13 @@
 <template>
   <div class="facade-date-box">
     <title-caps>
-      <slot name="date">сегодня, 16 янв.</slot>
-      <span class="notifications-count">
-        <slot name="count">4</slot>
+      {{date}}
+      <span class="notifications-count" v-if="!!length">
+        {{length}}
       </span>
     </title-caps>
-      <button-close/>
-<!--      <action-list :items="items" :actionListStatus="true"/>-->
+
+    <button-close @onClick="$emit('onClick', {key: created})"/>
   </div>
 </template>
 
@@ -23,7 +23,67 @@
     },
     data() {
       return {
-        items: ['Удалить все'],
+      }
+    },
+    props: {
+      created:{
+        type: String,
+        required: true
+      },
+      length: Number
+    },
+    computed: {
+      date() {
+        let month = ''
+        const dataMonth = this.created.substr(5, 2)
+        switch (dataMonth) {
+          case '01':
+            month = 'янв.'
+                break;
+          case '02':
+            month = 'февр.'
+            break;
+          case '03':
+            month = 'марта'
+            break;
+          case '04':
+            month = 'апр.'
+            break;
+          case '05':
+            month = 'мая'
+            break;
+          case '06':
+            month = 'июня'
+            break;
+          case '07':
+            month = 'июля'
+            break;
+          case '08':
+            month = 'авг.'
+            break;
+          case '09':
+            month = 'сент.'
+            break;
+          case '10':
+            month = 'окт.'
+            break;
+          case '11':
+            month = 'ноября'
+            break;
+          case '12':
+            month = 'дек.'
+            break;
+
+            default:
+        }
+        const dataDay = this.created.slice(-2)
+        const day = dataDay.slice(0, 1) === '0' ? dataDay.slice(-1) : dataDay
+
+        if (`${new Date().getFullYear()}-${(String(new Date().getMonth() + 1)).length === 1 ? '0' : ''}${new Date().getMonth() + 1}-${new Date().getDate()}` === this.created) {
+          return `сегодня, ${day} ${month}`
+        }
+
+        return `${day} ${month}`
       }
     }
   }
@@ -44,18 +104,6 @@
       width: 24px;
       margin-right: 4px;
       background-color: $grey-scale-400;
-    }
-    .facade-modal-action-list::v-deep {
-      position: absolute;
-      right: 0;
-      top: 0;
-      width: 248px;
-      padding: 8px 0;
-      transform: translateY(-100%);
-      //z-index: 10;
-      .action-item {
-        padding: 12px 16px;
-      }
     }
   }
 </style>

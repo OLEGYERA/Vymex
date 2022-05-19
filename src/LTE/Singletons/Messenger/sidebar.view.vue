@@ -24,7 +24,7 @@
   import ContactInfoRouter from '../MessengerDff/ToolsScene/RouterView/ContactInfo'
 
   /**/
-  import VolumesTab from '../facades/TabVolumes.atom'
+  import VolumesTab from '../Notifications/views/Volumes.tab'
 
 
 

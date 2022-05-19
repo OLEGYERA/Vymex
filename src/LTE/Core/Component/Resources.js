@@ -21,13 +21,13 @@ class Resources extends Binder{
     async createMaterial(){
         const CreatorData = this.$store.name('Resources').get('CreatorMaterialResource');
 
-        // const WorkerID = CreatorData.workerId ? numberToArray(CreatorData.workerId) : null;
+        const WorkerID = CreatorData.workerId ? numberToArray(CreatorData.workerId) : null;
 
         let data = serialize(
             utf8ToArray(String(CreatorData.name)),
             utf8ToArray(String(CreatorData.description || '')),
-            utf8ToArray(String(CreatorData.identifier)),
-            numberToArray(CreatorData.workerId || null), //нужно вытягивать по пользователю его текущий воркер компании
+            utf8ToArray(String(CreatorData.identifier || '')),
+            WorkerID, //нужно вытягивать по пользователю его текущий воркер компании
             objectToArray([]),
             utf8ToArray(CreatorData.currency),
             numberToArray(200),
@@ -35,12 +35,12 @@ class Resources extends Binder{
             objectToArray([]),
         );
 
-        // this.$socket.emit('listener', await encrypt(...arguments[1], utf8ToArray('daf')));
         this.$socket.emit('listener', await encrypt(...arguments[1], data));
     }
 
     createMaterialRes(resource){
-        console.log('why not, blyat?', resource.identifier)
+        console.log(resource, 'ресурс создан')
+        this.$notify({text: 'Ресурс успешно создан', type: 'success', duration: 3000, speed: 500})
     }
 
     async createIntangible(workerId) {
@@ -52,28 +52,51 @@ class Resources extends Binder{
             utf8ToArray(String(CreatorData.login)),
             utf8ToArray(String(CreatorData.password)),
             utf8ToArray(String(CreatorData.description || '')),
-            numberToArray(workerId || null), //нужно вытягивать по пользователю его текущий воркер компании
+            numberToArray(workerId || null),
         );
 
         this.$socket.emit('listener', await encrypt(...arguments[1], data));
     }
 
     createIntangibleRes(response) {
+        this.$notify({text: 'Ресурс успешно создан', type: 'success', duration: 3000, speed: 500})
         console.log(response, 'createIntangibleRes')
+    }
+
+    async editIntangible(workerId) {
+        const resource = this.$store.name('Resources').get('ChosenIntangibleResource');
+
+        let data = serialize(
+            utf8ToArray(String(resource.name)),
+            utf8ToArray(String(resource.url || '')),
+            utf8ToArray(String(resource.login)),
+            utf8ToArray(String(resource.password)),
+            utf8ToArray(String(resource.description || '')),
+            numberToArray(workerId),
+            numberToArray(resource.id),
+        );
+
+        this.$socket.emit('listener', await encrypt(...arguments[1], data));
+    }
+
+    editIntangibleRes(res){
+        console.log(res, 'editInt')
     }
 
     async editMaterial() {
         const resource = this.$store.name('Resources').get('ChosenMaterialResource');
-        console.log(resource, 'edit')
+
+        const WorkerID = resource.workerId ? numberToArray(resource.workerId) : null;
+
         let data = serialize(
             utf8ToArray(String(resource.name)),
             utf8ToArray(String(resource.description || '')),
-            utf8ToArray(String(resource.identifier)),
-            numberToArray(7), //нужно вытягивать по пользователю его текущий воркер компании
+            utf8ToArray(String(resource.identifier || '')),
+            WorkerID, //нужно вытягивать по пользователю его текущий воркер компании
             objectToArray([]),
             utf8ToArray(resource.currency),
             numberToArray(200),
-            numberToArray(resource.companyId),
+            numberToArray(resource.id),
             objectToArray([]),
         );
         console.log(data, 'data')
@@ -90,12 +113,12 @@ class Resources extends Binder{
     }
 
     getMaterialResourcesRes(resources){
-        console.log(resources, 'resources')
+        // console.log(resources, 'resources')
         this.$store.name('Resources').set('MaterialResources', resources);
     }
 
     async getStructure(companyId, resourceId){
-        console.log(2)
+        console.log(2) ///исправить на массив параметры
         let data = serialize(
             numberToArray(companyId),
             numberToArray(resourceId || null)
@@ -174,7 +197,7 @@ class Resources extends Binder{
     }
 
     async createFolder(newFolder) {
-
+        console.log(newFolder, 'create')
         let data = serialize(
             utf8ToArray(String(newFolder.name)),
             numberToArray(newFolder.workerId),
@@ -184,7 +207,8 @@ class Resources extends Binder{
     }
 
     createFolderRes(folder){
-        console.log(folder, 'new folder')
+        console.log(folder, 'res')
+        this.$notify({text: 'Папка успешно создана', type: 'success', duration: 3000, speed: 500})
     }
 
     async moveToTrashFolder(folderId) {
@@ -192,11 +216,11 @@ class Resources extends Binder{
     }
 
     moveToTrashFolderRes(response){
+        this.$notify({text: 'Папка удалена', type: 'success', duration: 3000, speed: 500})
         console.log(response, 'delete folder')
     }
 
     async getInfo(workerId) {
-        console.log(7)
         this.$socket.emit('listener', await encrypt(...arguments[1], numberToArray(workerId)));
     }
 
@@ -212,12 +236,11 @@ class Resources extends Binder{
         this.$socket.emit('listener', await encrypt(...arguments[1], data));
     }
 
-    editFolderRes(res){
-        console.log(res, 2222222)
+    editFolderRes(){
+        this.$notify({text: 'Папка переименована', type: 'success', duration: 3000, speed: 500})
     }
 
     async getFolderParticipants(folderId){
-        console.log(8)
         this.$socket.emit('listener', await encrypt(...arguments[1], numberToArray(folderId)));
     }
 

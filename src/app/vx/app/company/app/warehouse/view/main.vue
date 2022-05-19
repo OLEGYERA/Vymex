@@ -13,21 +13,26 @@
 
     <input-search :placeholder="'Поиск'"/>
 
-    <list-header title="Все объекты"/>
+    <list-header title="Все объекты" :title-count="warehouse.length" @onAction="$router.push({name: 'vx.warehouse.create.resource'})"/>
 
-    <main class="resource-folders">
-      <div class="background-plate">
+    <main class="warehouse-main-info">
+
+      <div class="warehouse-resources" v-if="warehouse.length">
+        <warehouse-object v-for="(object, objectKey) in warehouse"
+                          :key="objectKey"
+                          :resource-name="object.name"
+                          :resource-identifier="object.identifier"
+                          :cost="object.cost"
+                          :count-requests="object.countRequests"
+                          :id="object.id"
+        />
+      </div>
+
+      <div class="background-plate" v-else>
         <img class="image" src="@/assets/img/my/resource.svg">
         Ресурсов нет
       </div>
 
-      <warehouse-object v-for="(object, objectKey) in warehouse"
-                        :key="objectKey"
-                        :resource-name="object.name"
-                        :resource-identifier="object.identifier"
-                        :cost="object.cost"
-                        :count-requests="object.countRequests"
-      />
     </main>
   </div>
 </template>
@@ -55,48 +60,49 @@
     data() {
       return{
         modalStatus: false,
-        warehouse: [
-          {
-            "id": 3,
-            "name": "resource without worker and owner",
-            "description": null,
-            "identifier": "123456qwer",
-            "worker": null,
-            "cost": 100,
-            "currency": "USD",
-            "company": {
-              "id": 1,
-              "name": "Arxel",
-              "avatar": null
-            },
-            "files": [],
-            "images": [],
-            "countRequests": 1
-          },
-          {
-            "id": 3,
-            "name": "resource without worker and owner",
-            "description": null,
-            "identifier": "123456qwer",
-            "worker": null,
-            "cost": 100,
-            "currency": "USD",
-            "company": {
-              "id": 1,
-              "name": "Arxel",
-              "avatar": null
-            },
-            "files": [],
-            "images": [],
-            "countRequests": 2
-          },
-        ]
+        // warehouse: [
+        //   {
+        //     "id": 3,
+        //     "name": "resource without worker and owner",
+        //     "description": null,
+        //     "identifier": "123456qwer",
+        //     "worker": null,
+        //     "cost": 100,
+        //     "currency": "USD",
+        //     "company": {
+        //       "id": 1,
+        //       "name": "Arxel",
+        //       "avatar": null
+        //     },
+        //     "files": [],
+        //     "images": [],
+        //     "countRequests": 1
+        //   },
+        //   {
+        //     "id": 3,
+        //     "name": "resource without worker and owner",
+        //     "description": null,
+        //     "identifier": "123456qwer",
+        //     "worker": null,
+        //     "cost": 100,
+        //     "currency": "USD",
+        //     "company": {
+        //       "id": 1,
+        //       "name": "Arxel",
+        //       "avatar": null
+        //     },
+        //     "files": [],
+        //     "images": [],
+        //     "countRequests": 2
+        //   },
+        // ]
       }
     },
     computed:{
       ...mapGetters({
         mainInfo: 'Resources/getMainInfo',
-        // warehouse: 'WareHouse/getWarehouse'
+        currentCompany: 'Company/getCurrentCompany',
+        warehouse: 'WareHouse/getWarehouse'
       }),
     },
     methods: {
@@ -104,8 +110,8 @@
         changeStatus: 'Company/changeStatus'
       }),
     },
-    beforeCreate() {
-      this.$core.execViaComponent('Resources', 'getWarehouse', 4)
+    created() {
+      this.$core.execViaComponent('Resources', 'getWarehouse', this.currentCompany.base.id)
       this.$core.execViaComponent('Resources', 'getInfo', 7)
     },
   }
@@ -130,7 +136,7 @@
       margin-bottom: 20px;
     }
     .facade-navigation-list-header{
-      padding: 8px 0;
+      height: 36px;
       margin-bottom: 4px;
     }
     .background-plate {

@@ -1,5 +1,5 @@
 <template>
-  <div class="facade-info-amount"><title-caps><slot/></title-caps></div>
+  <title-caps class="facade-info-amount"><slot/></title-caps>
 </template>
 
 <script>
@@ -17,8 +17,6 @@ export default {
     padding: rem(4) rem(8);
     border-radius: 8px;
     background-color: $blue;
-    .facade-title-caps{
-      color: #fff;
-    }
+    color: #fff;
   }
 </style>

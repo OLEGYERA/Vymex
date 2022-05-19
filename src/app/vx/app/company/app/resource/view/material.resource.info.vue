@@ -105,7 +105,7 @@
     },
     computed: {
       ...mapGetters({
-        materialResources: 'Resources/materialResources',
+        // materialResources: 'Resources/materialResources',
         selectedResource: 'Resources/getChosenMaterialResource'
       }),
     },
@@ -188,7 +188,7 @@
     }
     .facade-navigation-list-header {
       margin-bottom: rem(4);
-      padding: rem(8) 0;
+      height: 36px;
     }
     .resource-file-ui {
       margin-bottom: rem(8);

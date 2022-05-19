@@ -5,6 +5,7 @@
       <modal-action-list class="unit-setting-list"
                          :status="modalSettingList"
                          :actions="['Просмотр', 'Редактировать']"
+                         @onDelete="deleteUnit"
                          @onClose="modalSettingList = false"/>
     </div>
   </unit-ui>
@@ -22,7 +23,12 @@
     data: () => ({
       modalSettingList: false
     }),
-
+    methods: {
+      deleteUnit(){
+        this.$emit('onDelete')
+        this.modalSettingList = false
+      }
+    }
   }
 </script>
 

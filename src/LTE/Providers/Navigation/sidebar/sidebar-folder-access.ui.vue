@@ -143,7 +143,6 @@
     },
     beforeMount() {
       this.folderParticipants.map(person => this.participantsIds.push(person.id))
-      this.$core.execViaComponent('Resources', 'getStructure', 4);
     },
 
   }

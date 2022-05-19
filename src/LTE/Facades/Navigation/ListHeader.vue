@@ -3,7 +3,7 @@
     <div class="header-left-part">
       <title-caps>
         {{title}}
-        <span class="list-title-counter" v-if="titleCount">{{titleCount}}</span>
+        <span class="list-title-counter" v-if="!!titleCount">{{titleCount}}</span>
       </title-caps>
       <div class="setting-slider" :class="{'setting-active': settingCount}" v-if="setting" @click="$emit('onSetting')">
         <icon-setting-slider/>
@@ -37,7 +37,7 @@
         type: String,
         required: true
       },
-      titleCount: Number || String,
+      titleCount: Number,
       add: {
         type: Boolean,
         default:() => true
@@ -55,6 +55,8 @@
     align-items: center;
     justify-content: space-between;
     padding: rem(4) 0;
+    height: 32px;
+    box-sizing: border-box;
 
     .header-left-part{
       display: inherit;

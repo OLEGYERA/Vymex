@@ -34,7 +34,7 @@ export default {
       } else {
         activeTab.routers.push(routerData)
       }
-
+      console.log(activeTab.routers)
       state.router.directionNext = true;
     },
     routerBack: (state) => {

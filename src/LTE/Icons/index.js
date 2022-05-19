@@ -40,3 +40,7 @@ Vue.component('icon-wallet', () => import('./Wallet'));
 Vue.component('icon-arrow-right', () => import('./ArrowRight'));
 Vue.component('icon-editor', () => import('./Editor'));
 Vue.component('icon-watcher', () => import('./Watcher'));
+Vue.component('icon-save', () => import('./Save'));
+Vue.component('icon-trash', () => import('./Trash'));
+Vue.component('icon-edit', () => import('./Edit'));
+Vue.component('icon-send-message', () => import('./SendMessage'));

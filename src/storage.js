@@ -39,7 +39,7 @@ import Dashboard from '@/models/Dashboard'
 import Resources from "@/models/Resources";
 import WareHouse from "@/models/WareHouse"
 import Processes from '@/models/Processes'
-import Resources from "@/LTE/Singletons/Resources/models/Resources";
+import Tasks from '@/models/Tasks'
 
 
 export default new Vuex.Store({
@@ -59,14 +59,15 @@ export default new Vuex.Store({
     Resources,
     Company,
     Dashboard,
-    WareHouse
+    WareHouse,
     Processes,
-    Users
+    Users,
+    Tasks
   },
   plugins: [
     createPersistedState({
       key: 'vymex_session',
-      paths: ['Countries', 'Crypto', 'UserProfile', 'VxInfo', 'History', 'Company', 'Resources', 'WareHouse'],
+      paths: ['Countries', 'Crypto', 'UserProfile', 'VxInfo', 'History', 'Company', 'Resources', 'WareHouse', 'Tasks'],
       storage: {
         getItem: (key) => {
           return Secure.get(key)

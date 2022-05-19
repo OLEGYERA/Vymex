@@ -10,14 +10,19 @@
       <title-caps class="resource-price">Стоимость ресурса</title-caps>
       <input-price :model="newResource.cost" @onInput="setCreatorMaterial(['cost', $event])"/>
 
-      <list-header title="Пользователь" :title-count="newResource.workerId ? 1 : ''" @onAction="showSidebar()" :add="!newResource.workerId"/>
+      <list-header title="Пользователь" :title-count="newResource.workerId ? 1 : 0" @onAction="showSidebar()" :add="!newResource.workerId"/>
       <div class="resource-user">
-        <unit-setting-ui v-if="Object.keys(user).length" :unit-level="user.unitLevel" :unit-data="user" :unit-position="user.unitName"/>
+        <unit-setting-ui v-if="Object.keys(user).length"
+                         :unit-level="user.unitLevel"
+                         :unit-data="user"
+                         :unit-position="user.unitName"
+                         @onDelete="deleteUnit"
+        />
       </div>
 
       <assign-user-ui :status="assignStatus" :structure="structure" @chooseUser="setWorker"/>
 
-      <modal-base :status="modalStatus" @onClose="cancelUser" @onOk="confirmWorker">
+      <modal-base :status="modalStatus" @onClose="modalStatus = false" @onOk="confirmWorker">
         <template #title>
           Назначить пользователя
         </template>
@@ -42,7 +47,7 @@
       <company-ui :company="currentCompany.base"/>
 
       <list-header title="изображения"
-                   :title-count="newResource.fileIds.length + newResource.imageIds.length || ''"
+                   :title-count="newResource.fileIds.length + newResource.imageIds.length"
                    @onAction="modalDownload=true"/>
 
       <modal-base :status="modalDownload" @onClose="modalDownload=false" class="modal-download" @onOk="modalDownload=false">
@@ -54,7 +59,7 @@
         </template>
         <template #content>
           <title-caps class="modal-subtitle">изображения</title-caps>
-          <input type="file" class="file"/>
+          <input type="file" class="file" ref="uploadedFile4Test" @change="onChange"/>
           <div class="download-plate">
             <div class="button-add">
               <icon-add/>
@@ -72,7 +77,7 @@
       <button-secondary class="create-resource-button" @onClick="saveChanges">
         Отмена
       </button-secondary>
-      <button-base class="create-resource-button" :disable="buttonDisable" @onClick="createResource">
+      <button-base class="create-resource-button" :disable="!newResource.name" @onClick="createResource">
         Создать ресурс
       </button-base>
     </div>
@@ -161,14 +166,13 @@
         currentCompany: 'Company/getCurrentCompany',
         structure: 'Resources/getStructure',
         user: 'Resources/chosenUser',
-        userID: 'getUserID',
       }),
-      buttonDisable(){
-        if (!this.newResource.name || !this.newResource.identifier) {
-          return true
-        }
-        return false
-      }
+      // buttonDisable(){
+      //   if (!this.newResource.name) {
+      //     return true
+      //   }
+      //   return false
+      // }
     },
     methods: {
       ...mapMutations({
@@ -178,19 +182,14 @@
         getConfirmedUser: 'Resources/getConfirmedUser'
       }),
       saveChanges(){
-        if(this.newResource.name && this.newResource.identifier){
+        if(this.newResource.name){
           this.modalSaveStatus=true
         } else{
-          this.clear()
-          this.getConfirmedUser({})
           this.$router.push({name: 'vx.resource.material.resources'})
         }
       },
       createResource() {
-        this.$core.execViaComponent('Resources', 'createMaterial', this.userID);
-        this.clear()
-        this.getConfirmedUser({})
-       // this.$core.execViaComponent('Resources', 'getMaterialResources', 7);
+        this.$core.execViaComponent('Resources', 'createMaterial');
         this.$router.push({name: 'vx.resource.material.resources'})
       },
       setWorker(id){
@@ -199,7 +198,6 @@
             this.selectedUser = this.structure[level].find(unit => unit.id === id)
           }
         }
-        console.log(Object.values(this.structure), 'this.selectedUser')
         this.modalStatus = true
       },
       confirmWorker(){
@@ -207,26 +205,41 @@
         this.getConfirmedUser(this.selectedUser)
         this.modalStatus = false
       },
-      cancelUser(){
-        this.chosenUser = {}
-        this.modalStatus = false
-      },
       onClose(){
-        this.clear()
-        this.getConfirmedUser({})
         this.$router.push({name: 'vx.resource.material.resources'})
       },
       onOk() {
-        this.$notify({text: 'Ресурс успешно создан', type: 'success', duration: 3000, speed: 500})
         this.$core.execViaComponent('Resources', 'createMaterial');
-        this.$core.execViaComponent('Resources', 'getMaterialResources', 7);
-        this.clear()
-        this.getConfirmedUser({})
+        // this.$notify({text: 'Ресурс успешно создан', type: 'success', duration: 3000, speed: 500})
         this.$router.push({name: 'vx.resource.material.resources'})
+      },
+      deleteUnit(){
+        this.getConfirmedUser({})
+        this.setCreatorMaterial(['workerId', null])
+      },
+      onChange() {
+        this.$core.execViaComponent('Uploader', 'init',[
+          this.$refs.uploadedFile4Test.files[0],
+          this.handleUploadOnprogress, null,
+          this.handleUploaderOnload
+        ])
+      },
+      handleUploadOnprogress(progress){
+        console.log(progress, 'handleUploadOnprogress')
+      },
+      handleUploaderOnload(fileId){
+        console.log(fileId, 'handleUploaderOnload')
+        // this.setCreator(['logo', fileId])
+        // this.avatarReady = true;
       },
     },
     created() {
       this.setCreatorMaterial(['companyId', this.currentCompany.base.id])
+      this.$core.execViaComponent('Resources', 'getStructure', this.currentCompany.base.id);
+    },
+    destroyed() {
+      this.clear()
+      this.getConfirmedUser({})
     },
 
     watch: {
@@ -279,7 +292,7 @@
         }
         .resource-plate{
           padding: rem(8) rem(16);
-          min-height: 52px;
+          height: 52px;
           box-sizing: border-box;
           margin-bottom: rem(12);
           border-radius: 8px;
@@ -293,7 +306,7 @@
         }
       }
       .facade-navigation-list-header{
-        padding: 8px 0;
+        height: 36px;
         margin-bottom: 4px;
       }
       .resource-user{
@@ -360,6 +373,8 @@
     }
     .modal-save{
       .save-resource-plate{
+        height: 52px;
+        box-sizing: border-box;
         padding: rem(8) rem(16);
         border-radius: 8px;
         background-color: $grey-scale-400;

@@ -1,51 +1,69 @@
 <template>
   <div class="singleton-notifications-app" v-if="status">
-    <sidebar
-        class="notifications-app-sidebar" @onClose="close()"
+    <sidebar-right
+        class="notifications-app-sidebar" @onClose="closeSidebar"
         :tab-list="sidebarView.tabList" :tab-active="sidebarView.tabActive" :tab-index="tabIndex"
         @onChangeTab="switchTab($event)">
       <template #main-header>
-        <notifications-head/>
+        <notifications-head :count="count"/>
       </template>
       <template #main-content>
-        <sidebar-view-notifications/>
+        <sidebar-view-notifications />
       </template>
-    </sidebar>
+    </sidebar-right>
   </div>
 </template>
 
 <script>
-import {mapGetters, mapMutations} from 'vuex'
+  import {mapGetters, mapMutations} from 'vuex'
 
-//for sidebar
-import Sidebar from "@Facade/Navigation/SidebarRight"
-import NotificationsHead from "@/LTE/Singletons/Notifications/facades/NotificationsHeader";
-import SidebarViewNotifications from "@/LTE/Singletons/Notifications/sidebar.view"
+  //for sidebar
+  import SidebarRight from "@Facade/Navigation/SidebarRight"
+  import NotificationsHead from "@/LTE/Singletons/Notifications/facades/NotificationsHeader";
+  import SidebarViewNotifications from "@/LTE/Singletons/Notifications/sidebar.view"
 
-export default {
-  name: 'Singleton.Notifications.app',
-  components: {
-    Sidebar, NotificationsHead, SidebarViewNotifications
-  },
-  data() {
-    return {
-    }
-  },
-  computed: {
-    ...mapGetters({
-      sidebarView: 'Notifications/sidebarView',
-      //messenger
-      status: 'Notifications/statusNotifications',
-      tabIndex: 'Notifications/tabIndex'
-    })
-  },
-  methods: {
-    ...mapMutations({
-      close: 'Notifications/closeNotifications',
-      switchTab: 'Notifications/switchTab',
-    }),
-  },
-}
+  export default {
+    name: 'Singleton.Notifications.app',
+    components: {
+      SidebarRight, NotificationsHead, SidebarViewNotifications
+    },
+    data() {
+      return {
+        readNotifications: []
+      }
+    },
+    computed: {
+      ...mapGetters({
+        sidebarView: 'Notifications/sidebarView',
+        status: 'Notifications/statusNotifications',
+        tabIndex: 'Notifications/tabIndex',
+        notificationsCount: 'Notifications/getNotificationsCount',
+        notifications: 'Notifications/getNotifications',
+      }),
+      count(){
+        return this.notificationsCount
+      }
+    },
+    methods: {
+      ...mapMutations({
+        close: 'Notifications/closeNotifications',
+        switchTab: 'Notifications/switchTab',
+      }),
+      closeSidebar(){
+        this.close()
+        this.notifications.notifications.map(notification => this.readNotifications.push(notification.id)) ///фильтровать?
+
+        this.$core.execViaComponent('Notifications', 'readNotifications', this.readNotifications); /// не обновляется автоматически
+      }
+    },
+    created() {
+      this.$core.execViaComponent('Notifications', 'getNotifications', 1);
+      this.$core.execViaComponent('Notifications', 'getNotificationCount');
+    },
+    // updated() {
+    //   this.$core.execViaComponent('Notifications', 'getNotificationCount');
+    // }
+  }
 </script>
 
 <style lang="scss" scoped>

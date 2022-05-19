@@ -10,7 +10,7 @@
       <input-price :model="resource.cost" @onInput="editResource(['cost', $event])"/>
 
       <div class="user">
-        <list-header title="Пользователь" :title-count="resource.worker.id ? 1 : ''" @onAction="showSidebar()" :add="!resource.worker.id"/>
+        <list-header title="Пользователь" :title-count="!!resource.worker ? 1 : 0" @onAction="showSidebar()" :add="!resource.worker"/>
         <unit-setting-ui :unit-level="resource.worker.unitLevel" :unit-data="resource.worker" :unit-position="resource.worker.unitName"/>
       </div>
 <!--      <assign-user-ui/>-->
@@ -76,6 +76,7 @@
       ...mapMutations({
         showSidebar: 'Resources/showSidebarAssign',
         editResource: 'Resources/editResource',
+        clearChosenMaterialResource: 'Resources/clearChosenMaterialResource',
       }),
       editMaterialResource(){
         this.$core.execViaComponent('Resources', 'editMaterial')
@@ -83,9 +84,11 @@
       },
       exit() {
         this.$router.back()
-        this.clearChosenMaterialResource()
       }
     },
+    destroyed() {
+      this.clearChosenMaterialResource()
+    }
   }
 </script>
 
@@ -120,7 +123,7 @@
         margin-bottom: 24px;
       }
       .facade-navigation-list-header {
-        padding: rem(8) 0;
+        height: 36px;
         margin-bottom: rem(4);
       }
       .resource-company-ui {

@@ -3,36 +3,52 @@
     <navigation-close @onClick="$router.push({name: 'vx.co', params: {companyID: $route.params.companyID}})"/>
     <title-base>Задачи</title-base>
     <text-base>Тут отображаються все задачи в вашей компании</text-base>
-    <navigation-static-tabs :tabs="[{title: ' Мои задачи', count: 5}, {title: 'Поставленные мной'}]" :current-tab="currentNavigationCoTab" @onTab="currentNavigationCoTab = $event">
+    <navigation-static-tabs :tabs="[{title: ' Мои задачи', count: taskCount}, {title: 'Поставленные мной', count: observableTasksCount}]" :current-tab="currentNavigationCoTab" @onTab="currentNavigationCoTab = $event">
       <template #header-content>
-        <div class="create-new-task" @click="$router.push({name: 'vx.co.task.create', params: {companyID: $route.params.companyID}})"><icon-add/><title-caption>Создать задачу</title-caption></div>
+        <div class="create-new-task" @click="createTask"><icon-add/><title-caption>Создать задачу</title-caption></div>
       </template>
-      <template #tab-content>
+      <template #tab-content-0>
         <div class="tab-nav-space">
           <task-column-ui title="Текущие">
-            <task-ui :term-stage="0" title="Модули клиентской поддержки или еще чет ведь всякое "/>
-            <task-ui :term-stage="1" title="Модули клиентской поддержки или еще чет ведь всякое "/>
-            <task-ui title="Модули клиентской поддержки или еще чет ведь всякое может быть в этой жизниМодули клиентской поддержки или еще чет ведь всякое может быть в этой жизниМодули клиентской поддержки или еще чет ведь всякое может быть в этой жизни "/>
+            <task-ui v-for="(task, taskKey) in tasks['in_progress']"
+                     :task="task" :key="taskKey"
+                     :actions="actionsProgress"
+                     @onList="actionProgress"
+                     @onDelete="deleteTask"/>
+          </task-column-ui>
+
+          <task-column-ui title="Отложено">
+            <task-ui v-for="(task, taskKey) in tasks.hold"
+                     :task="task"
+                     :key="taskKey"
+                     :actions="actionsHold"
+                     @onList="actionHold"
+                     @onDelete="deleteTask"/>
+          </task-column-ui>
+
+          <task-column-ui title="Выполнено">
+            <task-ui v-for="(task, taskKey) in tasks.done"
+                     :task="task"
+                     :key="taskKey"
+                     :actions="actionsDone"
+                     @onList="actionDone"
+                     @onDelete="deleteTask"/>
+          </task-column-ui>
+<!--          <task-column-create-ui/>-->
+        </div>
+      </template>
+      <template #tab-content-1>
+        <div class="tab-nav-space">
+          <task-column-ui title="Текущие">
+            <task-ui v-for="(task, taskKey) in observableTasks['in_progress']" :task="task" :key="taskKey"/>
           </task-column-ui>
           <task-column-ui title="Отложено">
-            <task-ui :term-stage="1" title="Модули клиентской поддержки или еще чет ведь всякое "/>
-            <task-ui :term-stage="2" title="Модули клиентской поддержки или еще чет ведь всякое Модули клиентской поддержки или еще чет ведь всякое "/>
-          </task-column-ui>
-          <task-column-ui title="Отложено">
-            <task-ui :term-stage="1" title="Модули клиентской поддержки или еще чет ведь всякое "/>
-            <task-ui :term-stage="2" title="Модули клиентской поддержки или еще чет ведь всякое Модули клиентской поддержки или еще чет ведь всякое "/>
-          </task-column-ui>
-          <task-column-ui title="Отложено">
-            <task-ui :term-stage="1" title="Модули клиентской поддержки или еще чет ведь всякое "/>
-            <task-ui :term-stage="2" title="Модули клиентской поддержки или еще чет ведь всякое Модули клиентской поддержки или еще чет ведь всякое "/>
-          </task-column-ui>
-          <task-column-ui title="Отложено">
-            <task-ui :term-stage="1" title="Модули клиентской поддержки или еще чет ведь всякое "/>
-            <task-ui :term-stage="2" title="Модули клиентской поддержки или еще чет ведь всякое Модули клиентской поддержки или еще чет ведь всякое "/>
+            <task-ui v-for="(task, taskKey) in observableTasks.hold" :task="task" :key="taskKey"/>
           </task-column-ui>
           <task-column-ui title="Выполнено">
+            <task-ui v-for="(task, taskKey) in observableTasks.done" :task="task" :key="taskKey"/>
           </task-column-ui>
-          <task-column-create-ui/>
+          <!--          <task-column-create-ui/>-->
         </div>
       </template>
     </navigation-static-tabs>
@@ -48,6 +64,7 @@
   import NavigationStaticTabs from '@Facade/Navigation/StaticTabs'
   import TitleCaption from '@Facade/Title/Caption'
   import {TaskColumnUi, TaskColumnCreateUi, TaskUi} from '@Providers'
+  import {mapGetters} from "vuex";
 
 
   export default {
@@ -56,8 +73,67 @@
       NavigationClose, TitleBase, TextBase, NavigationStaticTabs, TaskColumnUi, TaskUi, TitleCaption, TaskColumnCreateUi
     },
     data: () => ({
-      currentNavigationCoTab: 0
-    })
+      currentNavigationCoTab: 0,
+      actionsProgress: ['Редактировать', 'В отложенные', 'В выполненные'],
+      actionsHold: ['Редактировать', 'В текущие', 'В выполненные'],
+      actionsDone: ['В текущие', 'В отложенные'],
+    }),
+    created() {
+      this.$core.execViaComponent('Tasks', 'getUserTasks', 50);
+      this.$core.execViaComponent('Tasks', 'getObservableTasksByWorker', {workerId: 50, targetWorkerId: 51});
+    },
+    computed: {
+      ...mapGetters({
+        tasks: 'Tasks/getTasks',
+        observableTasks: 'Tasks/getObservableTasks'
+      }),
+      taskCount(){
+        return this.tasks['in_progress'].length + this.tasks.hold.length + this.tasks.done.length
+      },
+      observableTasksCount() {
+        return this.observableTasks['in_progress'].length + this.observableTasks.hold.length + this.observableTasks.done.length
+      }
+    },
+    methods: {
+      createTask() {
+        this.$router.push({name: 'vx.co.task.create', params: {companyID: this.$route.params.companyID}})
+        this.$core.execViaComponent('Tasks', 'create', [50, this.$route.params.companyID]);
+      },
+      actionProgress(key, id) {
+        if(key === 0) {
+          this.$router.push({name: 'vx.co.task.edit', params: {taskID: id}})
+        }
+        if(key === 1) {
+          this.$core.execViaComponent('Tasks', 'changeStatus', {id: id, status: 'hold'});
+        }
+        if(key === 2) {
+          this.$core.execViaComponent('Tasks', 'changeStatus', {id: id, status: 'done'});
+        }
+      },
+      actionHold(key, id){
+        if(key === 0) {
+          this.$router.push({name: 'vx.co.task.edit', params: {taskID: id}})
+        }
+        if(key === 1) {
+          this.$core.execViaComponent('Tasks', 'changeStatus', {id: id, status: 'in_progress'});
+        }
+        if(key === 2) {
+          this.$core.execViaComponent('Tasks', 'changeStatus', {id: id, status: 'done'});
+        }
+
+      },
+      actionDone(key, id){
+        if(key === 0) {
+          this.$core.execViaComponent('Tasks', 'changeStatus', {id: id, status: 'in_progress'});
+        }
+        if(key === 1) {
+          this.$core.execViaComponent('Tasks', 'changeStatus', {id: id, status: 'hold'});
+        }
+      },
+      deleteTask({id}){
+        this.$core.execViaComponent('Tasks', 'delete', id);
+      }
+    }
   }
 </script>
 
@@ -93,7 +169,7 @@
 
     .tab-nav-space{
       width: 100%;
-      padding: 16px 0;
+      padding: 16px 0 140px;
       display: flex;
       overflow-x: scroll;
       .company-task-ui{
