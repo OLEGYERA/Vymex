@@ -1,5 +1,5 @@
 <template>
-  <div  :class="[hideWidget === 'Resources'
+  <div  :class="[hideWidget === 'resources'
   ? (index + 1) % 2 === 0
   ? 'hide-right-widget'
   : 'hide-left-widget' : '',
@@ -8,18 +8,16 @@
                     :title="data.title"
                     :icon="data.icon"/>
     <div class="resources-body">
-      <div class="body-coast">
-        <span class="coast-total">Общая стоимость ресурсов</span>
-        <span class="coast-sum">{{ data.data.coastSum }}₴</span>
+      <span class="body-title">Последние</span>
+      <div class="body-content">
+        <div class="content-item"
+             v-for="(file, i) in data.widget"
+             :key="i">
+          <img :src="require('@/assets/img/my/file.svg')"/>
+          <span class="item-text">{{ file.label }}.{{file.extension}}</span>
+          <div class="item-border"></div>
+        </div>
       </div>
-      <div class="body-coast">
-        <span class="coast-total">Количество свободных ресурсов</span>
-        <span class="coast-sum">{{ data.data.resourcesSum }}</span>
-      </div>
-    </div>
-    <div class="resources-footer">
-      <span>Запросы на ресурс</span>
-      <span class="footer-num">{{ data.data.requests }}</span>
     </div>
   </div>
 </template>
@@ -29,7 +27,7 @@ import WidgetsHeader from "../../facades/WidgetsHeader";
 import {mapGetters} from "vuex";
 
 export default {
-  name: "Resources",
+  name: "resources",
   methods: {
     showContext(value) {
       this.$emit('show-context', value, this.data.name)
@@ -52,6 +50,7 @@ export default {
 
 <style lang="scss" scoped>
 @import '../../assets/animations.module';
+
 .container-dashboard-resources {
   display: flex;
   flex-direction: column;
@@ -59,64 +58,44 @@ export default {
   background-color: $grey-scale-500;
   padding: 16px;
   height: 224px;
+  cursor: pointer;
 
   .resources-body {
     display: inherit;
+    flex-direction: column;
 
-    .body-coast {
-      display: inherit;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: space-between;
-      padding: 8px;
-      background: $grey-scale-400;
-      border-radius: 12px;
-      width: 100%;
-      margin-right: 0;
-      margin-left: 8px;
-
-      .coast-total {
-        font-size: rem(12);
-        line-height: rem(16);
-        color: $grey-scale-200;
-      }
-
-      .coast-sum {
-        font-weight: 600;
-        font-size: rem(20);
-        color: #FFF;
-        margin-top: 5%;
-      }
-
-      &:first-child {
-        margin-right: 8px;
-        margin-left: 0;
-      }
-    }
-  }
-
-  .resources-footer {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #FFF;
-    padding: 12px;
-    height: 40px;
-    background: $grey-scale-400;
-    border-radius: 12px;
-    margin-top: 6.4%;
-
-    .footer-num {
-      text-align: center;
-      background: $red;
-      border-radius: 10px;
-      width: 24px;
-      height: 16px;
+    .body-title {
       font-weight: 600;
       font-size: rem(12);
-      margin-left: 2%;
+      line-height: rem(16);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: $grey-scale-200;
+      margin-bottom: 1%;
+    }
+
+    .body-content {
+      display: inherit;
+      flex-direction: column;
+
+      .content-item {
+        margin-top: 3%;
+
+        .item-text {
+          color: #FFF;
+          font-size: rem(12);
+          line-height: rem(16);
+          margin-left: 2%;
+        }
+
+        .item-border {
+          border-bottom: #313D49 solid 1px;
+          margin-top: 2%;
+        }
+      }
     }
   }
 }
+
 </style>
 

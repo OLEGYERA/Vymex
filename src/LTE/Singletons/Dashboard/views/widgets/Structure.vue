@@ -1,5 +1,5 @@
 <template>
-    <div :class="[hideWidget === 'Structure'
+  <div :class="[hideWidget === 'structure'
   ? (index + 1) % 2 === 0
   ? 'hide-right-widget'
   : 'hide-left-widget' : '',
@@ -8,10 +8,15 @@
                     :title="data.title"
                     :icon="data.icon"/>
     <div class="structure-body">
-      <div v-for="(man, i) of data.data"
+      <div v-for="(man, i) of processedData"
            :key="i"
            class="body-part"
-           :style="{ backgroundColor: man.color }">
+           :class="{
+         level1: man.level === 1,
+         level2: man.level === 2,
+         level3: man.level === 3,
+         level4: man.level === 4
+         }">
         <span class="part-level">{{ man.level }} УР.</span>
         <div class="part-mens">
           <span class="part-num">{{ man.numMens }}</span>
@@ -27,7 +32,7 @@ import WidgetsHeader from "../../facades/WidgetsHeader";
 import {mapGetters} from "vuex";
 
 export default {
-  name: "Structure",
+  name: "structure",
   methods: {
     showContext(value) {
       this.$emit('show-context', value, this.data.name)
@@ -40,6 +45,15 @@ export default {
     ...mapGetters({
       hideWidget: 'getHideWidget'
     }),
+    processedData() {
+      let widgetKeys = Object.keys(this.data.widget)
+      let widgetValues = Object.values(this.data.widget)
+      let finalData = []
+      for(let i = 0; i < widgetKeys.length; i++){
+        finalData.push({level: +widgetKeys[i].split('')[5], numMens: widgetValues[i]})
+      }
+      return finalData
+    },
   },
   props: {
     data: Object,
@@ -59,6 +73,8 @@ export default {
   background-color: $grey-scale-500;
   padding: 16px;
   height: 224px;
+  cursor: pointer;
+
   .structure-body {
     display: flex;
     flex-direction: column;

@@ -1,5 +1,5 @@
 <template>
-  <div  :class="[hideWidget === 'Processes'
+  <div  :class="[hideWidget === 'processes'
   ? (index + 1) % 2 === 0
   ? 'hide-right-widget'
   : 'hide-left-widget' : '',
@@ -8,13 +8,13 @@
                     :title="data.title"
                     :icon="data.icon"/>
     <div class="processes-body"
-         v-for="(process, i) in data.data"
+         v-for="(process, i) in twoProcesses"
          :key="i">
-      <div class="body-title-process">{{ process.titleProcess }}</div>
+      <div class="body-title-process">{{ createElipsis(process.title) }}</div>
       <div class="body-date">
-        <img :src="require('@/assets/img/icons/calendar-grey.svg')"/>
-        <div class="date-title-date">{{ process.titleDate }}</div>
-        <img :src="require('@/assets/img/icons/change.svg')"/>
+        <img v-if="process.repeatDate" :src="require('@/assets/img/icons/calendar-grey.svg')"/>
+        <div class="date-title-date">{{ process.repeatDate }}</div>
+        <img v-if="process.isRegular" :src="require('@/assets/img/icons/change.svg')"/>
       </div>
       <div class="body-border"></div>
     </div>
@@ -25,13 +25,15 @@
 <script>
 import WidgetsHeader from "../../facades/WidgetsHeader";
 import {mapGetters} from "vuex";
+import DashboardMixin from "@/LTE/Singletons/Dashboard/mixin";
 
 export default {
-  name: "Processes",
+  name: "processes",
+  mixins: [DashboardMixin],
   methods: {
     showContext(value) {
       this.$emit('show-context', value, this.data.name)
-    },
+    }
   },
   components: {
     WidgetsHeader
@@ -44,7 +46,10 @@ export default {
     ...mapGetters({
       hideWidget: 'getHideWidget'
     }),
-  },
+    twoProcesses(){
+      return this.data.widget.filter((el, i) => i < 2)
+    }
+  }
 }
 </script>
 
@@ -57,6 +62,7 @@ export default {
   background-color: $grey-scale-500;
   padding: 16px;
   height: 224px;
+  cursor: pointer;
 
   .processes-body {
     display: flex;

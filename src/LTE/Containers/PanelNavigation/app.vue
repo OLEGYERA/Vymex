@@ -17,28 +17,6 @@ import {mapGetters, mapMutations} from "vuex";
 
 export default {
   name: "NavigationPanel",
-  data() {
-    return {
-      // sections: [
-      //   {isActive: true, icon: require('@/assets/img/my/dashboard.svg')},
-      //   {isActive: false, icon: require('@/assets/img/my/process.svg')},
-      //   {isActive: false, icon: require('@/assets/img/my/resource.svg')},
-      //   {isActive: false, icon: require('@/assets/img/my/share-management.svg')},
-      //   {isActive: false, icon: require('@/assets/img/my/team.svg')},
-      //   {isActive: false, icon: require('@/assets/img/my/task.svg')},
-      //   {isActive: false, icon: require('@/assets/img/my/structure.svg')},
-      //   {isActive: false, icon: require('@/assets/img/my/result.svg')},
-      //   {isActive: false, icon: require('@/assets/img/my/co-queues.svg')},
-      //   {isActive: false, icon: require('@/assets/img/my/control-center.svg')},
-      //   {isActive: false, icon: require('@/assets/img/my/calendar.svg')},
-      //   {isActive: false, icon: require('@/assets/img/my/storage.svg')},
-      //   {isActive: false, icon: require('@/assets/img/my/settings.svg')},
-      //   {isActive: false, icon: require('@/assets/img/my/assumptions.svg')},
-      //   {isActive: false, icon: require('@/assets/img/my/costs.svg')},
-      //   {isActive: false, icon: require('@/assets/img/my/result-c-e.svg')},
-      // ],
-    }
-  },
   computed: {
     ...mapGetters({
       companySections: 'Company/getSections'

@@ -85,6 +85,7 @@ export default {
   background-color: $grey-scale-500;
   padding: 16px;
   height: 224px;
+  cursor: pointer;
 
   .control-center-body {
     padding: 8px;

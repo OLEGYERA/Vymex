@@ -1,5 +1,5 @@
 <template>
-  <div  :class="[hideWidget === 'Tasks'
+  <div :class="[hideWidget === 'tasks'
   ? (index + 1) % 2 === 0
   ? 'hide-right-widget'
   : 'hide-left-widget' : '',
@@ -8,27 +8,28 @@
                     :title="data.title"
                     :icon="data.icon"/>
     <div class="tasks-body"
-         v-for="(task, i) in data.data"
+         v-for="(task, i) in data.widget"
          :key="i">
       <div class="body-task">
         <img :src="require('@/assets/img/icons/bell.svg')" class="task-bell"/>
         <span class="task-event">{{ task.event }}</span>
       </div>
-      <span class="body-title">{{ task.title }}</span>
+      <span class="body-title">{{ createElipsis(task.title) }}</span>
       <div class="body-panel">
-        <div class="panel-date" :style="{
-          color: task.textColor,
-          background: task.background
-        }">
-          <img :src="task.calendarIcon"/>
-          <span>{{ task.date }}</span>
+        <div class="panel-date"
+             :style="{color: widgetWarningColor(task.finish) && widgetWarningColor(task.finish).color,
+             background: widgetWarningColor(task.finish) && widgetWarningColor(task.finish).background}">
+          <icon-calendar v-if="task.finish" class="panel-date-icons"/>
+          <span>{{ task.finish }}</span>
         </div>
-        <img :src="require('@/assets/img/icons/message.svg')" class="panel-alerts-icon"/>
-        <div class="panel-alerts">{{ task.messages }}</div>
-        <img :src="require('@/assets/img/icons/attach.svg')" class="panel-alerts-icon"/>
-        <div class="panel-alerts">{{ task.files }}</div>
-        <img :src="require('@/assets/img/icons/completed.svg')" class="panel-alerts-icon"/>
-        <div class="panel-alerts">{{ task.completed }}</div>
+        <div class="panel-notification">
+          <img :src="require('@/assets/img/icons/message.svg')" class="panel-alerts-icon"/>
+          <div class="panel-alerts">{{ task.commentsCount }}</div>
+          <img :src="require('@/assets/img/icons/attach.svg')" class="panel-alerts-icon"/>
+          <div class="panel-alerts">{{ task.filesCount }}</div>
+          <img :src="require('@/assets/img/icons/completed.svg')" class="panel-alerts-icon"/>
+          <div class="panel-alerts">{{ task.progress.finished }}/{{ task.progress.total }}</div>
+        </div>
       </div>
       <div class="body-border"></div>
     </div>
@@ -38,13 +39,33 @@
 <script>
 import WidgetsHeader from "../../facades/WidgetsHeader";
 import {mapGetters} from "vuex";
+import DashboardMixin from "@/LTE/Singletons/Dashboard/mixin";
 
 export default {
-  name: "Tasks",
+  name: "tasks",
+  mixins: [DashboardMixin],
   methods: {
     showContext(value) {
       this.$emit('show-context', value, this.data.name)
     },
+    widgetWarningColor(data) {
+      if (data) {
+        let dateFinish = new Date(data)
+        let currentDate = new Date()
+        let period = dateFinish.getTime() - currentDate.getTime()
+        if (period > 0) {
+          if (period > 86400000) {
+            return {color: '#FFF', background: '#1890FF'}
+          } else {
+            return {color: '#010203', background: '#FACD23'}
+          }
+        } else {
+          return {color: '#010203', background: '#FF0000'}
+        }
+      } else {
+        return null
+      }
+    }
   },
   components: {
     WidgetsHeader
@@ -57,7 +78,7 @@ export default {
     ...mapGetters({
       hideWidget: 'getHideWidget'
     }),
-  },
+  }
 }
 </script>
 
@@ -70,10 +91,17 @@ export default {
   border-radius: 16px;
   background-color: $grey-scale-500;
   padding: 16px;
+  height: 224px;
+  cursor: pointer;
+
+  .widgets-header {
+    margin-bottom: 17px;
+  }
 
   .tasks-body {
     display: inherit;
     flex-direction: column;
+    margin-top: 12px;
 
     .body-task {
       display: inherit;
@@ -104,29 +132,36 @@ export default {
 
     .body-panel {
       display: inherit;
+      align-items: center;
       font-size: rem(12);
       line-height: rem(16);
       color: $grey-scale-200;
+      width: 100%;
 
       .panel-date {
         display: flex;
         align-items: center;
-        justify-content: space-around;
+        justify-content: flex-start;
         font-size: rem(12);
         line-height: rem(16);
         border-radius: 14px;
-        padding: 0.5% 1.5%;
-        width: 30%;
+        width: 43%;
       }
 
-      .panel-alerts {
-        margin-left: 1%;
-        margin-top: 1%;
-      }
+      .panel-notification {
+        display: flex;
+        align-items: center;
+        width: 40%;
 
-      .panel-alerts-icon {
-        margin-left: 2%;
-        margin-top: 3px;
+        .panel-alerts {
+          margin-left: 5px;
+        }
+
+        .panel-alerts-icon {
+          margin-left: 8px;
+          width: 11px;
+          height: 11px;
+        }
       }
     }
 
@@ -135,6 +170,15 @@ export default {
       margin-top: 3%;
     }
   }
+}
+
+.panel-date-icons {
+  height: 12px;
+  width: 12px;
+  display: flex;
+  margin: 0 6px;
+  justify-content: center;
+  align-items: center;
 }
 </style>
 

@@ -5,7 +5,10 @@
     <navigation-tabs class="profile-career-navigation"
                      :tabs="[{title: 'Карьера', count: companies.length},{title: 'Резюме'}]" :current-tab="currentNavigationTab" @onTab="currentNavigationTab = $event">
 
-      <template #tab-content-0>
+      <template v-if="userDraftRes.length" #tab-content-0>
+        <draft-list :userDraftRes="userDraftRes"/>
+      </template>
+      <template v-else #tab-content-0>
         <div class="career-space" v-if="companies.length === 0">
           <stub-triple icon="company-empty.svg" title="Для начала работы <br> создайте компанию" description="Дальше система автоматически <br> настроит вашу новую рабочую зону"/>
           <button-base @onClick="registrationLimits">Создать компанию</button-base>
@@ -30,9 +33,9 @@
       </template>
 
       <template #tab-content-1>
-        <stub-triple 
-          icon="suitcase.png" 
-          title="Этот раздел в разработке" 
+        <stub-triple
+          icon="suitcase.png"
+          title="Этот раздел в разработке"
           description="В дальнейшем тут можно будет создать резюме и найти работу. Будет доступно в апреле 2022."
         />
       </template>
@@ -54,6 +57,7 @@
   import ButtonBase from '@Facade/Button/Base'
 
   import CompanyMixin from "../app/company/mixin";
+  import DraftList from '@/LTE/Singletons/Company/RegistrationLimits/views/draft.list'
   import {mapGetters} from 'vuex'
   //import Dashboard from "@/LTE/Singletons/Dashboard/app";
 
@@ -62,16 +66,21 @@
     components: {
       TitleSemi, TextBase, ImageAvatar, TitleCaps, TitleCaption,
       ProfileFaq, NavigationTabs,
-      StubTriple, ButtonBase,
+      StubTriple, ButtonBase, DraftList
       // ResourcesApp: async  () => (await import('@Singletons')).ResourcesApp
     },
     mixins: [CompanyMixin],
     data: () => ({
       currentNavigationTab: 0
     }),
+    mounted() {
+      this.$core.execViaComponent('CompanyDraft', 'getUserDraftCompanies', this.user.id);
+    },
     computed: {
       ...mapGetters({
-        companies: 'Company/getAll'
+        companies: 'Company/getAll',
+        userDraftRes: 'getUserDraftRes',
+        user: 'getUser'
       }),
     }
   }

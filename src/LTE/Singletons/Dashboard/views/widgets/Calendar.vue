@@ -1,5 +1,5 @@
 <template>
-    <div :class="[hideWidget === 'Calendar'
+    <div :class="[hideWidget === 'calendar'
   ? (index + 1) % 2 === 0
   ? 'hide-right-widget'
   : 'hide-left-widget' : '',
@@ -8,7 +8,7 @@
                     :title="data.title"
                     :icon="data.icon"/>
     <div class="calendar-body">
-      <div v-for="(day, i) in data.data.calendar"
+      <div v-for="(day, i) in data.widget && data.widget.calendar"
            :key="i"
            class="body-dates"
            :style="{
@@ -29,7 +29,7 @@
     </div>
     <div class="calendar-footer">
       <div class="footer-meeting"
-           v-for="(event, i) in data.data.events"
+           v-for="(event, i) in data.widget && data.widget.events"
            :key="i">
         <div class="meeting-dot"></div>
         <div class="meeting-data">
@@ -37,7 +37,7 @@
           <span class="data-time">{{ event.time }}</span>
         </div>
       </div>
-      <span class="footer-events">{{ data.data.otherEvents }}</span>
+      <span class="footer-events">{{ data.widget && data.widget.otherEvents }}</span>
     </div>
   </div>
 </template>
@@ -46,7 +46,7 @@
 import WidgetsHeader from "../../facades/WidgetsHeader";
 import {mapGetters} from "vuex";
 export default {
-  name: "Calendar",
+  name: "calendar",
   methods: {
     showContext(value) {
       this.$emit('show-context', value, this.data.name)
@@ -75,6 +75,7 @@ export default {
   background-color: $grey-scale-500;
   padding: 16px;
   height: 224px;
+  cursor: pointer;
 
   .calendar-body {
     display: inherit;

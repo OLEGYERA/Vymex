@@ -16,7 +16,7 @@
       <div class="body-performers">
         <header-add>
           <template #header-title>исполнители</template>
-          <template #header-amount>{{ performerCount }}</template>
+          <template #header-amount>{{ performersCounter }}</template>
         </header-add>
         <process-performer :performers="performers"/>
       </div>
@@ -47,7 +47,6 @@ export default {
   mixins: [ProcessesMixin],
   methods: {
     ...mapMutations({
-      setPerformerCount: 'setNewPerformerCount',
       setSelectedProcess: 'setClickedSelectedProcess',
       setPerformers: 'setCurrentPerformers',
       setSubdivisions: 'setChooseSubdivisions',
@@ -64,10 +63,10 @@ export default {
       files: 'getFiles',
       performers: 'getPerformers',
       periods: 'getPeriods',
-      performerCount: 'getPerformerCount',
       selectedProcess: 'getSelectedProcess',
       processModel: 'getProcessModel',
-      levels: 'getLevels'
+      levels: 'getLevels',
+      subdivisions: 'getSubdivisions'
     }),
     activePeriod() {
       if (this.selectedProcess.repeatFrequency.interval === "P1D") {
@@ -81,7 +80,14 @@ export default {
       } else {
         return ''
       }
-    }
+    },
+    performersCounter() {
+      let count = 0
+      for (let i = 0; i < this.subdivisions.length; i++) {
+        this.subdivisions[i].numberPeople ? count += this.subdivisions[i].numberPeople : count += 1
+      }
+      return count
+    },
   }
 }
 </script>

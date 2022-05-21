@@ -13,8 +13,7 @@
       </div>
     </div>
     <transition :name="tabTransitionName" mode="out-in">
-      <draft-list v-if="userDraftRes.length" :userDraftRes="userDraftRes"/>
-      <template v-else v-for="(tab, tabIndex) in tabs">
+      <template v-for="(tab, tabIndex) in tabs">
         <div class="navigation-tabs-content" :key="tabIndex" v-if="tabIndex === currentTab">
           <slot :name="`tab-content-${tabIndex}`"/>
         </div>
@@ -25,14 +24,11 @@
 
 <script>
 import TitleCaps from '@Facade/Title/Caps'
-import DraftList from '@/LTE/Singletons/Company/RegistrationLimits/views/draft.list'
-import {mapGetters} from "vuex"
 
 export default {
   name: 'Facades.Navigation.Tabs',
   components: {
     TitleCaps,
-    DraftList
   },
   props: {
     tabs: {
@@ -44,19 +40,12 @@ export default {
   },
   mounted() {
     this.updateRailTabStyle();
-    this.$core.execViaComponent('CompanyDraft', 'getUserDraftCompanies', this.user.id);
   },
   data() {
     return {
       tabTransitionName: 'tab-slot-left',
       railTabStyle: {}
     }
-  },
-  computed: {
-    ...mapGetters({
-      userDraftRes: 'getUserDraftRes',
-      user: 'getUser'
-    })
   },
   methods: {
     changeTap(tabIndex) {

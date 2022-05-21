@@ -16,6 +16,8 @@
         />
       </transition>
     </div>
+    <div class="action-list-outside" v-if="actionListStatus"
+         @click="actionListStatus = false"></div>
   </div>
 </template>
 
@@ -32,6 +34,7 @@ export default {
   },
   methods: {
     showContext(value) {
+      this.actionListStatus = false
       this.$emit('show-context', value)
     },
   },
@@ -81,31 +84,12 @@ export default {
     display: none;
   }
 }
-
-//.show-context-animation{
-//  animation: show-context;
-//  animation-duration: $vx-nav-time;
-//}
-//@keyframes show-context{
-//  0%{
-//    font-size: 0;
-//    right: 0;
-//    width: 0;
-//    height: 0;
-//  }
-//  50%{
-//    font-size: 0;
-//  }
-//  90%{
-//    font-size: 0;
-//  }
-//  99%{
-//    font-size: 0;
-//  }
-//  100%{
-//    bottom: 0;
-//    width: 155px;
-//    height: 96px;
-//  }
-//}
+.action-list-outside {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  cursor: auto;
+}
 </style>

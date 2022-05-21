@@ -89,6 +89,7 @@ export default {
   },
   watch: {
     unitsRes(data) {
+      console.log(data)
       let arrayLevels = Object.values(data)
       if (this.processModel === 'official-processes') {
         let ceo = {}
@@ -96,10 +97,10 @@ export default {
         if (this.selectedCompany.unitLevel === 1) {
           ceo = {
             level: 1, showContext: true, data: [{
-              avatar: data.self.avatar,
+              avatar: arrayLevels[0][0].avatar,
               numberPeople: 1,
-              id: data.self.id,
-              name: data.self.unitName,
+              id: arrayLevels[0][0].id,
+              name: arrayLevels[0][0].unitName,
               checkedPosition: false,
               checkboxType: 2,
               actionListStatus: false
@@ -152,6 +153,7 @@ export default {
 <style lang="scss" scoped>
 .company-processes-files {
   width: 100%;
+  padding-bottom: rem(266);
 
   .header-text-group {
     display: flex;

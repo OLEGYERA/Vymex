@@ -48,3 +48,5 @@ Vue.component('icon-сlock', () => import('./Clock'));
 Vue.component('icon-homes', () => import('./Homes'));
 Vue.component('icon-human', () => import('./Human'));
 Vue.component('icon-question', () => import('./Question'));
+Vue.component('icon-burger', () => import('./Burger'));
+Vue.component('icon-notification-off', () => import('./NotificationOff'));

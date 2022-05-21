@@ -26,7 +26,7 @@ export default {
     }
   },
   computed: {
-   ...mapGetters({sections: 'getSections'})
+   ...mapGetters({sections: 'Company/getSections'})
   },
   methods: {
     handleClickOnItem(id) {

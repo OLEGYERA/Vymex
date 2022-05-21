@@ -48,6 +48,9 @@ export default {
     data: Array,
     level: Number
   },
+  mounted(){
+    console.log(this.data, 'data')
+  },
   components: {
     Checkbox,
     ImageAvatar

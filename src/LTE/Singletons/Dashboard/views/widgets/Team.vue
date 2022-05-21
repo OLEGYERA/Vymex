@@ -1,26 +1,26 @@
 <template>
-  <div  :class="[hideWidget === 'Team'
+  <div  :class="[hideWidget === 'team'
   ? (index + 1) % 2 === 0
   ? 'hide-right-widget'
   : 'hide-left-widget' : '',
   'container-dashboard-team']">
     <widgets-header @show-context="showContext"
                     :title="data.title"
-                    :icon="data.icon"/>
+                    :icon="require('@/assets/img/my/team.svg')"/>
     <div class="team-body">
       <div class="body-people">
         <span class="people-total">Людей в компании</span>
-        <span class="people-sum">{{ data.data.humans }}</span>
+        <span class="people-sum">{{ data.widget && data.widget.humans }}</span>
       </div>
       <div class="body-people">
         <span class="people-total">Вакансии</span>
-        <span class="people-sum">{{ data.data.vacancies }}</span>
+        <span class="people-sum">{{ data.widget && data.widget.vacancies }}</span>
       </div>
     </div>
     <div class="team-footer">
       <span class="footer-title">Последняя активность:</span>
       <div class="footer-positions">
-        <div v-for="(man, i) in data.data.people"
+        <div v-for="(man, i) in  data.widget && data.widget.people"
              :key="i">
           <div class="footer-unit">
             <img :src="man.avatar" class="positions-avatar"/>
@@ -37,7 +37,7 @@ import WidgetsHeader from "../../facades/WidgetsHeader";
 import {mapGetters} from "vuex";
 
 export default {
-  name: "Team",
+  name: "team",
   methods: {
     showContext(value) {
       this.$emit('show-context', value, this.data.name)
@@ -68,6 +68,7 @@ export default {
   background-color: $grey-scale-500;
   padding: 16px;
   height: 224px;
+  cursor: pointer;
 
   .team-body {
     display: inherit;

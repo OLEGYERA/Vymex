@@ -1,29 +1,29 @@
 <template>
-  <div  :class="[hideWidget === 'Costs'
+  <div  :class="[hideWidget === 'expenses'
   ? (index + 1) % 2 === 0
   ? 'hide-right-widget'
   : 'hide-left-widget' : '',
-  'container-dashboard-costs']">
+  'container-dashboard-expenses']">
     <widgets-header @show-context="showContext"
                     :title="data.title"
                     :icon="data.icon"/>
-    <div class="costs-body">
+    <div class="expenses-body">
       <span class="body-title">Зарплатный фонд на месяц</span>
       <div class="body-resources">
-        <span class="resources-free">{{ data.data.salaryFund.UAH }}₴</span>
-        <span class="body-title">/${{ data.data.salaryFund.dollar }}</span>
+        <span class="resources-free">{{ data.widget.salaryFund && data.widget.salaryFund.UAH }}₴</span>
+        <span class="body-title">/${{ data.widget.salaryFund && data.widget.salaryFund.dollar }}</span>
       </div>
     </div>
-    <div class="costs-footer">
+    <div class="expenses-footer">
       <div class="footer-wage">
         <span class="wage-medium-wage">Средняя ЗП</span>
-        <span class="wage-wage-UAH">{{ data.data.averageSalary.UAH }}₴</span>
-        <span class="wage-medium-wage">${{ data.data.averageSalary.dollar }}</span>
+        <span class="wage-wage-UAH">{{ data.widget.averageSalary && data.widget.averageSalary.UAH }}₴</span>
+        <span class="wage-medium-wage">${{ data.widget.averageSalary && data.widget.averageSalary.dollar }}</span>
       </div>
       <div class="footer-wage">
         <span class="wage-medium-wage">Остаток выплат по ЗП</span>
-        <span class="wage-wage-UAH">{{ data.data.remainderSalary.UAH }}₴</span>
-        <span class="wage-medium-wage">${{ data.data.remainderSalary.UAH }}</span>
+        <span class="wage-wage-UAH">{{ data.widget.remainderSalary && data.widget.remainderSalary.UAH }}₴</span>
+        <span class="wage-medium-wage">${{ data.widget.remainderSalary && data.widget.remainderSalary.UAH }}</span>
       </div>
     </div>
   </div>
@@ -34,7 +34,7 @@ import WidgetsHeader from "../../facades/WidgetsHeader";
 import {mapGetters} from "vuex";
 
 export default {
-  name: "Costs",
+  name: "expenses",
   methods: {
     showContext(value) {
       this.$emit('show-context', value, this.data.name)
@@ -58,15 +58,16 @@ export default {
 <style lang="scss" scoped>
 @import '../../assets/animations.module';
 
-.container-dashboard-costs {
+.container-dashboard-expenses {
   display: flex;
   flex-direction: column;
   border-radius: 16px;
   background-color: $grey-scale-500;
   padding: 16px;
   height: 224px;
+  cursor: pointer;
 
-  .costs-body {
+  .expenses-body {
     display: inherit;
     flex-direction: column;
     align-items: flex-start;
@@ -93,7 +94,7 @@ export default {
     }
   }
 
-  .costs-footer {
+  .expenses-footer {
     display: inherit;
     margin-top: 5%;
     height: 35.7%;

@@ -1,25 +1,25 @@
 <template>
-  <div  :class="[hideWidget === 'CoQueues'
+  <div  :class="[hideWidget === 'сofounders'
   ? (index + 1) % 2 === 0
   ? 'hide-right-widget'
   : 'hide-left-widget' : '',
-  'container-dashboard-co-queues']">
+  'container-dashboard-сofounders']">
     <widgets-header @show-context="showContext"
                     :title="data.title"
                     :icon="data.icon"/>
-    <div class="co-queues-body">
+    <div class="сofounders-body">
       <div class="body-for-sale">
         <span class="for-sale-title">Доля компании на продажу:</span>
-        <span class="for-sale-percent">{{ data.data.forSale }} %</span>
+        <span class="for-sale-percent">{{ data.widget && data.widget.forSale }} %</span>
       </div>
       <div class="body-for-sale">
         <span class="for-sale-title">Активные голосования:</span>
-        <span class="for-sale-percent">{{ data.data.activeVoting }}</span>
+        <span class="for-sale-percent">{{ data.widget && data.widget.activeVoting }}</span>
       </div>
     </div>
-    <div class="co-queues-footer">
+    <div class="сofounders-footer">
       <span>Количество соучредителей</span>
-      <span class="footer-num">{{ data.data.coQueues }}</span>
+      <span class="footer-num">{{ data.widget && data.widget.coQueues }}</span>
     </div>
   </div>
 </template>
@@ -29,7 +29,7 @@ import WidgetsHeader from "../../facades/WidgetsHeader";
 import {mapGetters} from "vuex";
 
 export default {
-  name: "CoQueues",
+  name: "сofounders",
   methods: {
     showContext(value) {
       this.$emit('show-context', value, this.data.name)
@@ -52,15 +52,16 @@ export default {
 
 <style lang="scss" scoped>
 @import '../../assets/animations.module';
-.container-dashboard-co-queues {
+.container-dashboard-сofounders {
   display: flex;
   flex-direction: column;
   border-radius: 16px;
   background-color: $grey-scale-500;
   padding: 16px;
   height: 224px;
+  cursor: pointer;
 
-  .co-queues-body {
+  .сofounders-body {
     display: flex;
 
     .body-for-sale {
@@ -96,7 +97,7 @@ export default {
     }
   }
 
-  .co-queues-footer {
+  .сofounders-footer {
     display: flex;
     align-items: center;
     justify-content: center;

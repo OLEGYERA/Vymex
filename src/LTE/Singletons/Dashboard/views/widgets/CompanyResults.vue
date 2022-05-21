@@ -1,31 +1,31 @@
 <template>
-  <div  :class="[hideWidget === 'Result'
+  <div  :class="[hideWidget === 'companyResults'
   ? (index + 1) % 2 === 0
   ? 'hide-right-widget'
   : 'hide-left-widget' : '',
-  'container-dashboard-result']">
+  'container-dashboard-company-results']">
     <widgets-header @show-context="showContext"
                     :title="data.title"
                     :icon="data.icon"/>
-    <div class="result-body">
+    <div class="company-results-body">
       <div class="body-bill">
         <span class="bill-coast">Всего на счету</span>
-        <span class="bill-sum">{{ data.data.allBill }}₴</span>
+        <span class="bill-sum">{{ data.widget && data.widget.allBill }}₴</span>
       </div>
       <div class="body-bill">
         <span class="bill-coast">Сумма на конец мес.</span>
         <div class="bill-res">
-          <div class="bill-sum">{{ data.data.endOfMonth }}₴</div>
+          <div class="bill-sum">{{ data.widget && data.widget.endOfMonth }}₴</div>
           <div class="bill-proc">
             <div class="proc-triangle"></div>
-            <div class="proc-development">{{ data.data.development }}%</div>
+            <div class="proc-development">{{ data.widget && data.widget.development }}%</div>
           </div>
         </div>
       </div>
     </div>
-    <div class="result-footer">
+    <div class="company-results-footer">
       <div
-          v-for="(date, i) in data.data.dates"
+          v-for="(date, i) in data.widget && data.widget.dates"
           :key="i">
         <div class="footer-plot"
              v-if="(typeof date.height !== 'object') && (typeof date.color !== 'object')"
@@ -61,7 +61,7 @@ import WidgetsHeader from "../../facades/WidgetsHeader";
 import {mapGetters} from "vuex";
 
 export default {
-  name: "Result",
+  name: "companyResults",
   methods: {
     showContext(value) {
       this.$emit('show-context', value, this.data.name)
@@ -85,16 +85,17 @@ export default {
 <style lang="scss" scoped>
 @import '../../assets/animations.module';
 
-.container-dashboard-result {
+.container-dashboard-company-results {
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
   border-radius: 16px;
   background-color: $grey-scale-500;
   padding: 16px;
-  height: 98.3%;
+  height: 256px;
+  cursor: pointer;
 
-  .result-body {
+  .company-results-body {
     display: inherit;
     margin-bottom: 5%;
 
@@ -160,7 +161,7 @@ export default {
     }
   }
 
-  .result-footer {
+  .company-results-footer {
     display: inherit;
     justify-content: space-around;
     align-items: flex-end;

@@ -135,7 +135,6 @@ export default {
       disableStatusCount: 'getDisableStatusCount',
       levelsStructure: 'getLevelsStructure',
       processModel: 'getProcessModel',
-      performerCount: 'getPerformerCount',
       levels: 'getLevels',
       periods: 'getPeriods',
       selectedProcess: 'getSelectedProcess',
@@ -147,7 +146,6 @@ export default {
       for (let i = 0; i < this.subdivisions.length; i++) {
         this.subdivisions[i].numberPeople ? count += this.subdivisions[i].numberPeople : count += 1
       }
-      this.setPerformerCount(count)
       return count
     },
   },
@@ -158,7 +156,6 @@ export default {
       setPerformers: 'setCurrentPerformers',
       setSubdivisions: 'setChooseSubdivisions',
       setProcessModel: 'setChangeProcessModel',
-      setPerformerCount: 'setNewPerformerCount',
       setDisableStatusCount: 'setCheckDisableStatusCount',
       setSelectedProcess: 'setClickedSelectedProcess',
       setFiles: 'setNewFiles',
