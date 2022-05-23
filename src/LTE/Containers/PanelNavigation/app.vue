@@ -43,6 +43,8 @@ export default {
       this.sections[i].isActive = !this.sections[i].isActive
       if(this.sections[1].isActive){
         this.$router.push({name: 'vx.process'})
+      } else if(this.sections[2].isActive){
+        this.$router.push({name: 'vx.structure'})
       } else if(this.sections[0].isActive){
         this.$router.push({name: 'vx.co'})
       }

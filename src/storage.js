@@ -37,6 +37,7 @@ import {NotificationsStore as Notifications} from '@Singletons'
 import {UsersStore as Users} from '@Singletons'
 import Dashboard from '@/models/Dashboard'
 import Processes from '@/models/Processes'
+import Structure from '@/models/Structure'
 import Resources from "@/LTE/Singletons/Resources/models/Resources";
 
 
@@ -58,6 +59,7 @@ export default new Vuex.Store({
     Company,
     Dashboard,
     Processes,
+    Structure,
     Users
   },
   plugins: [

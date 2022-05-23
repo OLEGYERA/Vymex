@@ -124,6 +124,7 @@ export default {
 			setBlockModal: 'Users/setBlockModal',
 		}),
 		savePasscode() {
+			this.showModal = false
 			this.setPasscode(this.firstCode)
 		},
 		setAutoLock() {

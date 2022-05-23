@@ -11,6 +11,7 @@
         </div>
         <div class="railTab" ref="railTab" :style="railTabStyle"></div>
       </div>
+      <slot name="options" />
     </div>
     <transition :name="tabTransitionName" mode="out-in">
       <template v-for="(tab, tabIndex) in tabs">
