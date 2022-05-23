@@ -21,7 +21,16 @@
               <template #title>Мои компании</template>
               <template #icon><icon-company/></template>
             </sketch-title>
-            <sketch-plate-account :tiny="!isFull" category="company" v-for="(company, companyIndex) in companies" :data="{name: company.name, id: company.id}" :router="{name: 'vx.co', params: {companyID: company.id}}" :key="companyIndex"/>
+            <sketch-plate-account 
+              :tiny="!isFull" 
+              category="company" 
+              v-for="(company, companyIndex) in companies" 
+              :data="{name: company.name, id: company.id}" 
+              :router="{name: 'vx.co', 
+              params: {companyID: company.id}}" 
+              :key="companyIndex"
+              @click.native="setActiveCompany(company.id)"
+            />
             <sketch-plate-account :tiny="!isFull"/>
           </div>
         </div>
@@ -83,7 +92,10 @@
       }),
     },
     methods: {
-      ...mapMutations(['setNavigationFull'])
+      ...mapMutations({
+        setNavigationFull: 'setNavigationFull', 
+        setActiveCompany: 'Company/setActiveCompany'
+      })
     }
   }
 </script>

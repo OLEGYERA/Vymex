@@ -7,6 +7,8 @@
 
 <script>
 import TitleCaps from "@Facade/Title/Caps"
+import { mapGetters } from 'vuex';
+
 export default {
   name: "Providers.Company.Level.Ui",
 	components: {TitleCaps},
@@ -21,6 +23,9 @@ export default {
 		}
 	},
 	computed: {
+		...mapGetters({
+			share: 'Company/getShare'
+		}),
 		levelText() {
 			let result = {
 				name: '',
@@ -45,7 +50,7 @@ export default {
 					break;
 				case 100: 
 					result.name = 'Cоучредитель'
-					result.number = '100%';
+					result.number = `${this.share}%`;
 					result.className = 'co-founder';
 			}
 			return result

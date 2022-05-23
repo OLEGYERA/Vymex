@@ -62,6 +62,15 @@ class Auth extends Binder{
   userRes(data){
     this.$store.set('UserProfileData', data);
   }
+
+  async logout() {
+    this.$socket.emit('listener', await encrypt(...arguments[1]));
+  }
+
+  logoutRes() {
+    localStorage.clear();
+    location.reload();
+  }
 }
 
 export default new Auth();

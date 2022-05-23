@@ -5,8 +5,15 @@
         <avatar :logo="logo" :colorCode="color"/>
       </div>
       <div class="info-text">
-        <div class="name">{{contact.title}}</div>
-        <title-caption>{{contact.alias}}</title-caption>
+        <div class="name">
+          {{contact.title || `${contact.name} ${contact.lastname}`}}
+        </div>
+        <title-caption>
+          {{structure ? 'Занимает структурные ед.:' : contact.alias}} 
+          <span v-for="unit in contact.units" :key="unit.id">
+            <span class="level" :class="`level-${unit.level}`">{{unit.name}}</span>
+          </span>
+        </title-caption>
       </div>
     </div>
     <points-vertical v-if="!user"/>
@@ -39,17 +46,29 @@ export default {
     user: {
       type: Boolean, 
       default: false
+    },
+    structure: {
+      type: Boolean, 
+      default: false
     }
   },
   computed: {
     logo: function () {
       let initials = ''
-      for (const char of this.contact.title) {
-        if (char === char.toUpperCase() && char !== ' ') {
-          initials += char
+      if (this.contact.avatar) {
+        return this.contact.avatar
+      } else if (this.contact.title) {
+        for (const char of this.contact.title) {
+          if (char === char.toUpperCase() && char !== ' ') {
+            initials += char
+          }
         }
+        return initials.slice(0, 2);
+      } else if (this.contact.name && this.contact.lastname) {
+        return this.contact.name[0]+this.contact.lastname[0]
+      } else {
+        return ''
       }
-      return initials.slice(0, 2);
     },
   },
   methods: {
@@ -100,5 +119,24 @@ export default {
       margin-bottom: 8px;
       padding: rem(10) rem(12);
     }
+  }
+
+  .level {
+    color: $grey;
+    padding: 2px 8px;
+    border-radius: 32px;
+    margin-left: 4px;
+  }
+  .level-1 {
+    background: $su-level-1;
+  }
+  .level-2 {
+    background: $su-level-2;
+  }
+  .level-3 {
+    background: $su-level-3;
+  }
+  .level-4 {
+    background: $su-level-4;
   }
 </style>

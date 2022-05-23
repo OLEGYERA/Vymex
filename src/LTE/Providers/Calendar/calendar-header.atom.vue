@@ -6,26 +6,33 @@
           :style="{transform:  calendarReplica && calendar.Month !== calendarReplica.Month ? gesture.style : '' }"
         >{{ calendar.Month }}</title-semi>
       </div>
-      <div class="date-year" :class="{floatingYear: (calendarReplica && calendar.Year !== calendarReplica.Year) }">
-       <input
-         :style="{transform:  calendarReplica && calendar.Year !== calendarReplica.Year ? gesture.style : '' }"
-         type="text"
-         class="transparentYear"
-         ref="transparentYear"
-         v-mask="'XXXX'"
-         v-model="yearModel"
-         @blur="handleNewYear"
-         @keydown.38="increaseYear"
-         @keydown.40="decreaseYear"
-         @keydown.enter="$refs['transparentYear'].blur()"
-         @keydown.tab.prevent="$refs['transparentYear'].blur()"
-       />
-        <input
-          v-if="calendarReplica && calendar.Year !== calendarReplica.Year"
-          :style="{transform: gesture.styleReplica}"
-          type="text"
-          class="transparentYear yearReplica"
-          :value="calendarReplica.Year">
+      <div class="right">
+        <div class="year-wrapp">
+          <icon-arrow-left class="arrow" @click.native="decreaseYear()" />
+          <div class="date-year" :class="{floatingYear: (calendarReplica && calendar.Year !== calendarReplica.Year) }">
+          <input
+            :style="{transform:  calendarReplica && calendar.Year !== calendarReplica.Year ? gesture.style : '' }"
+            type="text"
+            class="transparentYear"
+            ref="transparentYear"
+            v-mask="'XXXX'"
+            v-model="yearModel"
+            @blur="handleNewYear"
+            @keydown.38="increaseYear"
+            @keydown.40="decreaseYear"
+            @keydown.enter="$refs['transparentYear'].blur()"
+            @keydown.tab.prevent="$refs['transparentYear'].blur()"
+          />
+            <input
+              v-if="calendarReplica && calendar.Year !== calendarReplica.Year"
+              :style="{transform: gesture.styleReplica}"
+              type="text"
+              class="transparentYear yearReplica"
+              :value="calendarReplica.Year">
+          </div>
+          <icon-arrow-right class="arrow" @click.native="increaseYear()" />
+        </div>
+        <button-close @click.native="$emit('onClose')"/>
       </div>
     </div>
     <div class="calendar-days-week-box">
@@ -41,6 +48,9 @@
 <script>
   import TitleSemi from '@Facade/Title/Semi'
   import TitleCaption from '@Facade/Title/Caption'
+  import IconArrowLeft from '@Icon/ArrowLeft'
+  import IconArrowRight from '@Icon/ArrowRight'
+  import ButtonClose from '@Facade/Button/Close'
 
   export default {
     name: 'Providers.CalendarHeaderAtom',
@@ -75,7 +85,7 @@
         required: true
       },
     },
-    components: {TitleSemi, TitleCaption},
+    components: {TitleSemi, TitleCaption, IconArrowLeft, IconArrowRight, ButtonClose},
     created() {
       this.setYearModel();
     },
@@ -110,5 +120,30 @@
 <style lang="scss" scoped>
   .facade-title-caption{
     font-size: rem(14);
+  }
+  .year-wrapp {
+    display: flex;
+  }
+  .arrow {
+    color: #fff;
+    cursor: pointer;
+    // &.top {
+    //   transform: rotate(90deg);
+    //   width: 20px;
+    // }
+    // &.down {
+    //   transform: rotate(-90deg);
+    //   width: 20px;
+    // }
+  }
+  .right {
+    display: flex;
+    align-items: center;
+  }
+  .calendar-date-box {
+    align-items: center !important;
+  }
+  .facade-button-close {
+    margin-left: 7px;
   }
 </style>

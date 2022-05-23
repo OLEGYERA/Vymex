@@ -80,6 +80,9 @@
 <style lang="scss" scoped>
   .singleton-co-create-app{
     position: relative;
+    padding: 0 15px;
+    max-width: 795px;
+    margin: 10px auto;
     .facade-title-base{
       margin: 28px 0 36px;
       text-align: center;

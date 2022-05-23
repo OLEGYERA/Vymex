@@ -2,12 +2,59 @@
   <div id="app">
     <notifications position="top right" classes="vymex-notification"/>
     <router-view></router-view>
+    <modal :status="getBlockModal" block :disable="code !== getPasscode" @onOk="unBlock()">
+      <template #title>Сайт заблокирован, введите код-пароль</template>
+      <template #description>
+				<codepassword @onAction="code=$event" />
+			</template>
+      <template #button-accept>Применить</template>
+    </modal>
   </div>
 </template>
 
 <script>
+  import Modal from "@Facade/Modal/Base";
+  import Codepassword from "@Facade/Input/Codepassword";
+  import { mapGetters, mapMutations } from 'vuex';
+
   export default {
     name: 'App',
+    components: {Modal, Codepassword},
+    created() {
+      this.setBlockModal()
+    },
+    data() {
+      return {
+        code: ''
+      }
+    },
+    methods: {
+      ...mapMutations({
+        setBlockModal: 'Users/setBlockModal',
+        closeBlockModal: 'Users/setCloseBlockModal',
+        setClearInterval: 'Users/setClearInterval'
+      }),
+      unBlock() {
+        this.closeBlockModal()
+        this.setBlockModal()
+      },
+    },
+    computed: {
+      ...mapGetters({
+        getPasscode: 'Users/getPasscode',
+        passcodeActive: 'Users/getPasscodeActive',
+        getBlockModal: 'Users/getBlockModal'
+      })
+    },
+    watch: {
+      passcodeActive(val) {
+        if (val) {
+          this.setBlockModal(true)
+        } else {
+          this.setClearInterval()
+        }
+      }
+    }
   }
 </script>
 

@@ -2,7 +2,7 @@
   <div class="facade-plate-setting">
     <div class="plate-setting-body">
       <div class="setting-left-group">
-        <div class="setting-avatar">
+        <div class="setting-avatar" :class="{'disable': disable}">
           <slot name="icon"/>
         </div>
         <div class="setting-title">
@@ -11,7 +11,7 @@
       </div>
       <div class="setting-right-group">
         <span class="setting-additional"><slot name="additional"/></span>
-        <icon-arrow-right/>
+        <icon-arrow-right v-if="!buttonSwitch"/>
       </div>
     </div>
   </div>
@@ -24,6 +24,13 @@
   export default {
     /*eslint-disable*/
     name: 'Facade.Plate.Setting',
+    props: {
+      disable: Boolean,
+      buttonSwitch: {
+        type: Boolean,
+        default: false
+      }
+    },
 
     components: {
       TextBase,
@@ -57,6 +64,12 @@
           .icon{
             max-height: 16px;
             color: $blue;
+          }
+          &.disable {
+            background-color: rgba($grey-scale-200, .2);
+            & .icon {
+              color: $grey-scale-200;
+            }
           }
         }
         .facade-text-base{

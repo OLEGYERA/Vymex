@@ -60,6 +60,39 @@ class Company extends Binder{
   }
   getUserCompaniesRes(companies) {
     this.$store.name('Company').set('All', companies)
+
+    let activeCompany = this.$store.name('Company').get('ActiveCompany')
+    if (activeCompany.id) {
+      this.$store.name('Company').set('ActiveCompany', activeCompany.id)
+    }
+  }
+
+  async getCompanyTeam(companyId) {
+    this.$socket.emit('listener', await encrypt(...arguments[1], numberToArray(companyId)));
+  }
+
+  getCompanyTeamRes(team) {
+    this.$store.name('Company').set('CompanyTeam', team)
+  }
+
+  async getStructure(companyId) {
+    this.$socket.emit('listener', await encrypt(...arguments[1], numberToArray(companyId)));
+  }
+
+  getStructureRes(str) {
+    this.$store.name('Company').set('Structure', str)
+  }
+
+  async getUserInfo(params) {
+    let data = serialize(
+      numberToArray(params.userId),
+      numberToArray(params.companyId)
+    )
+    this.$socket.emit('listener', await encrypt(...arguments[1], data));
+  }
+
+  getUserInfoRes(info) {
+    this.$store.name('Company').set('UserInfo', info)
   }
 }
 

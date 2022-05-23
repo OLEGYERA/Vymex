@@ -2,7 +2,7 @@
   <div class="container-auth-passwords">
     <input-password
       :model="firstPasswordField"
-      placeholder="Пароль"
+      :placeholder="change ? 'Новый пароль' : 'Пароль'"
       labeled
       ref="input-first-password"
       tooltip
@@ -16,7 +16,7 @@
     />
     <input-password
       :model="secondPasswordField"
-      placeholder="Повторите пароль"
+      :placeholder="change ? 'Повторите новый пароль' : 'Повторите пароль'"
       labeled
       ref="input-second-password"
       :disable="!enableSecondPassword"
@@ -33,6 +33,12 @@
   export default {
     name: 'Container.Auth.Passwords',
     components: {InputPassword},
+    props: {
+      change: {
+        type: Boolean,
+        default: false
+      }
+    },
     data() {
       return {
         firstPasswordField: null,

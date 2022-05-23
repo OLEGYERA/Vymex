@@ -2,48 +2,50 @@ export default {
 	namespaced: true,
 	state: {
 		status: false,
-		title: '',
-		alias: '',
-		avatar: '',
-		id: null,
+		activeUser: {id: null},
 		shareRecipients: {},
-		issuedShares: []
+		issuedShares: [],
+		users: [],
+		cofounders: [],
+		search: [],
+
+		loadingShares: false,
+		loadingCofounders: false,
+		loadingSearch: false,
+
+		passcode: {
+			code: '',
+			active: false
+		},
+		activeAutoLock: 3600000,
+		blockModal: false,
+		finishTime: null,
+		idInt: null
 	},
 	getters: {
-		status: (state) => state.status,
-		getUserAvatarData: (state) => {
-			let logo = '';
-			if (!state.avatar){
-				for (const char of state.title) {
-					if (char === char.toUpperCase() && char !== ' ') {
-						logo += char
-					}
-				}
-			} else {
-				logo = state.avatar;
-			}
-			return {logo: logo.slice(0, 2), colorCode: String(state.activeUser.id).substr(state.activeUser.id.length - 1, 1)}
-		},
-		getFullName: state => state.title,
-		getAlias: state => state.alias,
-		getId: state => state.id,
-		shareRecipients: state => state.shareRecipients,
-		issuedShares: state => state.issuedShares
+		getStatus: (state) => state.status,
+		getShareRecipients: state => state.shareRecipients,
+		getIssuedShares: state => state.issuedShares,
+		getCofounders: state => state.cofounders,
+		getUsers: state => state.users,
+		getActiveUser: state => state.activeUser,
+		getSearch: state => state.search,
+		getLoadingShares: state => state.loadingShares,
+		getLoadingCofounders: state => state.loadingCofounders,
+		getLoadingSearch: state => state.loadingSearch,
+		getPasscode: state => state.passcode.code,
+		getPasscodeActive: state => state.passcode.active,
+		getActiveAutoLock: state => state.activeAutoLock,
+		getBlockModal: state => state.blockModal
 	},
 	mutations: {
 		show: (state) => state.status = true,
 		close: (state) => state.status = false,
 		setActiveUser: (state, user) => {
-			state.title = user.title,
-			state.alias = user.alias,
-			state.avatar = user.avatar,
-			state.id = user.id
+			state.activeUser = user
 		},
 		clearActiveUser: state => {
-			state.title = '',
-			state.alias = '',
-			state.avatar = '',
-			state.id = null
+			state.activeUser = {id: null}
 		},
 		setShareRecipients: (state, user) => {
 			state.shareRecipients = user
@@ -51,8 +53,56 @@ export default {
 		deleteUser: state => {
 			state.shareRecipients = {}
 		},
-		setIssuedShares: (state, user) => {
-			state.issuedShares.push(user)
+		setIssuedShares: (state, users) => {
+			state.issuedShares = users
+		},
+		setCofounders: (state, cofounders) => {
+			state.cofounders = cofounders
+		},
+		setUsers: (state, users) => {
+			state.users = users
+		},
+		setSearch: (state, users) => {
+			state.search = users
+		},
+		setLoadingShares: (state, payload) => {
+			state.loadingShares = payload
+		},
+		setLoadingCofounders: (state, payload) => {
+			state.loadingCofounders = payload
+		},
+		setLoadingSearch: (state, payload) => {
+			state.loadingSearch = payload
+		},
+		setPasscode: (state, payload) => {
+			state.passcode.code = payload
+		},
+		setPasscodeActive: (state, payload) => {
+			state.passcode.active = payload
+		},
+		setActiveAutoLock: (state, payload) => {
+			state.activeAutoLock = payload
+		},
+		setBlockModal: (state, change) => {
+			if (!state.finishTime || change) {
+				state.finishTime = new Date().getTime() + state.activeAutoLock
+			}
+
+			if (state.passcode.active) {
+				state.idInt = setInterval(() => {
+					if (new Date().getTime() > state.finishTime) {
+						state.blockModal = true
+						clearInterval(state.idInt);
+						state.finishTime = null
+					}
+				}, 1000)
+			}
+		},
+		setCloseBlockModal: state => {
+			state.blockModal = false
+		},
+		setClearInterval(state) {
+			clearInterval(state.idInt);
 		}
 	}
 }
