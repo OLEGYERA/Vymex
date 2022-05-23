@@ -101,6 +101,7 @@
       },
       actionProgress(key, id) {
         if(key === 0) {
+          this.$core.execViaComponent('Tasks', 'get', id);
           this.$router.push({name: 'vx.co.task.edit', params: {taskID: id}})
         }
         if(key === 1) {
@@ -112,6 +113,7 @@
       },
       actionHold(key, id){
         if(key === 0) {
+          this.$core.execViaComponent('Tasks', 'get', id);
           this.$router.push({name: 'vx.co.task.edit', params: {taskID: id}})
         }
         if(key === 1) {

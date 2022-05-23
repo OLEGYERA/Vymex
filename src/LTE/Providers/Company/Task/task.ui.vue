@@ -1,5 +1,5 @@
 <template>
-  <div class="company-task-ui" @click="$router.push({name: 'vx.co.task.info', params: {taskID: task.id}})">
+  <div class="company-task-ui" @click="openTask">
     <header class="company-task-header">
       <div class="task-expiration-space" :class="{expired: termStage === 0, soon: termStage === 1, normal: termStage === 2}">
         <icon-calendar-error v-if="termStage === 0"/>
@@ -138,6 +138,10 @@
         this.statusDelete = false
         this.$core.execViaComponent('Tasks', 'delete', this.task.id)
         // this.$router.push({name: 'vx.co.task'})
+      },
+      openTask(){
+        this.$core.execViaComponent('Tasks', 'get', this.task.id);
+        this.$router.push({name: 'vx.co.task.info', params: {taskID: this.task.id}})
       }
     }
 

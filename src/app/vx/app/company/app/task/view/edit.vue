@@ -4,14 +4,14 @@
     <title-base class="task-edit-title">Редактировать задачу</title-base>
 
     <div class="task-edit-space">
-      <input-base placeholder="Название задачи" labeled :model="task.title" @onInput="editTask(['title', $event])"/>
-      <input-text-area :model="task.description" :max-length="1000" placeholder="Описание" labeled count  @onInput="editTask(['description', $event])"/>
+      <input-base placeholder="Название задачи" labeled :model="task.title" @onInput="setTaskInfo(['title', $event])"/>
+      <input-text-area :model="task.description" :max-length="1000" placeholder="Описание" labeled count  @onInput="setTaskInfo(['description', $event])"/>
 
-      <title-caps>Время выполнения</title-caps>
+      <title-caps class="task-title-time">Время выполнения</title-caps>
 
       <div class="date-range-box">
-        <input-date :model="task.start" @onDate="editTask(['start', $event])" placeholder="Начало" :disable="task.isTimeless"/>
-        <input-date :model="task.finish" @onDate="editTask(['finish', $event])" placeholder="Конец" :disable="task.isTimeless"/>
+        <input-date :model="task.start" @onDate="setTaskInfo(['start', $event])" placeholder="Начало" :disable="task.isTimeless"/>
+        <input-date :model="task.finish" @onDate="setTaskInfo(['finish', $event])" placeholder="Конец" :disable="task.isTimeless"/>
       </div>
       <div class="perpetual-task">
         <input-checkbox :model="!!task.isTimeless" @click.native="togglePerpetual"/>
@@ -19,10 +19,11 @@
       </div>
 
       <div class="task-checklist-container">
-        <task-checklist v-for="(checklist, checklistKey) in task.checkList" :key="checklistKey" :checklist-key="checklistKey" :check-list="checklist" @editChecklist="editChecklist"/>
+        <task-checklist v-for="(checklist, checklistKey) in task.checklists" :key="checklistKey" :checklist-key="checklistKey" :check-list="checklist" @editChecklist="editChecklist"/>
+        <task-checklist v-for="(checklist, checklistKey) in checkList" :key="checklistKey" :checklist-key="checklistKey" :check-list="checklist" @editChecklist="editNewChecklist"/>
       </div>
 
-      <navigation-list-header title="Список" :title-count="1" @onAction="statusTaskList = true"/>
+      <navigation-list-header class="task-list-title" title="Список" @onAction="statusTaskList = true"/>
 
       <modal-base :status="statusTaskList"
                   @onClose="statusTaskList = false"
@@ -84,9 +85,9 @@
         <file-ui v-for="(file, key) in task.files" :file="file" :key="key"/>
       </div>
 
-      <navigation-list-header title="Исполнители" @onAction="showAppointSidebar()" :add="!newTask.assigneeId"/>
+      <navigation-list-header title="Исполнители" @onAction="showAppointSidebar()" :add="!task.assigneeId"/>
       <div class="content-container">
-        <unit-setting-ui :unit-data="selectedUser" :unit-level="selectedUser.unitLevel" :unit-position="selectedUser.unitName"/>
+        <unit-setting-ui :unit-data="task.assignee" :unit-level="task.assignee.unitLevel" :unit-position="task.assignee.unitName"/>
       </div>
 
       <navigation-list-header title="Следят" @onAction="showAddSidebar()"/>
@@ -99,7 +100,7 @@
       <button-secondary @onClick="$router.push({name: 'vx.co.task', params: {companyID: $route.params.companyID}})">
         Отмена
       </button-secondary>
-      <button-base @onClick="createTask">Сохранить</button-base>
+      <button-base @onClick="saveEditTask">Сохранить</button-base>
     </div>
 
     <sidebar-appoint-executor-ui :structure="structure"
@@ -110,7 +111,7 @@
 
     <sidebar-add-observer :status="sidebarAddStatus"
                           :structure="structure"
-                          :chosen-units="newTask.watchers"
+                          :chosen-units="task.watchers"
                           @selectAllLevel="selectAllLevel"
                           @deleteAllLevel="deleteLevel"
                           @chooseUser="addWatchers"
@@ -128,7 +129,7 @@
   import InputDate from '@Facade/Input/Date'
   import InputCheckbox from '@Facade/Input/Checkbox'
   import TextBase from '@Facade/Text/Base'
-  import {UnitUi, UnitSettingUi, UnitCheckboxUi, SidebarAppointExecutorUi, SidebarAddObserver, FileUi, TaskChecklist} from '@Providers'
+  import {UnitUi, UnitSettingUi, UnitCheckboxUi, SidebarAppointExecutorUi, SidebarAddObserver, TaskChecklist, FileUi} from '@Providers'
   import NavigationListHeader from '@Facade/Navigation/ListHeader'
   import {mapGetters, mapMutations} from "vuex";
   import ModalBase from "@Facade/Modal/Base"
@@ -136,133 +137,152 @@
   import ButtonSecondary from '@Facade/Button/Secondary'
   import ButtonAdd from '@Facade/Button/Add'
 
-export default {
-  name: 'vx.co.task.edit.view',
-  components: {
-    NavigationComeback, TitleBase, InputBase, InputTextArea, TitleCaps, InputDate, InputCheckbox, TextBase,
-    UnitUi, UnitSettingUi, UnitCheckboxUi, ButtonBase, ButtonSecondary, FileUi, TaskChecklist,
-    NavigationListHeader, SidebarAppointExecutorUi, ModalBase, ButtonAdd, SidebarAddObserver
-  },
-  data: () => ({
-    currentNavigationCoTab: 0,
-    chosenUnitsAppoint: [],
-    chosenUnitsAdd: [],
-    unitCheckboxModel: false,
-    statusTaskList: false,
-    statusDeleteList: false,
-    listContainerStatus: false,
-    title: '',
-    listItems: [],
-    newItemText: '',
-  }),
-  created() {
-    console.log(this.$route.params.taskID, 'this.$route.params.taskID')
-    this.$core.execViaComponent('Tasks', 'get', this.$route.params.taskID);
-  },
-  mounted() {
-    this.$core.execViaComponent('Tasks', 'getStructure', this.$route.params.companyID);
-  },
-  computed: {
-    ...mapGetters({
-      task: 'Tasks/getTask',
-      sidebarAppointStatus: 'Tasks/sidebarAppointStatus',
-      sidebarAddStatus: 'Tasks/sidebarAddStatus',
-      newTask: 'Tasks/getNewTask',
-      structure: 'Tasks/getStructure',
-      selectedUser: 'Tasks/getSelectedUser',
-      checkList: 'Tasks/getChecklist',
-      watchers: 'Tasks/selectedWatchers',
-
+  export default {
+    name: 'vx.co.task.edit.view',
+    components: {
+      NavigationComeback, TitleBase, InputBase, InputTextArea, TitleCaps, InputDate, InputCheckbox, TextBase,
+      UnitUi, UnitSettingUi, UnitCheckboxUi, ButtonBase, ButtonSecondary, TaskChecklist, FileUi,
+      NavigationListHeader, SidebarAppointExecutorUi, ModalBase, ButtonAdd, SidebarAddObserver
+    },
+    data: () => ({
+      currentNavigationCoTab: 0,
+      chosenUnitsAppoint: [],
+      chosenUnitsAdd: [],
+      unitCheckboxModel: false,
+      statusTaskList: false,
+      statusDeleteList: false,
+      listContainerStatus: false,
+      modalDownload: false,
+      title: '',
+      listItems: [],
+      newItemText: '',
     }),
-  },
-  methods: {
-    ...mapMutations({
-      showAppointSidebar: 'Tasks/showAppointSidebar',
-      editTask: 'Tasks/editTask',
-      findExecutor: 'Tasks/findExecutor',
-      cleanNewTask: 'Tasks/cleanNewTask',
-      addTaskChecklist: 'Tasks/addTaskChecklist',
-      changeStatus: 'Tasks/changeStatus',
-      showAddSidebar: 'Tasks/showAddSidebar',
-      findWatchers: 'Tasks/findWatchers',
-      checkAllLevel: 'Tasks/checkAllLevel',
-      deleteAllLevel: 'Tasks/deleteAllLevel',
-      addObservers: 'Tasks/addObservers',
-    }),
-    togglePerpetual(){
-      if(!!this.task.isTimeless === false) {
-        this.editTask(['isTimeless', true])
-        this.editTask(['start', ''])
-        this.editTask(['finish', ''])
-      } else {
-        this.editTask(['isTimeless', false])
-      }
+    mounted() {
+      this.$core.execViaComponent('Tasks', 'getStructure', this.$route.params.companyID);
     },
-    chooseUser(id){
-      if (this.chosenUnitsAppoint[0] === id) {
-        this.chosenUnitsAppoint = []
-      } else {
-        this.chosenUnitsAppoint = [id]
-      }
-    },
-    setUser() {
-      this.editTask(['assigneeId', this.chosenUnitsAppoint[0]])
-      this.findExecutor()
-    },
-    addTaskList(){
-      if(this.newItemText) {
-        this.listItems.push({text: this.newItemText, status: false})
-      }
-      this.addTaskChecklist({title: this.title, items: this.listItems})
-      console.log(this.checkList, 'this.checkList')
-      this.statusTaskList = false
-      this.title = ''
-      this.newItemText = ''
-      this.listItems = []
+    computed: {
+      ...mapGetters({
+        sidebarAppointStatus: 'Tasks/sidebarAppointStatus',
+        sidebarAddStatus: 'Tasks/sidebarAddStatus',
+        task: 'Tasks/getTask',
+        structure: 'Tasks/getStructure',
+        selectedUser: 'Tasks/getSelectedUser',
+        checkList: 'Tasks/getChecklist',
+        watchers: 'Tasks/selectedWatchers',
 
+      }),
     },
-    addItem(){
-      if(this.listContainerStatus === false) {
-        this.listContainerStatus = true
-      } else if (this.newItemText) {
-        this.listItems.push({text: this.newItemText, status: false})
+    methods: {
+      ...mapMutations({
+        showAppointSidebar: 'Tasks/showAppointSidebar',
+        setTaskInfo: 'Tasks/setTaskInfo',
+        findExecutor: 'Tasks/findExecutor',
+        cleanTask: 'Tasks/cleanTask',
+        addTaskChecklist: 'Tasks/addTaskChecklist',
+        changeStatus: 'Tasks/changeStatus',
+        showAddSidebar: 'Tasks/showAddSidebar',
+        findWatchers: 'Tasks/findWatchers',
+        checkAllLevel: 'Tasks/checkAllLevel',
+        deleteAllLevel: 'Tasks/deleteAllLevel',
+        addObservers: 'Tasks/addObservers',
+        addFile: 'Tasks/addFile',
+        editChecklistStatus: 'Tasks/editChecklistStatus',
+      }),
+      togglePerpetual(){
+        if(!!this.task.isTimeless === false) {
+          this.setTaskInfo(['isTimeless', true])
+          this.setTaskInfo(['start', ''])
+          this.setTaskInfo(['finish', ''])
+        } else {
+          this.setTaskInfo(['isTimeless', false])
+        }
+      },
+      chooseUser(id){
+        if (this.chosenUnitsAppoint[0] === id) {
+          this.chosenUnitsAppoint = []
+        } else {
+          this.chosenUnitsAppoint = [id]
+        }
+      },
+      editNewChecklist(taskKey, itemKey) {
+        this.changeStatus([taskKey, itemKey])
+      },
+      editChecklist(taskKey, itemKey){
+        console.log(taskKey, itemKey, 'editChecklist')
+        this.editChecklistStatus([taskKey, itemKey])
+        this.$core.execViaComponent('Tasks', 'updateChecklist', taskKey)
+      },
+      setUser() {
+        this.setTaskInfo(['assigneeId', this.chosenUnitsAppoint[0]])
+        this.findExecutor()
+      },
+      addTaskList(){
+        if(this.newItemText) {
+          this.listItems.push({text: this.newItemText, status: false})
+        }
+        this.addTaskChecklist({title: this.title, items: this.listItems})
+        console.log(this.checkList, 'this.checkList')
+        this.statusTaskList = false
+        this.title = ''
         this.newItemText = ''
-      }
-    },
-    deleteAllList(){
-      this.statusDeleteList = false
-      this.listItems = []
-      this.newItemText = ''
-    },
-    addWatchers(id) {
-      this.addObservers(id)
-    },
-    setObservers(){
-      this.findWatchers()
-    },
-    selectAllLevel(key) {
-      this.checkAllLevel(key)
-    },
-    deleteLevel(key) {
-      this.deleteAllLevel(key)
-    },
-    createTask() {
-      this.checkList.map(list => {
-        this.$core.execViaComponent('Tasks', 'createChecklist', {list: list, id: this.newTask.taskId});
+        this.listItems = []
+        // this.$core.execViaComponent('Tasks', 'createChecklist', [this.newTask.taskId, this.title, this.listItems]);
 
-      })
-      this.$core.execViaComponent('Tasks', 'edit');
+      },
+      addItem(){
+        if(this.listContainerStatus === false) {
+          this.listContainerStatus = true
+        } else if (this.newItemText) {
+          this.listItems.push({text: this.newItemText, status: false})
+          this.newItemText = ''
+        }
+      },
+      deleteAllList(){
+        this.statusDeleteList = false
+        this.listItems = []
+        this.newItemText = ''
+      },
+      addWatchers(id) {
+        this.addObservers(id)
+      },
+      setObservers(){
+        this.findWatchers()
+      },
+      selectAllLevel(key) {
+        this.checkAllLevel(key)
+      },
+      deleteLevel(key) {
+        this.deleteAllLevel(key)
+      },
+      saveEditTask() {
+        this.checkList.map(list => {
+          this.$core.execViaComponent('Tasks', 'createChecklist', {list: list, id: this.task.id});
+
+        })
+        this.$core.execViaComponent('Tasks', 'edit');
+        this.$router.push({name: 'vx.co.task', params: {companyID: this.$route.params.companyID}})
+      },
+      onChange() {
+        this.$core.execViaComponent('Uploader', 'init',[
+          this.$refs.uploadedFile4Test.files[0],
+          this.handleUploadOnprogress, null,
+          this.handleUploaderOnload
+        ])
+      },
+      handleUploadOnprogress(progress){
+        console.log(progress, 'handleUploadOnprogress')
+      },
+      handleUploaderOnload(fileId){
+        console.log(fileId, 'handleUploaderOnload')
+        this.addFile(fileId)
+        // this.setCreator(['logo', fileId])
+        // this.avatarReady = true;
+      },
     },
-    editChecklist(taskKey, itemKey){
-      console.log(taskKey, itemKey, 'editChecklist')
-      this.editChecklistStatus([taskKey, itemKey])
-      this.$core.execViaComponent('Tasks', 'updateChecklist', taskKey)
+    destroyed() {
+      this.cleanTask()
     }
-  },
-  destroyed() {
-    this.cleanNewTask()
   }
-}
 </script>
 
 <style lang="scss" scoped>
@@ -285,6 +305,9 @@ export default {
         .textarea-container{
           border-width: 1px;
         }
+      }
+      .task-title-time{
+        margin-bottom: 16px;
       }
       .date-range-box{
         display: flex;
@@ -311,6 +334,10 @@ export default {
         margin-bottom: 4px;
       }
       .content-container{
+        margin-bottom: 24px;
+      }
+
+      .task-list-title{
         margin-bottom: 24px;
       }
     }

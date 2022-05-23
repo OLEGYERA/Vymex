@@ -8,23 +8,38 @@
         <text-base class="user-name">{{comment.user.name || 'Lera'}} {{comment.user.lastname || 'P'}}</text-base>
         <div class="bottom-part">
           <div class="comment-create-date">{{commentDate}}</div>
-          <div class="button-reply">Ответить</div>
+          <div class="button-reply" @click="replyVisible = !replyVisible">
+            {{replyVisible ? 'Отменить' : 'Ответить' }}
+          </div>
         </div>
       </div>
 
     </div>
     <text-base class="comment-content">{{comment.content}}</text-base>
 
+    <div class="input-send-reply" v-if="replyVisible">
+      <input-message :model="reply" placeholder="Ваш комментарий" @onInput="reply = $event"/>
+      <div class="comment-send-button" :disable="!reply" @click="sendComment">
+        <icon-send-message/>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
   import ImageAvatar from '@Facade/Image/Avatar'
   import TextBase from '@Facade/Text/Base'
+  import InputMessage from "@Facade/Input/Message";
 
   export default {
     name: 'Providers.Company.Task.TaskComment.Ui',
-    components: {ImageAvatar, TextBase},
+    components: {ImageAvatar, TextBase, InputMessage},
+    data(){
+      return{
+        reply: '',
+        replyVisible: false,
+      }
+    },
     props: {
       comment: {
         type: Object,
@@ -88,12 +103,18 @@
         return `${day} ${month} ${year}, ${time}`
       },
     },
+    methods: {
+      sendComment(){
+
+      },
+    }
   }
 
 </script>
 
 <style lang="scss" scoped>
   .company-task-comment-ui{
+    height: 100%;
     margin-bottom: 12px;
     padding: 20px 28px 24px 24px;
     background-color: $grey-scale-500;
@@ -135,6 +156,41 @@
 
     .comment-content{
       color: #fff;
+      //margin-bottom: 24px;
+    }
+    .input-send-reply{
+      height: 100%;
+      padding: 24px 0 0;
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-radius: 12px;
+      background-color: $grey-scale-500;
+
+      .facade-input-message{
+        margin-right: 10px;
+      }
+
+      .comment-send-button{
+        height: 36px;
+        min-width: 36px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+        cursor: pointer;
+        color: #fff;
+        background-color: $blue;
+        .icon{
+          height: 18px;
+          margin-left: 1px;
+        }
+        &[disable]{
+          color: $grey-scale-300;
+          background-color: $grey-scale-400;
+        }
+      }
     }
   }
 </style>

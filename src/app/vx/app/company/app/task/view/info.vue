@@ -30,7 +30,7 @@
       </div>
 
       <div class="header-right-part">
-        <div class="nav-button" @click="$router.push({name: 'vx.co.task.edit', params: {taskID: task.id}})">
+        <div class="nav-button" @click="editTask">
           <icon-edit/>
         </div>
         <div class="nav-button" @click="statusDelete = true">
@@ -210,7 +210,7 @@
       // }
     }),
     created() {
-      this.$core.execViaComponent('Tasks', 'get', this.$route.params.taskID);
+      // this.$core.execViaComponent('Tasks', 'get', this.$route.params.taskID);
     },
     computed: {
       ...mapGetters({
@@ -286,7 +286,8 @@
       ...mapMutations({
         showAppointSidebar: 'Tasks/showAppointSidebar',
         editChecklistStatus: 'Tasks/editChecklistStatus',
-        changeTaskStatus: 'Tasks/changeTaskStatus'
+        changeTaskStatus: 'Tasks/changeTaskStatus',
+        cleanTask: 'Tasks/cleanTask',
       }),
       changeStatus(status) {
         this.statusDropdown = false
@@ -300,6 +301,10 @@
           this.comment = ''
         }
       },
+      editTask() {
+        this.$core.execViaComponent('Tasks', 'get', this.task.id);
+        this.$router.push({name: 'vx.co.task.edit', params: {taskID: this.task.id}})
+      },
       deleteTask(){
         // this.statusDelete = false
         this.$core.execViaComponent('Tasks', 'delete', this.task.id)
@@ -311,6 +316,9 @@
         this.$core.execViaComponent('Tasks', 'updateChecklist', taskKey)
       }
     },
+    destroyed() {
+      this.cleanTask()
+    }
   }
 </script>
 

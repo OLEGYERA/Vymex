@@ -33,8 +33,8 @@ class Tasks extends Binder{
     }
 
     async edit() {
-        const CreatorData = this.$store.name('Tasks').get('NewTask');
-        const isTimeless = CreatorData.isTimeless ? 1 : 0
+        const CreatorData = this.$store.name('Tasks').get('Task');
+        const isTimeless = !!CreatorData.isTimeless ? 1 : 0
         const start = CreatorData.start ? CreatorData.start + ' 04:20:00' : ''
         const finish = CreatorData.finish ? CreatorData.finish + ' 04:20:00' : ''
 
@@ -46,7 +46,7 @@ class Tasks extends Binder{
             utf8ToArray(String(start)),
             utf8ToArray(String(finish)),
             objectToArray(CreatorData.watchers),
-            numberToArray(CreatorData.taskId),
+            numberToArray(CreatorData.id),
             objectToArray(CreatorData.fileIds)
         );
         console.log(data, 'data')
@@ -55,6 +55,7 @@ class Tasks extends Binder{
 
     editRes(response) {
         console.log(response, 'editRes')
+        this.$core.execViaComponent('Tasks', 'getUserTasks', 50);
         this.$notify({text: 'Задача создана', type: 'success', duration: 3000, speed: 500})
     }
 
@@ -118,6 +119,7 @@ class Tasks extends Binder{
     }
 
     changeStatusRes(resp){
+        this.$core.execViaComponent('Tasks', 'getUserTasks', 50);
         console.log(resp, 'changeStatusRes')
     }
 

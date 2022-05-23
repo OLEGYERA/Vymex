@@ -4,17 +4,17 @@
     <title-base class="task-create-title">Создать задачу</title-base>
 
     <div class="task-create-space">
-      <input-base placeholder="Название задачи" labeled :model="newTask.title" @onInput="setNewTask(['title', $event])"/>
-      <input-text-area :model="newTask.description" :max-length="1000" placeholder="Описание" labeled count  @onInput="setNewTask(['description', $event])"/>
+      <input-base placeholder="Название задачи" labeled :model="task.title" @onInput="setTaskInfo(['title', $event])"/>
+      <input-text-area :model="task.description" :max-length="1000" placeholder="Описание" labeled count  @onInput="setTaskInfo(['description', $event])"/>
 
-      <title-caps>Время выполнения</title-caps>
+      <title-caps class="task-title-time">Время выполнения</title-caps>
 
       <div class="date-range-box">
-        <input-date :model="newTask.start" @onDate="setNewTask(['start', `${$event}`])" placeholder="Начало" :disable="newTask.isTimeless"/>
-        <input-date :model="newTask.finish" @onDate="setNewTask(['finish', `${$event}`])" placeholder="Конец" :disable="newTask.isTimeless"/>
+        <input-date :model="task.start" @onDate="setTaskInfo(['start', `${$event}`])" placeholder="Начало" :disable="task.isTimeless"/>
+        <input-date :model="task.finish" @onDate="setTaskInfo(['finish', `${$event}`])" placeholder="Конец" :disable="task.isTimeless"/>
       </div>
       <div class="perpetual-task">
-        <input-checkbox :model="newTask.isTimeless" @click.native="togglePerpetual"/>
+        <input-checkbox :model="task.isTimeless" @click.native="togglePerpetual"/>
         <text-base @click.native="togglePerpetual">Бессрочная задача</text-base>
       </div>
 
@@ -23,7 +23,7 @@
         <task-checklist v-for="(checklist, checklistKey) in checkList" :key="checklistKey" :checklist-key="checklistKey" :check-list="checklist" @editChecklist="editChecklist"/>
       </div>
 
-      <navigation-list-header class="task-list-title" title="Список" :title-count="checkList.length" @onAction="statusTaskList = true"/>
+      <navigation-list-header class="task-list-title" title="Список" @onAction="statusTaskList = true"/>
 
       <modal-base :status="statusDeleteList"
                   @onClose="statusDeleteList = false"
@@ -67,7 +67,7 @@
         </template>
       </modal-base>
 
-      <navigation-list-header title="Исполнители" @onAction="showAppointSidebar()" :add="!newTask.assigneeId"/>
+      <navigation-list-header title="Исполнители" @onAction="showAppointSidebar()" :add="!task.assigneeId"/>
       <div class="content-container">
         <unit-setting-ui :unit-data="selectedUser" :unit-level="selectedUser.unitLevel" :unit-position="selectedUser.unitName"/>
       </div>
@@ -133,7 +133,7 @@
 
     <sidebar-add-observer :status="sidebarAddStatus"
                           :structure="structure"
-                          :chosen-units="newTask.watchers"
+                          :chosen-units="task.watchers"
                           @selectAllLevel="selectAllLevel"
                           @deleteAllLevel="deleteLevel"
                           @chooseUser="addWatchers"
@@ -178,119 +178,7 @@
       title: '',
       listItems: [],
       newItemText: '',
-      // person: {
-      //   unitLevel: 1,
-      //   unitData: {
-      //     id: 1,
-      //     name: 'Александр',
-      //     lastname: 'Ким',
-      //     avatar: null
-      //   },
-      //   unitPosition: 'big boss'
-      // },
-      // levels: [
-      //   {
-      //     level: 1,
-      //     disable: false,
-      //     data: [
-      //       {
-      //         unitLevel: 1,
-      //         unitData: {
-      //           id: 1,
-      //           name: 'Александр',
-      //           lastname: 'Ким',
-      //           avatar: null
-      //         },
-      //         unitPosition: 'big boss',
-      //         checked: false,
-      //       },
-      //     ]
-      //   },
-      //   {
-      //     level: 2,
-      //     disable: true,
-      //     data: [
-      //       {
-      //         unitLevel: 2,
-      //         unitData: {
-      //           id: 2,
-      //           name: 'Александр',
-      //           lastname: 'Ким',
-      //           avatar: null
-      //         },
-      //         unitPosition: 'big boss',
-      //         checked: false,
-      //       },
-      //       {
-      //         unitLevel: 2,
-      //         unitData: {
-      //           id: 3,
-      //           name: 'Александр',
-      //           lastname: 'Ким',
-      //           avatar: null
-      //         },
-      //         unitPosition: 'big boss',
-      //         checked: false,
-      //       },
-      //     ]
-      //   },
-      //   {
-      //     level: 3,
-      //     disable: true,
-      //     data: [
-      //       {
-      //         unitLevel: 3,
-      //         unitData: {
-      //           id: 4,
-      //           name: 'Александр',
-      //           lastname: 'Ким',
-      //           avatar: null
-      //         },
-      //         unitPosition: 'big boss',
-      //         checked: false,
-      //       },
-      //       {
-      //         unitLevel: 3,
-      //         unitData: {
-      //           id: 5,
-      //           name: 'Александр',
-      //           lastname: 'Ким',
-      //           avatar: null
-      //         },
-      //         unitPosition: 'big boss',
-      //         checked: false,
-      //       },
-      //     ]
-      //   },
-      //   {
-      //     level: 4,
-      //     disable: true,
-      //     data: [
-      //       {
-      //         unitLevel: 4,
-      //         unitData: {
-      //           id: 6,
-      //           name: 'Александр',
-      //           lastname: 'Ким',
-      //           avatar: null
-      //         },
-      //         unitPosition: 'big boss',
-      //         checked: false,
-      //       },
-      //       {
-      //         unitLevel: 4,
-      //         unitData: {
-      //           id: 7,
-      //           name: 'Александр',
-      //           lastname: 'Ким',
-      //           avatar: null
-      //         },
-      //         unitPosition: 'big boss',
-      //         checked: false,
-      //       },
-      //     ]
-      //   }
-      // ],
+
     }),
     mounted() {
       this.$core.execViaComponent('Tasks', 'getStructure', this.$route.params.companyID);
@@ -299,7 +187,7 @@
       ...mapGetters({
         sidebarAppointStatus: 'Tasks/sidebarAppointStatus',
         sidebarAddStatus: 'Tasks/sidebarAddStatus',
-        newTask: 'Tasks/getNewTask',
+        task: 'Tasks/getTask',
         structure: 'Tasks/getStructure',
         selectedUser: 'Tasks/getSelectedUser',
         checkList: 'Tasks/getChecklist',
@@ -310,9 +198,9 @@
     methods: {
       ...mapMutations({
         showAppointSidebar: 'Tasks/showAppointSidebar',
-        setNewTask: 'Tasks/setNewTask',
+        setTaskInfo: 'Tasks/setTaskInfo',
         findExecutor: 'Tasks/findExecutor',
-        cleanNewTask: 'Tasks/cleanNewTask',
+        cleanTask: 'Tasks/cleanTask',
         addTaskChecklist: 'Tasks/addTaskChecklist',
         changeStatus: 'Tasks/changeStatus',
         showAddSidebar: 'Tasks/showAddSidebar',
@@ -323,12 +211,12 @@
         addFile: 'Tasks/addFile',
       }),
       togglePerpetual(){
-        if(this.newTask.isTimeless === false) {
-          this.setNewTask(['isTimeless', true])
-          this.setNewTask(['start', ''])
-          this.setNewTask(['finish', ''])
+        if(this.task.isTimeless === false) {
+          this.setTaskInfo(['isTimeless', true])
+          this.setTaskInfo(['start', ''])
+          this.setTaskInfo(['finish', ''])
         } else {
-          this.setNewTask(['isTimeless', false])
+          this.setTaskInfo(['isTimeless', false])
         }
       },
       chooseUser(id){
@@ -342,7 +230,7 @@
         this.changeStatus([taskKey, itemKey])
       },
       setUser() {
-        this.setNewTask(['assigneeId', this.chosenUnitsAppoint[0]])
+        this.setTaskInfo(['assigneeId', this.chosenUnitsAppoint[0]])
         this.findExecutor()
       },
       addTaskList(){
@@ -385,7 +273,7 @@
       },
       createTask() {
         this.checkList.map(list => {
-          this.$core.execViaComponent('Tasks', 'createChecklist', {list: list, id: this.newTask.taskId});
+          this.$core.execViaComponent('Tasks', 'createChecklist', {list: list, id: this.task.taskId});
 
         })
         this.$core.execViaComponent('Tasks', 'edit');
@@ -409,7 +297,7 @@
       },
     },
     destroyed() {
-      this.cleanNewTask()
+      this.cleanTask()
     }
   }
 </script>
@@ -434,6 +322,9 @@
         .textarea-container{
           border-width: 1px;
         }
+      }
+      .task-title-time{
+        margin-bottom: 16px;
       }
       .date-range-box{
         display: flex;
